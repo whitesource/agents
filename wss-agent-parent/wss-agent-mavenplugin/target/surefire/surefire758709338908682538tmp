@@ -1,0 +1,5 @@
+#surefire
+#Wed Mar 07 17:03:11 IST 2012
+user.dir=C\:\\workspaces\\wss\\wss-agent-parent\\wss-agent-mavenplugin
+localRepository=C\:\\Users\\tom.shapira\\.m2\\repository
+basedir=C\:\\workspaces\\wss\\wss-agent-parent\\wss-agent-mavenplugin
