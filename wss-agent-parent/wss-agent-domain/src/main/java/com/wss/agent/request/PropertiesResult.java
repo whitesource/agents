@@ -1,5 +1,10 @@
 package com.wss.agent.request;
 
+import java.util.Properties;
+
+import com.wss.agent.exception.JsonParsingException;
+import com.wss.agent.utils.JsonUtils;
+
 /**
  * This class represents the properties needed for executing the update operation.
  * 
@@ -10,21 +15,33 @@ public class PropertiesResult {
 	
 	/* --- Members --- */
 	
-	String property;
+	private Properties properties;
 	
 	/* --- Constructors --- */
+
+	/**
+	 * Constructor
+	 * 
+	 * @param properties
+	 */
+	public PropertiesResult(Properties properties) {
+		this.properties = properties;
+	}
 	
-	public PropertiesResult(String property) {
-		this.property = property;
+	/* --- Static methods--- */
+	
+	public static PropertiesResult fromJSON(String json) throws JsonParsingException {
+		return JsonUtils.parsePropertiesJson(json);
 	}
 
 	/* --- Getters / Setters --- */
 	
-	public String getProperty() {
-		return property;
+	public Properties getProperties() {
+		return properties;
 	}
 
-	public void setProperty(String property) {
-		this.property = property;
+	public void setProperties(Properties properties) {
+		this.properties = properties;
 	}
+	
 }

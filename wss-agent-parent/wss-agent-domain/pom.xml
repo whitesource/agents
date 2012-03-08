@@ -8,14 +8,13 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	
-	<groupId>com.wss</groupId>
 	<artifactId>wss-agent-domain</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	
 	<dependencies>
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	

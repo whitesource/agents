@@ -87,16 +87,18 @@ public class UpdateServiceImpl implements UpdateService {
 		
 		// handle response
 		if (response != null) {
-			String properties;
 			try {
-				properties = readResponse(response);
-				result = new PropertiesResult(properties);
+				String json = readResponse(response);
+				result = PropertiesResult.fromJSON(json);
 				
-				logDebug(FROM_SERVER + properties);
+				logDebug(FROM_SERVER + json);
 			} catch (IllegalStateException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JsonParsingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -155,12 +157,14 @@ public class UpdateServiceImpl implements UpdateService {
 	 */
 	private HttpResponse sendRequest(HttpRequestBase httpRequest) throws MojoExecutionException {
 		HttpResponse response = null;
+		
 		try {
 			HttpClient client = new DefaultHttpClient();
 			response = client.execute(httpRequest);
 		} catch (IOException e) {
 			throw new MojoExecutionException(Constants.ERROR_CONNECTION, e);
 		}
+		
 		return response;
 	}
 	
