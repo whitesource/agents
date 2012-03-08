@@ -19,7 +19,7 @@ public class Constants {
 	/* --- Servlet info --- */
 
 	// TODO change
-	public static final String SERVICE_ENDPOINT_URL = "http://localhost:8888/com.wss.WSS/update";
+	public static final String SERVICE_ENDPOINT_URL = "http://localhost:8888/Wss/update";
 	
 	/* --- Stand alone pom --- */
 	
