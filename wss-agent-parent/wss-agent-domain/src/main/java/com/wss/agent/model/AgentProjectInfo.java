@@ -31,6 +31,20 @@ public class AgentProjectInfo {
 		dependencies = new ArrayList<DependencyInfo>();
 	}
 	
+	/* --- Overridden methods --- */
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("AgentProjectInfo@").append(hashCode()).append("[")
+		.append("coordinates= ").append(coordinates).append(",")
+		.append("parentCoordinates= ").append(parentCoordinates).append(",")
+		.append("projectToken= ").append(projectToken).append(" ]");
+		
+		return sb.toString();
+	}
+	
 	/* --- Getters / Setters --- */
 	
 	public Coordinates getCoordinates() {
