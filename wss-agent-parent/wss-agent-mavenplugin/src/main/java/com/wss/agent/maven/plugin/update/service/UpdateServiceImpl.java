@@ -99,20 +99,8 @@ public class UpdateServiceImpl implements UpdateService {
 		
 		// handle response
 		if (response != null) {
-			String json = readResponse(response);
-			
-			ResultEnvelope envelope = ResultEnvelope.fromJSON(json);
-			int status = envelope.getStatus();
-			String message = envelope.getMessage();
-			String data = envelope.getData();
-			
-			if (status == ResultEnvelope.STATUS_BAD_REQUEST) {
-				throw new MojoExecutionException(message + ": " + data);
-			} else if (status == ResultEnvelope.STATUS_SERVER_ERROR) {
-				throw new MojoExecutionException(message + ": " + data);
-			} else if (status == ResultEnvelope.STATUS_SUCCESS) {
-				result = PropertiesResult.fromJSON(data);
-			}
+			String data = getResultData(response);
+			result = PropertiesResult.fromJSON(data);
 		}
 		return result;
 	}
@@ -145,20 +133,8 @@ public class UpdateServiceImpl implements UpdateService {
 		
 		// handle response
 		if (response != null) {
-			String json = readResponse(response);
-
-			ResultEnvelope envelope = ResultEnvelope.fromJSON(json);
-			int status = envelope.getStatus();
-			String message = envelope.getMessage();
-			String data = envelope.getData();
-			
-			if (status == ResultEnvelope.STATUS_BAD_REQUEST) {
-				throw new MojoExecutionException(message + ": " + data);
-			} else if (status == ResultEnvelope.STATUS_SERVER_ERROR) {
-				throw new MojoExecutionException(message + ": " + data);
-			} else if (status == ResultEnvelope.STATUS_SUCCESS) {
-				result = UpdateInventoryResult.fromJSON(data);
-			}
+			String data = getResultData(response);
+			result = UpdateInventoryResult.fromJSON(data);
 		}
 		return result;
 	}
@@ -179,6 +155,37 @@ public class UpdateServiceImpl implements UpdateService {
 		}
 		
 		return response;
+	}
+	
+	/**
+	 * Read the data from the {@link RequestEnvelope}.
+	 * 
+	 * @param response
+	 * 
+	 * @return
+	 * 
+	 * @throws MojoExecutionException
+	 * @throws JsonParsingException
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 */
+	private String getResultData(HttpResponse response) throws MojoExecutionException, JsonParsingException, IllegalStateException, IOException {
+		String data = null;
+		
+		String json = readResponse(response);
+		
+		ResultEnvelope envelope = ResultEnvelope.fromJSON(json);
+		int status = envelope.getStatus();
+		String message = envelope.getMessage();
+		
+		if (status == ResultEnvelope.STATUS_BAD_REQUEST) {
+			throw new MojoExecutionException(message + ": " + data);
+		} else if (status == ResultEnvelope.STATUS_SERVER_ERROR) {
+			throw new MojoExecutionException(message + ": " + data);
+		} else if (status == ResultEnvelope.STATUS_SUCCESS) {
+			data = envelope.getData();
+		}
+		return data;
 	}
 	
 	/**
