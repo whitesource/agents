@@ -3,6 +3,7 @@ package com.wss.agent.maven.plugin.update;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Plugin;
@@ -15,7 +16,6 @@ import com.wss.agent.maven.plugin.update.service.UpdateService;
 import com.wss.agent.maven.plugin.update.service.UpdateServiceImpl;
 import com.wss.agent.model.AgentProjectInfo;
 import com.wss.agent.model.DependencyInfo;
-import com.wss.agent.request.PropertiesResult;
 import com.wss.agent.request.UpdateInventoryRequest;
 import com.wss.agent.request.UpdateInventoryResult;
 
@@ -31,7 +31,7 @@ public class UpdaterImpl implements Updater {
 
 	private Log log;
 
-	private PropertiesResult properties;
+	private Properties properties;
 
 	private String orgToken;
 
@@ -43,7 +43,7 @@ public class UpdaterImpl implements Updater {
 	 * Creates a new {@link UpdaterImpl}
 	 * 
 	 */
-	public UpdaterImpl(PropertiesResult properties, String orgToken, MavenProject project) {
+	public UpdaterImpl(Properties properties, String orgToken, MavenProject project) {
 		this.properties = properties;
 		this.orgToken = orgToken;
 		this.project = project;

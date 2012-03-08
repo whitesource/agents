@@ -12,7 +12,9 @@ import org.codehaus.jackson.type.TypeReference;
 import com.wss.agent.exception.JsonParsingException;
 import com.wss.agent.model.AgentProjectInfo;
 import com.wss.agent.request.PropertiesResult;
+import com.wss.agent.request.ResultEnvelope;
 import com.wss.agent.request.UpdateInventoryRequest;
+import com.wss.agent.request.UpdateInventoryResult;
 
 /**
  * Utility class for JSON conversion.
@@ -93,5 +95,57 @@ public class JsonUtils {
 			throw new JsonParsingException(e);
 		}
 		return properties;
+	}
+
+	/**
+	 * Parses the JSON string back to a {@link ResultEnvelope}.
+	 * 
+	 * @param json The JSON string to parse.
+	 * @return {@link ResultEnvelope} result envelope.
+	 * @throws JsonParsingException 
+	 * 
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
+	public static ResultEnvelope parseResultEnvelopeJson(String json) throws JsonParsingException {
+		ObjectMapper mapper = new ObjectMapper();
+		ResultEnvelope envelope = null;
+		try {
+			envelope = mapper.readValue(json, ResultEnvelope.class);
+		} catch (JsonGenerationException e) {
+			throw new JsonParsingException(e);
+		} catch (JsonMappingException e) {
+			throw new JsonParsingException(e);
+		} catch (IOException e) {
+			throw new JsonParsingException(e);
+		}
+		return envelope;
+	}
+	
+	/**
+	 * Parses the JSON string back to a {@link UpdateInventoryResult}.
+	 * 
+	 * @param json The JSON string to parse.
+	 * @return {@link UpdateInventoryResult} update inventory result.
+	 * @throws JsonParsingException 
+	 * 
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
+	public static UpdateInventoryResult parseUpdateInventoryResultJson(String json) throws JsonParsingException {
+		ObjectMapper mapper = new ObjectMapper();
+		UpdateInventoryResult result = null;
+		try {
+			result = mapper.readValue(json, UpdateInventoryResult.class);
+		} catch (JsonGenerationException e) {
+			throw new JsonParsingException(e);
+		} catch (JsonMappingException e) {
+			throw new JsonParsingException(e);
+		} catch (IOException e) {
+			throw new JsonParsingException(e);
+		}
+		return result;
 	}
 }

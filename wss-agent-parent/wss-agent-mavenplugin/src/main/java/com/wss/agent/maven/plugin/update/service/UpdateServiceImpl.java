@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -23,10 +22,10 @@ import org.apache.maven.plugin.logging.Log;
 import com.wss.agent.constants.AgentConstants;
 import com.wss.agent.exception.JsonParsingException;
 import com.wss.agent.maven.plugin.update.Constants;
-import com.wss.agent.model.AgentProjectInfo;
 import com.wss.agent.request.PropertiesRequest;
 import com.wss.agent.request.PropertiesResult;
 import com.wss.agent.request.RequestType;
+import com.wss.agent.request.ResultEnvelope;
 import com.wss.agent.request.UpdateInventoryRequest;
 import com.wss.agent.request.UpdateInventoryResult;
 import com.wss.agent.utils.JsonUtils;
@@ -52,8 +51,14 @@ public class UpdateServiceImpl implements UpdateService {
 	public PropertiesResult getProperties(PropertiesRequest request) throws MojoExecutionException {
 		PropertiesResult result = null;
 		try {
-			result = servicePoperties(request);
+			result = serviceProperties(request);
 		} catch (UnsupportedEncodingException e) {
+			throw new MojoExecutionException(e.getMessage(), e);
+		} catch (JsonParsingException e) {
+			throw new MojoExecutionException(Constants.ERROR_JSON_PARSING);
+		} catch (IllegalStateException e) {
+			throw new MojoExecutionException(e.getMessage(), e);
+		} catch (IOException e) {
 			throw new MojoExecutionException(e.getMessage(), e);
 		}
 		return result;
@@ -65,13 +70,20 @@ public class UpdateServiceImpl implements UpdateService {
 			result = serviceUpdate(request);
 		} catch (UnsupportedEncodingException e) {
 			throw new MojoExecutionException(e.getMessage(), e);
+		}  catch (JsonParsingException e) {
+			throw new MojoExecutionException(Constants.ERROR_JSON_PARSING);
+		} catch (IllegalStateException e) {
+			throw new MojoExecutionException(e.getMessage(), e);
+		} catch (IOException e) {
+			throw new MojoExecutionException(e.getMessage(), e);
 		}
 		return result;
 	}
 	
 	/* --- Private methods --- */
 	
-	private PropertiesResult servicePoperties(PropertiesRequest request) throws UnsupportedEncodingException, MojoExecutionException {
+	private PropertiesResult serviceProperties(PropertiesRequest request) 
+			throws MojoExecutionException, IllegalStateException, IOException, JsonParsingException {
 		PropertiesResult result = null;
 		
 		// create http request
@@ -87,20 +99,19 @@ public class UpdateServiceImpl implements UpdateService {
 		
 		// handle response
 		if (response != null) {
-			try {
-				String json = readResponse(response);
-				result = PropertiesResult.fromJSON(json);
-				
-				logDebug(FROM_SERVER + json);
-			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (JsonParsingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			String json = readResponse(response);
+			
+			ResultEnvelope envelope = ResultEnvelope.fromJSON(json);
+			int status = envelope.getStatus();
+			String message = envelope.getMessage();
+			String data = envelope.getData();
+			
+			if (status == ResultEnvelope.STATUS_BAD_REQUEST) {
+				throw new MojoExecutionException(message + ": " + data);
+			} else if (status == ResultEnvelope.STATUS_SERVER_ERROR) {
+				throw new MojoExecutionException(message + ": " + data);
+			} else if (status == ResultEnvelope.STATUS_SUCCESS) {
+				result = PropertiesResult.fromJSON(data);
 			}
 		}
 		return result;
@@ -110,12 +121,13 @@ public class UpdateServiceImpl implements UpdateService {
 	 * Send HTTP request and read the response.
 	 * 
 	 * @return 
-	 * 
-	 * @throws UnsupportedEncodingException 
+	 * @throws IOException 
+	 * @throws IllegalStateException 
+	 * @throws JsonParsingException 
 	 * 
 	 */
 	private UpdateInventoryResult serviceUpdate(UpdateInventoryRequest request) 
-			throws MojoExecutionException, UnsupportedEncodingException {
+			throws MojoExecutionException, IllegalStateException, IOException, JsonParsingException {
 		UpdateInventoryResult result = null;
 		
 		// create http request
@@ -125,7 +137,7 @@ public class UpdateServiceImpl implements UpdateService {
 		nvps.add(new BasicNameValuePair(AgentConstants.PARAM_TOKEN, request.getToken()));
 		nvps.add(new BasicNameValuePair(AgentConstants.PARAM_TIME_STAMP, String.valueOf(request.getTimeStamp())));
 		nvps.add(new BasicNameValuePair(AgentConstants.PARAM_AGENT_VERSION, Constants.AGENT_VERSION));
-		nvps.add(new BasicNameValuePair(AgentConstants.PARAM_DIFF, toJson(request.getProjects())));
+		nvps.add(new BasicNameValuePair(AgentConstants.PARAM_DIFF, JsonUtils.toJson(request.getProjects())));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 
 		// actual call to the service
@@ -133,18 +145,19 @@ public class UpdateServiceImpl implements UpdateService {
 		
 		// handle response
 		if (response != null) {
-			String resultString;
-			try {
-				resultString = readResponse(response);
-				result = new UpdateInventoryResult(resultString);
-				
-				logDebug(FROM_SERVER + resultString);
-			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			String json = readResponse(response);
+
+			ResultEnvelope envelope = ResultEnvelope.fromJSON(json);
+			int status = envelope.getStatus();
+			String message = envelope.getMessage();
+			String data = envelope.getData();
+			
+			if (status == ResultEnvelope.STATUS_BAD_REQUEST) {
+				throw new MojoExecutionException(message + ": " + data);
+			} else if (status == ResultEnvelope.STATUS_SERVER_ERROR) {
+				throw new MojoExecutionException(message + ": " + data);
+			} else if (status == ResultEnvelope.STATUS_SUCCESS) {
+				result = UpdateInventoryResult.fromJSON(data);
 			}
 		}
 		return result;
@@ -187,25 +200,6 @@ public class UpdateServiceImpl implements UpdateService {
 			wssResponse.append(line);
 		}
 		return wssResponse.toString();
-	}
-	
-	/**
-	 * Converts the collection to JSON.
-	 * 
-	 * @return The collection represented in JSON.
-	 * 
-	 * @throws MojoExecutionException In case there was a JSON parsing exception.
-	 */
-	private String toJson(Collection<AgentProjectInfo> projectInfos) throws MojoExecutionException {
-		String json = null;
-		
-		try {
-			json = JsonUtils.toJson(projectInfos);
-		} catch (JsonParsingException e) {
-			throw new MojoExecutionException(Constants.ERROR_JSON_PARSING);
-		}
-		
-		return json;
 	}
 	
 	/**

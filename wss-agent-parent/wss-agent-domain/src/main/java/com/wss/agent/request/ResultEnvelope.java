@@ -1,5 +1,8 @@
 package com.wss.agent.request;
 
+import com.wss.agent.exception.JsonParsingException;
+import com.wss.agent.utils.JsonUtils;
+
 /**
  * Wrapper for any response form the White Source service. 
  * 
@@ -28,8 +31,15 @@ public class ResultEnvelope {
 	/** Data associated with the result */
 	private String data;
 	
-	/* --- constructors --- */
+	/* --- Constructors --- */
 
+	/**
+	 * Default constructor (for JSON parsing)
+	 * 
+	 */
+	public ResultEnvelope() {
+	}
+	
 	/**
 	 * Constructor
 	 * 
@@ -57,6 +67,12 @@ public class ResultEnvelope {
 		.append("\n]");
 		
 		return sb.toString();
+	}
+	
+	/* --- Static methods --- */
+	
+	public static ResultEnvelope fromJSON(String json) throws JsonParsingException {
+		return JsonUtils.parseResultEnvelopeJson(json);
 	}
 	
 	/* --- Getters / Setters --- */

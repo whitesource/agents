@@ -92,11 +92,11 @@ public class UpdateMojo extends AbstractMojo {
 		UpdateService service = new UpdateServiceImpl();
 		service.setLog(getLog());
 		
-		final PropertiesRequest request = new PropertiesRequest(orgToken);
-		PropertiesResult properties = service.getProperties(request);
+		PropertiesRequest request = new PropertiesRequest(orgToken);
+		PropertiesResult propertiesResult = service.getProperties(request);
 		
 		// send update request
-		Updater updater = new UpdaterImpl(properties, orgToken, project);
+		Updater updater = new UpdaterImpl(propertiesResult.getProperties(), orgToken, project);
 		updater.setLog(getLog());
 		UpdateInventoryResult result = updater.update();
 		

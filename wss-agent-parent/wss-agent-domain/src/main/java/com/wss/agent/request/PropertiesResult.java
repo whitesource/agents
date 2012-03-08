@@ -20,6 +20,13 @@ public class PropertiesResult {
 	/* --- Constructors --- */
 
 	/**
+	 * Default constructor (for JSON parsing)
+	 * 
+	 */
+	public PropertiesResult() {
+	}
+	
+	/**
 	 * Constructor
 	 * 
 	 * @param properties
