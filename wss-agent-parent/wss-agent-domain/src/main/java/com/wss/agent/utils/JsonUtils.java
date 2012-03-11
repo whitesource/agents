@@ -89,4 +89,13 @@ public class JsonUtils {
 		}
 		return result;
 	}
+	
+	/* --- Constructors --- */
+	
+	/**
+	 * Private default constructor
+	 */
+	private JsonUtils() {
+		// avoid instantiation
+	}
 }

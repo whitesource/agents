@@ -31,5 +31,14 @@ public class AgentConstants {
 	public static final String PARAM_AGENT_VERSION = "agentVersion";
 	
 	public static final String PARAM_REQUEST_TYPE = "type";
+	
+	/* --- Constructors --- */
+	
+	/**
+	 * Private default constructor
+	 */
+	private AgentConstants() {
+		// avoid instantiation
+	}
 
 }

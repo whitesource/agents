@@ -17,11 +17,11 @@ public interface ServiceRequest<R> {
 	/**
 	 * @return White Source service token for the organization.
 	 */
-	public String getOrgToken();
+	String getOrgToken();
 
 	/**
 	 * @return Time stamp when the request created (client side)
 	 */
-	public long getTimeStamp() ;
+	long getTimeStamp() ;
 	
 }

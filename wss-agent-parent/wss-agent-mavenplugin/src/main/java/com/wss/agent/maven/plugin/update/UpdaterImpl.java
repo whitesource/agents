@@ -102,12 +102,12 @@ public class UpdaterImpl implements Updater {
 	private void processProject(MavenProject mavenProject, Collection<AgentProjectInfo> projectInfos) {
 		logDebug(Constants.DEBUG_FOUND_PROJECT + mavenProject.getArtifactId());
 
-		AgentProjectInfo project = new AgentProjectInfo();
-		setProjectToken(project, mavenProject);
-		setCoordinates(project, mavenProject);
-		setDependencies(project, mavenProject);
+		AgentProjectInfo projectInfo = new AgentProjectInfo();
+		setProjectToken(projectInfo, mavenProject);
+		setCoordinates(projectInfo, mavenProject);
+		setDependencies(projectInfo, mavenProject);
 
-		projectInfos.add(project);
+		projectInfos.add(projectInfo);
 	}
 
 	/**

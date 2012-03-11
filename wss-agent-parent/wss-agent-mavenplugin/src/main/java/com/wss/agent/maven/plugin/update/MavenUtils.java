@@ -44,6 +44,7 @@ public class MavenUtils {
 	 */
 	public static Coordinates getCoordinates(MavenProject mavenProject) {
 		Coordinates coordinates = new Coordinates();
+		
 		coordinates.setGroupId(mavenProject.getGroupId());
 		coordinates.setArtifactId(mavenProject.getArtifactId());
 		coordinates.setVersion(mavenProject.getVersion());
@@ -74,22 +75,24 @@ public class MavenUtils {
 	 */
 	private static void setExclusions(Dependency dependency, DependencyInfo dependencyInfo) {
 		ArrayList<ExclusionInfo> exclusions = new ArrayList<ExclusionInfo>();
-		ExclusionInfo exclusionInfo;
 		
-		for (Object obj : dependency.getExclusions()) {
-			if (obj instanceof Exclusion) {
-				Exclusion exclusion = (Exclusion) obj;
-				
-				// set exclusion info
-				exclusionInfo = new ExclusionInfo();
-				exclusionInfo.setGroupId(exclusion.getGroupId());
-				exclusionInfo.setArtifactId(exclusion.getArtifactId());
-				
-				// add to list
-				exclusions.add(exclusionInfo);
-			}
+		for (Exclusion exclusion : dependency.getExclusions()) {
+			ExclusionInfo exclusionInfo = new ExclusionInfo();
+			exclusionInfo.setGroupId(exclusion.getGroupId());
+			exclusionInfo.setArtifactId(exclusion.getArtifactId());
+			exclusions.add(exclusionInfo);
 		}
+		
 		dependencyInfo.setExclusions(exclusions);
+	}
+	
+	/* --- Constructors --- */
+	
+	/**
+	 * Private default constructor
+	 */
+	private MavenUtils() {
+		// avoid instantiation
 	}
 
 }

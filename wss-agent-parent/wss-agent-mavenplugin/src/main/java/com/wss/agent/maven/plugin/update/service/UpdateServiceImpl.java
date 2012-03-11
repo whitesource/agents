@@ -1,8 +1,6 @@
 package com.wss.agent.maven.plugin.update.service;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +17,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
+import org.codehaus.plexus.util.IOUtil;
 
 import com.wss.agent.api.PropertiesRequest;
 import com.wss.agent.api.PropertiesResult;
@@ -43,7 +42,7 @@ public class UpdateServiceImpl implements UpdateService {
 
 	private Log log;
 
-	private static UpdateService instance;
+	private static UpdateService INSTANCE = new UpdateServiceImpl();
 
 	/* --- Singleton --- */
 	
@@ -52,10 +51,7 @@ public class UpdateServiceImpl implements UpdateService {
 	}
 
 	public static UpdateService getInstance() {
-		if (instance == null) {
-			instance = new UpdateServiceImpl();
-		}
-		return instance;
+		return INSTANCE;
 	}
 
 	/* --- Concrete implementation methods --- */
@@ -201,22 +197,13 @@ public class UpdateServiceImpl implements UpdateService {
 	/**
 	 * Reads the response.
 	 * 
-	 * @param response
+	 * @param httpResponse
 	 * @return
-	 * 
-	 * @throws IllegalStateException
-	 * @throws IOException
+	 * @throws IOException 
+	 * @throws IllegalStateException 
 	 */
-	private String readResponse(HttpResponse response) throws IllegalStateException, IOException {
-		StringBuffer wssResponse = new StringBuffer();
-		BufferedReader rd = new BufferedReader(new InputStreamReader(
-				response.getEntity().getContent()));
-
-		String line = "";
-		while ((line = rd.readLine()) != null) {
-			wssResponse.append(line);
-		}
-		return wssResponse.toString();
+	private String readResponse(HttpResponse httpResponse) throws IllegalStateException, IOException {
+		return IOUtil.toString(httpResponse.getEntity().getContent());
 	}
 
 	/**

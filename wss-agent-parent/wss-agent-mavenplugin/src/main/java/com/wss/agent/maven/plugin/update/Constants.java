@@ -60,5 +60,15 @@ public class Constants {
 	public static final String DEBUG_UPDATE_SEND = "Sending update request";
 	
 	public static final String DEBUG_UPDATE_SUCCESS = "Update successful";
+	
+
+	/* --- Constructors --- */
+	
+	/**
+	 * Private default constructor
+	 */
+	private Constants() {
+		// avoid instantiation
+	}
 
 }
