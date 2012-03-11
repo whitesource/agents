@@ -48,5 +48,13 @@ public class Constants {
 	public static final String DEBUG_REQUEST_BUILT = "Request created successfully";
 	
 	public static final String DEBUG_FOUND_PROJECT = "Found project ";
+	
+	public static final String DEBUG_PROPERTIES_ACQUIRE = "Acquiring properties";
+	
+	public static final String DEBUG_PROPERTIES_RECEIVED = "Received properties";
+	
+	public static final String DEBUG_UPDATE_SEND = "Sending update request";
+	
+	public static final String DEBUG_UPDATE_SUCCESS = "Update successful";
 
 }
