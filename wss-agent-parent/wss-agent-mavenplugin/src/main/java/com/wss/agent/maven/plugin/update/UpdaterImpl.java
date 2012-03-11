@@ -12,12 +12,12 @@ import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
+import com.wss.agent.api.UpdateInventoryRequest;
+import com.wss.agent.api.UpdateInventoryResult;
 import com.wss.agent.maven.plugin.update.service.UpdateService;
 import com.wss.agent.maven.plugin.update.service.UpdateServiceImpl;
 import com.wss.agent.model.AgentProjectInfo;
 import com.wss.agent.model.DependencyInfo;
-import com.wss.agent.request.UpdateInventoryRequest;
-import com.wss.agent.request.UpdateInventoryResult;
 
 /**
  * Implementation class of {@link Updater}

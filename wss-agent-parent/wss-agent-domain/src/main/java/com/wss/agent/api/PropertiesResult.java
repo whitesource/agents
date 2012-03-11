@@ -1,4 +1,4 @@
-package com.wss.agent.request;
+package com.wss.agent.api;
 
 import java.util.Properties;
 
@@ -38,7 +38,7 @@ public class PropertiesResult {
 	/* --- Static methods--- */
 	
 	public static PropertiesResult fromJSON(String json) throws JsonParsingException {
-		return JsonUtils.parsePropertiesJson(json);
+		return JsonUtils.fromJson(json, PropertiesResult.class);
 	}
 
 	/* --- Getters / Setters --- */

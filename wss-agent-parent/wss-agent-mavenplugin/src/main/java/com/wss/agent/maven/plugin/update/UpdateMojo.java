@@ -4,11 +4,11 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
+import com.wss.agent.api.PropertiesRequest;
+import com.wss.agent.api.PropertiesResult;
+import com.wss.agent.api.UpdateInventoryResult;
 import com.wss.agent.maven.plugin.update.service.UpdateService;
 import com.wss.agent.maven.plugin.update.service.UpdateServiceImpl;
-import com.wss.agent.request.PropertiesRequest;
-import com.wss.agent.request.PropertiesResult;
-import com.wss.agent.request.UpdateInventoryResult;
 
 /**
  * Sends an update request to White Source.
@@ -152,12 +152,7 @@ public class UpdateMojo extends AbstractMojo {
 			throw new MojoExecutionException(message);
 		} else {
 			getLog().warn(message);
-			
-			// log cause in debug
-			Throwable cause = e.getCause();
-			if (cause != null) {
-				getLog().debug(cause);
-			}
+			getLog().debug(e);
 		}
 	}
 }

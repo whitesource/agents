@@ -1,4 +1,4 @@
-package com.wss.agent.request;
+package com.wss.agent.api;
 
 import com.wss.agent.exception.JsonParsingException;
 import com.wss.agent.utils.JsonUtils;
@@ -30,7 +30,7 @@ public class UpdateInventoryResult {
 	/* --- Static methods --- */
 	
 	public static UpdateInventoryResult fromJSON(String json) throws JsonParsingException {
-		return JsonUtils.parseUpdateInventoryResultJson(json);
+		return JsonUtils.fromJson(json, UpdateInventoryResult.class);
 	}
 	
 	/* --- Getters / Setters --- */ 

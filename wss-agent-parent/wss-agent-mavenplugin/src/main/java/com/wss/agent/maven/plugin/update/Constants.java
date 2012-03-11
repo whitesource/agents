@@ -21,6 +21,8 @@ public class Constants {
 	// TODO change
 	public static final String SERVICE_ENDPOINT_URL = "http://localhost:8888/agent/update";
 	
+	public static final String APPLICATION_JSON = "application/json";
+	
 	/* --- Stand alone pom --- */
 	
 	public static final String STANDALONE_POM_GROUP_ID = "org.apache.maven";
@@ -40,6 +42,8 @@ public class Constants {
 	public static final String ERROR_JSON_PARSING = "Unexpected error";
 	
 	public static final String ERROR_CONNECTION = "No connection / Problem with server. Please contact White Source for assistance";
+	
+	public static final String ERROR_HTTP = "HTTP request ended unsuccessfuly";
 
 	/* --- Maven log messages --- */
 	

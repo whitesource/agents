@@ -1,4 +1,4 @@
-package com.wss.agent.request;
+package com.wss.agent.api;
 
 import com.wss.agent.exception.JsonParsingException;
 import com.wss.agent.utils.JsonUtils;
@@ -72,7 +72,7 @@ public class ResultEnvelope {
 	/* --- Static methods --- */
 	
 	public static ResultEnvelope fromJSON(String json) throws JsonParsingException {
-		return JsonUtils.parseResultEnvelopeJson(json);
+		return JsonUtils.fromJson(json, ResultEnvelope.class);
 	}
 	
 	/* --- Getters / Setters --- */

@@ -1,20 +1,13 @@
 package com.wss.agent.utils;
 
 import java.io.IOException;
-import java.util.Collection;
 
 import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 
 import com.wss.agent.exception.JsonParsingException;
-import com.wss.agent.model.AgentProjectInfo;
-import com.wss.agent.request.PropertiesResult;
-import com.wss.agent.request.ResultEnvelope;
-import com.wss.agent.request.UpdateInventoryRequest;
-import com.wss.agent.request.UpdateInventoryResult;
 
 /**
  * Utility class for JSON conversion.
@@ -46,22 +39,22 @@ public class JsonUtils {
 		}
 		return jsonString;
 	}
-
+	
 	/**
-	 * Parses the JSON string back to a {@link UpdateInventoryRequest}.
+	 * Convert the given json string to java object
 	 * 
-	 * @param json The JSON string to parse.
-	 * @return {@link UpdateInventoryRequest} request
+	 * @param json JSON string to parse.
+	 * @param clazz Result object class.
 	 * 
-	 * @throws JsonMappingException 
-	 * @throws JsonParseException 
-	 * @throws IOException
+	 * @return Java object value of the json string.
+	 * 
+	 * @throws JsonParsingException In case of any errors.
 	 */
-	public static Collection<AgentProjectInfo> parseProjectInfosJson(String json) throws JsonParsingException  {
+	public static <T> T fromJson(String json, Class<T> clazz) throws JsonParsingException{
 		ObjectMapper mapper = new ObjectMapper();
-		Collection<AgentProjectInfo> agentRequest = null;
+		T result = null;
 		try {
-			agentRequest = mapper.readValue(json, new TypeReference<Collection<AgentProjectInfo>>() { });
+			result = mapper.readValue(json, clazz);
 		} catch (JsonGenerationException e) {
 			throw new JsonParsingException(e);
 		} catch (JsonMappingException e) {
@@ -69,76 +62,24 @@ public class JsonUtils {
 		} catch (IOException e) {
 			throw new JsonParsingException(e);
 		}
-		return agentRequest;
+		return result;
 	}
 	
 	/**
-	 * Parses the JSON string back to a {@link PropertiesResult}.
+	 * Convert the given json string to java object
 	 * 
-	 * @param json The JSON string to parse.
-	 * @return {@link PropertiesResult} properties.
+	 * @param json JSON string to parse.
+	 * @param typeRef Result object type reference.
 	 * 
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
-	 * @throws IOException
+	 * @return Java object value of the json string.
+	 * 
+	 * @throws JsonParsingException In case of any errors.
 	 */
-	public static PropertiesResult parsePropertiesJson(String json) throws JsonParsingException {
+	public static <T> T fromJson(String json, TypeReference<T> typeRef) throws JsonParsingException{
 		ObjectMapper mapper = new ObjectMapper();
-		PropertiesResult properties = null;
+		T result = null;
 		try {
-			properties = mapper.readValue(json, PropertiesResult.class);
-		} catch (JsonGenerationException e) {
-			throw new JsonParsingException(e);
-		} catch (JsonMappingException e) {
-			throw new JsonParsingException(e);
-		} catch (IOException e) {
-			throw new JsonParsingException(e);
-		}
-		return properties;
-	}
-
-	/**
-	 * Parses the JSON string back to a {@link ResultEnvelope}.
-	 * 
-	 * @param json The JSON string to parse.
-	 * @return {@link ResultEnvelope} result envelope.
-	 * @throws JsonParsingException 
-	 * 
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
-	 * @throws IOException
-	 */
-	public static ResultEnvelope parseResultEnvelopeJson(String json) throws JsonParsingException {
-		ObjectMapper mapper = new ObjectMapper();
-		ResultEnvelope envelope = null;
-		try {
-			envelope = mapper.readValue(json, ResultEnvelope.class);
-		} catch (JsonGenerationException e) {
-			throw new JsonParsingException(e);
-		} catch (JsonMappingException e) {
-			throw new JsonParsingException(e);
-		} catch (IOException e) {
-			throw new JsonParsingException(e);
-		}
-		return envelope;
-	}
-	
-	/**
-	 * Parses the JSON string back to a {@link UpdateInventoryResult}.
-	 * 
-	 * @param json The JSON string to parse.
-	 * @return {@link UpdateInventoryResult} update inventory result.
-	 * @throws JsonParsingException 
-	 * 
-	 * @throws JsonParseException
-	 * @throws JsonMappingException
-	 * @throws IOException
-	 */
-	public static UpdateInventoryResult parseUpdateInventoryResultJson(String json) throws JsonParsingException {
-		ObjectMapper mapper = new ObjectMapper();
-		UpdateInventoryResult result = null;
-		try {
-			result = mapper.readValue(json, UpdateInventoryResult.class);
+			result = mapper.readValue(json, typeRef);
 		} catch (JsonGenerationException e) {
 			throw new JsonParsingException(e);
 		} catch (JsonMappingException e) {

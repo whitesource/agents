@@ -1,4 +1,4 @@
-package com.wss.agent.request;
+package com.wss.agent.api;
 
 public enum RequestType {
 	

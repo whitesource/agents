@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -19,15 +20,16 @@ import org.apache.http.protocol.HTTP;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 
+import com.wss.agent.api.PropertiesRequest;
+import com.wss.agent.api.PropertiesResult;
+import com.wss.agent.api.RequestType;
+import com.wss.agent.api.ResultEnvelope;
+import com.wss.agent.api.ServiceRequest;
+import com.wss.agent.api.UpdateInventoryRequest;
+import com.wss.agent.api.UpdateInventoryResult;
 import com.wss.agent.constants.AgentConstants;
 import com.wss.agent.exception.JsonParsingException;
 import com.wss.agent.maven.plugin.update.Constants;
-import com.wss.agent.request.PropertiesRequest;
-import com.wss.agent.request.PropertiesResult;
-import com.wss.agent.request.RequestType;
-import com.wss.agent.request.ResultEnvelope;
-import com.wss.agent.request.UpdateInventoryRequest;
-import com.wss.agent.request.UpdateInventoryResult;
 import com.wss.agent.utils.JsonUtils;
 
 /**
@@ -45,7 +47,8 @@ public class UpdateServiceImpl implements UpdateService {
 
 	/* --- Singleton --- */
 	
-	protected UpdateServiceImpl() {
+	private UpdateServiceImpl() {
+		
 	}
 
 	public static UpdateService getInstance() {
@@ -58,102 +61,93 @@ public class UpdateServiceImpl implements UpdateService {
 	/* --- Concrete implementation methods --- */
 
 	public PropertiesResult getProperties(PropertiesRequest request) throws MojoExecutionException {
-		PropertiesResult result = null;
-		try {
-			result = serviceProperties(request);
-		} catch (UnsupportedEncodingException e) {
-			throw new MojoExecutionException(e.getMessage(), e);
-		} catch (JsonParsingException e) {
-			throw new MojoExecutionException(Constants.ERROR_JSON_PARSING);
-		} catch (IllegalStateException e) {
-			throw new MojoExecutionException(e.getMessage(), e);
-		} catch (IOException e) {
-			throw new MojoExecutionException(e.getMessage(), e);
-		}
-		return result;
+		return service(request);
 	}
 
 	public UpdateInventoryResult updateInventory(UpdateInventoryRequest request) throws MojoExecutionException {
-		UpdateInventoryResult result = null;
+		return service(request);
+	}
+
+	/* --- Private methods --- */
+	
+	/**
+	 * The method service the given request.
+	 * 
+	 * @param request Request to serve.
+	 * 
+	 * @return Result from white source service.
+	 * 
+	 * @throws MojoExecutionException In case of errors while serving the request.
+	 */
+	@SuppressWarnings("unchecked")
+	private <R> R service(ServiceRequest<R> request) throws MojoExecutionException {
+		R result = null;
+		
 		try {
-			result = serviceUpdate(request);
+			// create http request
+			HttpRequestBase httpRequest = createHttpRequest(request);
+
+			// actual call to the service
+			logDebug("sending request for " + request.getType());
+			HttpResponse response = sendRequest(httpRequest);
+
+			// handle response
+			logDebug("response = " + response);
+			if (response == null || response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+				logDebug(response.getStatusLine().getReasonPhrase());
+				throw new MojoExecutionException(Constants.ERROR_HTTP);
+			}
+			else {
+				String data = getResultData(response);
+				
+				switch (request.getType()) {
+				case PROPERTIES: result = (R) PropertiesResult.fromJSON(data); break;
+				case UPDATE: result = (R) UpdateInventoryResult.fromJSON(data); break;
+				default: throw new IllegalStateException("Unsupporeted request type.");
+				}
+			}
 		} catch (UnsupportedEncodingException e) {
 			throw new MojoExecutionException(e.getMessage(), e);
 		}  catch (JsonParsingException e) {
-			throw new MojoExecutionException(Constants.ERROR_JSON_PARSING);
+			throw new MojoExecutionException(Constants.ERROR_JSON_PARSING, e);
 		} catch (IllegalStateException e) {
 			throw new MojoExecutionException(e.getMessage(), e);
 		} catch (IOException e) {
 			throw new MojoExecutionException(e.getMessage(), e);
 		}
+		
 		return result;
 	}
-
-	/* --- Private methods --- */
-
-	private PropertiesResult serviceProperties(PropertiesRequest request) 
-	throws MojoExecutionException, IllegalStateException, IOException, JsonParsingException {
-		PropertiesResult result = null;
-
-		// create http request
-		HttpPost httpPost = new HttpPost(Constants.SERVICE_ENDPOINT_URL);
-		List <NameValuePair> nvps = new ArrayList <NameValuePair>();
-		nvps.add(new BasicNameValuePair(AgentConstants.PARAM_REQUEST_TYPE, RequestType.PROPERTIES.toString()));
-		nvps.add(new BasicNameValuePair(AgentConstants.PARAM_TOKEN, request.getToken()));
-		nvps.add(new BasicNameValuePair(AgentConstants.PARAM_AGENT_VERSION, Constants.AGENT_VERSION));
-		httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
-
-		logDebug(Constants.DEBUG_PROPERTIES_ACQUIRE);
-
-		// actual call to the service
-		HttpResponse response = sendRequest(httpPost);
-
-		// handle response
-		if (response != null) {
-			String data = getResultData(response);
-			result = PropertiesResult.fromJSON(data);
-
-			logDebug(Constants.DEBUG_PROPERTIES_RECEIVED);
-		}
-		return result;
-	}
-
+	
 	/**
-	 * Send HTTP request and read the response.
+	 * The method create the http post request to be sent to the remote service.
 	 * 
-	 * @return 
-	 * @throws IOException 
-	 * @throws IllegalStateException 
-	 * @throws JsonParsingException 
+	 * @param request Request to service.
 	 * 
+	 * @return Newly created http post request. 
+	 * 
+	 * @throws UnsupportedEncodingException In case of error encoding request parameters.
+	 * @throws JsonParsingException In case of error marshaling data to JSON format.
 	 */
-	private UpdateInventoryResult serviceUpdate(UpdateInventoryRequest request) 
-	throws MojoExecutionException, IllegalStateException, IOException, JsonParsingException {
-		UpdateInventoryResult result = null;
-
-		// create http request
-		HttpPost httpPost = new HttpPost(Constants.SERVICE_ENDPOINT_URL);
+	private <R> HttpRequestBase createHttpRequest(ServiceRequest<R> request) 
+			throws UnsupportedEncodingException, JsonParsingException {
+		HttpPost httpRequest = new HttpPost(Constants.SERVICE_ENDPOINT_URL);
+		
+		httpRequest.setHeader("Accept", Constants.APPLICATION_JSON);
+		
 		List <NameValuePair> nvps = new ArrayList <NameValuePair>();
-		nvps.add(new BasicNameValuePair(AgentConstants.PARAM_REQUEST_TYPE, RequestType.UPDATE.toString()));
-		nvps.add(new BasicNameValuePair(AgentConstants.PARAM_TOKEN, request.getToken()));
-		nvps.add(new BasicNameValuePair(AgentConstants.PARAM_TIME_STAMP, String.valueOf(request.getTimeStamp())));
 		nvps.add(new BasicNameValuePair(AgentConstants.PARAM_AGENT_VERSION, Constants.AGENT_VERSION));
-		nvps.add(new BasicNameValuePair(AgentConstants.PARAM_DIFF, JsonUtils.toJson(request.getProjects())));
-		httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
-
-		logDebug(Constants.DEBUG_UPDATE_SEND);
-
-		// actual call to the service
-		HttpResponse response = sendRequest(httpPost);
-
-		// handle response
-		if (response != null) {
-			String data = getResultData(response);
-			result = UpdateInventoryResult.fromJSON(data);
-
-			logDebug(Constants.DEBUG_UPDATE_SUCCESS);
+		nvps.add(new BasicNameValuePair(AgentConstants.PARAM_REQUEST_TYPE, request.getType().toString()));
+		nvps.add(new BasicNameValuePair(AgentConstants.PARAM_TOKEN, request.getOrgToken()));
+		
+		if (RequestType.UPDATE.equals(request.getType())) {
+			nvps.add(new BasicNameValuePair(AgentConstants.PARAM_TIME_STAMP, String.valueOf(request.getTimeStamp())));
+			nvps.add(new BasicNameValuePair(AgentConstants.PARAM_DIFF, JsonUtils.toJson(((UpdateInventoryRequest) request).getProjects())));
 		}
-		return result;
+		
+		httpRequest.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
+		
+		return httpRequest;
 	}
 
 	/**
