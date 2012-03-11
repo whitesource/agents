@@ -15,10 +15,6 @@ public interface Updater {
 	
 	/* --- Public methods --- */
 	
-//	void getProperties(String token) throws MojoExecutionException;
-	
-//	void update(UpdateInventoryRequest agentRequest) throws MojoExecutionException;
-	
 	UpdateInventoryResult update() throws MojoExecutionException;
 	
 	void setLog(Log log);

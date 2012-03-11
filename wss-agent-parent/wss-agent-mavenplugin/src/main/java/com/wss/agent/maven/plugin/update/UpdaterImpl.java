@@ -36,6 +36,8 @@ public class UpdaterImpl implements Updater {
 	private String orgToken;
 
 	private MavenProject project;
+	
+	private UpdateService service;
 
 	/* --- Constructors --- */
 
@@ -63,7 +65,7 @@ public class UpdaterImpl implements Updater {
 		logDebug(Constants.DEBUG_REQUEST_BUILT);
 
 		// send request
-		UpdateService service = new UpdateServiceImpl();
+		service = UpdateServiceImpl.getInstance();
 		result = service.updateInventory(request);
 
 		return result;

@@ -56,6 +56,8 @@ public class UpdateMojo extends AbstractMojo {
 	 */
 	private boolean skip;  
 	
+	private UpdateService service;
+	
 	/* --- Maven plugin implementation methods --- */
 
 	public void execute() throws MojoExecutionException {
@@ -88,10 +90,10 @@ public class UpdateMojo extends AbstractMojo {
 	 * @throws MojoExecutionException
 	 */
 	private void update() throws MojoExecutionException {
-		// get properties
-		UpdateService service = new UpdateServiceImpl();
+		service = UpdateServiceImpl.getInstance();
 		service.setLog(getLog());
 		
+		// get properties
 		PropertiesRequest request = new PropertiesRequest(orgToken);
 		PropertiesResult propertiesResult = service.getProperties(request);
 		

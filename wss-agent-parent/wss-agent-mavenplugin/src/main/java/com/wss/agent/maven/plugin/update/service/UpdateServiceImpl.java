@@ -34,20 +34,29 @@ import com.wss.agent.utils.JsonUtils;
  * Implementation class for {@link UpdateService}
  * 
  * @author tom.shapira
- *
  */
 public class UpdateServiceImpl implements UpdateService {
 
-	/* --- Static methods --- */
-	
-	private static final String FROM_SERVER = "From server: ";
-	
 	/* --- Members --- */
-	
+
 	private Log log;
+
+	private static UpdateService instance;
+
+	/* --- Singleton --- */
 	
+	protected UpdateServiceImpl() {
+	}
+
+	public static UpdateService getInstance() {
+		if (instance == null) {
+			instance = new UpdateServiceImpl();
+		}
+		return instance;
+	}
+
 	/* --- Concrete implementation methods --- */
-	
+
 	public PropertiesResult getProperties(PropertiesRequest request) throws MojoExecutionException {
 		PropertiesResult result = null;
 		try {
@@ -79,13 +88,13 @@ public class UpdateServiceImpl implements UpdateService {
 		}
 		return result;
 	}
-	
+
 	/* --- Private methods --- */
-	
+
 	private PropertiesResult serviceProperties(PropertiesRequest request) 
-			throws MojoExecutionException, IllegalStateException, IOException, JsonParsingException {
+	throws MojoExecutionException, IllegalStateException, IOException, JsonParsingException {
 		PropertiesResult result = null;
-		
+
 		// create http request
 		HttpPost httpPost = new HttpPost(Constants.SERVICE_ENDPOINT_URL);
 		List <NameValuePair> nvps = new ArrayList <NameValuePair>();
@@ -93,18 +102,22 @@ public class UpdateServiceImpl implements UpdateService {
 		nvps.add(new BasicNameValuePair(AgentConstants.PARAM_TOKEN, request.getToken()));
 		nvps.add(new BasicNameValuePair(AgentConstants.PARAM_AGENT_VERSION, Constants.AGENT_VERSION));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
-		
+
+		logDebug(Constants.DEBUG_PROPERTIES_ACQUIRE);
+
 		// actual call to the service
 		HttpResponse response = sendRequest(httpPost);
-		
+
 		// handle response
 		if (response != null) {
 			String data = getResultData(response);
 			result = PropertiesResult.fromJSON(data);
+
+			logDebug(Constants.DEBUG_PROPERTIES_RECEIVED);
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Send HTTP request and read the response.
 	 * 
@@ -115,9 +128,9 @@ public class UpdateServiceImpl implements UpdateService {
 	 * 
 	 */
 	private UpdateInventoryResult serviceUpdate(UpdateInventoryRequest request) 
-			throws MojoExecutionException, IllegalStateException, IOException, JsonParsingException {
+	throws MojoExecutionException, IllegalStateException, IOException, JsonParsingException {
 		UpdateInventoryResult result = null;
-		
+
 		// create http request
 		HttpPost httpPost = new HttpPost(Constants.SERVICE_ENDPOINT_URL);
 		List <NameValuePair> nvps = new ArrayList <NameValuePair>();
@@ -128,17 +141,21 @@ public class UpdateServiceImpl implements UpdateService {
 		nvps.add(new BasicNameValuePair(AgentConstants.PARAM_DIFF, JsonUtils.toJson(request.getProjects())));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 
+		logDebug(Constants.DEBUG_UPDATE_SEND);
+
 		// actual call to the service
 		HttpResponse response = sendRequest(httpPost);
-		
+
 		// handle response
 		if (response != null) {
 			String data = getResultData(response);
 			result = UpdateInventoryResult.fromJSON(data);
+
+			logDebug(Constants.DEBUG_UPDATE_SUCCESS);
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Send HTTP request and return response.
 	 * 
@@ -146,17 +163,17 @@ public class UpdateServiceImpl implements UpdateService {
 	 */
 	private HttpResponse sendRequest(HttpRequestBase httpRequest) throws MojoExecutionException {
 		HttpResponse response = null;
-		
+
 		try {
 			HttpClient client = new DefaultHttpClient();
 			response = client.execute(httpRequest);
 		} catch (IOException e) {
 			throw new MojoExecutionException(Constants.ERROR_CONNECTION, e);
 		}
-		
+
 		return response;
 	}
-	
+
 	/**
 	 * Read the data from the {@link RequestEnvelope}.
 	 * 
@@ -171,23 +188,22 @@ public class UpdateServiceImpl implements UpdateService {
 	 */
 	private String getResultData(HttpResponse response) throws MojoExecutionException, JsonParsingException, IllegalStateException, IOException {
 		String data = null;
-		
+
 		String json = readResponse(response);
-		
+
 		ResultEnvelope envelope = ResultEnvelope.fromJSON(json);
 		int status = envelope.getStatus();
 		String message = envelope.getMessage();
-		
+		data = envelope.getData();
+
 		if (status == ResultEnvelope.STATUS_BAD_REQUEST) {
 			throw new MojoExecutionException(message + ": " + data);
 		} else if (status == ResultEnvelope.STATUS_SERVER_ERROR) {
 			throw new MojoExecutionException(message + ": " + data);
-		} else if (status == ResultEnvelope.STATUS_SUCCESS) {
-			data = envelope.getData();
 		}
 		return data;
 	}
-	
+
 	/**
 	 * Reads the response.
 	 * 
@@ -201,14 +217,14 @@ public class UpdateServiceImpl implements UpdateService {
 		StringBuffer wssResponse = new StringBuffer();
 		BufferedReader rd = new BufferedReader(new InputStreamReader(
 				response.getEntity().getContent()));
-		
+
 		String line = "";
 		while ((line = rd.readLine()) != null) {
 			wssResponse.append(line);
 		}
 		return wssResponse.toString();
 	}
-	
+
 	/**
 	 * Writes a debug message to the log.
 	 * 
@@ -221,7 +237,7 @@ public class UpdateServiceImpl implements UpdateService {
 	}
 
 	/* --- Getters / Setters --- */
-	
+
 	public void setLog(Log log) {
 		this.log = log;
 	}
