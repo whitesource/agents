@@ -36,6 +36,13 @@ public class UpdateInventoryRequest {
 	 * Default constructor
 	 * 
 	 */
+	public UpdateInventoryRequest() {
+	}
+	
+	/**
+	 * Constructor
+	 * 
+	 */
 	public UpdateInventoryRequest(String token, Collection<AgentProjectInfo> projects) {
 		this.token = token;
 		this.projects = projects;
