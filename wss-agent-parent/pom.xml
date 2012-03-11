@@ -62,13 +62,13 @@
 	
 	<distributionManagement>
 		<repository>
-			<id>wss-nexus-server</id>
+			<id>wss-releases</id>
 			<name>White Source nexus repository manager</name>
 			<uniqueVersion>false</uniqueVersion>
 			<url>http://nexus.whitesourcesoftware.com/nexus/content/repositories/releases/</url>
 		</repository>
 		<snapshotRepository>
-			<id>wss-nexus-server</id>
+			<id>wss-snapshots</id>
 			<name>White Source nexus repository manager</name>
 			<uniqueVersion>false</uniqueVersion>
 			<url>http://nexus.whitesourcesoftware.com/nexus/content/repositories/snapshots/</url>
