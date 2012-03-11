@@ -21,14 +21,6 @@
 		<module>wss-agent-mavenplugin</module>
 	</modules>
 
-	<distributionManagement>
-		<repository>
-			<id>snapshots</id>
-			<name>Snapshots</name>
-			<url>http://nexus.whitesourcesoftware.com/nexus/content/repositories/snapshots</url>
-		</repository>
-	</distributionManagement>
-
 	<dependencyManagement>
 		<dependencies>
 			<!-- Maven -->
@@ -67,5 +59,20 @@
 			
 		</dependencies>
 	</dependencyManagement>
+	
+	<distributionManagement>
+		<repository>
+			<id>wss-nexus-server</id>
+			<name>White Source nexus repository manager</name>
+			<uniqueVersion>false</uniqueVersion>
+			<url>http://nexus.whitesourcesoftware.com/nexus/content/repositories/releases/</url>
+		</repository>
+		<snapshotRepository>
+			<id>wss-nexus-server</id>
+			<name>White Source nexus repository manager</name>
+			<uniqueVersion>false</uniqueVersion>
+			<url>http://nexus.whitesourcesoftware.com/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 </project>
