@@ -199,10 +199,7 @@ public class UpdaterImpl implements Updater {
 		// exclusions
 		Collection<ExclusionInfo> exclusions = info.getExclusions();
 		for (Exclusion exclusion : dependency.getExclusions()) {
-			ExclusionInfo exclusionInfo = new ExclusionInfo();
-			exclusionInfo.setGroupId(exclusion.getGroupId());
-			exclusionInfo.setArtifactId(exclusion.getArtifactId());
-			exclusions.add(exclusionInfo);
+			exclusions.add(new ExclusionInfo(exclusion.getGroupId(), exclusion.getArtifactId()));
 		}
 		
 		return info;
@@ -216,13 +213,9 @@ public class UpdaterImpl implements Updater {
 	 * @return Project coordinates
 	 */
 	private Coordinates extractCoordinates(MavenProject mavenProject) {
-		Coordinates coordinates = new Coordinates();
-		
-		coordinates.setGroupId(mavenProject.getGroupId());
-		coordinates.setArtifactId(mavenProject.getArtifactId());
-		coordinates.setVersion(mavenProject.getVersion());
-		
-		return coordinates;
+		return new Coordinates(mavenProject.getGroupId(),
+				mavenProject.getArtifactId(), 
+				mavenProject.getVersion());
 	}
 
 	/**
