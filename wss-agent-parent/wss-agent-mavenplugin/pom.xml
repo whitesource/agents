@@ -11,7 +11,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>maven-whitesource-plugin</artifactId>
+	<artifactId>whitesource-maven-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	
 	<name>wss-agent-mavenplugin</name>
@@ -29,7 +29,7 @@
 		<!-- White Source -->
 		<dependency>
 			<groupId>com.wss</groupId>
-			<artifactId>wss-agent-domain</artifactId>
+			<artifactId>wss-agent-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 

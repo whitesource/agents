@@ -6,11 +6,11 @@ package com.wss.agent.maven.plugin.update;
  * @author tom.shapira
  *
  */
-public class Constants {
+public final class Constants {
 	
 	/* --- Maven plugin--- */
 	
-	public static final String PLUGIN_KEY = "com.wss:maven-whitesource-plugin";
+	public static final String PLUGIN_KEY = "com.wss:whitesource-maven-plugin";
 	
 	public static final String PROJECT_TOKEN = "projectToken";
 	

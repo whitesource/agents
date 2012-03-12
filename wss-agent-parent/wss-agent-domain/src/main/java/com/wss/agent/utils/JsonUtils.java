@@ -15,7 +15,7 @@ import com.wss.agent.exception.JsonParsingException;
  * @author tom.shapira
  *
  */
-public class JsonUtils {
+public final class JsonUtils {
 
 	/* --- Static methods --- */
 

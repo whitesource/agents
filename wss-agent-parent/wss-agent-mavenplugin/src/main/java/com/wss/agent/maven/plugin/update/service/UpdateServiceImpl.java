@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
+import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -36,13 +37,13 @@ import com.wss.agent.utils.JsonUtils;
  * 
  * @author tom.shapira
  */
-public class UpdateServiceImpl implements UpdateService {
+public final class UpdateServiceImpl implements UpdateService {
 
 	/* --- Members --- */
 
 	private Log log;
 
-	private static UpdateService INSTANCE = new UpdateServiceImpl();
+	private static final UpdateService INSTANCE = new UpdateServiceImpl();
 
 	/* --- Singleton --- */
 	
@@ -87,28 +88,26 @@ public class UpdateServiceImpl implements UpdateService {
 			logDebug("sending request for " + request.getType());
 			HttpResponse response = sendRequest(httpRequest);
 
-			// handle response
+			// verify response
 			logDebug("response = " + response);
-			if (response == null || response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-				logDebug(response.getStatusLine().getReasonPhrase());
-				throw new MojoExecutionException(Constants.ERROR_HTTP);
+			verifyResponse(response);
+			
+			// handle response
+			String data = getResultData(response);
+			switch (request.getType()) {
+			case PROPERTIES: 
+				result = (R) PropertiesResult.fromJSON(data); 
+				break;
+			case UPDATE: 
+				result = (R) UpdateInventoryResult.fromJSON(data); 
+				break;
+			default: 
+				throw new IllegalStateException("Unsupporeted request type.");
 			}
-			else {
-				String data = getResultData(response);
-				
-				switch (request.getType()) {
-				case PROPERTIES: result = (R) PropertiesResult.fromJSON(data); break;
-				case UPDATE: result = (R) UpdateInventoryResult.fromJSON(data); break;
-				default: throw new IllegalStateException("Unsupporeted request type.");
-				}
-			}
-		} catch (UnsupportedEncodingException e) {
-			throw new MojoExecutionException(e.getMessage(), e);
+			
 		}  catch (JsonParsingException e) {
 			throw new MojoExecutionException(Constants.ERROR_JSON_PARSING, e);
-		} catch (IllegalStateException e) {
-			throw new MojoExecutionException(e.getMessage(), e);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new MojoExecutionException(e.getMessage(), e);
 		}
 		
@@ -173,24 +172,22 @@ public class UpdateServiceImpl implements UpdateService {
 	 * 
 	 * @throws MojoExecutionException
 	 * @throws JsonParsingException
-	 * @throws IllegalStateException
 	 * @throws IOException
 	 */
-	private String getResultData(HttpResponse response) throws MojoExecutionException, JsonParsingException, IllegalStateException, IOException {
-		String data = null;
-
+	private String getResultData(HttpResponse response) throws MojoExecutionException, JsonParsingException, IOException {
+		// read and parse result envelope 
 		String json = readResponse(response);
-
 		ResultEnvelope envelope = ResultEnvelope.fromJSON(json);
-		int status = envelope.getStatus();
+		
+		// extract info from envelope
 		String message = envelope.getMessage();
-		data = envelope.getData();
+		String data = envelope.getData();
 
-		if (status == ResultEnvelope.STATUS_BAD_REQUEST) {
-			throw new MojoExecutionException(message + ": " + data);
-		} else if (status == ResultEnvelope.STATUS_SERVER_ERROR) {
+		// fault ?
+		if (ResultEnvelope.STATUS_SUCCESS != envelope.getStatus()) {
 			throw new MojoExecutionException(message + ": " + data);
 		}
+		
 		return data;
 	}
 
@@ -200,10 +197,34 @@ public class UpdateServiceImpl implements UpdateService {
 	 * @param httpResponse
 	 * @return
 	 * @throws IOException 
-	 * @throws IllegalStateException 
 	 */
-	private String readResponse(HttpResponse httpResponse) throws IllegalStateException, IOException {
+	private String readResponse(HttpResponse httpResponse) throws IOException {
 		return IOUtil.toString(httpResponse.getEntity().getContent());
+	}
+	
+	/**
+	 * The method verify the given http response.
+	 * 
+	 * @param response Http response to verify.
+	 * 
+	 * @throws IllegalArgumentException In case the response is invalid.
+	 */
+	private void verifyResponse(HttpResponse response) {
+		boolean verified = (response != null);
+		String logMessage = "";
+		
+		if (verified) {
+			StatusLine statusLine = response.getStatusLine();
+			verified = (statusLine != null) && (statusLine.getStatusCode() == HttpStatus.SC_OK);
+			logMessage = statusLine.getReasonPhrase(); 
+		} else {
+			logMessage = "HttpResponse is null";
+		}
+		
+		if (!verified) {
+			logDebug(logMessage);
+			throw new IllegalArgumentException(Constants.ERROR_HTTP);
+		}
 	}
 
 	/**

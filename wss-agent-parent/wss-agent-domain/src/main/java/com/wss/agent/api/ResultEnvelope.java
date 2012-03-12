@@ -1,5 +1,6 @@
 package com.wss.agent.api;
 
+import com.wss.agent.constants.AgentConstants;
 import com.wss.agent.exception.JsonParsingException;
 import com.wss.agent.utils.JsonUtils;
 
@@ -10,9 +11,9 @@ import com.wss.agent.utils.JsonUtils;
  */
 public class ResultEnvelope {
 	
-	public static final int STATUS_SUCCESS = 0;
-	public static final int STATUS_BAD_REQUEST = 1;
-	public static final int STATUS_SERVER_ERROR = 2;
+	public static final int STATUS_SUCCESS = 1;
+	public static final int STATUS_BAD_REQUEST = 2;
+	public static final int STATUS_SERVER_ERROR = 3;
 	
 	public static final String MESSAGE_OK = "ok";
 	public static final String MESSAGE_ILLEGAL_ARGUMENTS = "Illegal arguments";
@@ -20,7 +21,7 @@ public class ResultEnvelope {
 	
 	/* --- Members --- */
 	
-	private final String envelopeVersion = "1.0";
+	private String envelopeVersion = AgentConstants.API_VERSION;
 	
 	/** Status code of the operation. */
 	private int status;

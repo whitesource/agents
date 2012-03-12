@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.maven.model.Dependency;
+import org.apache.maven.model.Exclusion;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
@@ -17,7 +18,9 @@ import com.wss.agent.api.UpdateInventoryResult;
 import com.wss.agent.maven.plugin.update.service.UpdateService;
 import com.wss.agent.maven.plugin.update.service.UpdateServiceImpl;
 import com.wss.agent.model.AgentProjectInfo;
+import com.wss.agent.model.Coordinates;
 import com.wss.agent.model.DependencyInfo;
+import com.wss.agent.model.ExclusionInfo;
 
 /**
  * Implementation class of {@link Updater}
@@ -97,85 +100,129 @@ public class UpdaterImpl implements Updater {
 	/**
 	 * Sets the project coordinates and dependencies.
 	 * 
-	 * @param mavenProject The maven project
+	 * @param mavenProject Maven project.
 	 */
 	private void processProject(MavenProject mavenProject, Collection<AgentProjectInfo> projectInfos) {
 		logDebug(Constants.DEBUG_FOUND_PROJECT + mavenProject.getArtifactId());
 
 		AgentProjectInfo projectInfo = new AgentProjectInfo();
-		setProjectToken(projectInfo, mavenProject);
-		setCoordinates(projectInfo, mavenProject);
-		setDependencies(projectInfo, mavenProject);
+		populateProjectToken(projectInfo, mavenProject);
+		populateCoordinates(projectInfo, mavenProject);
+		populateDependencies(projectInfo, mavenProject);
 
 		projectInfos.add(projectInfo);
 	}
 
 	/**
-	 * Iteratively sets all the project's modules.
+	 * The method process the collected projects of the given project. 
 	 * 
-	 * @param project The maven project
+	 * @param project Maven project.
 	 */
-	@SuppressWarnings("rawtypes")
 	private void processChildren(MavenProject project, Collection<AgentProjectInfo> projectInfos) {
-		List collectedProjects = project.getCollectedProjects();
-
-		for (Object collectedProject : collectedProjects) {
-			if (collectedProject instanceof MavenProject) {
-				processProject((MavenProject) collectedProject, projectInfos);
-			}
+		List<MavenProject> collectedProjects = project.getCollectedProjects();
+		if (collectedProjects != null) {
+			for (MavenProject collectedProject : collectedProjects) {
+				processProject(collectedProject, projectInfos);
+			}	
 		}
 	}
 
 	/**
-	 * Gets the project token parameter from the plugin configuration in the pom file.
+	 * The method populate the project token parameter from the plugin configuration in the pom file.
 	 * 
-	 * @param project The project model.
-	 * @param mavenProject The maven project.
+	 * @param projectInfo Project info model.
+	 * @param project Maven project.
 	 */
-	private void setProjectToken(AgentProjectInfo project, MavenProject mavenProject) {
-		Plugin plugin = mavenProject.getPlugin(Constants.PLUGIN_KEY);
+	private void populateProjectToken(AgentProjectInfo projectInfo, MavenProject project) {
+		Plugin plugin = project.getPlugin(Constants.PLUGIN_KEY);
 		if (plugin != null) {
 			Xpp3Dom configuration = (Xpp3Dom) plugin.getConfiguration();
 			if (configuration != null) {
 				Xpp3Dom projectTokenParameter = configuration.getChild(Constants.PROJECT_TOKEN);
 				if (projectTokenParameter != null) {
-					project.setProjectToken(projectTokenParameter.getValue());
+					projectInfo.setProjectToken(projectTokenParameter.getValue());
 				}
 			}
 		}
 	}
 
 	/**
-	 * Sets the coordinates (artifactId:groupId:version) of the project and of it's parent.
+	 * The method populate the coordinates info.
 	 * 
-	 * @param project The project model.
-	 * @param mavenProject The maven project.
+	 * @param projectInfo Project info model.
+	 * @param project Maven project.
 	 */
-	private void setCoordinates(AgentProjectInfo project, MavenProject mavenProject) {
-		// get project coordinates
-		project.setCoordinates(MavenUtils.getCoordinates(mavenProject));
+	private void populateCoordinates(AgentProjectInfo projectInfo, MavenProject project) {
+		// project coordinates
+		projectInfo.setCoordinates(extractCoordinates(project));
 
-		// check for parent
-		MavenProject parent = mavenProject.getParent();
+		// parent coordinates
+		MavenProject parent = project.getParent();
 		if (parent != null) {
-			project.setParentCoordinates(MavenUtils.getCoordinates(parent));
+			projectInfo.setParentCoordinates(extractCoordinates(parent));
 		}
 	}
 
 	/**
-	 * Sets the project dependencies.
+	 * The method populate the dependencies info.
 	 * 
-	 * @param project The project model.
-	 * @param mavenProject The maven project.
+	 * @param projectInfo Project info model.
+	 * @param project Maven project.
 	 */
-	private void setDependencies(AgentProjectInfo project, MavenProject mavenProject) {
-		List<Dependency> dependencies = mavenProject.getDependencies();
-		ArrayList<DependencyInfo> dependencyInfos = new ArrayList<DependencyInfo>();
-
-		for (Dependency dependency : dependencies) {
-			dependencyInfos.add(MavenUtils.getInfo(dependency));
+	private void populateDependencies(AgentProjectInfo projectInfo, MavenProject project) {
+		Collection<DependencyInfo> dependencyInfos = projectInfo.getDependencies();
+		for (Dependency dependency : project.getDependencies()) {
+			dependencyInfos.add(extractDependencyInfo(dependency));
 		}
-		project.setDependencies(dependencyInfos);
+	}
+	
+	/**
+	 * The method extract the info model from the given dependency.
+	 * 
+	 * @param dependency Source maven dependency.
+	 *  
+	 * @return Extracted info model.
+	 */
+	private DependencyInfo extractDependencyInfo(Dependency dependency) {
+		DependencyInfo info = new DependencyInfo();
+		
+		// dependency data
+		info.setGroupId(dependency.getGroupId());
+		info.setArtifactId(dependency.getArtifactId());
+		info.setVersion(dependency.getVersion());
+		info.setScope(dependency.getScope());
+		info.setClassifier(dependency.getClassifier());
+		info.setOptional(dependency.isOptional());
+		info.setType(dependency.getType());
+		info.setSystemPath(dependency.getSystemPath());
+		
+		// exclusions
+		Collection<ExclusionInfo> exclusions = info.getExclusions();
+		for (Exclusion exclusion : dependency.getExclusions()) {
+			ExclusionInfo exclusionInfo = new ExclusionInfo();
+			exclusionInfo.setGroupId(exclusion.getGroupId());
+			exclusionInfo.setArtifactId(exclusion.getArtifactId());
+			exclusions.add(exclusionInfo);
+		}
+		
+		return info;
+	}
+
+	/**
+	 * The method extract the gav from the given maven project.
+	 * 
+	 * @param mavenProject Maven project
+	 * 
+	 * @return Project coordinates
+	 */
+	private Coordinates extractCoordinates(MavenProject mavenProject) {
+		Coordinates coordinates = new Coordinates();
+		
+		coordinates.setGroupId(mavenProject.getGroupId());
+		coordinates.setArtifactId(mavenProject.getArtifactId());
+		coordinates.setVersion(mavenProject.getVersion());
+		
+		return coordinates;
 	}
 
 	/**

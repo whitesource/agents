@@ -3,12 +3,12 @@
 	
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>wss-agent-parent</artifactId>
 		<groupId>com.wss</groupId>
+		<artifactId>wss-agent-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	
-	<artifactId>wss-agent-domain</artifactId>
+	<artifactId>wss-agent-api</artifactId>
 	
 	<dependencies>
 		<dependency>
