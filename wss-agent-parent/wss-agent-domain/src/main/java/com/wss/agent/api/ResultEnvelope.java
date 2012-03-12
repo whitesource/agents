@@ -60,7 +60,7 @@ public class ResultEnvelope {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("ResultEnvelope@").append(hashCode()).append("[")
+		sb.append("ResultEnvelope@").append(Integer.toHexString(hashCode())).append("[")
 		.append("\n").append("envelopeVersion=").append(envelopeVersion).append(",")
 		.append("\n").append("status=").append(status).append(",")
 		.append("\n").append("message=").append(message).append(",")
