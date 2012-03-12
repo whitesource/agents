@@ -210,15 +210,15 @@ public final class UpdateServiceImpl implements UpdateService {
 	 * @throws IllegalArgumentException In case the response is invalid.
 	 */
 	private void verifyResponse(HttpResponse response) {
-		boolean verified = (response != null);
+		boolean verified = (response != null && response.getStatusLine() != null);
 		String logMessage = "";
 		
 		if (verified) {
 			StatusLine statusLine = response.getStatusLine();
-			verified = (statusLine != null) && (statusLine.getStatusCode() == HttpStatus.SC_OK);
-			logMessage = statusLine.getReasonPhrase(); 
+			verified = (statusLine.getStatusCode() == HttpStatus.SC_OK);
+			logMessage = statusLine.getReasonPhrase();
 		} else {
-			logMessage = "HttpResponse is null";
+			logMessage = "HttpResponse or statusLine is null";
 		}
 		
 		if (!verified) {
