@@ -2,8 +2,12 @@ package com.wss.agent.api;
 
 public class BaseRequest<R> implements ServiceRequest<R> {
 
-	/* --- Members --- */
+	/* --- Static members --- */
 	
+	private static final long serialVersionUID = 4691829529579651426L;
+	
+	/* --- Members --- */
+
 	private final RequestType type;
 	
 	private final String orgToken;

@@ -1,5 +1,7 @@
 package com.wss.agent.api;
 
+import java.io.Serializable;
+
 import com.wss.agent.constants.AgentConstants;
 import com.wss.agent.exception.JsonParsingException;
 import com.wss.agent.utils.JsonUtils;
@@ -9,7 +11,9 @@ import com.wss.agent.utils.JsonUtils;
  * 
  * @author Edo.Shor
  */
-public class ResultEnvelope {
+public class ResultEnvelope implements Serializable {
+	
+	/* --- Static members --- */
 	
 	public static final int STATUS_SUCCESS = 1;
 	public static final int STATUS_BAD_REQUEST = 2;
@@ -18,6 +22,8 @@ public class ResultEnvelope {
 	public static final String MESSAGE_OK = "ok";
 	public static final String MESSAGE_ILLEGAL_ARGUMENTS = "Illegal arguments";
 	public static final String MESSAGE_SERVER_ERROR = "Server error";
+	
+	private static final long serialVersionUID = -3835912575385728376L;
 	
 	/* --- Members --- */
 	
@@ -35,10 +41,10 @@ public class ResultEnvelope {
 	/* --- Constructors --- */
 
 	/**
-	 * Default constructor (for JSON parsing)
-	 * 
+	 * Default constructor
 	 */
 	public ResultEnvelope() {
+		
 	}
 	
 	/**

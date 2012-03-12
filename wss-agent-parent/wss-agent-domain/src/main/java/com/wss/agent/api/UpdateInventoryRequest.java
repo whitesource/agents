@@ -12,6 +12,10 @@ import com.wss.agent.model.AgentProjectInfo;
  */
 public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
 
+	/* --- Static members --- */
+	
+	private static final long serialVersionUID = 7731258010033962980L;
+	
 	/* --- Members --- */
 
 	private Collection<AgentProjectInfo> projects;

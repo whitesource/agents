@@ -1,5 +1,7 @@
 package com.wss.agent.api;
 
+import java.io.Serializable;
+
 /**
  * The interface describe the functionality to be exposed by any request to the white source service.
  * 
@@ -7,7 +9,7 @@ package com.wss.agent.api;
  *
  * @param <R> Result type
  */
-public interface ServiceRequest<R> {
+public interface ServiceRequest<R> extends Serializable {
 
 	/**
 	 * @return Request type.
