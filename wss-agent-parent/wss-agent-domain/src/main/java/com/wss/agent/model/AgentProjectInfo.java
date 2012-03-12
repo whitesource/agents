@@ -1,5 +1,6 @@
 package com.wss.agent.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -9,8 +10,12 @@ import java.util.List;
  * 
  * @author tom.shapira
  */
-public class AgentProjectInfo {
+public class AgentProjectInfo implements Serializable {
 	
+	 /* --- Static members --- */
+	
+	private static final long serialVersionUID = -7847114716505720514L;
+
 	/* --- Members --- */
 	
 	private Coordinates coordinates;
@@ -38,9 +43,9 @@ public class AgentProjectInfo {
 		StringBuilder sb = new StringBuilder();
 		
 		sb.append("AgentProjectInfo@").append(Integer.toHexString(hashCode())).append("[")
-		.append("coordinates= ").append(coordinates).append(",")
-		.append("parentCoordinates= ").append(parentCoordinates).append(",")
-		.append("projectToken= ").append(projectToken).append(" ]");
+			.append("coordinates= ").append(coordinates).append(",")
+			.append("parentCoordinates= ").append(parentCoordinates).append(",")
+			.append("projectToken= ").append(projectToken).append(" ]");
 		
 		return sb.toString();
 	}

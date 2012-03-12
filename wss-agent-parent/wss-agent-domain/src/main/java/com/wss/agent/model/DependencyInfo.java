@@ -1,5 +1,6 @@
 package com.wss.agent.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -9,9 +10,13 @@ import java.util.Collection;
  * @author tom.shapira
  *
  */
-public class DependencyInfo {
+public class DependencyInfo implements Serializable {
 	
-	/* --- Private methods --- */
+	/* --- Static members --- */
+	
+	private static final long serialVersionUID = -6212622409560068635L;
+
+	/* --- Members --- */
 	
 	private String groupId;
 	
@@ -35,7 +40,6 @@ public class DependencyInfo {
 	
 	/**
 	 * Default constructor
-	 * 
 	 */
 	public DependencyInfo() {
 		exclusions = new ArrayList<ExclusionInfo>();
@@ -45,7 +49,14 @@ public class DependencyInfo {
 	
 	@Override
 	public String toString() {
-		return groupId + ":" + artifactId + ":" + version;
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("DependencyInfo@").append(Integer.toHexString(hashCode())).append("[")
+			.append("groupId= ").append(groupId).append(",")
+			.append("artifactId= ").append(artifactId).append(",")
+			.append("version= ").append(version).append(" ]");
+		
+		return sb.toString();
 	}
 	
 	/* --- Getters / Setters --- */

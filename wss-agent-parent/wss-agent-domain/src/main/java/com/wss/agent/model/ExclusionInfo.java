@@ -1,12 +1,17 @@
 package com.wss.agent.model;
 
+import java.io.Serializable;
+
 /**
- * WSS model for exclusion of transitive dependencies. 
+ * White Source model for exclusion of transitive dependencies. 
  * 
  * @author tom.shapira
- *
  */
-public class ExclusionInfo {
+public class ExclusionInfo implements Serializable {
+
+	/* --- Static members --- */
+	
+	private static final long serialVersionUID = -3900555692407177279L;
 
 	/* --- Members --- */
 	
@@ -14,11 +19,37 @@ public class ExclusionInfo {
 	
 	private String groupId;
 	
+	/* --- Constructors --- */
+	
+	/**
+	 * Default constructor
+	 */
+	public ExclusionInfo() {
+		
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param artifactId
+	 * @param groupId
+	 */
+	public ExclusionInfo(String artifactId, String groupId) {
+		this.artifactId = artifactId;
+		this.groupId = groupId;
+	}
+
 	/* --- Overridden methods --- */
 	
 	@Override
 	public String toString() {
-		return groupId + ":" + artifactId;
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("ExclusionInfo@").append(Integer.toHexString(hashCode())).append("[")
+			.append("groupId= ").append(groupId).append(",")
+			.append("artifactId= ").append(artifactId).append(" ]");
+		
+		return sb.toString();
 	}
 	
 	/* --- Getters / Setters --- */

@@ -1,26 +1,60 @@
 package com.wss.agent.model;
 
+import java.io.Serializable;
+
 /**
- * Represents coordinates of a maven artifact
+ * Info model for artifact's coordinates. 
  * 
  * @author tom.shapira
- *
  */
-public class Coordinates {
+public class Coordinates implements Serializable {
 	
-	/* --- Private members --- */
+	/* --- Static members --- */
+	
+	private static final long serialVersionUID = 4962222806117752812L;
+	
+	/* --- Members --- */
 	
 	private String groupId;
 	
 	private String artifactId;
 	
 	private String version;
+	
+	/* --- Constructors --- */
 
+	/**
+	 * Default constructor
+	 */
+	public Coordinates() {
+		
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param groupId
+	 * @param artifactId
+	 * @param version
+	 */
+	public Coordinates(String groupId, String artifactId, String version) {
+		this.groupId = groupId;
+		this.artifactId = artifactId;
+		this.version = version;
+	}
+	
 	/* --- Overridden methods --- */
 	
 	@Override
 	public String toString() {
-		return groupId + ":" + artifactId + ":" + version;
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("Coordinates@").append(Integer.toHexString(hashCode())).append("[")
+			.append("groupId= ").append(groupId).append(",")
+			.append("artifactId= ").append(artifactId).append(",")
+			.append("version= ").append(version).append(" ]");
+		
+		return sb.toString();
 	}
 	
 	/* --- Getters / Setters --- */ 
