@@ -233,6 +233,9 @@
 								<goals>
 									<goal>sign</goal>
 								</goals>
+								<configuration>
+									<homedir>/usr/local/whitesource/.gnupg</homedir>
+								</configuration>
 							</execution>
 						</executions>
 					</plugin>
