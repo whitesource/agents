@@ -1,5 +1,7 @@
 package com.wss.agent.maven.plugin.update;
 
+import java.util.Collection;
+
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
@@ -100,9 +102,27 @@ public class UpdateMojo extends AbstractMojo {
 		updater.setLog(getLog());
 		UpdateInventoryResult result = updater.update();
 		
-		getLog().info(result.getResult());
+		displayResult(result);
 	}
 	
+	private void displayResult(UpdateInventoryResult result) {
+		getLog().info("");
+		getLog().info(Constants.INFO_DOMAIN + result.getDomainName());
+
+		Collection<String> updatedProjects = result.getUpdatedProjects();
+		if (updatedProjects.isEmpty()) {
+			getLog().info(Constants.INFO_NO_PROJECTS_UPDATED);
+		} else {
+			getLog().info(Constants.INFO_PROJECTS_UPDATED);
+			getLog().info("");
+			for (String projectName : updatedProjects) {
+				getLog().info(projectName);
+			}
+			getLog().info("");
+			getLog().info(Constants.INFO_EMAIL_MESSAGE);
+		}
+	}
+
 	/**
 	 * Validates mandatory maven parameter inputs required for the request.
 	 * 

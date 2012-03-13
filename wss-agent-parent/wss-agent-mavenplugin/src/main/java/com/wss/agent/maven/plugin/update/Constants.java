@@ -47,6 +47,14 @@ public final class Constants {
 
 	/* --- Maven log messages --- */
 	
+	public static final String INFO_DOMAIN = "Inventory update results for organization ";
+	
+	public static final String INFO_PROJECTS_UPDATED = "The following projects have been updated: ";
+	
+	public static final String INFO_NO_PROJECTS_UPDATED = "No projects were updated";
+	
+	public static final String INFO_EMAIL_MESSAGE = "Each project admin will receive an email once the update process has been completed";
+	
 	public static final String SKIP_UPDATE = "Skipping White Source update";
 	
 	public static final String DEBUG_REQUEST_BUILT = "Request created successfully";
@@ -60,7 +68,6 @@ public final class Constants {
 	public static final String DEBUG_UPDATE_SEND = "Sending update request";
 	
 	public static final String DEBUG_UPDATE_SUCCESS = "Update successful";
-	
 
 	/* --- Constructors --- */
 	
