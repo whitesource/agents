@@ -8,8 +8,38 @@
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	
-	<name>wss-agent-parent</name>
-	<description>The agent parent</description>
+	<name>WhiteSource agents parent</name>
+	<description>Parent pom for WhiteSource agents</description>
+	<url>http://code.google.com/p/whitesource-agent</url>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<scm>
+		<url>http://whitesource-agent.googlecode.com/svn/trunk</url>
+		<connection>scm:svn:http://whitesource-agent.googlecode.com/svn/trunk</connection>
+		<developerConnection>scm:svn:https://whitesource-agent.googlecode.com/svn/trunk</developerConnection>
+	</scm>
+	<developers>
+		<developer>
+			<id>rami.sass</id>
+			<name>Rami Sass</name>
+			<email>rami.sass@whitesourcesoftware.com</email>
+		</developer>
+		<developer>
+			<id>edo.shor</id>
+			<name>Edo Shor</name>
+			<email>edo.shor@whitesourcesoftware.com</email>
+		</developer>
+		<developer>
+			<id>tom.shapira</id>
+			<name>Tom Shapira</name>
+			<email>tom.shapira@whitesourcesoftware.com</email>
+		</developer>
+	</developers>
 
 	<properties>
 		<maven.version>3.0.4</maven.version>
@@ -26,6 +56,7 @@
 
 	<dependencyManagement>
 		<dependencies>
+		
 			<!-- Maven -->
 			<dependency>
 				<groupId>org.apache.maven</groupId>
@@ -127,9 +158,9 @@
 					<version>1.7</version>
 				</plugin>
 				<plugin>
-					<groupId>org.jboss.tattletale</groupId>
-					<artifactId>tattletale-maven</artifactId>
-					<version>1.1.2.Final</version>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>1.4</version>
 				</plugin>
 				<plugin>
 	                <groupId>org.eclipse.m2e</groupId>
@@ -158,6 +189,57 @@
             </plugins>
 		</pluginManagement>
 	</build>
+	
+	<profiles>
+		<profile>
+			<id>ci-build</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<configuration>
+							<quiet>true</quiet>
+						</configuration>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 	
 	<distributionManagement>
 		<repository>
