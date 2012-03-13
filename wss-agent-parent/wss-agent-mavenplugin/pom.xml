@@ -1,6 +1,4 @@
-<?xml version="1.0"?>
-<project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
 	<modelVersion>4.0.0</modelVersion>
@@ -10,19 +8,11 @@
 		<groupId>com.wss</groupId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-
 	<artifactId>whitesource-maven-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	
 	<name>wss-agent-mavenplugin</name>
-
-	<distributionManagement>
-		<repository>
-			<id>snapshots</id>
-			<name>Snapshots</name>
-			<url>http://nexus.whitesourcesoftware.com/nexus/content/repositories/snapshots</url>
-		</repository>
-	</distributionManagement>
+	<description>Maven plugin to update WhiteSource projects</description>
 
 	<dependencies>
 
@@ -54,5 +44,7 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
+		
 	</dependencies>
+	
 </project>
