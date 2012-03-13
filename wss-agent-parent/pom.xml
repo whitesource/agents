@@ -10,7 +10,7 @@
 	
 	<groupId>com.wss</groupId>
 	<artifactId>wss-agent-parent</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	
 	<name>WhiteSource agents parent</name>
@@ -24,9 +24,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<url>http://whitesource-agent.googlecode.com/svn/tags/wss-agent-parent-1.0.0</url>
-		<connection>scm:svn:http://whitesource-agent.googlecode.com/svn/tags/wss-agent-parent-1.0.0</connection>
-		<developerConnection>scm:svn:https://whitesource-agent.googlecode.com/svn/tags/wss-agent-parent-1.0.0</developerConnection>
+		<url>http://whitesource-agent.googlecode.com/svn/trunk</url>
+		<connection>scm:svn:http://whitesource-agent.googlecode.com/svn/trunk</connection>
+		<developerConnection>scm:svn:https://whitesource-agent.googlecode.com/svn/trunk</developerConnection>
 	</scm>
 	<developers>
 		<developer>

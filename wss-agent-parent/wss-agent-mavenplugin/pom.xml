@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>wss-agent-parent</artifactId>
 		<groupId>com.wss</groupId>
-		<version>1.0.0</version>
+		<version>1.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>whitesource-maven-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
