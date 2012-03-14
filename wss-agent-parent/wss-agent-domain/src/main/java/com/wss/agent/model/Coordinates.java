@@ -3,7 +3,7 @@ package com.wss.agent.model;
 import java.io.Serializable;
 
 /**
- * Info model for artifact's coordinates. 
+ * WhiteSource model for artifact's coordinates. 
  * 
  * @author tom.shapira
  */
@@ -49,10 +49,12 @@ public class Coordinates implements Serializable {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("Coordinates@").append(Integer.toHexString(hashCode())).append("[")
+		sb.append("Coordinates@").append(Integer.toHexString(hashCode()))
+			.append("[")
 			.append("groupId= ").append(groupId).append(",")
 			.append("artifactId= ").append(artifactId).append(",")
-			.append("version= ").append(version).append(" ]");
+			.append("version= ").append(version)
+			.append(" ]");
 		
 		return sb.toString();
 	}

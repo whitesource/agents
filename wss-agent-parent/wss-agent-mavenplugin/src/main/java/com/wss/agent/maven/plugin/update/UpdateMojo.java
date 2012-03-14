@@ -76,7 +76,6 @@ public class UpdateMojo extends AbstractMojo {
 	
 	/**
 	 * Wrapper for the execute() method for easier error handling.
-	 * 
 	 */
 	private void doExecute() throws MojoExecutionException {
 		validateInputs(project, orgToken);
@@ -102,12 +101,18 @@ public class UpdateMojo extends AbstractMojo {
 		updater.setLog(getLog());
 		UpdateInventoryResult result = updater.update();
 		
-		displayResult(result);
+		// show result in log
+		logResult(result);
 	}
 	
-	private void displayResult(UpdateInventoryResult result) {
+	/**
+	 * Logs the operation results. 
+	 * 
+	 * @param result
+	 */
+	private void logResult(UpdateInventoryResult result) {
 		getLog().info("");
-		getLog().info(Constants.INFO_DOMAIN + result.getDomainName());
+		getLog().info(Constants.INFO_DOMAIN + result.getOrganization());
 
 		Collection<String> updatedProjects = result.getUpdatedProjects();
 		if (updatedProjects.isEmpty()) {

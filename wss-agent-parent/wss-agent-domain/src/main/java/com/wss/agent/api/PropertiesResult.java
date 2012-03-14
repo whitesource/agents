@@ -6,10 +6,9 @@ import com.wss.agent.exception.JsonParsingException;
 import com.wss.agent.utils.JsonUtils;
 
 /**
- * This class represents the properties needed for executing the update operation.
+ * Result of the properties operation.
  * 
  * @author tom.shapira
- *
  */
 public class PropertiesResult {
 	
@@ -24,6 +23,7 @@ public class PropertiesResult {
 	 * 
 	 */
 	public PropertiesResult() {
+		properties = new Properties();
 	}
 	
 	/**

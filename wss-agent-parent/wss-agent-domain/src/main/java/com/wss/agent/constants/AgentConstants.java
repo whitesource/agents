@@ -1,6 +1,7 @@
 package com.wss.agent.constants;
 
 /**
+ * A class to hold constant values used in WhiteSource agents.
  * 
  * @author tom.shapira
  */

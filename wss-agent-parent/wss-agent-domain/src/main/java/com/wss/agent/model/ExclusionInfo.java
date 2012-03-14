@@ -3,7 +3,7 @@ package com.wss.agent.model;
 import java.io.Serializable;
 
 /**
- * White Source model for exclusion of transitive dependencies. 
+ * WhiteSource model for exclusion of transitive dependencies. 
  * 
  * @author tom.shapira
  */
@@ -45,9 +45,11 @@ public class ExclusionInfo implements Serializable {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("ExclusionInfo@").append(Integer.toHexString(hashCode())).append("[")
+		sb.append("ExclusionInfo@").append(Integer.toHexString(hashCode()))
+			.append("[")
 			.append("groupId= ").append(groupId).append(",")
-			.append("artifactId= ").append(artifactId).append(" ]");
+			.append("artifactId= ").append(artifactId)
+			.append(" ]");
 		
 		return sb.toString();
 	}

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * WSS Model for a project's dependency 
+ * WhiteSource Model for a project's dependency 
  * 
  * @author tom.shapira
  *
@@ -51,10 +51,12 @@ public class DependencyInfo implements Serializable {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("DependencyInfo@").append(Integer.toHexString(hashCode())).append("[")
+		sb.append("DependencyInfo@").append(Integer.toHexString(hashCode()))
+			.append("[")
 			.append("groupId= ").append(groupId).append(",")
 			.append("artifactId= ").append(artifactId).append(",")
-			.append("version= ").append(version).append(" ]");
+			.append("version= ").append(version)
+			.append(" ]");
 		
 		return sb.toString();
 	}

@@ -6,7 +6,7 @@ import java.util.Collection;
 import com.wss.agent.model.AgentProjectInfo;
 
 /**
- * Represents the request sent to the server from the agent after converted to JSON 
+ * Request to update organization inventory. 
  * 
  * @author tom.shapira
  */

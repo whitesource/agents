@@ -1,5 +1,10 @@
 package com.wss.agent.api;
 
+/**
+ * Request for service properties.
+ * 
+ * @author Edo.Shor
+ */
 public class PropertiesRequest extends BaseRequest<PropertiesResult> {
 
 	/* --- Static members --- */

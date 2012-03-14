@@ -42,10 +42,12 @@ public class AgentProjectInfo implements Serializable {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		
-		sb.append("AgentProjectInfo@").append(Integer.toHexString(hashCode())).append("[")
+		sb.append("AgentProjectInfo@").append(Integer.toHexString(hashCode()))
+			.append("[")
 			.append("coordinates= ").append(coordinates).append(",")
 			.append("parentCoordinates= ").append(parentCoordinates).append(",")
-			.append("projectToken= ").append(projectToken).append(" ]");
+			.append("projectToken= ").append(projectToken)
+			.append(" ]");
 		
 		return sb.toString();
 	}
