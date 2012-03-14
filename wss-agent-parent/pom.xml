@@ -29,6 +29,10 @@
 		<connection>scm:svn:http://whitesource-agent.googlecode.com/svn/trunk</connection>
 		<developerConnection>scm:svn:https://whitesource-agent.googlecode.com/svn/trunk</developerConnection>
 	</scm>
+	<organization>
+		<name>White Source</name>
+		<url>http://www.whitesourcesoftware.com/</url>
+	</organization>
 	<developers>
 		<developer>
 			<id>rami.sass</id>
