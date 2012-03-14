@@ -20,7 +20,7 @@ import com.wss.agent.maven.plugin.update.service.UpdateServiceImpl;
  * @requiresOnline true
  * @aggregator false
  * 
- * @author tom.shapira
+ * @author Tom Shapira
  * 
  */
 public class UpdateMojo extends AbstractMojo {
@@ -52,7 +52,7 @@ public class UpdateMojo extends AbstractMojo {
 	private boolean failOnError;
 
 	/**
-	 * Set this to 'true' to bypass artifact deploy
+	 * Set this to 'true' to bypass artifact deploy.
 	 *       
 	 * @parameter default-value="false"
 	 */
