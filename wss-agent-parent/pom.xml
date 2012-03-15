@@ -9,7 +9,7 @@
 		<version>7</version>
 	</parent>
 	
-	<groupId>com.wss</groupId>
+	<groupId>org.whitesource</groupId>
 	<artifactId>wss-agent-parent</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
