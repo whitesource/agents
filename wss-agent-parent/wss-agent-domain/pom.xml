@@ -8,7 +8,7 @@
 		<artifactId>wss-agent-parent</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-		<artifactId>wss-agent-api</artifactId>
+	<artifactId>wss-agent-api</artifactId>
 	<packaging>jar</packaging>
 	
 	<name>WhiteSource update service API</name>
@@ -20,5 +20,35 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 		</dependency>
 	</dependencies>
+	
+	<profiles>
+		<profile>
+			<id>Release</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.github.github</groupId>
+						<artifactId>site-maven-plugin</artifactId>
+						<configuration>
+							<path>wss-agent-api</path>
+							<merge>true</merge>
+							<message>Building site for ${project.version}</message>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>site</goal>
+								</goals>
+								<phase>site</phase>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 	
 </project>

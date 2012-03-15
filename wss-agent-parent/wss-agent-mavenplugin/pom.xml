@@ -11,14 +11,14 @@
 	<artifactId>whitesource-maven-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	
-	<name>wss-agent-mavenplugin</name>
+	<name>WhiteSource maven plugin</name>
 	<description>Maven plugin to update WhiteSource projects</description>
 
 	<dependencies>
 
 		<!-- White Source -->
 		<dependency>
-			<groupId>com.wss</groupId>
+			<groupId>org.whitesource</groupId>
 			<artifactId>wss-agent-api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -47,19 +47,34 @@
 
 	</dependencies>
 
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<version>2.4</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-plugin-plugin</artifactId>
-				<version>2.9</version>
-			</plugin>
-		</plugins>
-	</reporting>
+	<profiles>	
+		<profile>
+			<id>Release</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.github.github</groupId>
+						<artifactId>site-maven-plugin</artifactId>
+						<configuration>
+							<path>whitesource-maven-plugin</path>
+							<merge>true</merge>
+							<message>Building site for ${project.version}</message>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>site</goal>
+								</goals>
+								<phase>site</phase>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
