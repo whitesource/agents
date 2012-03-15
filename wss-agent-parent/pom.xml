@@ -25,9 +25,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<url>http://whitesource-agent.googlecode.com/svn/trunk</url>
-		<connection>scm:svn:http://whitesource-agent.googlecode.com/svn/trunk</connection>
-		<developerConnection>scm:svn:https://whitesource-agent.googlecode.com/svn/trunk</developerConnection>
+		<connection>scm:git:git@github.com:git@github.com:whitesource/agents.git</connection>
+	   <developerConnection>scm:git:git@github.com:git@github.com:whitesource/agents.git</developerConnection>
+	   <url>git@github.com:git@github.com:whitesource/agents.git</url>
 	</scm>
 	<organization>
 		<name>White Source</name>
