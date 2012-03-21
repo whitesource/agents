@@ -10,7 +10,7 @@ public final class Constants {
 	
 	/* --- Maven plugin--- */
 	
-	public static final String PLUGIN_KEY = "com.wss:whitesource-maven-plugin";
+	public static final String PLUGIN_KEY = "org.whitesource:whitesource-maven-plugin";
 	
 	public static final String PROJECT_TOKEN = "projectToken";
 	
