@@ -312,16 +312,16 @@
 	
 	<distributionManagement>
 		<repository>
-			<id>wss-releases</id>
-			<name>White Source nexus repository manager</name>
+			<id>sonatype-nexus-staging</id>
+			<name>Sonatype staging repository</name>
 			<uniqueVersion>false</uniqueVersion>
-			<url>http://nexus.whitesourcesoftware.com/nexus/content/repositories/releases/</url>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
 		<snapshotRepository>
-			<id>wss-snapshots</id>
-			<name>White Source nexus repository manager</name>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype snapshots repository</name>
 			<uniqueVersion>false</uniqueVersion>
-			<url>http://nexus.whitesourcesoftware.com/nexus/content/repositories/snapshots/</url>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 
