@@ -61,6 +61,7 @@
 						<configuration>
 							<path>whitesource-maven-plugin</path>
 							<merge>true</merge>
+							<force>true</force>
 							<message>Building site for ${project.version}</message>
 						</configuration>
 						<executions>

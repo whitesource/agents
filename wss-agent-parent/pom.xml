@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -25,9 +24,9 @@
 		</license>
 	</licenses>
 	<scm>
-		<connection>scm:git:git@github.com:git@github.com:whitesource/agents.git</connection>
-		<developerConnection>scm:git:git@github.com:git@github.com:whitesource/agents.git</developerConnection>
-		<url>git@github.com:git@github.com:whitesource/agents.git</url>
+		<connection>scm:git:git@github.com:whitesource/agents.git</connection>
+		<developerConnection>scm:git:git@github.com:whitesource/agents.git</developerConnection>
+		<url>git@github.com:whitesource/agents.git</url>
 	</scm>
 	<issueManagement>
 		<url>https://github.com/whitesource/agents/issues</url>
@@ -169,6 +168,15 @@
 					<version>2.6</version>
 				</plugin>
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.2.2</version>
+					<configuration>
+						<arguments>-Dgpg.passphrase=${passed.gpg.passphrase} -Dgpg.homedir=${passed.gpg.homedir}</arguments>
+						<releaseProfiles>Release</releaseProfiles>
+					</configuration>
+				</plugin>
+				<plugin>
 	                <groupId>org.eclipse.m2e</groupId>
 	                <artifactId>lifecycle-mapping</artifactId>
 	                <version>1.0.0</version>
@@ -243,7 +251,7 @@
 									<goal>sign</goal>
 								</goals>
 								<configuration>
-									<homedir>/usr/local/whitesource/.gnupg</homedir>
+									<homedir>${gpg.homedir}</homedir>
 								</configuration>
 							</execution>
 						</executions>
@@ -312,16 +320,16 @@
 	
 	<distributionManagement>
 		<repository>
-			<id>wss-releases</id>
-			<name>White Source nexus repository manager</name>
+			<id>sonatype-nexus-staging</id>
+			<name>Sonatype staging repository</name>
 			<uniqueVersion>false</uniqueVersion>
-			<url>http://nexus.whitesourcesoftware.com/nexus/content/repositories/releases/</url>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
 		<snapshotRepository>
-			<id>wss-snapshots</id>
-			<name>White Source nexus repository manager</name>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype snapshots repository</name>
 			<uniqueVersion>false</uniqueVersion>
-			<url>http://nexus.whitesourcesoftware.com/nexus/content/repositories/snapshots/</url>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 
