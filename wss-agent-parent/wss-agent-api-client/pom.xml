@@ -1,0 +1,75 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+  	<parent>
+		<artifactId>wss-agent-parent</artifactId>
+		<groupId>org.whitesource</groupId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>wss-agent-api-client</artifactId>
+	<packaging>jar</packaging>
+	
+	<name>Client for WhiteSource service API</name>
+	<description>Java client implementation for the WhiteSource service API</description>
+	
+	<dependencies>
+
+		<!-- White Source -->
+		<dependency>
+			<groupId>org.whitesource</groupId>
+			<artifactId>wss-agent-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- Utilities -->
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+
+		<!-- Testing -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.httpcomponents</groupId>
+		    <artifactId>httpclient</artifactId>
+		    <classifier>tests</classifier>
+		    <scope>test</scope>
+		</dependency>
+
+	</dependencies>
+
+	<profiles>	
+		<profile>
+			<id>Release</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.github.github</groupId>
+						<artifactId>site-maven-plugin</artifactId>
+						<configuration>
+							<path>wss-agent-api-client</path>
+							<merge>true</merge>
+							<force>true</force>
+							<message>Building site for ${project.version}</message>
+						</configuration>
+						<executions>
+							<execution>
+								<goals>
+									<goal>site</goal>
+								</goals>
+								<phase>site</phase>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+  
+</project>

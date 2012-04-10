@@ -65,6 +65,7 @@
 	<modules>
 		<module>wss-agent-domain</module>
 		<module>wss-agent-mavenplugin</module>
+		<module>wss-agent-api-client</module>
 	</modules>
 
 	<dependencyManagement>
@@ -102,6 +103,13 @@
 				<artifactId>junit</artifactId>
 				<version>${junit.version}</version>
 				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>${http.version}</version>
+				<classifier>tests</classifier>
+		    	<scope>test</scope>
 			</dependency>
 			
 		</dependencies>
