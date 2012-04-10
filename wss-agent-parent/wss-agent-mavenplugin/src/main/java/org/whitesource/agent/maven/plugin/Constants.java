@@ -10,18 +10,13 @@ public final class Constants {
 	
 	/* --- Maven plugin--- */
 	
-	public static final String PLUGIN_KEY = "com.wss:whitesource-maven-plugin";
+	public static final String PLUGIN_KEY = "org.whitesource:whitesource-maven-plugin";
 	
 	public static final String PROJECT_TOKEN = "projectToken";
 	
+	public static final String AGENT_TYPE = "maven-plugin";
+	
 	public static final String AGENT_VERSION = "1.0";
-	
-	/* --- Servlet info --- */
-
-	// TODO change
-	public static final String SERVICE_ENDPOINT_URL = "http://localhost:8888/agent";
-	
-	public static final String APPLICATION_JSON = "application/json";
 	
 	/* --- Error messages --- */
 	

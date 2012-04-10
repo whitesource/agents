@@ -16,8 +16,8 @@ import org.whitesource.agent.api.dispatch.ReportResult;
 import org.whitesource.agent.api.model.DependencyInfo;
 import org.whitesource.agent.maven.plugin.Constants;
 import org.whitesource.agent.maven.plugin.InputValidator;
-import org.whitesource.agent.maven.plugin.service.ServiceProvider;
-import org.whitesource.agent.maven.plugin.service.ServiceProviderImpl;
+import org.whitesource.agent.maven.plugin.WssServiceProvider;
+import org.whitesource.api.client.WssServiceException;
 
 
 /**
@@ -73,8 +73,6 @@ public class ReportMojo extends AbstractMojo {
 	 */
 	private boolean generateReport;
 
-	private ServiceProvider service;
-
 	/* --- Maven plugin implementation methods --- */
 
 	public void execute() throws MojoExecutionException {
@@ -85,7 +83,10 @@ public class ReportMojo extends AbstractMojo {
 				doExecute();
 			} catch (MojoExecutionException e) {
 				handleError(e);
+			} finally {
+				WssServiceProvider.instance().shutdown();
 			}
+			
 		}
 	}
 
@@ -134,11 +135,16 @@ public class ReportMojo extends AbstractMojo {
 	 * @throws MojoExecutionException In case of errors during the operation.
 	 */
 	private ReportResult getReport(Collection<DependencyInfo> dependencies) throws MojoExecutionException {
-		ReportRequest request = new ReportRequest(dependencies);
-
-		service = ServiceProviderImpl.getInstance();
-		service.setLog(getLog());
-		return service.getReport(request);
+		ReportResult result = null;
+		
+		try {
+			ReportRequest request = WssServiceProvider.instance().requestFactory().newReportRequest(dependencies);
+			result = WssServiceProvider.instance().provider().getReport(request);
+		} catch (WssServiceException e) {
+			throw new MojoExecutionException("Error getting report", e);
+		}
+		
+		return result;
 	}
 
 	/**

@@ -10,8 +10,8 @@ import org.whitesource.agent.api.dispatch.PropertiesResult;
 import org.whitesource.agent.api.dispatch.UpdateInventoryResult;
 import org.whitesource.agent.maven.plugin.Constants;
 import org.whitesource.agent.maven.plugin.InputValidator;
-import org.whitesource.agent.maven.plugin.service.ServiceProvider;
-import org.whitesource.agent.maven.plugin.service.ServiceProviderImpl;
+import org.whitesource.agent.maven.plugin.WssServiceProvider;
+import org.whitesource.api.client.WssServiceException;
 
 
 /**
@@ -58,7 +58,7 @@ public class UpdateMojo extends AbstractMojo {
 	 *       
 	 * @parameter default-value="false"
 	 */
-	private boolean skip;  
+	private boolean skip; 
 	
 	/* --- Maven plugin implementation methods --- */
 
@@ -70,6 +70,8 @@ public class UpdateMojo extends AbstractMojo {
 				doExecute();
 			} catch (MojoExecutionException e) {
 				handleError(e);
+			} finally {
+				WssServiceProvider.instance().shutdown();
 			}
 		}
 	}
@@ -91,12 +93,14 @@ public class UpdateMojo extends AbstractMojo {
 	 * @throws MojoExecutionException
 	 */
 	private void update() throws MojoExecutionException {
-		ServiceProvider service = ServiceProviderImpl.getInstance();
-		service.setLog(getLog());
-		
 		// get properties
-		PropertiesRequest request = new PropertiesRequest(orgToken);
-		PropertiesResult propertiesResult = service.getProperties(request);
+		PropertiesRequest request = WssServiceProvider.instance().requestFactory().newPropertiesRequest(orgToken);
+		PropertiesResult propertiesResult;
+		try {
+			propertiesResult = WssServiceProvider.instance().provider().getProperties(request);
+		} catch (WssServiceException e) {
+			throw new MojoExecutionException("Error getting properties from WhiteSource", e);
+		}
 		
 		// send update request
 		Updater updater = new UpdaterImpl(propertiesResult.getProperties(), orgToken, project);

@@ -19,8 +19,8 @@ import org.whitesource.agent.api.model.Coordinates;
 import org.whitesource.agent.api.model.DependencyInfo;
 import org.whitesource.agent.api.model.ExclusionInfo;
 import org.whitesource.agent.maven.plugin.Constants;
-import org.whitesource.agent.maven.plugin.service.ServiceProvider;
-import org.whitesource.agent.maven.plugin.service.ServiceProviderImpl;
+import org.whitesource.agent.maven.plugin.WssServiceProvider;
+import org.whitesource.api.client.WssServiceException;
 
 
 /**
@@ -41,8 +41,6 @@ public class UpdaterImpl implements Updater {
 
 	private MavenProject project;
 	
-	private ServiceProvider service;
-
 	/* --- Constructors --- */
 
 	/**
@@ -64,13 +62,16 @@ public class UpdaterImpl implements Updater {
 		Collection<AgentProjectInfo> projectInfos = setProjects(project);
 
 		// create update request
-		UpdateInventoryRequest request = new UpdateInventoryRequest(orgToken, projectInfos);
+		UpdateInventoryRequest request = WssServiceProvider.instance().requestFactory().newUpdateInventoryRequest(orgToken, projectInfos);
 
 		logDebug(Constants.DEBUG_REQUEST_BUILT);
 
 		// send request
-		service = ServiceProviderImpl.getInstance();
-		result = service.updateInventory(request);
+		try {
+			result = WssServiceProvider.instance().provider().updateInventory(request);
+		} catch (WssServiceException e) {
+			throw new MojoExecutionException("Error updating inventory", e);
+		}
 
 		return result;
 	}
