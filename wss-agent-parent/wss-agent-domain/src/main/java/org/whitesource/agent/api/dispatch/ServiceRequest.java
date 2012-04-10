@@ -3,7 +3,7 @@ package org.whitesource.agent.api.dispatch;
 import java.io.Serializable;
 
 /**
- * The interface describe the functionality to be exposed by any request to the white source service.
+ * The interface describe the functionality to be exposed by any request to the WhiteSource service.
  * 
  * @author Edo.Shor
  *
@@ -14,16 +14,26 @@ public interface ServiceRequest<R> extends Serializable {
 	/**
 	 * @return Request type.
 	 */
-	RequestType getType();
+	RequestType type();
 	
 	/**
-	 * @return White Source service token for the organization.
+	 * @return Agent type identifier.
 	 */
-	String getOrgToken();
+	String agent();
+	
+	/**
+	 * @return Agent version.
+	 */
+	String agentVersion();
 
+	/**
+	 * @return WhiteSource service token for the organization.
+	 */
+	String orgToken();
+	
 	/**
 	 * @return Time stamp when the request created (client side)
 	 */
-	long getTimeStamp() ;
+	long timeStamp() ;
 	
 }

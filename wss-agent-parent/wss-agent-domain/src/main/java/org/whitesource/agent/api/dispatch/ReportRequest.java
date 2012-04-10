@@ -1,13 +1,11 @@
 package org.whitesource.agent.api.dispatch;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import org.whitesource.agent.api.model.DependencyInfo;
 
-
 /**
- * Request for license analysis.
+ * Request for WhiteSource anonymous report.
  * 
  * @author tom.shapira
  */
@@ -24,17 +22,12 @@ public class ReportRequest extends BaseRequest<ReportResult> {
 	/* --- Constructors --- */
 	
 	/**
-	 * Default constructor
-	 */
-	public ReportRequest() {
-		this(new ArrayList<DependencyInfo>());
-	}
-	
-	/**
 	 * Constructor
+	 * 
+	 * @param dependencies Dependencies for analysis.
 	 */
 	public ReportRequest(Collection<DependencyInfo> dependencies) {
-		super(RequestType.REPORT, null);
+		super(RequestType.REPORT);
 		
 		this.dependencies = dependencies;
 	}

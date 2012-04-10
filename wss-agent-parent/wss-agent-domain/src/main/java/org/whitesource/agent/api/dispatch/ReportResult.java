@@ -1,9 +1,9 @@
 package org.whitesource.agent.api.dispatch;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.whitesource.agent.api.JsonParsingException;
 import org.whitesource.agent.api.JsonUtils;
 
 
@@ -42,7 +42,7 @@ public class ReportResult {
 	
 	/* --- Static methods--- */
 	
-	public static ReportResult fromJSON(String json) throws JsonParsingException {
+	public static ReportResult fromJSON(String json) throws IOException {
 		return JsonUtils.fromJson(json, ReportResult.class);
 	}
 

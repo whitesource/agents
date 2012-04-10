@@ -21,6 +21,8 @@ public final class APIConstants {
 	
 	public static final String PARAM_DEPENDENCIES = "dependencies";
 	
+	public static final String PARAM_AGENT = "agent";
+	
 	public static final String PARAM_AGENT_VERSION = "agentVersion";
 	
 	public static final String PARAM_REQUEST_TYPE = "type";

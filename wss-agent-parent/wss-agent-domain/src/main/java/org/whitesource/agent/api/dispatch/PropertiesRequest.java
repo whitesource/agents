@@ -14,19 +14,13 @@ public class PropertiesRequest extends BaseRequest<PropertiesResult> {
 	/* --- Constructors --- */
 	
 	/**
-	 * Default constructor
-	 */
-	public PropertiesRequest() {
-		this(null);
-	}
-	
-	/**
 	 * Constructor
 	 * 
-	 * @param orgToken
+	 * @param orgToken WhiteSource organization token.
 	 */
 	public PropertiesRequest(String orgToken) {
-		super(RequestType.PROPERTIES, orgToken);
+		super(RequestType.PROPERTIES);
+		this.orgToken = orgToken;
 	}
 	
 }

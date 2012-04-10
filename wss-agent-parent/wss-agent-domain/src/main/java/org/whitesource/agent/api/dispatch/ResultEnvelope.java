@@ -1,9 +1,9 @@
 package org.whitesource.agent.api.dispatch;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 import org.whitesource.agent.api.APIConstants;
-import org.whitesource.agent.api.JsonParsingException;
 import org.whitesource.agent.api.JsonUtils;
 
 
@@ -79,7 +79,7 @@ public class ResultEnvelope implements Serializable {
 	
 	/* --- Static methods --- */
 	
-	public static ResultEnvelope fromJSON(String json) throws JsonParsingException {
+	public static ResultEnvelope fromJSON(String json) throws IOException {
 		return JsonUtils.fromJson(json, ResultEnvelope.class);
 	}
 	

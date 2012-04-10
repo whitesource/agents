@@ -1,10 +1,8 @@
 package org.whitesource.agent.api.dispatch;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import org.whitesource.agent.api.model.AgentProjectInfo;
-
 
 /**
  * Request to update organization inventory. 
@@ -24,20 +22,13 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
 	/* --- Constructors --- */
 
 	/**
-	 * Default constructor
-	 */
-	public UpdateInventoryRequest() {
-		this(null, new ArrayList<AgentProjectInfo>());
-	}
-	
-	/**
 	 * Constructor
 	 * 
-	 * @param token
-	 * @param projects
+	 * @param orgToken WhiteSource organization token.
+	 * @param projects Projects status statement to update.
 	 */
-	public UpdateInventoryRequest(String token, Collection<AgentProjectInfo> projects) {
-		super(RequestType.UPDATE, token);
+	public UpdateInventoryRequest(String orgToken, Collection<AgentProjectInfo> projects) {
+		super(RequestType.UPDATE);
 		
 		this.projects = projects;
 	}

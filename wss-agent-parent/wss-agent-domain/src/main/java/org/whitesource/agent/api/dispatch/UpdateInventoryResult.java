@@ -1,9 +1,9 @@
 package org.whitesource.agent.api.dispatch;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.whitesource.agent.api.JsonParsingException;
 import org.whitesource.agent.api.JsonUtils;
 
 
@@ -45,7 +45,7 @@ public class UpdateInventoryResult {
 
 	/* --- Static methods --- */
 	
-	public static UpdateInventoryResult fromJSON(String json) throws JsonParsingException {
+	public static UpdateInventoryResult fromJSON(String json) throws IOException {
 		return JsonUtils.fromJson(json, UpdateInventoryResult.class);
 	}
 

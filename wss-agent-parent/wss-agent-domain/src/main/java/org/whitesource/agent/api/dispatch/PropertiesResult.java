@@ -1,8 +1,8 @@
 package org.whitesource.agent.api.dispatch;
 
+import java.io.IOException;
 import java.util.Properties;
 
-import org.whitesource.agent.api.JsonParsingException;
 import org.whitesource.agent.api.JsonUtils;
 
 
@@ -38,7 +38,7 @@ public class PropertiesResult {
 	
 	/* --- Static methods--- */
 	
-	public static PropertiesResult fromJSON(String json) throws JsonParsingException {
+	public static PropertiesResult fromJSON(String json) throws IOException {
 		return JsonUtils.fromJson(json, PropertiesResult.class);
 	}
 

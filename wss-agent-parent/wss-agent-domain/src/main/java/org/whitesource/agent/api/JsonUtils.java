@@ -2,8 +2,6 @@ package org.whitesource.agent.api;
 
 import java.io.IOException;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 
@@ -12,81 +10,51 @@ import org.codehaus.jackson.type.TypeReference;
  * Utility class for JSON conversion.
  * 
  * @author tom.shapira
- *
  */
 public final class JsonUtils {
 
 	/* --- Static methods --- */
 
 	/**
-	 * Converts the object to a JSON string.
+	 * The method convert the given object to a JSON string.
 	 * 
 	 * @return JSON string representation of the object.
-	 * @throws JsonParsingException
+	 * 
+	 * @throws IOException In case of errors during the conversion process.
 	 */
-	public static String toJson(Object object) throws JsonParsingException {
+	public static String toJson(Object object) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		String jsonString;
-		try {
-			jsonString = mapper.writeValueAsString(object);
-		} catch (JsonGenerationException e) {
-			throw new JsonParsingException(e);
-		} catch (JsonMappingException e) {
-			throw new JsonParsingException(e);
-		} catch (IOException e) {
-			throw new JsonParsingException(e);
-		}
-		return jsonString;
+		return  mapper.writeValueAsString(object);
 	}
 	
 	/**
-	 * Convert the given json string to java object
+	 * Convert the given JSON string to java object
 	 * 
 	 * @param json JSON string to parse.
 	 * @param clazz Result object class.
 	 * 
-	 * @return Java object value of the json string.
+	 * @return Java object value of the JSON string.
 	 * 
-	 * @throws JsonParsingException In case of any errors.
+	 * @throws IOException In case of errors during the conversion process.
 	 */
-	public static <T> T fromJson(String json, Class<T> clazz) throws JsonParsingException{
+	public static <T> T fromJson(String json, Class<T> clazz) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		T result = null;
-		try {
-			result = mapper.readValue(json, clazz);
-		} catch (JsonGenerationException e) {
-			throw new JsonParsingException(e);
-		} catch (JsonMappingException e) {
-			throw new JsonParsingException(e);
-		} catch (IOException e) {
-			throw new JsonParsingException(e);
-		}
-		return result;
+		return mapper.readValue(json, clazz);
 	}
 	
 	/**
-	 * Convert the given json string to java object
+	 * Convert the given JSON string to java object
 	 * 
 	 * @param json JSON string to parse.
 	 * @param typeRef Result object type reference.
 	 * 
-	 * @return Java object value of the json string.
+	 * @return Java object value of the JSON string.
 	 * 
-	 * @throws JsonParsingException In case of any errors.
+	 * @throws IOException In case of errors during the conversion process.
 	 */
-	public static <T> T fromJson(String json, TypeReference<T> typeRef) throws JsonParsingException{
+	public static <T> T fromJson(String json, TypeReference<T> typeRef) throws IOException{
 		ObjectMapper mapper = new ObjectMapper();
-		T result = null;
-		try {
-			result = mapper.readValue(json, typeRef);
-		} catch (JsonGenerationException e) {
-			throw new JsonParsingException(e);
-		} catch (JsonMappingException e) {
-			throw new JsonParsingException(e);
-		} catch (IOException e) {
-			throw new JsonParsingException(e);
-		}
-		return result;
+		return mapper.readValue(json, typeRef);
 	}
 	
 	/* --- Constructors --- */

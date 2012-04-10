@@ -44,6 +44,20 @@ public class DependencyInfo implements Serializable {
 	public DependencyInfo() {
 		exclusions = new ArrayList<ExclusionInfo>();
 	}
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param groupId
+	 * @param artifactId
+	 * @param version
+	 */
+	public DependencyInfo(String groupId, String artifactId, String version) {
+		this();
+		this.groupId = groupId;
+		this.artifactId = artifactId;
+		this.version = version;
+	}
 
 	/* --- Overridden methods --- */
 
