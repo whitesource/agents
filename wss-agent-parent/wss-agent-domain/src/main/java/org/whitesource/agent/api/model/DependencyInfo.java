@@ -29,6 +29,8 @@ public class DependencyInfo implements Serializable {
 	private String classifier;
 
 	private String scope;
+	
+	private String sha1;
 
 	private String systemPath;
 
@@ -57,6 +59,16 @@ public class DependencyInfo implements Serializable {
 		this.groupId = groupId;
 		this.artifactId = artifactId;
 		this.version = version;
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param sha1
+	 */
+	public DependencyInfo(String sha1) {
+		this();
+		this.sha1 = sha1;
 	}
 
 	/* --- Overridden methods --- */
@@ -156,6 +168,14 @@ public class DependencyInfo implements Serializable {
 
 	public void setScope(String scope) {
 		this.scope = scope;
+	}
+
+	public String getSha1() {
+		return sha1;
+	}
+
+	public void setSha1(String sha1) {
+		this.sha1 = sha1;
 	}
 
 	public String getSystemPath() {
