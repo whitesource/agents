@@ -30,6 +30,7 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
 	public UpdateInventoryRequest(String orgToken, Collection<AgentProjectInfo> projects) {
 		super(RequestType.UPDATE);
 		
+		this.orgToken = orgToken;
 		this.projects = projects;
 	}
 
