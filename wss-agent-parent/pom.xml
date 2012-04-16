@@ -193,11 +193,11 @@
 	                        <pluginExecutions>
 	                            <pluginExecution>
 	                                <pluginExecutionFilter>
-	                                    <groupId>org.bsc.maven</groupId>
-	                                    <artifactId>maven-processor-plugin</artifactId>
-	                                    <versionRange>[2.0.2,)</versionRange>
+	                                    <groupId>org.apache.maven.plugins</groupId>
+	                                    <artifactId>maven-enforcer-plugin</artifactId>
+	                                    <versionRange>1.0</versionRange>
 	                                    <goals>
-	                                        <goal>process</goal>
+	                                        <goal>enforce</goal>
 	                                    </goals>
 	                                </pluginExecutionFilter>
 	                                <action>
