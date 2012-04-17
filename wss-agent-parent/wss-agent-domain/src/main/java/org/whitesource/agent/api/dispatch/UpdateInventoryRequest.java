@@ -17,7 +17,7 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
 	
 	/* --- Members --- */
 
-	private Collection<AgentProjectInfo> projects;
+	protected Collection<AgentProjectInfo> projects;
 
 	/* --- Constructors --- */
 

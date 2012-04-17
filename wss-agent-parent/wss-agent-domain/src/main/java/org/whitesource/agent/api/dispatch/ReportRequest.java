@@ -17,7 +17,7 @@ public class ReportRequest extends BaseRequest<ReportResult> {
 	
 	/* --- Members --- */
 	
-	private Collection<DependencyInfo> dependencies;
+	protected Collection<DependencyInfo> dependencies;
 	
 	/* --- Constructors --- */
 	
