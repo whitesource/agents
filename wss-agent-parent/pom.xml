@@ -60,6 +60,7 @@
 		<jackson.version>1.9.2</jackson.version>
 		<junit.version>4.10</junit.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<aether.version>1.13.1</aether.version>
 	</properties>
 
 	<modules>
@@ -83,6 +84,13 @@
 			    <artifactId>maven-core</artifactId>
 			    <version>${maven.version}</version>
 			    <scope>provided</scope>
+			</dependency>
+			
+			<!-- Aether -->
+			<dependency>
+			    <groupId>org.sonatype.aether</groupId>
+			    <artifactId>aether-util</artifactId>
+			    <version>${aether.version}</version>
 			</dependency>
 			
 			<!-- Utilities -->
@@ -193,11 +201,11 @@
 	                        <pluginExecutions>
 	                            <pluginExecution>
 	                                <pluginExecutionFilter>
-	                                    <groupId>org.bsc.maven</groupId>
-	                                    <artifactId>maven-processor-plugin</artifactId>
-	                                    <versionRange>[2.0.2,)</versionRange>
+	                                    <groupId>org.apache.maven.plugins</groupId>
+	                                    <artifactId>maven-enforcer-plugin</artifactId>
+	                                    <versionRange>1.0</versionRange>
 	                                    <goals>
-	                                        <goal>process</goal>
+	                                        <goal>enforce</goal>
 	                                    </goals>
 	                                </pluginExecutionFilter>
 	                                <action>
