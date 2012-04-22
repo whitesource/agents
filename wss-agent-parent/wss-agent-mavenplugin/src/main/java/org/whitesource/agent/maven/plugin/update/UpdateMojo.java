@@ -20,7 +20,8 @@ import org.whitesource.api.client.WssServiceException;
  * @goal update
  * @requiresProject true
  * @requiresOnline true
- * @aggregator false
+ * @requiresDependencyResolution runtime
+ * @aggregator
  * 
  * @author Tom Shapira
  * 
@@ -37,14 +38,12 @@ public class UpdateMojo extends AbstractMojo {
 	 */
 	private String orgToken;
 
-	/**
-	 * The Maven Project.
-	 *
-	 * @parameter expression="${project}" default-value="${project}"
+	/** 
+	 * @parameter default-value="${reactorProjects}"
 	 * @required true
 	 * @readonly true
-	 */
-	private MavenProject project = null;
+	 */ 
+	private Collection<MavenProject> projects;
 
 	/**
 	 * Indicates whether the build will continue even if there are errors.
@@ -82,8 +81,7 @@ public class UpdateMojo extends AbstractMojo {
 	 * Wrapper for the execute() method for easier error handling.
 	 */
 	private void doExecute() throws MojoExecutionException {
-		validateInputs(project, orgToken);
-		
+		validateInputs();
 		update();
 	}
 	
@@ -103,7 +101,7 @@ public class UpdateMojo extends AbstractMojo {
 		}
 		
 		// send update request
-		Updater updater = new UpdaterImpl(propertiesResult.getProperties(), orgToken, project);
+		Updater updater = new UpdaterImpl(propertiesResult.getProperties(), orgToken, projects);
 		updater.setLog(getLog());
 		UpdateInventoryResult result = updater.update();
 		
@@ -151,19 +149,19 @@ public class UpdateMojo extends AbstractMojo {
 	 * 
 	 * @throws MojoExecutionException In case of any invalid property.
 	 */
-	private void validateInputs(MavenProject project, String token) throws MojoExecutionException {
-		// check if project exists
-		if (project == null) {
+	private void validateInputs() throws MojoExecutionException {
+		// check if projects exists
+		if (projects == null && projects.isEmpty()) {
 			throw new MojoExecutionException(Constants.ERROR_NO_PROJECT);
 		}
 		
 		// check if plugin was run from folder without POM file
-		if (InputValidator.isStandAlonePom(project)) {
+		if (InputValidator.isStandAlonePom(projects.iterator().next())) {
 			throw new MojoExecutionException(Constants.ERROR_NOT_PROJECT_FOLDER);
 		}
 		
 		// check token property
-		if (token == null) {
+		if (orgToken == null) {
 			throw new MojoExecutionException(Constants.ERROR_MISSING_TOKEN);
 		}
 	}

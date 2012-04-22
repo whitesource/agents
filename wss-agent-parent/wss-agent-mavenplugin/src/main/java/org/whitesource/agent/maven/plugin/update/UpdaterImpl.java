@@ -1,10 +1,15 @@
 package org.whitesource.agent.maven.plugin.update;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Exclusion;
 import org.apache.maven.model.Plugin;
@@ -12,6 +17,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
+import org.sonatype.aether.util.ChecksumUtils;
 import org.whitesource.agent.api.dispatch.UpdateInventoryRequest;
 import org.whitesource.agent.api.dispatch.UpdateInventoryResult;
 import org.whitesource.agent.api.model.AgentProjectInfo;
@@ -39,27 +45,27 @@ public class UpdaterImpl implements Updater {
 
 	private String orgToken;
 
-	private MavenProject project;
-	
+	private Collection<MavenProject> projects;
+
 	/* --- Constructors --- */
 
 	/**
 	 * Creates a new {@link UpdaterImpl}
 	 * 
 	 */
-	public UpdaterImpl(Properties properties, String orgToken, MavenProject project) {
+	public UpdaterImpl(Properties properties, String orgToken, Collection<MavenProject> projects) {
 		this.properties = properties;
 		this.orgToken = orgToken;
-		this.project = project;
+		this.projects = projects;
 	}
 
 	/* --- Concrete implementation methods --- */
 
 	public UpdateInventoryResult update() throws MojoExecutionException {
 		UpdateInventoryResult result = null;
-		
+
 		// analyze projects
-		Collection<AgentProjectInfo> projectInfos = setProjects(project);
+		Collection<AgentProjectInfo> projectInfos = setProjects(projects);
 
 		// create update request
 		UpdateInventoryRequest request = WssServiceProvider.instance().requestFactory().newUpdateInventoryRequest(orgToken, projectInfos);
@@ -86,15 +92,14 @@ public class UpdaterImpl implements Updater {
 	 * Sets the top level project and all if its collected projects (in case this is a multi-module project) 
 	 * 
 	 */
-	private Collection<AgentProjectInfo> setProjects(MavenProject project) 
-	throws MojoExecutionException {
+	private Collection<AgentProjectInfo> setProjects(Collection<MavenProject> projects) 
+			throws MojoExecutionException {
 		Collection<AgentProjectInfo> projectInfos = new ArrayList<AgentProjectInfo>();
 
-		// process top-level project
-		processProject(project, projectInfos);
-
-		// go over all children 
-		processChildren(project, projectInfos);
+		// process all projects
+		for (MavenProject project : projects) {
+			projectInfos.add(processProject(project));
+		}
 
 		return projectInfos;
 	}
@@ -104,7 +109,7 @@ public class UpdaterImpl implements Updater {
 	 * 
 	 * @param mavenProject Maven project.
 	 */
-	private void processProject(MavenProject mavenProject, Collection<AgentProjectInfo> projectInfos) {
+	private AgentProjectInfo processProject(MavenProject mavenProject) {
 		logDebug(Constants.DEBUG_FOUND_PROJECT + mavenProject.getArtifactId());
 
 		AgentProjectInfo projectInfo = new AgentProjectInfo();
@@ -112,21 +117,7 @@ public class UpdaterImpl implements Updater {
 		populateCoordinates(projectInfo, mavenProject);
 		populateDependencies(projectInfo, mavenProject);
 
-		projectInfos.add(projectInfo);
-	}
-
-	/**
-	 * The method process the collected projects of the given project. 
-	 * 
-	 * @param project Maven project.
-	 */
-	private void processChildren(MavenProject project, Collection<AgentProjectInfo> projectInfos) {
-		List<MavenProject> collectedProjects = project.getCollectedProjects();
-		if (collectedProjects != null) {
-			for (MavenProject collectedProject : collectedProjects) {
-				processProject(collectedProject, projectInfos);
-			}	
-		}
+		return projectInfo;
 	}
 
 	/**
@@ -173,9 +164,90 @@ public class UpdaterImpl implements Updater {
 	 */
 	private void populateDependencies(AgentProjectInfo projectInfo, MavenProject project) {
 		Collection<DependencyInfo> dependencyInfos = projectInfo.getDependencies();
+
+		// create lookup table
+		Map<Dependency, Artifact> lut = createLookupTable(project);
+
+		// create WhiteSource API dependencies
 		for (Dependency dependency : project.getDependencies()) {
-			dependencyInfos.add(getDependencyInfo(dependency));
+			String sha1 = null;
+			Artifact artifact = lut.get(dependency);
+			if (artifact != null) {
+				sha1 = calculateSha1(artifact);	
+			}
+
+			DependencyInfo dependencyInfo = getDependencyInfo(dependency);
+			dependencyInfo.setSha1(sha1);
+			dependencyInfos.add(dependencyInfo);
 		}
+	}
+
+	private Map<Dependency, Artifact> createLookupTable(MavenProject project) {
+		Map<Dependency, Artifact> lut = new HashMap<Dependency, Artifact>();
+
+		for (Dependency dependency : project.getDependencies()) {
+			for (Artifact dependencyArtifact : project.getDependencyArtifacts()) {
+				if (match(dependency, dependencyArtifact)) {
+					lut.put(dependency, dependencyArtifact);
+				}
+			}
+		}
+
+		return lut;
+	}
+
+	/**
+	 * Compares groupId, artifactId, version and classifier of the given dependency and artifact.
+	 * 
+	 * @param dependency Maven dependency.
+	 * @param artifact Maven artifact.
+	 * 
+	 * @return Whether of not the dependency and artifact have the same coordinates.
+	 */
+	private boolean match(Dependency dependency, Artifact artifact) {
+		boolean match = dependency.getGroupId().equals(artifact.getGroupId()) &&
+		dependency.getArtifactId().equals(artifact.getArtifactId()) &&
+		dependency.getVersion().equals(artifact.getVersion());
+
+		if (match) {
+			if (dependency.getClassifier() == null) {
+				match = artifact.getClassifier() == null;
+			} else {
+				match = dependency.getClassifier().equals(artifact.getClassifier());
+			}
+		}
+
+		if (match) {
+			String type = artifact.getType();
+			if (dependency.getType() == null) {
+				match = type == null || type.equals("jar");
+			} else {
+				match = dependency.getType().equals(type);
+			}
+		}
+
+		return match;
+	}
+
+	/**
+	 * Calculates SHA-1 for the specified artifact.
+	 * 
+	 * @param artifact Maven artifact.
+	 * 
+	 * @return SHA-1 calculation.
+	 */
+	private String calculateSha1(Artifact artifact) {
+		String sha1 = null;
+		File file = artifact.getFile();
+		if (file != null) {
+			try {
+				Map<String, Object> calcMap = ChecksumUtils.calc(file, Arrays.asList(Constants.SHA1));
+				sha1 = (String) calcMap.get(Constants.SHA1);
+			} catch (IOException e) {
+				logDebug(Constants.ERROR_SHA1);
+			}
+		}
+		return sha1;
 	}
 
 	/**
@@ -185,7 +257,7 @@ public class UpdaterImpl implements Updater {
 	 *  
 	 * @return Extracted info model.
 	 */
-	public static DependencyInfo getDependencyInfo(Dependency dependency) {
+	private DependencyInfo getDependencyInfo(Dependency dependency) {
 		DependencyInfo info = new DependencyInfo();
 
 		// dependency data
@@ -206,9 +278,9 @@ public class UpdaterImpl implements Updater {
 
 		return info;
 	}
-	
+
 	/**
-	 * The method extract the gav from the given maven project.
+	 * The method extract the GAV from the given maven project.
 	 * 
 	 * @param mavenProject Maven project
 	 * 

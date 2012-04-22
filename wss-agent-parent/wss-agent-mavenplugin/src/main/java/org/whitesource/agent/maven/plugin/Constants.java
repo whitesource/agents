@@ -18,6 +18,8 @@ public final class Constants {
 	
 	public static final String AGENT_VERSION = "1.0";
 	
+	public static final String SHA1 = "SHA-1";
+	
 	/* --- Error messages --- */
 	
 	public static final String ERROR_NOT_PROJECT_FOLDER = "Not a project folder";
@@ -31,6 +33,8 @@ public final class Constants {
 	public static final String ERROR_CONNECTION = "No connection / Problem with server. Please contact White Source for assistance";
 	
 	public static final String ERROR_HTTP = "HTTP request ended unsuccessfuly";
+	
+	public static final String ERROR_SHA1 = "Error calculating SHA-1";
 
 	/* --- Maven log messages --- */
 	
@@ -71,7 +75,6 @@ public final class Constants {
 	public static final String DEBUG_UPDATE_SEND = "Sending update request";
 	
 	public static final String DEBUG_UPDATE_SUCCESS = "Update successful";
-
 
 	/* --- Constructors --- */
 	
