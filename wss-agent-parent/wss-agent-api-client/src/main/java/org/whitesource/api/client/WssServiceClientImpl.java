@@ -43,13 +43,13 @@ import org.whitesource.agent.api.dispatch.UpdateInventoryResult;
  * @author tom.shapira
  * @author Edo.Shor
  */
-public final class WssServiceClientImpl implements WssServiceClient {
+public class WssServiceClientImpl implements WssServiceClient {
 
 	/* --- Static members --- */
 
 	public static final int DEFAULT_CONNECTION_TIMEOUT = 5 * 60 * 1000;
 	
-	private static final Log log = LogFactory.getLog(WssServiceClientImpl.class);
+	private static final Log logger = LogFactory.getLog(WssServiceClientImpl.class);
 	
 	/* --- Members --- */
 	
@@ -127,7 +127,7 @@ public final class WssServiceClientImpl implements WssServiceClient {
 		try {
 			HttpRequestBase httpRequest = createHttpRequest(request);
 			
-			log.trace("Calling WhiteSource service: " +  request);
+			logger.trace("Calling WhiteSource service: " +  request);
 			
 			HttpResponse response = httpClient.execute(httpRequest);
 			StatusLine statusLine = response.getStatusLine();
@@ -141,7 +141,7 @@ public final class WssServiceClientImpl implements WssServiceClient {
 	            } else {
 	            	String data = extractResultData(response);
 	            	
-	            	log.trace("Result data is: " + data);
+	            	logger.trace("Result data is: " + data);
 	            	
 	            	switch (request.type()) {
 	    			case PROPERTIES: 

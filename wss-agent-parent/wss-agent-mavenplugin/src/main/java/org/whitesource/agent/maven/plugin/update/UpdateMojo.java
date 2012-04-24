@@ -151,7 +151,7 @@ public class UpdateMojo extends AbstractMojo {
 	 */
 	private void validateInputs() throws MojoExecutionException {
 		// check if projects exists
-		if (projects == null && projects.isEmpty()) {
+		if (projects == null || projects.isEmpty()) {
 			throw new MojoExecutionException(Constants.ERROR_NO_PROJECT);
 		}
 		

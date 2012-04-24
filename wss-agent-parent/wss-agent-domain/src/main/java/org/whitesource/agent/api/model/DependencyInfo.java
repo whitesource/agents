@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.whitesource.agent.api.APIConstants;
+
 /**
  * WhiteSource Model for a project's dependency 
  * 
@@ -89,12 +91,10 @@ public class DependencyInfo implements Serializable {
 
 	@Override
 	public int hashCode() {
-		final int multiplier = 23;
-		
-		int code = 133;
-		code = multiplier * code + ((groupId == null) ? 0 : groupId.hashCode());
-		code = multiplier * code + ((artifactId == null) ? 0 : artifactId.hashCode());
-		code = multiplier * code + ((version == null) ? 0 : version.hashCode());
+		int code = APIConstants.HASH_CODE_SEED;
+		code = APIConstants.HASH_CODE_FACTOR * code + ((groupId == null) ? 0 : groupId.hashCode());
+		code = APIConstants.HASH_CODE_FACTOR * code + ((artifactId == null) ? 0 : artifactId.hashCode());
+		code = APIConstants.HASH_CODE_FACTOR * code + ((version == null) ? 0 : version.hashCode());
 		
 		return code;
 	}

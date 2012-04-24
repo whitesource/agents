@@ -9,7 +9,7 @@ import org.whitesource.api.client.WssServiceClientImpl;
  * 
  * @author Edo.Shor
  */
-public class WssServiceProvider {
+public final class WssServiceProvider {
 
 	/* --- Static members --- */
 	
@@ -19,9 +19,9 @@ public class WssServiceProvider {
 	
 	/* --- Members --- */
 	
-	private WssServiceClient _service;
+	private WssServiceClient mService;
 	
-	private RequestFactory _requestFactory;
+	private RequestFactory mRequestFactory;
 
 	/* --- Constructors --- */
 	
@@ -29,13 +29,13 @@ public class WssServiceProvider {
 	 * Default constructor.
 	 */
 	private WssServiceProvider() {
-		_requestFactory = new RequestFactory(Constants.AGENT_TYPE, Constants.AGENT_VERSION);
+		mRequestFactory = new RequestFactory(Constants.AGENT_TYPE, Constants.AGENT_VERSION);
 		
 		String url = System.getProperty(ALTERNATE_SERVICE_LOCATION, null);
 		if (url == null) {
-			_service = new WssServiceClientImpl();	
+			mService = new WssServiceClientImpl();	
 		} else {
-			_service = new WssServiceClientImpl(url);
+			mService = new WssServiceClientImpl(url);
 		}
 	}
 	
@@ -48,15 +48,15 @@ public class WssServiceProvider {
 	/* --- Public methods --- */
 	
 	public WssServiceClient provider() {
-		return _service;
+		return mService;
 	}
 	
 	public RequestFactory requestFactory() {
-		return _requestFactory;
+		return mRequestFactory;
 	}
 	
 	public void shutdown() {
-		_service.shutdown();
+		mService.shutdown();
 	}
 	
 }

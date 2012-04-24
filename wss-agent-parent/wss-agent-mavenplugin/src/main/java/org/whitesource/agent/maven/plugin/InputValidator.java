@@ -2,7 +2,7 @@ package org.whitesource.agent.maven.plugin;
 
 import org.apache.maven.project.MavenProject;
 
-public class InputValidator {
+public final class InputValidator {
 	
 	/* --- Static members --- */
 	
@@ -24,5 +24,14 @@ public class InputValidator {
 		return project.getArtifactId().equals(STANDALONE_POM_ARTIFACT_ID) && 
 			project.getGroupId().equals(STANDALONE_POM_GROUP_ID) &&
 			project.getVersion().equals(STANDALONE_POM_VERSION);
+	}
+	
+/* --- Constructors --- */
+	
+	/**
+	 * Private default constructor
+	 */
+	private InputValidator() {
+		// avoid instantiation
 	}
 }

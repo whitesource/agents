@@ -127,10 +127,12 @@ public class ReportRenderer {
 	 * @param license Name of the license.
 	 * @param appearances Number of libraries under license;
 	 */
-	private static String formatLicenseResult(String license, Integer appearances) {
+	private static String formatLicenseResult(final String license, Integer appearances) {
+		String formattedLicense = license;
+		
 		// shorten name if necessary
-		if (license.length() > LICENSE_NAME_LENGTH) {
-			license = license.substring(0, LICENSE_NAME_LENGTH) + "..";
+		if (formattedLicense.length() > LICENSE_NAME_LENGTH) {
+			formattedLicense = formattedLicense.substring(0, LICENSE_NAME_LENGTH) + "..";
 		}
 
 		StringBuilder sb = new StringBuilder(LOG_SEPERATOR);
@@ -147,5 +149,14 @@ public class ReportRenderer {
 		sb.append(alignString + appearances);
 
 		return sb.toString();
+	}
+	
+	/* --- Constructors --- */
+	
+	/**
+	 * Private default constructor
+	 */
+	private ReportRenderer() {
+		// avoid instantiation
 	}
 }
