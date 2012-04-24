@@ -20,7 +20,7 @@ import org.whitesource.agent.maven.plugin.Constants;
  * @author tom.shapira
  *
  */
-public class ReportRenderer {
+public final class ReportRenderer {
 
 	/* --- Static members --- */
 
@@ -136,7 +136,7 @@ public class ReportRenderer {
 		}
 
 		StringBuilder sb = new StringBuilder(LOG_SEPERATOR);
-		sb.replace(0, license.length(), license + " ");
+		sb.replace(0, formattedLicense.length(), formattedLicense + " ");
 
 		// align number to right
 		String alignString = "  ";

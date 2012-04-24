@@ -73,7 +73,11 @@ public class WssServiceClientImpl implements WssServiceClient {
 	 */
 	public WssServiceClientImpl(String serviceUrl) {
 		this.serviceUrl = serviceUrl;
-		initHttpClient();
+
+		HttpParams params = new BasicHttpParams();
+		HttpConnectionParams.setConnectionTimeout(params, DEFAULT_CONNECTION_TIMEOUT);
+		HttpConnectionParams.setSoTimeout(params, DEFAULT_CONNECTION_TIMEOUT);
+		httpClient = new DefaultHttpClient(params);
 	}
 
 	/* --- Interface implementation methods --- */
@@ -247,17 +251,6 @@ public class WssServiceClientImpl implements WssServiceClient {
         throw new IOException(error);
     }
 	
-	/**
-	 * The method initialize the http client to use for communication with the WhiteSource service.
-	 */
-	protected void initHttpClient() {
-		HttpParams params = new BasicHttpParams();
-		HttpConnectionParams.setConnectionTimeout(params, DEFAULT_CONNECTION_TIMEOUT);
-		HttpConnectionParams.setSoTimeout(params, DEFAULT_CONNECTION_TIMEOUT);
-		
-		httpClient = new DefaultHttpClient(params);
-	}
-
 	/* --- Getters / Setters --- */
 		
 	public String getServiceUrl() {
