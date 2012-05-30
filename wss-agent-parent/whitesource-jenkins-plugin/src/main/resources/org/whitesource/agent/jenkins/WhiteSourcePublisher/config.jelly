@@ -1,0 +1,14 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <f:block>
+    <d:taglib uri="local">
+  	  <div style="font-weight:bold; margin-bottom:0.2em; margin-top:0.4em">White Source Service Configuration</div>
+  	  <table width="100%" bgcolor="#660033"><tr><td></td></tr></table>
+  	  <f:entry title="White Source Service URL">
+        <f:textbox name="WhiteSourceAgent.whitesourceConfiguration.wssUrl" value="${instance.config.getWssUrl()}" checkUrl="'descriptorByName/WhiteSourcePublisher/checkWssUrl?wssUrl='+encodeURIComponent(this.value)" />
+      </f:entry>
+      <f:entry title="Organization Token">
+        <f:textbox name="WhiteSourceAgent.whitesourceConfiguration.orgToken" value="${instance.config.getOrgToken()}" checkUrl="'descriptorByName/WhiteSourcePublisher/checkOrgToken?orgToken='+encodeURIComponent(this.value)" />
+      </f:entry>
+  	</d:taglib>
+  </f:block>
+</j:jelly>
