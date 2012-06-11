@@ -27,4 +27,12 @@ public class WhiteSourceUtils {
         }
         return FormValidation.ok();
     }
+	
+	public static FormValidation validateLibLocation(final String libLocation) {
+        final String t = Util.fixEmptyAndTrim(libLocation);
+        if (t == null) {
+            return FormValidation.error("Required.");
+        }
+        return FormValidation.ok();
+    }
 }

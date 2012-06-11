@@ -37,6 +37,7 @@ public final class JsonUtils {
 	 * 
 	 * @throws IOException In case of errors during the conversion process.
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T> T fromJson(String json, Class<T> clazz) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.readValue(json, clazz);
@@ -52,6 +53,7 @@ public final class JsonUtils {
 	 * 
 	 * @throws IOException In case of errors during the conversion process.
 	 */
+	@SuppressWarnings("unchecked") 
 	public static <T> T fromJson(String json, TypeReference<T> typeRef) throws IOException{
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.readValue(json, typeRef);

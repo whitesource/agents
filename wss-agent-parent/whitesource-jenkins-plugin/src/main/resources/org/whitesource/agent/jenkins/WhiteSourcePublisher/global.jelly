@@ -13,5 +13,9 @@
   -->
   <f:section title="White Source Publisher">
     
+    <f:entry title="Default White Source Service URL">
+	    <f:textbox name="wssUrl"/>
+	</f:entry>
+    
   </f:section>
 </j:jelly>
