@@ -1,5 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -10,7 +11,7 @@
 	
 	<groupId>org.whitesource</groupId>
 	<artifactId>wss-agent-parent</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	
 	<name>WhiteSource agents parent</name>
@@ -129,6 +130,23 @@
 	</dependencyManagement>
 	
 	<build>
+        <plugins>
+            <plugin>
+                <groupId>com.mycila.maven-license-plugin</groupId>
+                <artifactId>maven-license-plugin</artifactId>
+                <configuration>
+                    <aggregate>true</aggregate>
+                    <header>src/etc/header.txt</header>
+                    <strictCheck>true</strictCheck>
+                    <excludes>
+                        <exclude>.idea/**</exclude>
+                        <exclude>LICENSE-2.0.txt</exclude>
+                        <exclude>**/test/**/*.txt</exclude>
+                        <exclude>**/site/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -197,6 +215,11 @@
 						<releaseProfiles>Release</releaseProfiles>
 					</configuration>
 				</plugin>
+                <plugin>
+                    <groupId>com.mycila.maven-license-plugin</groupId>
+                    <artifactId>maven-license-plugin</artifactId>
+                    <version>1.9.0</version>
+                </plugin>
 				<plugin>
 	                <groupId>org.eclipse.m2e</groupId>
 	                <artifactId>lifecycle-mapping</artifactId>
