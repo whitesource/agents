@@ -1,17 +1,10 @@
 package org.whitesource.api.client;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.NameValuePair;
-import org.apache.http.StatusLine;
+import org.apache.http.*;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -26,15 +19,11 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.whitesource.agent.api.APIConstants;
 import org.whitesource.agent.api.JsonUtils;
-import org.whitesource.agent.api.dispatch.PropertiesRequest;
-import org.whitesource.agent.api.dispatch.PropertiesResult;
-import org.whitesource.agent.api.dispatch.ReportRequest;
-import org.whitesource.agent.api.dispatch.ReportResult;
-import org.whitesource.agent.api.dispatch.RequestType;
-import org.whitesource.agent.api.dispatch.ResultEnvelope;
-import org.whitesource.agent.api.dispatch.ServiceRequest;
-import org.whitesource.agent.api.dispatch.UpdateInventoryRequest;
-import org.whitesource.agent.api.dispatch.UpdateInventoryResult;
+import org.whitesource.agent.api.dispatch.*;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -55,7 +44,7 @@ public class WssServiceClientImpl implements WssServiceClient {
 	
 	protected String serviceUrl;
 	
-	protected HttpClient httpClient;
+	protected DefaultHttpClient httpClient;
 	
 	/* --- Constructors --- */
 	
@@ -72,7 +61,11 @@ public class WssServiceClientImpl implements WssServiceClient {
 	 * @param serviceUrl WhiteSource service URL to use.
 	 */
 	public WssServiceClientImpl(String serviceUrl) {
-		this.serviceUrl = serviceUrl;
+        if (serviceUrl == null || serviceUrl.length() == 0) {
+            this.serviceUrl = ClientConstants.DEFAULT_SERVICE_URL;
+        } else {
+		    this.serviceUrl = serviceUrl;
+        }
 
 		HttpParams params = new BasicHttpParams();
 		HttpConnectionParams.setConnectionTimeout(params, DEFAULT_CONNECTION_TIMEOUT);
@@ -103,9 +96,10 @@ public class WssServiceClientImpl implements WssServiceClient {
 	}
 
 	@Override
-	public void setProxy(String host, int port) {
+	public void setProxy(String host, int port, String username, String password) {
 		HttpHost proxy = new HttpHost(host, port);
 		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+        httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials("username", "password"));
 	}
 
 	public void setConnectionTimeout(int timeout) {
@@ -251,22 +245,14 @@ public class WssServiceClientImpl implements WssServiceClient {
         throw new IOException(error);
     }
 	
-	/* --- Getters / Setters --- */
+	/* --- Getters  --- */
 		
 	public String getServiceUrl() {
 		return serviceUrl;
 	}
-	
-	public void setServiceUrl(String serviceUrl) {
-		this.serviceUrl = serviceUrl;
-	}
-	
+
 	public HttpClient getHttpClient() {
 		return httpClient;
 	}
 
-	public void setHttpClient(HttpClient httpClient) {
-		this.httpClient = httpClient;
-	}
-	
 }
