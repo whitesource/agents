@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.whitesource.agent.api.JsonUtils;
-
 
 /**
  * Result of the license distribution operation.
@@ -55,12 +53,6 @@ public class ReportResult {
 		this.numOfNewerVersions = numOfNewerVersions;
 	}
 	
-	/* --- Static methods--- */
-	
-	public static ReportResult fromJSON(String json) throws IOException {
-		return JsonUtils.fromJson(json, ReportResult.class);
-	}
-
 	/* --- Getters / Setters --- */
 	
 	public Map<String, Integer> getLicenseDistribution() {

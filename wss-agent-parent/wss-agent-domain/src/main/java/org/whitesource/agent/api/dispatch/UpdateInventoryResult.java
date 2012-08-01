@@ -19,8 +19,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.whitesource.agent.api.JsonUtils;
-
 
 /**
  * Result of the update inventory operation. 
@@ -56,12 +54,6 @@ public class UpdateInventoryResult {
 	public UpdateInventoryResult(String organization) {
 		this();
 		this.organization = organization;
-	}
-
-	/* --- Static methods --- */
-	
-	public static UpdateInventoryResult fromJSON(String json) throws IOException {
-		return JsonUtils.fromJson(json, UpdateInventoryResult.class);
 	}
 
 	/* --- Getters / Setters --- */ 

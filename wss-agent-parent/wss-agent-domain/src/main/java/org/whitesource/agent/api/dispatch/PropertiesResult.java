@@ -18,8 +18,6 @@ package org.whitesource.agent.api.dispatch;
 import java.io.IOException;
 import java.util.Properties;
 
-import org.whitesource.agent.api.JsonUtils;
-
 
 /**
  * Result of the properties operation.
@@ -49,12 +47,6 @@ public class PropertiesResult {
 	 */
 	public PropertiesResult(Properties properties) {
 		this.properties = properties;
-	}
-	
-	/* --- Static methods--- */
-	
-	public static PropertiesResult fromJSON(String json) throws IOException {
-		return JsonUtils.fromJson(json, PropertiesResult.class);
 	}
 
 	/* --- Getters / Setters --- */

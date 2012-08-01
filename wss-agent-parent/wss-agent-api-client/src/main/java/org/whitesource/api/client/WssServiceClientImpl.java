@@ -15,6 +15,7 @@
  */
 package org.whitesource.api.client;
 
+import com.google.gson.Gson;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.*;
@@ -25,6 +26,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
@@ -33,7 +35,6 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.whitesource.agent.api.APIConstants;
-import org.whitesource.agent.api.JsonUtils;
 import org.whitesource.agent.api.dispatch.*;
 
 import java.io.IOException;
@@ -60,6 +61,8 @@ public class WssServiceClientImpl implements WssServiceClient {
 	protected String serviceUrl;
 	
 	protected DefaultHttpClient httpClient;
+
+    protected Gson gson;
 	
 	/* --- Constructors --- */
 	
@@ -76,6 +79,8 @@ public class WssServiceClientImpl implements WssServiceClient {
 	 * @param serviceUrl WhiteSource service URL to use.
 	 */
 	public WssServiceClientImpl(String serviceUrl) {
+        gson = new Gson();
+
         if (serviceUrl == null || serviceUrl.length() == 0) {
             this.serviceUrl = ClientConstants.DEFAULT_SERVICE_URL;
         } else {
@@ -141,36 +146,24 @@ public class WssServiceClientImpl implements WssServiceClient {
 			HttpRequestBase httpRequest = createHttpRequest(request);
 			
 			logger.trace("Calling WhiteSource service: " +  request);
-			
-			HttpResponse response = httpClient.execute(httpRequest);
-			StatusLine statusLine = response.getStatusLine();
-	        HttpEntity entity = response.getEntity();
-	        if (statusLine.getStatusCode() != HttpStatus.SC_OK) {
-	            EntityUtils.consume(entity);
-	            throwServiceException("Error calling WhiteSource:", statusLine);
-	        } else {
-	            if (entity == null) {
-	            	throwServiceException("WhiteSource returned an Empty response:", statusLine);
-	            } else {
-	            	String data = extractResultData(response);
-	            	
-	            	logger.trace("Result data is: " + data);
-	            	
-	            	switch (request.type()) {
-	    			case PROPERTIES: 
-	    				result = (R) PropertiesResult.fromJSON(data); 
-	    				break;
-	    			case UPDATE: 
-	    				result = (R) UpdateInventoryResult.fromJSON(data); 
-	    				break;
-	    			case REPORT: 
-	    				result = (R) ReportResult.fromJSON(data); 
-	    				break;
-	    			default: 
-	    				throw new IllegalStateException("Unsupporeted request type.");
-	    			}
-	            }
-	        }
+            String response = httpClient.execute(httpRequest, new BasicResponseHandler());
+
+            String data = extractResultData(response);
+            logger.trace("Result data is: " + data);
+
+            switch (request.type()) {
+            case PROPERTIES:
+                result = (R) gson.fromJson(data, PropertiesResult.class);
+                break;
+            case UPDATE:
+                result = (R) gson.fromJson(data, UpdateInventoryResult.class);
+                break;
+            case REPORT:
+                result = (R) gson.fromJson(data, ReportResult.class);
+                break;
+            default:
+                throw new IllegalStateException("Unsupported request type.");
+            }
 		} catch (IOException e) {
 			throw new WssServiceException(e.getMessage(), e);
 		}
@@ -201,11 +194,11 @@ public class WssServiceClientImpl implements WssServiceClient {
 		switch (type) {
 		case UPDATE:
 			nvps.add(new BasicNameValuePair(APIConstants.PARAM_TIME_STAMP, String.valueOf(request.timeStamp())));
-			nvps.add(new BasicNameValuePair(APIConstants.PARAM_DIFF, JsonUtils.toJson(((UpdateInventoryRequest) request).getProjects())));
+			nvps.add(new BasicNameValuePair(APIConstants.PARAM_DIFF, gson.toJson(((UpdateInventoryRequest) request).getProjects())));
 			break;
 		case REPORT:
 			nvps.add(new BasicNameValuePair(APIConstants.PARAM_TIME_STAMP, String.valueOf(request.timeStamp())));
-			nvps.add(new BasicNameValuePair(APIConstants.PARAM_DEPENDENCIES, JsonUtils.toJson(((ReportRequest) request).getDependencies())));
+			nvps.add(new BasicNameValuePair(APIConstants.PARAM_DEPENDENCIES, gson.toJson(((ReportRequest) request).getDependencies())));
 			break;
 		default:
 			break;
@@ -217,19 +210,21 @@ public class WssServiceClientImpl implements WssServiceClient {
 	}
 
 	/**
-	 * The method extract the data from the given {@link RequestEnvelope}.
+	 * The method extract the data from the given {@link org.whitesource.agent.api.dispatch.ResultEnvelope}.
 	 * 
-	 * @param response Actual HTTP response.
+	 * @param response HTTP response as string.
 	 * 
 	 * @return String with logical result in JSON format.
 	 * 
 	 * @throws IOException
 	 * @throws WssServiceException 
 	 */
-	protected String extractResultData(HttpResponse response) throws IOException, WssServiceException {
-		// read and parse result envelope 
-		String contents = EntityUtils.toString(response.getEntity()); 
-		ResultEnvelope envelope = ResultEnvelope.fromJSON(contents);
+    protected String extractResultData(String response) throws IOException, WssServiceException {
+        // parse response
+		ResultEnvelope envelope = gson.fromJson(response, ResultEnvelope.class);
+        if (envelope == null) {
+            throw new WssServiceException("Empty response");
+        }
 		
 		// extract info from envelope
 		String message = envelope.getMessage();
@@ -242,23 +237,6 @@ public class WssServiceClientImpl implements WssServiceClient {
 		
 		return data;
 	}
-
-	/**
-	 * The method throws an {@link IOException} using the given message and {@link StatusLine}.
-	 * 
-	 * @param message
-	 * @param statusLine
-	 * 
-	 * @throws IOException
-	 */
-	protected void throwServiceException(String message, StatusLine statusLine) throws IOException {
-        String error = new StringBuilder(message)
-        	.append(" HTTP response code: ").append(statusLine.getStatusCode())
-            .append(". HTTP response message: ").append(statusLine.getReasonPhrase())
-            .toString();
-        
-        throw new IOException(error);
-    }
 	
 	/* --- Getters  --- */
 		

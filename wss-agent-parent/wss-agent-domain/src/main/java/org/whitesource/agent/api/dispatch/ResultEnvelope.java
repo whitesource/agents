@@ -15,11 +15,9 @@
  */
 package org.whitesource.agent.api.dispatch;
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import org.whitesource.agent.api.APIConstants;
-import org.whitesource.agent.api.JsonUtils;
+
+import java.io.Serializable;
 
 
 /**
@@ -90,12 +88,6 @@ public class ResultEnvelope implements Serializable {
 		.append("\n]");
 		
 		return sb.toString();
-	}
-	
-	/* --- Static methods --- */
-	
-	public static ResultEnvelope fromJSON(String json) throws IOException {
-		return JsonUtils.fromJson(json, ResultEnvelope.class);
 	}
 	
 	/* --- Getters / Setters --- */
