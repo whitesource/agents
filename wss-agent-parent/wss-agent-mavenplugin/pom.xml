@@ -65,18 +65,7 @@
 						<artifactId>site-maven-plugin</artifactId>
 						<configuration>
 							<path>whitesource-maven-plugin</path>
-							<merge>true</merge>
-							<force>true</force>
-							<message>Building site for ${project.version}</message>
 						</configuration>
-						<executions>
-							<execution>
-								<goals>
-									<goal>site</goal>
-								</goals>
-								<phase>site</phase>
-							</execution>
-						</executions>
 					</plugin>
 				</plugins>
 			</build>
