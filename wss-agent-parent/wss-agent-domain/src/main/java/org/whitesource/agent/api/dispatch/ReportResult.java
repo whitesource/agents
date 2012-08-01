@@ -15,7 +15,6 @@
  */
 package org.whitesource.agent.api.dispatch;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 

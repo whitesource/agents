@@ -15,9 +15,9 @@
  */
 package org.whitesource.agent.api.dispatch;
 
-import java.util.Collection;
-
 import org.whitesource.agent.api.model.AgentProjectInfo;
+
+import java.util.Collection;
 
 /**
  * Request to update organization inventory. 
