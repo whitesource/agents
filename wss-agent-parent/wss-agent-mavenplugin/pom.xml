@@ -54,12 +54,6 @@
           <version>3.0.1</version>
         </dependency>
 
-		<!-- Aether -->
-		<dependency>
-		    <groupId>org.sonatype.aether</groupId>
-		    <artifactId>aether-util</artifactId>
-		</dependency>
-
 		<!-- Testing -->
 		<dependency>
 			<groupId>junit</groupId>

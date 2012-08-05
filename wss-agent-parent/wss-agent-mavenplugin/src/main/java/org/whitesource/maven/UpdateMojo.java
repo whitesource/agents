@@ -28,6 +28,11 @@ import java.util.Map;
 /**
  * Send updates of open source software usage information to White Source.
  *
+ * <p>
+ *     Further documentation for the plugin and its usage can be found in the
+ *     <a href="http://docs.whitesourcesoftware.com/display/serviceDocs/Maven+plugin">online documentation</a>.
+ * </p>
+ *
  * @author Edo.Shor
  */
 @Mojo(name = "update",
@@ -46,8 +51,8 @@ public class UpdateMojo extends WhitesourceMojo {
     private String orgToken;
 
     /**
-     * Optional. Unique identifier of the mavenProject to update.
-     * If omitted, default naming convention will apply to match White Source mavenProject.
+     * Optional. Unique identifier of the White Source project to update.
+     * If omitted, default naming convention will apply.
      */
     @Parameter(alias = "projectToken",
             property = Constants.PROJECT_TOKEN,
@@ -63,7 +68,7 @@ public class UpdateMojo extends WhitesourceMojo {
     private Map<String, String> moduleTokens = new HashMap<String, String>();
 
     /**
-     * Optional. Set to true to ignore this maven mavenProject. Overrides any include patterns.
+     * Optional. Set to true to ignore this maven project. Overrides any include patterns.
      */
     @Parameter(alias = "ignore",
             property = Constants.IGNORE,
@@ -72,7 +77,7 @@ public class UpdateMojo extends WhitesourceMojo {
     private boolean ignore;
 
     /**
-     * Optional. Only modules with an artifactId matching any of these patterns will be processed by the plugin.
+     * Optional. Only modules with an artifactId matching one of these patterns will be processed by the plugin.
      */
     @Parameter(alias = "includes",
             property = Constants.INCLUDES,
@@ -90,7 +95,7 @@ public class UpdateMojo extends WhitesourceMojo {
     private String[] excludes;
 
     /**
-     * Optional. Set to true to ignore this maven mavenProject.
+     * Optional. Set to true to ignore this maven modules of type pom.
      */
     @Parameter(alias = "ignorePomModules",
             property = Constants.IGNORE_POM_MODULES,
@@ -149,6 +154,7 @@ public class UpdateMojo extends WhitesourceMojo {
         for (String pattern : patterns) {
             String regex = pattern.replace(".", "\\.").replace("*", ".*");
             if (value.matches(regex)) {
+                match = true;
                 break;
             }
         }
@@ -164,10 +170,10 @@ public class UpdateMojo extends WhitesourceMojo {
         AgentProjectInfo projectInfo = new AgentProjectInfo();
 
         // project token
-        if (StringUtils.isBlank(projectToken)) {
-            projectInfo.setProjectToken(moduleTokens.get(project.getArtifactId()));
-        } else {
+        if (project.equals(mavenProject)) {
             projectInfo.setProjectToken(projectToken);
+        } else {
+            projectInfo.setProjectToken(moduleTokens.get(project.getArtifactId()));
         }
 
         // project coordinates
