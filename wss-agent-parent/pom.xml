@@ -185,11 +185,11 @@
 					<artifactId>maven-site-plugin</artifactId>
 					<version>3.0</version>
 				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-plugin-plugin</artifactId>
-					<version>2.9</version>
-				</plugin>
+				<!--<maven>-->
+					<!--<groupId>org.apache.maven.plugins</groupId>-->
+					<!--<artifactId>maven-maven-maven</artifactId>-->
+					<!--<version>2.9</version>-->
+				<!--</maven>-->
 				<plugin>
 		        	<groupId>org.apache.maven.plugins</groupId>
         			<artifactId>maven-project-info-reports-plugin</artifactId>
@@ -222,7 +222,7 @@
                 <plugin>
                     <groupId>org.whitesource</groupId>
                     <artifactId>whitesource-maven-plugin</artifactId>
-                    <version>1.0.0</version>
+                    <version>1.1.0</version>
                     <configuration>
                         <orgToken>${whitesource.orgToken}</orgToken>
                     </configuration>
