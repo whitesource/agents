@@ -10,14 +10,8 @@
 /wss-agent-parent/wss-agent-api-client/.classpath
 /wss-agent-parent/wss-agent-api-client/wss-agent-api-client.iml
 
-/wss-agent-parent/wss-agent-domain/target
-/wss-agent-parent/wss-agent-domain/.settings
-/wss-agent-parent/wss-agent-domain/.project
-/wss-agent-parent/wss-agent-domain/.classpath
-/wss-agent-parent/wss-agent-domain/wss-agent-api.iml
-
-/wss-agent-parent/wss-agent-mavenplugin/target
-/wss-agent-parent/wss-agent-mavenplugin/.settings
-/wss-agent-parent/wss-agent-mavenplugin/.project
-/wss-agent-parent/wss-agent-mavenplugin/.classpath
-/wss-agent-parent/wss-agent-mavenplugin/whitesource-maven-plugin.iml
+/wss-agent-parent/wss-agent-api/target
+/wss-agent-parent/wss-agent-api/.settings
+/wss-agent-parent/wss-agent-api/.project
+/wss-agent-parent/wss-agent-api/.classpath
+/wss-agent-parent/wss-agent-api/wss-agent-api.iml
