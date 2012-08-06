@@ -19,7 +19,8 @@ We recommend to visit the [service documentation][7] as well.
 
 ### Available plugins
 At the moment we have plugins for [Maven][3], [Jenknins CI][4] and [TeamCity][5].
-More plugins will be available soon. Meanwhile, if need a plugin for another system please drop us a line [here][6].
+More plugins will be available soon. 
+Meanwhile, if you need a plugin for another system please drop a line to our [support team][6].
 
 ### Developers
 Agents are clients to the service REST api. You can develop your own agent by implementing such a client.
@@ -28,10 +29,11 @@ This project provide two modules for Java based agents:
  * Domain model for information and operations in the api
  * Client implementation of the api
  
-More information can be found in the [documentation][1].
+More information can be found in the [documentation][1]. 
+You can have a look in the [technical information][9] if you didn't find what you need.
 
 ### Support
-You can always create an issue or tell our support team what you think [here][6].
+You can always create an issue or tell our [support team][6] what you think.
 
 ### License
 The project is licensed under the [Apache 2.0][8] license.
@@ -53,9 +55,10 @@ limitations under the License.
 
 [1]: http://docs.whitesourcesoftware.com/display/docs/Agents
 [2]: http://www.whitesourcesoftware.com
-[3]: http://maven.apache.org
-[4]: http://jenkins-ci.org/
-[5]: http://www.jetbrains.com/teamcity/
+[3]: http://www.github.com/whitesource/maven-plugin
+[4]: http://www.github.com/whitesource/jenkins-whitesource-plugin
+[5]: http://www.github.com/whitesource/teamcity-plugin
 [6]: mailto:support@whitesourcesoftware.com
 [7]: http://docs.whitesourcesoftware.com/display/serviceDocs/Home
 [8]: http://www.apache.org/licenses/LICENSE-2.0.html
+[9]: http://whitesource.github.com/agents
