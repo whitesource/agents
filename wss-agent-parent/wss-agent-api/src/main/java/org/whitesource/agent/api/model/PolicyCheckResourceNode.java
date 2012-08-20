@@ -37,7 +37,7 @@ public class PolicyCheckResourceNode implements Serializable {
 
     private RequestPolicyInfo policy;
 
-    Collection<PolicyCheckResourceNode> children;
+    private Collection<PolicyCheckResourceNode> children;
 
     /* --- Constructors --- */
 

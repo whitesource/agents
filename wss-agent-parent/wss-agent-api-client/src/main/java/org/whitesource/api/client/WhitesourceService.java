@@ -44,13 +44,14 @@ public class WhitesourceService {
         this(agent, agentVersion, null);
     }
 
-    public WhitesourceService(final String agent, final String agentVersion, String serviceUrl) {
+    public WhitesourceService(final String agent, final String agentVersion, final String serviceUrl) {
         requestFactory = new RequestFactory(agent, agentVersion);
 
-        if (serviceUrl == null) {
-            serviceUrl = System.getProperty(ClientConstants.SERVICE_URL_KEYWORD, ClientConstants.DEFAULT_SERVICE_URL);
+        String url = serviceUrl;
+        if (url == null || url.trim().length() == 0) {
+            url = System.getProperty(ClientConstants.SERVICE_URL_KEYWORD, ClientConstants.DEFAULT_SERVICE_URL);
         }
-        client = new WssServiceClientImpl(serviceUrl);
+        client = new WssServiceClientImpl(url);
     }
 
     /* --- Public methods --- */
