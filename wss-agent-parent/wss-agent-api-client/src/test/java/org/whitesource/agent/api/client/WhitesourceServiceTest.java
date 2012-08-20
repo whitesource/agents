@@ -20,6 +20,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.whitesource.agent.api.dispatch.CheckPoliciesRequest;
 import org.whitesource.agent.api.dispatch.PropertiesRequest;
 import org.whitesource.agent.api.dispatch.ReportRequest;
 import org.whitesource.agent.api.dispatch.UpdateInventoryRequest;
@@ -88,6 +89,11 @@ public class WhitesourceServiceTest {
         ArgumentCaptor<ReportRequest> reportCaptor = ArgumentCaptor.forClass(ReportRequest.class);
         verify(client).getReport(reportCaptor.capture());
         assertTrue(reportCaptor.getValue().getDependencies().isEmpty());
+
+        service.checkPolicies("orgToken", new ArrayList<AgentProjectInfo>());
+        ArgumentCaptor<CheckPoliciesRequest> checkPoliciesCaptor = ArgumentCaptor.forClass(CheckPoliciesRequest.class);
+        verify(client).checkPolicies(checkPoliciesCaptor.capture());
+        assertEquals("orgToken", checkPoliciesCaptor.getValue().orgToken());
     }
 
 }

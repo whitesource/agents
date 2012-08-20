@@ -32,9 +32,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.whitesource.agent.api.APIConstants;
 import org.whitesource.agent.api.dispatch.*;
-import org.whitesource.agent.api.model.AgentProjectInfo;
-import org.whitesource.agent.api.model.Coordinates;
-import org.whitesource.agent.api.model.DependencyInfo;
+import org.whitesource.agent.api.model.*;
 import org.whitesource.api.client.WssServiceClient;
 import org.whitesource.api.client.WssServiceClientImpl;
 import org.whitesource.api.client.WssServiceException;
@@ -146,7 +144,8 @@ public class WssServiceClientTest {
                         assertEquals(nvp.getValue(), Long.toString(updateInventoryRequest.timeStamp()));
                     } else if (nvp.getName().equals(APIConstants.PARAM_DIFF)) {
                         Gson gson = new Gson();
-                        Type type = new TypeToken<Collection<AgentProjectInfo>>(){}.getType();
+                        Type type = new TypeToken<Collection<AgentProjectInfo>>() {
+                        }.getType();
                         final Collection<AgentProjectInfo> tmpProjects = gson.fromJson(nvp.getValue(), type);
                         assertEquals(tmpProjects.size(), 1);
                         final AgentProjectInfo info = tmpProjects.iterator().next();
@@ -161,7 +160,59 @@ public class WssServiceClientTest {
         };
         server.register("/agent", handler);
         try {
-                client.updateInventory(updateInventoryRequest);
+            client.updateInventory(updateInventoryRequest);
+        } catch (WssServiceException e) {
+            // suppress exception
+        }
+    }
+
+    @Test
+    public void testCheckPoliciesRequestSentOk() {
+        final Collection<AgentProjectInfo> projects = new ArrayList<AgentProjectInfo>();
+        final AgentProjectInfo projectInfo = new AgentProjectInfo();
+        projectInfo.setProjectToken("projectToken");
+        projectInfo.setCoordinates(new Coordinates("groupId", "artifactId", "version"));
+        projectInfo.setParentCoordinates(new Coordinates("groupId", "parent-artifactId", "version"));
+        final DependencyInfo dependencyInfo = new DependencyInfo("dep-groupId", "dep-artifactId", "dep-version");
+        projectInfo.getDependencies().add(dependencyInfo);
+        projects.add(projectInfo);
+        final CheckPoliciesRequest checkPoliciesRequest = requestFactory.newCheckPoliciesRequest("orgToken", projects);
+
+        HttpRequestHandler handler = new HttpRequestHandler() {
+            @Override
+            public void handle(HttpRequest request, HttpResponse response, HttpContext context) throws HttpException, IOException {
+                HttpEntity entity = ((HttpEntityEnclosingRequest) request).getEntity();
+                List<NameValuePair> nvps = URLEncodedUtils.parse(entity);
+                for (NameValuePair nvp : nvps) {
+                    if (nvp.getName().equals(APIConstants.PARAM_REQUEST_TYPE)) {
+                        assertEquals(nvp.getValue(), checkPoliciesRequest.type().toString());
+                    } else if (nvp.getName().equals(APIConstants.PARAM_AGENT)) {
+                        assertEquals(nvp.getValue(), checkPoliciesRequest.agent());
+                    } else if (nvp.getName().equals(APIConstants.PARAM_AGENT_VERSION)) {
+                        assertEquals(nvp.getValue(), checkPoliciesRequest.agentVersion());
+                    } else if (nvp.getName().equals(APIConstants.PARAM_TOKEN)) {
+                        assertEquals(nvp.getValue(), checkPoliciesRequest.orgToken());
+                    } else if (nvp.getName().equals(APIConstants.PARAM_TIME_STAMP)) {
+                        assertEquals(nvp.getValue(), Long.toString(checkPoliciesRequest.timeStamp()));
+                    } else if (nvp.getName().equals(APIConstants.PARAM_DIFF)) {
+                        Gson gson = new Gson();
+                        Type type = new TypeToken<Collection<AgentProjectInfo>>() {
+                        }.getType();
+                        final Collection<AgentProjectInfo> tmpProjects = gson.fromJson(nvp.getValue(), type);
+                        assertEquals(tmpProjects.size(), 1);
+                        final AgentProjectInfo info = tmpProjects.iterator().next();
+                        assertEquals(info.getProjectToken(), projectInfo.getProjectToken());
+                        assertEquals(info.getCoordinates(), projectInfo.getCoordinates());
+                        assertEquals(info.getParentCoordinates(), projectInfo.getParentCoordinates());
+                        assertEquals(info.getDependencies().size(), 1);
+                        assertEquals(info.getDependencies().iterator().next(), dependencyInfo);
+                    }
+                }
+            }
+        };
+        server.register("/agent", handler);
+        try {
+            client.checkPolicies(checkPoliciesRequest);
         } catch (WssServiceException e) {
             // suppress exception
         }
@@ -244,6 +295,87 @@ public class WssServiceClientTest {
         assertEquals("WhiteSource", result.getOrganization());
         assertThat(result.getCreatedProjects(), hasItems("newProject - 0.0.1"));
         assertThat(result.getUpdatedProjects(), hasItems("exitingProject - 1.0"));
+    }
+
+    @Test
+    public void testCheckPolicies() {
+        CheckPoliciesResult response = new CheckPoliciesResult("WhiteSource");
+
+        Map<String, PolicyCheckResourceNode> existingProjects = new HashMap<String, PolicyCheckResourceNode>();
+        Map<String, PolicyCheckResourceNode> newProjects = new HashMap<String, PolicyCheckResourceNode>();
+        Map<String, Collection<ResourceInfo>> projectNewResources = new HashMap<String, Collection<ResourceInfo>>();
+
+        response.setExistingProjects(existingProjects);
+        response.setNewProjects(newProjects);
+        response.setProjectNewResources(projectNewResources);
+
+        PolicyCheckResourceNode root = new PolicyCheckResourceNode();
+        existingProjects.put("exitingProject - 1.0", root);
+
+        ResourceInfo resource1 = new ResourceInfo("artifactId-1");
+        ResourceInfo resource2 = new ResourceInfo("artifactId-2");
+        ResourceInfo resource3 = new ResourceInfo("artifactId-3");
+        ResourceInfo resource4 = new ResourceInfo("artifactId-4");
+        ResourceInfo resource5 = new ResourceInfo("artifactId-5");
+        ResourceInfo resource6 = new ResourceInfo("artifactId-6");
+        ResourceInfo resource7 = new ResourceInfo("artifactId-7");
+        ResourceInfo resource8 = new ResourceInfo("artifactId-8");
+        ResourceInfo resource11 = new ResourceInfo("artifactId-11");
+        ResourceInfo resource12 = new ResourceInfo("artifactId-12");
+        PolicyCheckResourceNode node = new PolicyCheckResourceNode(resource1, new RequestPolicyInfo("policy-1"));
+        root.getChildren().add(node);
+        node = new PolicyCheckResourceNode(resource2, null);
+        root.getChildren().add(node);
+        node = new PolicyCheckResourceNode(resource3, null);
+        root.getChildren().add(node);
+        node.getChildren().add(new PolicyCheckResourceNode(resource4, null));
+        node.getChildren().add(new PolicyCheckResourceNode(resource5, null));
+        PolicyCheckResourceNode grandson = new PolicyCheckResourceNode(resource6, new RequestPolicyInfo("policy-2"));
+        node.getChildren().add(grandson);
+        grandson.getChildren().add(new PolicyCheckResourceNode(resource7, null));
+        grandson.getChildren().add(new PolicyCheckResourceNode(resource8, null));
+
+
+        root = new PolicyCheckResourceNode();
+        newProjects.put("newProject - 0.0.1", root);
+        node = new PolicyCheckResourceNode(resource11, null);
+        root.getChildren().add(node);
+        node = new PolicyCheckResourceNode(resource12, null);
+        root.getChildren().add(node);
+
+        server.register("/agent", createHandler(response));
+
+        Collection<AgentProjectInfo> projects = new ArrayList<AgentProjectInfo>();
+
+        AgentProjectInfo info = new AgentProjectInfo();
+        info.setCoordinates(new Coordinates("org.whitesource", "exitingProject", "1.0"));
+        info.setDependencies(Arrays.asList(
+                new DependencyInfo("groupId-1", "artifactId-1", "version-1"),
+                new DependencyInfo("groupId-2", "artifactId-2", "version-2"),
+                new DependencyInfo("groupId-3", "artifactId-3", "version-3")));
+        projects.add(info);
+
+        info = new AgentProjectInfo();
+        info.setCoordinates(new Coordinates("org.whitesource", "newProject", "0.0.1-SNAPSHOT"));
+        info.setDependencies(Arrays.asList(
+                new DependencyInfo("groupId-11", "artifactId-11", "version-11"),
+                new DependencyInfo("groupId-12", "artifactId-12", "version-12")));
+        projects.add(info);
+
+        CheckPoliciesRequest request = requestFactory.newCheckPoliciesRequest("orgToken", projects);
+
+        CheckPoliciesResult result = null;
+        try {
+            result = client.checkPolicies(request);
+        } catch (WssServiceException e) {
+            log.error("Error updating inventory", e);
+            fail("Unable to update inventory");
+        }
+
+        assertNotNull(result);
+        assertEquals("WhiteSource", result.getOrganization());
+        assertThat(result.getNewProjects().keySet(), hasItems("newProject - 0.0.1"));
+        assertThat(result.getExistingProjects().keySet(), hasItems("exitingProject - 1.0"));
     }
 
     @Test

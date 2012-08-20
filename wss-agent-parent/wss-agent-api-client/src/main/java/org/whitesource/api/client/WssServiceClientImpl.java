@@ -109,8 +109,13 @@ public class WssServiceClientImpl implements WssServiceClient {
 	public ReportResult getReport(ReportRequest request) throws WssServiceException {
 		return service(request);
 	}
-	
-	@Override
+
+    @Override
+    public CheckPoliciesResult checkPolicies(CheckPoliciesRequest request) throws WssServiceException {
+        return service(request);
+    }
+
+    @Override
 	public void shutdown() {
 		httpClient.getConnectionManager().shutdown();	
 	}
@@ -145,7 +150,7 @@ public class WssServiceClientImpl implements WssServiceClient {
 		try {
 			HttpRequestBase httpRequest = createHttpRequest(request);
 			
-			logger.trace("Calling WhiteSource service: " +  request);
+			logger.trace("Calling White Source service: " +  request);
             String response = httpClient.execute(httpRequest, new BasicResponseHandler());
 
             String data = extractResultData(response);
@@ -160,6 +165,9 @@ public class WssServiceClientImpl implements WssServiceClient {
                 break;
             case REPORT:
                 result = (R) gson.fromJson(data, ReportResult.class);
+                break;
+            case CHECK_POLICIES:
+                result = (R) gson.fromJson(data, CheckPoliciesResult.class);
                 break;
             default:
                 throw new IllegalStateException("Unsupported request type.");
@@ -196,6 +204,10 @@ public class WssServiceClientImpl implements WssServiceClient {
 			nvps.add(new BasicNameValuePair(APIConstants.PARAM_TIME_STAMP, String.valueOf(request.timeStamp())));
 			nvps.add(new BasicNameValuePair(APIConstants.PARAM_DIFF, gson.toJson(((UpdateInventoryRequest) request).getProjects())));
 			break;
+        case CHECK_POLICIES:
+            nvps.add(new BasicNameValuePair(APIConstants.PARAM_TIME_STAMP, String.valueOf(request.timeStamp())));
+            nvps.add(new BasicNameValuePair(APIConstants.PARAM_DIFF, gson.toJson(((CheckPoliciesRequest) request).getProjects())));
+            break;
 		case REPORT:
 			nvps.add(new BasicNameValuePair(APIConstants.PARAM_TIME_STAMP, String.valueOf(request.timeStamp())));
 			nvps.add(new BasicNameValuePair(APIConstants.PARAM_DEPENDENCIES, gson.toJson(((ReportRequest) request).getDependencies())));

@@ -15,10 +15,7 @@
  */
 package org.whitesource.api.client;
 
-import org.whitesource.agent.api.dispatch.PropertiesResult;
-import org.whitesource.agent.api.dispatch.ReportResult;
-import org.whitesource.agent.api.dispatch.RequestFactory;
-import org.whitesource.agent.api.dispatch.UpdateInventoryResult;
+import org.whitesource.agent.api.dispatch.*;
 import org.whitesource.agent.api.model.AgentProjectInfo;
 import org.whitesource.agent.api.model.DependencyInfo;
 
@@ -61,11 +58,9 @@ public class WhitesourceService {
     /**
      * The method update the White Source organization account with the given OSS information.
      *
-     * @param orgToken Orgnization token uniquely identifying the account at white source..
+     * @param orgToken     Orgnization token uniquely identifying the account at white source..
      * @param projectInfos OSS usage information to send to white source.
-     *
      * @return Result of updating white source.
-     *
      * @throws WssServiceException In case of errors while updating white source.
      */
     public UpdateInventoryResult update(String orgToken, Collection<AgentProjectInfo> projectInfos)
@@ -74,12 +69,23 @@ public class WhitesourceService {
     }
 
     /**
+     * The method check the policies application of the given OSS information.
+     *
+     * @param orgToken     Orgnization token uniquely identifying the account at white source..
+     * @param projectInfos OSS usage information to send to white source.
+     * @return Potential result of applying the currently defined policies.
+     * @throws WssServiceException In case of errors while checking the policies with white source.
+     */
+    public CheckPoliciesResult checkPolicies(String orgToken, Collection<AgentProjectInfo> projectInfos)
+            throws WssServiceException {
+        return client.checkPolicies(requestFactory.newCheckPoliciesRequest(orgToken, projectInfos));
+    }
+
+    /**
      * The method get the properties defined in the white source account.
      *
      * @param orgToken Orgnization token uniquely identifying the account at white source.
-     *
      * @return Whtie source account properties.
-     *
      * @throws WssServiceException In case of errors while getting the properties form white source.
      */
     public PropertiesResult getProperties(String orgToken)
@@ -91,14 +97,12 @@ public class WhitesourceService {
      * The method get a license report for the given dependencies.
      *
      * @param dependencies Collection of dependencies to get a report for.
-     *
      * @return Report for the given dependencies.
-     *
      * @throws WssServiceException In case of errors while getting the report from white source.
      */
     public ReportResult getReport(Collection<DependencyInfo> dependencies)
             throws WssServiceException {
-        return  client.getReport(requestFactory.newReportRequest(dependencies));
+        return client.getReport(requestFactory.newReportRequest(dependencies));
     }
 
     /**

@@ -18,7 +18,7 @@ package org.whitesource.api.client;
 import org.whitesource.agent.api.dispatch.*;
 
 /**
- * The interface describes the functionality to be exposed by a client implementation to the WhiteSource agent service.
+ * The interface describes the functionality to be exposed by a client implementation to the White Source agent service.
  *
  * @author Edo.Shor
  * @author Tom.Shapira
@@ -26,16 +26,17 @@ import org.whitesource.agent.api.dispatch.*;
 public interface WssServiceClient {
 
     /**
-     * The method calls the WhiteSource service for properties.
+     * The method calls the White Source service for properties.
      *
      * @param request Properties request.
      * @return Properties result.
      * @throws WssServiceException In case an error occurred during the call to White Source server.
      */
+    @Deprecated
     PropertiesResult getProperties(PropertiesRequest request) throws WssServiceException;
 
     /**
-     * The method calls the WhiteSource service for inventory update.
+     * The method calls the White Source service for inventory update.
      *
      * @param request Inventory update request.
      * @return Inventory update result.
@@ -44,13 +45,23 @@ public interface WssServiceClient {
     UpdateInventoryResult updateInventory(UpdateInventoryRequest request) throws WssServiceException;
 
     /**
-     * The method calls the WhiteSource service for dependency analysis report.
+     * The method calls the White Source service for dependency analysis report.
      *
      * @param request Report request.
      * @return Report result.
      * @throws WssServiceException In case an error occurred during the call to White Source server.
      */
+    @Deprecated
     ReportResult getReport(ReportRequest request) throws WssServiceException;
+
+
+    /**
+     * The method call the White Source service for checking policies application.
+     * @param request Check Policies request.
+     * @return Check Policies result.
+     * @throws WssServiceException In case an error occurred during the call to White Source server.
+     */
+    CheckPoliciesResult checkPolicies(CheckPoliciesRequest request) throws WssServiceException;
 
     /**
      * The method close all connections and release resources.

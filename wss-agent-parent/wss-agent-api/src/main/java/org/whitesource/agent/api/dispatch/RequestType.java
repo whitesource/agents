@@ -24,6 +24,7 @@ public enum RequestType {
 	
 	PROPERTIES,
 	UPDATE,
-	REPORT;
+	REPORT,
+    CHECK_POLICIES;
 
 }
