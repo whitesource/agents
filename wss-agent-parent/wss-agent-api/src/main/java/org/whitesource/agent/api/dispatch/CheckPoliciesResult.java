@@ -18,6 +18,7 @@ package org.whitesource.agent.api.dispatch;
 import org.whitesource.agent.api.model.PolicyCheckResourceNode;
 import org.whitesource.agent.api.model.ResourceInfo;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,6 +75,28 @@ public class CheckPoliciesResult {
 		this();
 		this.organization = organization;
 	}
+
+    /* --- Public methods --- */
+
+    /**
+     * @return True if some project in this result have some rejected dependency.
+     */
+    public boolean hasRejections() {
+        boolean hasRejections = false;
+
+        Collection<PolicyCheckResourceNode> roots = new ArrayList<PolicyCheckResourceNode>();
+        roots.addAll(getExistingProjects().values());
+        roots.addAll(getNewProjects().values());
+
+        for (PolicyCheckResourceNode root : roots) {
+            if (root.hasRejections()) {
+                hasRejections = true;
+                break;
+            }
+        }
+
+        return hasRejections;
+    }
 
 	/* --- Getters / Setters --- */ 
 

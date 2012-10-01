@@ -60,6 +60,23 @@ public class PolicyCheckResourceNode implements Serializable {
         this.policy = policy;
     }
 
+    /* --- Public methods --- */
+
+    public boolean hasRejections() {
+        boolean rejections = policy != null && "Reject".equals(policy.getActionType());
+
+        if (!rejections) {
+            for (PolicyCheckResourceNode child : children) {
+                rejections = child.hasRejections();
+                if (rejections) {
+                    break;
+                }
+            }
+        }
+
+        return rejections;
+    }
+
     /* --- Getters / Setters --- */
 
     public ResourceInfo getResource() {
