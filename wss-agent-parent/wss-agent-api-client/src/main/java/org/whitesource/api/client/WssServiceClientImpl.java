@@ -124,7 +124,7 @@ public class WssServiceClientImpl implements WssServiceClient {
 	public void setProxy(String host, int port, String username, String password) {
 		HttpHost proxy = new HttpHost(host, port);
 		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
-        httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials("username", "password"));
+        httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
 	}
 
 	public void setConnectionTimeout(int timeout) {
