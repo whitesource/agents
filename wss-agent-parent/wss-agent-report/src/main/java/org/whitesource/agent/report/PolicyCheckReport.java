@@ -15,6 +15,8 @@
  */
 package org.whitesource.agent.report;
 
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
@@ -133,10 +135,10 @@ public class PolicyCheckReport {
         context.put("licenses", createLicenseHistogram(result));
         context.put("creationTime", SimpleDateFormat.getInstance().format(new Date()));
 
-        if (buildName != null && buildName.trim().length() > 0) {
+        if (StringUtils.isNotBlank(buildName)) {
             context.put("buildName", buildName);
         }
-        if (buildNumber != null && buildNumber.trim().length() > 0) {
+        if (StringUtils.isNotBlank(buildNumber)) {
             context.put("buildNumber", buildNumber);
         }
 
@@ -154,7 +156,9 @@ public class PolicyCheckReport {
         Map<String, Integer> licenseHistogram = new HashMap<String, Integer>();
         for (Map.Entry<String, Collection<ResourceInfo>> entry : result.getProjectNewResources().entrySet()) {
             for (ResourceInfo resource : entry.getValue()) {
-                incrementHistoram(licenseHistogram, resource);
+                for (String license : resource.getLicenses()) {
+                    licenseHistogram.put(license, MapUtils.getInteger(licenseHistogram, license, 0) + 1);
+                }
             }
         }
 
@@ -193,16 +197,6 @@ public class PolicyCheckReport {
         }
 
         return dataPoints;
-    }
-
-    private void incrementHistoram(Map<String, Integer> licenseHistogram, ResourceInfo resource) {
-        for (String license : resource.getLicenses()) {
-            Integer licenseCount = licenseHistogram.get(license);
-            if (licenseCount == null) {
-                licenseCount = 0;
-            }
-            licenseHistogram.put(license, ++licenseCount);
-        }
     }
 
     private void copyReportResources(File outputDir) throws IOException {

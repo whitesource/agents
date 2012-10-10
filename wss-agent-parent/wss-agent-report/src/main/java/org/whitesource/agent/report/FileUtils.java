@@ -16,8 +16,6 @@
 package org.whitesource.agent.report;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
