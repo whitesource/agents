@@ -6,11 +6,12 @@
         <groupId>org.whitesource</groupId>
         <version>1.2.0-SNAPSHOT</version>
     </parent>
+
     <artifactId>wss-agent-api-client</artifactId>
     <packaging>jar</packaging>
 
-    <name>Client for WhiteSource service API</name>
-    <description>Java client implementation for the WhiteSource service API</description>
+    <name>API client implementation</name>
+    <description>Java client implementation for the API</description>
 
     <dependencies>
 

@@ -9,8 +9,8 @@
 	<artifactId>wss-agent-api</artifactId>
 	<packaging>jar</packaging>
 	
-	<name>WhiteSource update service API</name>
-	<description>Java API for WhiteSource external update REST service</description>
+	<name>API bindings</name>
+	<description>Java bindings for White Source API</description>
 	
 	<dependencies>
         <dependency>
@@ -30,7 +30,6 @@
                     <plugin>
                         <groupId>com.github.github</groupId>
                         <artifactId>downloads-maven-plugin</artifactId>
-
                     </plugin>
 					<plugin>
 						<groupId>com.github.github</groupId>

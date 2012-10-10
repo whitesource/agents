@@ -15,3 +15,6 @@
 /wss-agent-parent/wss-agent-api/.project
 /wss-agent-parent/wss-agent-api/.classpath
 /wss-agent-parent/wss-agent-api/wss-agent-api.iml
+
+/wss-agent-parent/wss-agent-report/target
+/wss-agent-parent/wss-agent-report/wss-agent-report.iml

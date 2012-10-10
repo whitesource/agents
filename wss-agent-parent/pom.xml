@@ -12,8 +12,8 @@
 	<version>1.2.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	
-	<name>WhiteSource agents parent</name>
-	<description>WhiteSource external update agents</description>
+	<name>Master parent pom</name>
+	<description>White Source external update agents</description>
 	<url>https://github.com/whitesource/agents/</url>
     <inceptionYear>2011</inceptionYear>
 
@@ -66,7 +66,8 @@
 	<modules>
 		<module>wss-agent-api</module>
 		<module>wss-agent-api-client</module>
-	</modules>
+        <module>wss-agent-report</module>
+    </modules>
 
 	<dependencyManagement>
 		<dependencies>
