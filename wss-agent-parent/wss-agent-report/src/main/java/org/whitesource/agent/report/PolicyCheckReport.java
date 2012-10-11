@@ -90,14 +90,14 @@ public class PolicyCheckReport {
      * @param outputDir Directory where report files will be created.
      * @param pack      <code>True</code> to create a zip file from the resulting directory.
      */
-    public void generate(File outputDir, boolean pack) throws IOException {
-
+    public File generate(File outputDir, boolean pack) throws IOException {
         if (result == null) {
             throw new IllegalStateException("Check policies result is null");
         }
 
         // make sure we have a working directory
         File workDir = new File(outputDir, "whitesource");
+        File reportFile = workDir;
         if (!workDir.exists()) {
             boolean mkdir = workDir.mkdir();
             if (!mkdir) {
@@ -113,11 +113,13 @@ public class PolicyCheckReport {
 
         // package report into a zip archive
         if (pack) {
-            File reportArchive = new File(outputDir, "whitesource.zip");
-            ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(reportArchive));
+            reportFile = new File(outputDir, "whitesource.zip");
+            ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(reportFile));
             FileUtils.packDirectory(workDir, zos);
             FileUtils.deleteRecursive(workDir);
         }
+
+        return reportFile;
     }
 
     /* --- Private methods --- */
