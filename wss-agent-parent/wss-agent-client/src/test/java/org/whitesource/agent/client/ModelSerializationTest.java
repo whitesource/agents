@@ -13,10 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.whitesource.agent.api.client;
+package org.whitesource.agent.client;
 
 import com.google.gson.Gson;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.whitesource.agent.api.dispatch.*;
 import org.whitesource.agent.api.model.*;

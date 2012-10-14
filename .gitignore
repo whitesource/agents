@@ -4,11 +4,11 @@
 /wss-agent-parent/.project
 /wss-agent-parent/wss-agent-parent.iml
 
-/wss-agent-parent/wss-agent-api-client/target
-/wss-agent-parent/wss-agent-api-client/.settings
-/wss-agent-parent/wss-agent-api-client/.project
-/wss-agent-parent/wss-agent-api-client/.classpath
-/wss-agent-parent/wss-agent-api-client/wss-agent-api-client.iml
+/wss-agent-parent/wss-agent-client/target
+/wss-agent-parent/wss-agent-client/.settings
+/wss-agent-parent/wss-agent-client/.project
+/wss-agent-parent/wss-agent-client/.classpath
+/wss-agent-parent/wss-agent-client/wss-agent-client.iml
 
 /wss-agent-parent/wss-agent-api/target
 /wss-agent-parent/wss-agent-api/.settings

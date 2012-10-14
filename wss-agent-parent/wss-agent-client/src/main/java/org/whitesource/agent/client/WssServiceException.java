@@ -13,30 +13,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.whitesource.api.client;
+package org.whitesource.agent.client;
+
 
 /**
- * WhiteSource service API client constants.
+ * Exception for errors encountered while interacting with the WhiteSource service. 
  * 
- * @author tom.shapira
+ * @author Edo.Shor
  */
-public final class ClientConstants {
-	
-	/* --- Service info --- */
+public class WssServiceException extends Exception {
 
-    public static final String SERVICE_URL_KEYWORD = "wss.url";
+	/* --- Static members --- */
 
-	public static final String DEFAULT_SERVICE_URL = "http://saas.whitesourcesoftware.com/agent";
-	
-	public static final String APPLICATION_JSON = "application/json";
+	private static final long serialVersionUID = -6703395740692354154L;
 	
 	/* --- Constructors --- */
-	
-	/**
-	 * Private default constructor
-	 */
-	private ClientConstants() {
-		// avoid instantiation
-	}
 
+	public WssServiceException(){
+		super();
+	}
+	
+	public WssServiceException(String message){
+		super(message);
+	}
+	
+	public WssServiceException(Throwable cause){
+		super(cause);
+	}
+	
+	public WssServiceException(String message, Throwable cause){
+		super(message, cause);
+	}
+	
 }

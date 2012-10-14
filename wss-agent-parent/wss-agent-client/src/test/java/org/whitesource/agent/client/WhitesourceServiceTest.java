@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.whitesource.agent.api.client;
+package org.whitesource.agent.client;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +26,6 @@ import org.whitesource.agent.api.dispatch.ReportRequest;
 import org.whitesource.agent.api.dispatch.UpdateInventoryRequest;
 import org.whitesource.agent.api.model.AgentProjectInfo;
 import org.whitesource.agent.api.model.DependencyInfo;
-import org.whitesource.api.client.*;
 
 import java.util.ArrayList;
 

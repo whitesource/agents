@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.whitesource.api.client;
+package org.whitesource.agent.client;
 
 import org.whitesource.agent.api.dispatch.*;
 import org.whitesource.agent.api.model.AgentProjectInfo;
@@ -109,7 +109,7 @@ public class WhitesourceService {
     /**
      * The method close the underlying client to the White Source service.
      *
-     * @see org.whitesource.api.client.WssServiceClient#shutdown()
+     * @see org.whitesource.agent.client.WssServiceClient#shutdown()
      */
     public void shutdown() {
         client.shutdown();

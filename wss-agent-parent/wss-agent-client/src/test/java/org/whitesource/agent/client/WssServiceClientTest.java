@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.whitesource.agent.api.client;
+package org.whitesource.agent.client;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -33,9 +33,6 @@ import org.junit.rules.ExpectedException;
 import org.whitesource.agent.api.APIConstants;
 import org.whitesource.agent.api.dispatch.*;
 import org.whitesource.agent.api.model.*;
-import org.whitesource.api.client.WssServiceClient;
-import org.whitesource.api.client.WssServiceClientImpl;
-import org.whitesource.api.client.WssServiceException;
 
 import java.io.IOException;
 import java.lang.reflect.Type;

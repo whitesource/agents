@@ -65,7 +65,7 @@
 
 	<modules>
 		<module>wss-agent-api</module>
-		<module>wss-agent-api-client</module>
+		<module>wss-agent-client</module>
         <module>wss-agent-report</module>
     </modules>
 

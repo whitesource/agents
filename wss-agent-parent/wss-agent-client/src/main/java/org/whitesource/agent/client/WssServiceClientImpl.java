@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.whitesource.api.client;
+package org.whitesource.agent.client;
 
 import com.google.gson.Gson;
 import org.apache.commons.logging.Log;
