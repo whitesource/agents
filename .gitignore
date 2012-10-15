@@ -1,20 +1,4 @@
+.idea
+*.iml
 
-/wss-agent-parent/.idea
-/wss-agent-parent/.settings
-/wss-agent-parent/.project
-/wss-agent-parent/wss-agent-parent.iml
-
-/wss-agent-parent/wss-agent-client/target
-/wss-agent-parent/wss-agent-client/.settings
-/wss-agent-parent/wss-agent-client/.project
-/wss-agent-parent/wss-agent-client/.classpath
-/wss-agent-parent/wss-agent-client/wss-agent-client.iml
-
-/wss-agent-parent/wss-agent-api/target
-/wss-agent-parent/wss-agent-api/.settings
-/wss-agent-parent/wss-agent-api/.project
-/wss-agent-parent/wss-agent-api/.classpath
-/wss-agent-parent/wss-agent-api/wss-agent-api.iml
-
-/wss-agent-parent/wss-agent-report/target
-/wss-agent-parent/wss-agent-report/wss-agent-report.iml
+target/
