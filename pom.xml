@@ -261,8 +261,7 @@
                     <artifactId>maven-release-plugin</artifactId>
                     <version>2.3.2</version>
                     <configuration>
-                        <arguments>-Dgpg.passphrase=${passed.gpg.passphrase} -Dgpg.homedir=${passed.gpg.homedir}
-                        </arguments>
+                        <arguments>-Dgpg.passphrase=${passed.gpg.passphrase} -Dgpg.homedir=${passed.gpg.homedir}</arguments>
                         <releaseProfiles>Release</releaseProfiles>
                     </configuration>
                 </plugin>
@@ -284,10 +283,10 @@
                         <server>github</server>
                         <description>${project.version} release of ${project.name}</description>
                         <override>true</override>
-                        <includeAttached>true</includeAttached>
-                        <excludes>
-                            <exclude>**/*.asc</exclude>
-                        </excludes>
+                        <includeAttached>false</includeAttached>
+                        <includes>
+                            <include>*.jar</include>
+                        </includes>
                     </configuration>
                     <executions>
                         <execution>
