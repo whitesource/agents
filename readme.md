@@ -18,7 +18,7 @@ Setup and usage instructions for each agent can be found in the [documentation][
 We recommend to visit the [service documentation][7] as well.
 
 ### Available plugins
-At the moment we have plugins for [Maven][3], [Jenknins CI][4] and [TeamCity][5].
+At the moment we have plugins for [Maven][3],[Ant][10], [Jenknins CI][4] and [TeamCity][5].
 More plugins will be available soon. 
 Meanwhile, if you need a plugin for another system please drop a line to our [support team][6].
 
@@ -62,3 +62,4 @@ limitations under the License.
 [7]: http://docs.whitesourcesoftware.com/display/serviceDocs/Home
 [8]: http://www.apache.org/licenses/LICENSE-2.0.html
 [9]: http://whitesource.github.com/agents
+[10]: http://www.github.com/whitesource/ant-plugin
