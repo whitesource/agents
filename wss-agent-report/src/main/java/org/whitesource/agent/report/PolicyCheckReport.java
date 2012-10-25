@@ -18,7 +18,7 @@ package org.whitesource.agent.report;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
+import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.whitesource.agent.api.dispatch.CheckPoliciesResult;
 import org.whitesource.agent.api.model.ResourceInfo;
@@ -91,24 +91,43 @@ public class PolicyCheckReport {
      * @param pack      <code>True</code> to create a zip file from the resulting directory.
      */
     public File generate(File outputDir, boolean pack) throws IOException {
+        return generate(outputDir, pack, null);
+    }
+
+    /**
+     * The method generate the policy check report
+     *
+     * @param outputDir Directory where report files will be created.
+     * @param pack      <code>True</code> to create a zip file from the resulting directory.
+     * @param properties Properties for template engine.
+     *
+     * @return  File reference to the resulting report.
+     *
+     * @throws IOException In case of errors during report generation process.
+     */
+    public File generate(File outputDir, boolean pack, Properties properties) throws IOException {
         if (result == null) {
             throw new IllegalStateException("Check policies result is null");
         }
 
-        // make sure we have a working directory
+        // prepare working directory
         File workDir = new File(outputDir, "whitesource");
         File reportFile = workDir;
         if (!workDir.exists()) {
-            boolean mkdir = workDir.mkdir();
-            if (!mkdir) {
-                throw new IOException("Unable to make output directory");
+            if (!workDir.mkdir()) {
+                throw new IOException("Unable to make output directory: " + workDir);
             }
         }
 
         // create actual report
-        createReport(workDir);
+        VelocityEngine engine = createTemplateEngine(properties);
+        VelocityContext context = createTemplateContext();
+        FileWriter fw = new FileWriter(new File(workDir, "index.html"));
+        engine.mergeTemplate(TEMPLATE_FOLDER + TEMPLATE_FILE, "UTF-8", context, fw);
+        fw.flush();
+        fw.close();
 
-        // copy report resources
+        // copy resources
         copyReportResources(workDir);
 
         // package report into a zip archive
@@ -122,16 +141,45 @@ public class PolicyCheckReport {
         return reportFile;
     }
 
-    /* --- Private methods --- */
+    /* --- Protected methods --- */
 
-    private void createReport(File outputDir) throws IOException {
-        // initialize velocity engine
-        Velocity.setProperty(Velocity.RESOURCE_LOADER, "classpath");
-        Velocity.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
-        Velocity.init();
+    /**
+     * Create and initialize a template engine to use for generating reports.
+     *
+     * @param properties properties to use for engine initialization. May be null.
+     *
+     * @return A new instance of th template engine to use.
+     */
+    protected VelocityEngine createTemplateEngine(Properties properties) {
+        Properties actualProperties = properties;
+        if (actualProperties == null) {
+            actualProperties = new Properties();
+        }
 
-        // create template context
+        String resourceLoader = actualProperties.getProperty(VelocityEngine.RESOURCE_LOADER);
+        if (StringUtils.isBlank(resourceLoader)) {
+            actualProperties.setProperty(VelocityEngine.RESOURCE_LOADER, "classpath");
+            actualProperties.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+        }
+
+        String loggerClass = actualProperties.getProperty(VelocityEngine.RUNTIME_LOG_LOGSYSTEM_CLASS);
+        if (StringUtils.isBlank(loggerClass)) {
+            actualProperties.setProperty(VelocityEngine.RUNTIME_LOG_LOGSYSTEM_CLASS,
+                    "org.apache.velocity.runtime.log.NullLogChute");
+        }
+
+        VelocityEngine velocity = new VelocityEngine(actualProperties);
+        velocity.init();
+
+        return velocity;
+    }
+
+    /**
+     * Create the context holding all the information of the report.
+     */
+    protected VelocityContext createTemplateContext() {
         VelocityContext context = new VelocityContext();
+
         context.put("result", result);
         context.put("hasRejections", result.hasRejections());
         context.put("licenses", createLicenseHistogram(result));
@@ -140,16 +188,26 @@ public class PolicyCheckReport {
         if (StringUtils.isNotBlank(buildName)) {
             context.put("buildName", buildName);
         }
+
         if (StringUtils.isNotBlank(buildNumber)) {
             context.put("buildNumber", buildNumber);
         }
 
-        // merge template and close file
-        FileWriter fw = new FileWriter(new File(outputDir, "index.html"));
-        Velocity.mergeTemplate(TEMPLATE_FOLDER + TEMPLATE_FILE, "UTF-8", context, fw);
-        fw.flush();
-        fw.close();
+        return context;
     }
+
+    /**
+     * Copy required resources for the report.
+     *
+     * @param workDir Report work directory.
+     *
+     * @throws IOException
+     */
+    protected void copyReportResources(File workDir) throws IOException {
+        FileUtils.copyResource(TEMPLATE_FOLDER + CSS_FILE, new File(workDir, CSS_FILE));
+    }
+
+    /* --- Private methods --- */
 
     private Collection<LicenseHistogramDataPoint> createLicenseHistogram(CheckPoliciesResult result) {
         Collection<LicenseHistogramDataPoint> dataPoints = new ArrayList<LicenseHistogramDataPoint>();
@@ -199,11 +257,6 @@ public class PolicyCheckReport {
         }
 
         return dataPoints;
-    }
-
-    private void copyReportResources(File outputDir) throws IOException {
-        // copy css file
-        FileUtils.copyResource(TEMPLATE_FOLDER + CSS_FILE, new File(outputDir, CSS_FILE));
     }
 
     /* --- Getters / Setters --- */
