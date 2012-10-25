@@ -113,19 +113,20 @@ public class PolicyCheckReport {
         // prepare working directory
         File workDir = new File(outputDir, "whitesource");
         File reportFile = workDir;
-        if (!workDir.exists()) {
-            if (!workDir.mkdir()) {
-                throw new IOException("Unable to make output directory: " + workDir);
-            }
+        if (!workDir.exists() && !workDir.mkdir()) {
+            throw new IOException("Unable to make output directory: " + workDir);
         }
 
         // create actual report
         VelocityEngine engine = createTemplateEngine(properties);
         VelocityContext context = createTemplateContext();
         FileWriter fw = new FileWriter(new File(workDir, "index.html"));
-        engine.mergeTemplate(TEMPLATE_FOLDER + TEMPLATE_FILE, "UTF-8", context, fw);
-        fw.flush();
-        fw.close();
+        try {
+            engine.mergeTemplate(TEMPLATE_FOLDER + TEMPLATE_FILE, "UTF-8", context, fw);
+            fw.flush();
+        } catch (Exception e) {
+            FileUtils.close(fw);
+        }
 
         // copy resources
         copyReportResources(workDir);
