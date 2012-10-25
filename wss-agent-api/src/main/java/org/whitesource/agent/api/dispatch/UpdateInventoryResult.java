@@ -15,6 +15,7 @@
  */
 package org.whitesource.agent.api.dispatch;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -24,9 +25,13 @@ import java.util.Collection;
  * 
  * @author Edo.Shor
  */
-public class UpdateInventoryResult {
-	
-	/* --- Members --- */
+public class UpdateInventoryResult implements Serializable {
+
+    /* --- Static members --- */
+
+    private static final long serialVersionUID = 9074828488465436483L;
+
+    /* --- Members --- */
 	
 	private String organization;
 	

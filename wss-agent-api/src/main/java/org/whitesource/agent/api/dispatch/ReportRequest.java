@@ -23,6 +23,8 @@ import java.util.Collection;
  * Request for WhiteSource anonymous report.
  * 
  * @author tom.shapira
+ *
+ * @deprecated No use for this operation anymore.
  */
 public class ReportRequest extends BaseRequest<ReportResult> {
 

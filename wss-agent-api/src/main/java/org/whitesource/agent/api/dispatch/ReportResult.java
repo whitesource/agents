@@ -23,6 +23,8 @@ import java.util.Map;
  * Result of the license distribution operation.
  * 
  * @author tom.shapira
+ *
+ * @deprecated No use for this operation anymore.
  */
 public class ReportResult {
 	

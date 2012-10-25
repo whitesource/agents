@@ -18,6 +18,7 @@ package org.whitesource.agent.api.dispatch;
 import org.whitesource.agent.api.model.PolicyCheckResourceNode;
 import org.whitesource.agent.api.model.ResourceInfo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -31,7 +32,11 @@ import java.util.Map;
  *
  * @since 1.2.0
  */
-public class CheckPoliciesResult {
+public class CheckPoliciesResult implements Serializable {
+
+    /* --- Static members --- */
+
+    private static final long serialVersionUID = 7083481460957821913L;
 
 	/* --- Members --- */
 

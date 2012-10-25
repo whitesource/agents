@@ -22,6 +22,8 @@ import java.util.Properties;
  * Result of the properties operation.
  * 
  * @author tom.shapira
+ *
+ * @deprecated No use for this operation anymore
  */
 public class PropertiesResult {
 	

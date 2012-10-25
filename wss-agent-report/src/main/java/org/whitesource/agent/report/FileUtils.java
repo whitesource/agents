@@ -24,7 +24,7 @@ import java.util.zip.ZipOutputStream;
  *
  * @author Edo.Shor
  */
-public class FileUtils {
+public final class FileUtils {
 
     /* --- Public methods --- */
 
@@ -87,7 +87,7 @@ public class FileUtils {
         try {
             traverseAndWrite(dir, zos, new StringBuilder(), true, buffer);
         } finally {
-            zos.close();
+            close(zos);
         }
     }
 
@@ -141,7 +141,7 @@ public class FileUtils {
                     zos.write(buffer, 0, Math.max(read, 0));
                 } while (read == buffer.length);
             } finally {
-                input.close();
+                close(input);
             }
         } else {
             final File[] files = file.listFiles();
@@ -153,5 +153,14 @@ public class FileUtils {
                 }
             }
         }
+    }
+
+    /* --- Constructors --- */
+
+    /**
+     * Private constructor
+     */
+    private FileUtils() {
+        // avoid instantiation
     }
 }

@@ -62,7 +62,11 @@ public final class ChecksumUtils {
                 len = fis.read(buffer, 0, BUFFER_SIZE);
             }
         } finally {
-            fis.close();
+            try{
+                fis.close();
+            } catch (IOException e) {
+                // ignore
+            }
         }
 
         return toHex(messageDigest.digest());

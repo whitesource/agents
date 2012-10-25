@@ -19,6 +19,8 @@ package org.whitesource.agent.api.dispatch;
  * Request for service properties.
  * 
  * @author Edo.Shor
+ *
+ * @deprecated No use for this operation anymore
  */
 public class PropertiesRequest extends BaseRequest<PropertiesResult> {
 

@@ -23,7 +23,6 @@ import org.whitesource.agent.api.model.*;
 import java.util.*;
 
 import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Unit test for api model and operation pojos serialization.
