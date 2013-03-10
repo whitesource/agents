@@ -21,8 +21,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.whitesource.agent.api.dispatch.CheckPoliciesRequest;
-import org.whitesource.agent.api.dispatch.PropertiesRequest;
-import org.whitesource.agent.api.dispatch.ReportRequest;
 import org.whitesource.agent.api.dispatch.UpdateInventoryRequest;
 import org.whitesource.agent.api.model.AgentProjectInfo;
 import org.whitesource.agent.api.model.DependencyInfo;
@@ -49,15 +47,15 @@ public class WhitesourceServiceTest {
     public void testDefaultConstructor() {
         WhitesourceService service = new WhitesourceService();
 
-        PropertiesRequest propertiesRequest = service.getRequestFactory().newPropertiesRequest("orgToken");
-        assertEquals("generic", propertiesRequest.agent());
-        assertEquals("1.0", propertiesRequest.agentVersion());
+        UpdateInventoryRequest updateRequest = service.getRequestFactory().newUpdateInventoryRequest("orgToken", null);
+        assertEquals("generic", updateRequest.agent());
+        assertEquals("1.0", updateRequest.agentVersion());
         assertEquals(ClientConstants.DEFAULT_SERVICE_URL, ((WssServiceClientImpl) service.getClient()).getServiceUrl());
 
         service = new WhitesourceService("agent", "agentVersion");
-        propertiesRequest = service.getRequestFactory().newPropertiesRequest("orgToken");
-        assertEquals("agent", propertiesRequest.agent());
-        assertEquals("agentVersion", propertiesRequest.agentVersion());
+        updateRequest = service.getRequestFactory().newUpdateInventoryRequest("orgToken", null);
+        assertEquals("agent", updateRequest.agent());
+        assertEquals("agentVersion", updateRequest.agentVersion());
         assertEquals(ClientConstants.DEFAULT_SERVICE_URL, ((WssServiceClientImpl) service.getClient()).getServiceUrl());
 
         System.setProperty(ClientConstants.SERVICE_URL_KEYWORD, "serviceUrl");
@@ -73,21 +71,12 @@ public class WhitesourceServiceTest {
     public void testServiceMethods() throws WssServiceException {
         WhitesourceService service = new WhitesourceService();
         service.setClient(client);
-        service.getProperties("orgToken");
-        ArgumentCaptor<PropertiesRequest> propertiesCaptor = ArgumentCaptor.forClass(PropertiesRequest.class);
-        verify(client).getProperties(propertiesCaptor.capture());
-        assertEquals("orgToken", propertiesCaptor.getValue().orgToken());
 
         service.update("orgToken", new ArrayList<AgentProjectInfo>());
         ArgumentCaptor<UpdateInventoryRequest> updateCaptor = ArgumentCaptor.forClass(UpdateInventoryRequest.class);
         verify(client).updateInventory(updateCaptor.capture());
         assertEquals("orgToken", updateCaptor.getValue().orgToken());
         assertTrue(updateCaptor.getValue().getProjects().isEmpty());
-
-        service.getReport(new ArrayList<DependencyInfo>());
-        ArgumentCaptor<ReportRequest> reportCaptor = ArgumentCaptor.forClass(ReportRequest.class);
-        verify(client).getReport(reportCaptor.capture());
-        assertTrue(reportCaptor.getValue().getDependencies().isEmpty());
 
         service.checkPolicies("orgToken", new ArrayList<AgentProjectInfo>());
         ArgumentCaptor<CheckPoliciesRequest> checkPoliciesCaptor = ArgumentCaptor.forClass(CheckPoliciesRequest.class);

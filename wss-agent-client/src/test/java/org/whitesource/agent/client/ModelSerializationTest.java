@@ -40,12 +40,6 @@ public class ModelSerializationTest {
     /* --- Test methods --- */
 
     @Test
-    public void testPropertiesRequest() {
-        PropertiesRequest request = requestFactory.newPropertiesRequest("orgToken");
-        testRequest(request, PropertiesRequest.class);
-    }
-
-    @Test
     public void testUpdateInventoryRequest() {
         Collection<AgentProjectInfo> projectInfos = createTestProjects();
         UpdateInventoryRequest request = requestFactory.newUpdateInventoryRequest("orgToken", projectInfos);
@@ -59,19 +53,6 @@ public class ModelSerializationTest {
         CheckPoliciesRequest request = requestFactory.newCheckPoliciesRequest("orgToken", projectInfos);
         CheckPoliciesRequest deserializedRequest = testRequest(request, CheckPoliciesRequest.class);
         assertProjectsEquals(deserializedRequest.getProjects(), request.getProjects());
-    }
-
-    @Test
-    public void testPropertiesResult() {
-        PropertiesResult result = new PropertiesResult();
-        Properties properties = new Properties();
-        for (int i = 0; i < 15; i++) {
-            properties.put("key-" + i, "value-" + i);
-        }
-        result.setProperties(properties);
-
-        PropertiesResult deserializedResult = testResult(result, PropertiesResult.class);
-        assertEquals(result.getProperties(), deserializedResult.getProperties());
     }
 
     @Test

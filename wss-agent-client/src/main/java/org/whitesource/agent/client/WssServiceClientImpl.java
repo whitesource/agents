@@ -26,6 +26,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -90,23 +91,14 @@ public class WssServiceClientImpl implements WssServiceClient {
 		HttpParams params = new BasicHttpParams();
 		HttpConnectionParams.setConnectionTimeout(params, DEFAULT_CONNECTION_TIMEOUT);
 		HttpConnectionParams.setSoTimeout(params, DEFAULT_CONNECTION_TIMEOUT);
+        HttpClientParams.setRedirecting(params, true);
 		httpClient = new DefaultHttpClient(params);
 	}
 
 	/* --- Interface implementation methods --- */
 
 	@Override
-	public PropertiesResult getProperties(PropertiesRequest request) throws WssServiceException {
-		return service(request);
-	}
-
-	@Override
 	public UpdateInventoryResult updateInventory(UpdateInventoryRequest request) throws WssServiceException {
-		return service(request);
-	}
-	
-	@Override
-	public ReportResult getReport(ReportRequest request) throws WssServiceException {
 		return service(request);
 	}
 
@@ -145,7 +137,7 @@ public class WssServiceClientImpl implements WssServiceClient {
 	 */
 	@SuppressWarnings("unchecked")
 	protected <R> R service(ServiceRequest<R> request) throws WssServiceException {
-		R result = null;
+		R result;
 		
 		try {
 			HttpRequestBase httpRequest = createHttpRequest(request);
@@ -157,14 +149,8 @@ public class WssServiceClientImpl implements WssServiceClient {
             logger.trace("Result data is: " + data);
 
             switch (request.type()) {
-            case PROPERTIES:
-                result = (R) gson.fromJson(data, PropertiesResult.class);
-                break;
             case UPDATE:
                 result = (R) gson.fromJson(data, UpdateInventoryResult.class);
-                break;
-            case REPORT:
-                result = (R) gson.fromJson(data, ReportResult.class);
                 break;
             case CHECK_POLICIES:
                 result = (R) gson.fromJson(data, CheckPoliciesResult.class);
@@ -208,10 +194,6 @@ public class WssServiceClientImpl implements WssServiceClient {
             nvps.add(new BasicNameValuePair(APIConstants.PARAM_TIME_STAMP, String.valueOf(request.timeStamp())));
             nvps.add(new BasicNameValuePair(APIConstants.PARAM_DIFF, gson.toJson(((CheckPoliciesRequest) request).getProjects())));
             break;
-		case REPORT:
-			nvps.add(new BasicNameValuePair(APIConstants.PARAM_TIME_STAMP, String.valueOf(request.timeStamp())));
-			nvps.add(new BasicNameValuePair(APIConstants.PARAM_DEPENDENCIES, gson.toJson(((ReportRequest) request).getDependencies())));
-			break;
 		default:
 			break;
 		}

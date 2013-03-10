@@ -15,7 +15,10 @@
  */
 package org.whitesource.agent.client;
 
-import org.whitesource.agent.api.dispatch.*;
+import org.whitesource.agent.api.dispatch.CheckPoliciesRequest;
+import org.whitesource.agent.api.dispatch.CheckPoliciesResult;
+import org.whitesource.agent.api.dispatch.UpdateInventoryRequest;
+import org.whitesource.agent.api.dispatch.UpdateInventoryResult;
 
 /**
  * The interface describes the functionality to be exposed by a client implementation to the White Source agent service.
@@ -26,16 +29,6 @@ import org.whitesource.agent.api.dispatch.*;
 public interface WssServiceClient {
 
     /**
-     * The method calls the White Source service for properties.
-     *
-     * @param request Properties request.
-     * @return Properties result.
-     * @throws WssServiceException In case an error occurred during the call to White Source server.
-     */
-    @Deprecated
-    PropertiesResult getProperties(PropertiesRequest request) throws WssServiceException;
-
-    /**
      * The method calls the White Source service for inventory update.
      *
      * @param request Inventory update request.
@@ -43,17 +36,6 @@ public interface WssServiceClient {
      * @throws WssServiceException In case an error occurred during the call to White Source server.
      */
     UpdateInventoryResult updateInventory(UpdateInventoryRequest request) throws WssServiceException;
-
-    /**
-     * The method calls the White Source service for dependency analysis report.
-     *
-     * @param request Report request.
-     * @return Report result.
-     * @throws WssServiceException In case an error occurred during the call to White Source server.
-     */
-    @Deprecated
-    ReportResult getReport(ReportRequest request) throws WssServiceException;
-
 
     /**
      * The method call the White Source service for checking policies application.

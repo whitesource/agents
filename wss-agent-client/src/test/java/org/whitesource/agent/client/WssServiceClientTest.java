@@ -81,37 +81,6 @@ public class WssServiceClientTest {
     /* --- Test methods --- */
 
     @Test
-    public void testPropertiesRequestSentOk() {
-        final PropertiesRequest propertiesRequest = requestFactory.newPropertiesRequest(null);
-
-        HttpRequestHandler handler = new HttpRequestHandler() {
-            @Override
-            public void handle(HttpRequest request, HttpResponse response, HttpContext context) throws HttpException, IOException {
-                HttpEntity entity = ((HttpEntityEnclosingRequest) request).getEntity();
-                List<NameValuePair> nvps = URLEncodedUtils.parse(entity);
-                for (NameValuePair nvp : nvps) {
-                    if (nvp.getName().equals(APIConstants.PARAM_REQUEST_TYPE)) {
-                        assertEquals(nvp.getValue(), propertiesRequest.type().toString());
-                    } else if (nvp.getName().equals(APIConstants.PARAM_AGENT)) {
-                        assertEquals(nvp.getValue(), propertiesRequest.agent());
-                    } else if (nvp.getName().equals(APIConstants.PARAM_AGENT_VERSION)) {
-                        assertEquals(nvp.getValue(), propertiesRequest.agentVersion());
-                    } else if (nvp.getName().equals(APIConstants.PARAM_TOKEN)) {
-                        assertEquals(nvp.getValue(), propertiesRequest.orgToken());
-                    }
-                }
-            }
-        };
-        server.register("/agent", handler);
-
-        try {
-            client.getProperties(propertiesRequest);
-        } catch (WssServiceException e) {
-            // suppress exception
-        }
-    }
-
-    @Test
     public void testUpdateRequestSentOk() {
         final Collection<AgentProjectInfo> projects = new ArrayList<AgentProjectInfo>();
         final AgentProjectInfo projectInfo = new AgentProjectInfo();
@@ -213,50 +182,6 @@ public class WssServiceClientTest {
         } catch (WssServiceException e) {
             // suppress exception
         }
-    }
-
-    @Test
-    public void testProperties() {
-        PropertiesResult response = new PropertiesResult(new Properties());
-        server.register("/agent", createHandler(response));
-
-        PropertiesRequest request = requestFactory.newPropertiesRequest(null);
-        PropertiesResult result = null;
-        try {
-            result = client.getProperties(request);
-        } catch (WssServiceException e) {
-            log.error("Error getting properties", e);
-            fail("Unable to get properties");
-        }
-
-        assertNotNull(result);
-        assertNotNull(result.getProperties());
-    }
-
-    @Test
-    public void testReport() {
-        Map<String, Integer> licenseDistribution = new HashMap<String, Integer>();
-        licenseDistribution.put("Apache 2.0", 10);
-        licenseDistribution.put("GPL 3.0", 1);
-        ReportResult response = new ReportResult(licenseDistribution, 8);
-        server.register("/agent", createHandler(response));
-
-        Collection<DependencyInfo> dependencies = Arrays.asList(new DependencyInfo("groupId", "artifactId", "version"));
-        ReportRequest request = requestFactory.newReportRequest(dependencies);
-
-        ReportResult result = null;
-        try {
-            result = client.getReport(request);
-        } catch (WssServiceException e) {
-            log.error("Error getting report", e);
-            fail("Unable to get report");
-        }
-
-        assertNotNull(result);
-        assertEquals(8, result.getNumOfNewerVersions());
-        assertNotNull(result.getLicenseDistribution());
-        assertEquals(10, result.getLicenseDistribution().get("Apache 2.0").intValue());
-        assertEquals(1, result.getLicenseDistribution().get("GPL 3.0").intValue());
     }
 
     @Test
@@ -380,9 +305,9 @@ public class WssServiceClientTest {
         thrown.expect(WssServiceException.class);
         thrown.expectMessage(ResultEnvelope.MESSAGE_ILLEGAL_ARGUMENTS);
 
-        PropertiesResult response = new PropertiesResult(new Properties());
+         CheckPoliciesResult response = new CheckPoliciesResult();
         server.register("/agent", createHandler(response, ResultEnvelope.STATUS_BAD_REQUEST, ResultEnvelope.MESSAGE_ILLEGAL_ARGUMENTS));
-        client.getProperties(requestFactory.newPropertiesRequest(null));
+        client.checkPolicies(requestFactory.newCheckPoliciesRequest("orgToken", null));
     }
 
     @Test
@@ -399,7 +324,7 @@ public class WssServiceClientTest {
             }
         });
 
-        client.getProperties(requestFactory.newPropertiesRequest(null));
+        client.checkPolicies(requestFactory.newCheckPoliciesRequest("orgToken", null));
     }
 
     @Test
@@ -416,7 +341,7 @@ public class WssServiceClientTest {
             }
         });
 
-        client.getProperties(requestFactory.newPropertiesRequest(null));
+        client.checkPolicies(requestFactory.newCheckPoliciesRequest("orgToken", null));
     }
 
     /* --- Private methods --- */

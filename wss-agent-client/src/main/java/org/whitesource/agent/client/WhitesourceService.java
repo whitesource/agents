@@ -83,30 +83,6 @@ public class WhitesourceService {
     }
 
     /**
-     * The method get the properties defined in the white source account.
-     *
-     * @param orgToken Orgnization token uniquely identifying the account at white source.
-     * @return Whtie source account properties.
-     * @throws WssServiceException In case of errors while getting the properties form white source.
-     */
-    public PropertiesResult getProperties(String orgToken)
-            throws WssServiceException {
-        return client.getProperties(requestFactory.newPropertiesRequest(orgToken));
-    }
-
-    /**
-     * The method get a license report for the given dependencies.
-     *
-     * @param dependencies Collection of dependencies to get a report for.
-     * @return Report for the given dependencies.
-     * @throws WssServiceException In case of errors while getting the report from white source.
-     */
-    public ReportResult getReport(Collection<DependencyInfo> dependencies)
-            throws WssServiceException {
-        return client.getReport(requestFactory.newReportRequest(dependencies));
-    }
-
-    /**
      * The method close the underlying client to the White Source service.
      *
      * @see org.whitesource.agent.client.WssServiceClient#shutdown()

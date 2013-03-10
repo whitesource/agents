@@ -29,7 +29,6 @@
         <connection>scm:git:git@github.com:whitesource/agents.git</connection>
         <developerConnection>scm:git:git@github.com:whitesource/agents.git</developerConnection>
         <url>git@github.com:whitesource/agents.git</url>
-      <tag>HEAD</tag>
 	</scm>
     <issueManagement>
         <url>https://github.com/whitesource/agents/issues</url>
@@ -279,6 +278,7 @@
                         <moduleTokens>
                             <wss-agent-api>98660a04-d68c-429e-b145-fd62dadd60bc</wss-agent-api>
                             <wss-agent-api-client>49f1c563-d138-4efe-9d5e-7905c1fec809</wss-agent-api-client>
+                            <wss-agent-report>a76038fa-6466-4072-9ab8-4c80d021d1bd</wss-agent-report>
                         </moduleTokens>
                     </configuration>
                 </plugin>

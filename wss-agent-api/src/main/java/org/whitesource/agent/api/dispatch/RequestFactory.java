@@ -16,7 +16,6 @@
 package org.whitesource.agent.api.dispatch;
 
 import org.whitesource.agent.api.model.AgentProjectInfo;
-import org.whitesource.agent.api.model.DependencyInfo;
 
 import java.util.Collection;
 
@@ -47,32 +46,6 @@ public class RequestFactory {
     }
 
     /* --- Public methods --- */
-
-    /**
-     * Create new Properties request.
-     *
-     * @param orgToken WhiteSource organization token.
-     * @return Newly created request for properties.
-     */
-    public PropertiesRequest newPropertiesRequest(String orgToken) {
-        PropertiesRequest request = new PropertiesRequest(orgToken);
-        prepareRequest(request);
-
-        return request;
-    }
-
-    /**
-     * Create new Report request.
-     *
-     * @param dependencies List of dependencies for analysis.
-     * @return Newly created request for analysis.
-     */
-    public ReportRequest newReportRequest(Collection<DependencyInfo> dependencies) {
-        ReportRequest request = new ReportRequest(dependencies);
-        prepareRequest(request);
-
-        return request;
-    }
 
     /**
      * Create new Inventory Update request.

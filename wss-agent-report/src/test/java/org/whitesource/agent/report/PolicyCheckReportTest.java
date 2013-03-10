@@ -52,10 +52,34 @@ public class PolicyCheckReportTest {
     }
 
     @Test
+    public void testEmptyResult() throws IOException {
+        CheckPoliciesResult result = new CheckPoliciesResult();
+        PolicyCheckReport report = new PolicyCheckReport(result);
+        report.generate(temporaryFolder.getRoot(), false);
+        report.getBuildName(); // just for breakpoints
+    }
+
+    @Test
+    public void testResultWEmptyProjects() throws IOException {
+        PolicyCheckResourceNode root = new PolicyCheckResourceNode();
+        CheckPoliciesResult result = new CheckPoliciesResult();
+        result.setOrganization("Report test org");
+        result.getExistingProjects().put("existing-project-1", root);
+        result.getExistingProjects().put("existing-project-2", root);
+        result.getNewProjects().put("new-project-1", root);
+        result.getProjectNewResources().put("existing-project-1", new ArrayList<ResourceInfo>());
+        result.getProjectNewResources().put("existing-project-2", new ArrayList<ResourceInfo>());
+        result.getProjectNewResources().put("new-project-1", new ArrayList<ResourceInfo>());
+
+        PolicyCheckReport report = new PolicyCheckReport(result);
+        report.generate(temporaryFolder.getRoot(), false);
+        report.getBuildName(); // just for breakpoints
+    }
+
+    @Test
     public void testCreateReport() throws IOException {
         CheckPoliciesResult result = createResult();
         PolicyCheckReport report = new PolicyCheckReport(result);
-
 
         report.generate(temporaryFolder.getRoot(), false);
         report.getBuildName(); // just for breakpoints

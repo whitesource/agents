@@ -21,10 +21,7 @@ package org.whitesource.agent.api.dispatch;
  * @author Edo.Shor
  */
 public enum RequestType {
-	
-	PROPERTIES,
 	UPDATE,
-	REPORT,
     CHECK_POLICIES
 
 }

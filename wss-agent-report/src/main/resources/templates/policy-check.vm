@@ -62,11 +62,15 @@
 #end
 
 #macro ( projectDependenciesTree $root)
-    <ul>
-        #foreach ($child in $root.children)
-            #dependencyNode ($child)
-        #end
-    </ul>
+    #if ($root.children.size > 0)
+        <ul>
+            #foreach ($child in $root.children)
+                #dependencyNode ($child)
+            #end
+        </ul>
+    #else
+        No libraries found in project
+    #end
 #end
 
 #macro ( dependencyNode $node)
