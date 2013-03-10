@@ -15,9 +15,10 @@
  */
 package org.whitesource.agent.client;
 
-import org.whitesource.agent.api.dispatch.*;
+import org.whitesource.agent.api.dispatch.CheckPoliciesResult;
+import org.whitesource.agent.api.dispatch.RequestFactory;
+import org.whitesource.agent.api.dispatch.UpdateInventoryResult;
 import org.whitesource.agent.api.model.AgentProjectInfo;
-import org.whitesource.agent.api.model.DependencyInfo;
 
 import java.util.Collection;
 
