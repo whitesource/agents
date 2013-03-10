@@ -19,10 +19,7 @@ import org.whitesource.agent.api.model.PolicyCheckResourceNode;
 import org.whitesource.agent.api.model.ResourceInfo;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -93,12 +90,10 @@ public class CheckPoliciesResult implements Serializable {
         roots.addAll(getExistingProjects().values());
         roots.addAll(getNewProjects().values());
 
-        for (PolicyCheckResourceNode root : roots) {
-            if (root.hasRejections()) {
-                hasRejections = true;
-                break;
-            }
-        }
+        Iterator<PolicyCheckResourceNode> iterator = roots.iterator();
+        while (iterator.hasNext() && !hasRejections ) {
+            hasRejections = iterator.next().hasRejections();
+        }        
 
         return hasRejections;
     }

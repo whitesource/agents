@@ -18,6 +18,7 @@ package org.whitesource.agent.api.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * A node for each resource in a dependency graph with associated policy application results.
@@ -65,13 +66,9 @@ public class PolicyCheckResourceNode implements Serializable {
     public boolean hasRejections() {
         boolean rejections = policy != null && "Reject".equals(policy.getActionType());
 
-        if (!rejections) {
-            for (PolicyCheckResourceNode child : children) {
-                rejections = child.hasRejections();
-                if (rejections) {
-                    break;
-                }
-            }
+        Iterator<PolicyCheckResourceNode> it = children.iterator();
+        while (it.hasNext() && !rejections) {
+            rejections = it.next().hasRejections();
         }
 
         return rejections;

@@ -124,7 +124,7 @@ public class PolicyCheckReport {
         try {
             engine.mergeTemplate(TEMPLATE_FOLDER + TEMPLATE_FILE, "UTF-8", context, fw);
             fw.flush();
-        } catch (Exception e) {
+        } finally {
             FileUtils.close(fw);
         }
 
