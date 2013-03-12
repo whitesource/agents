@@ -23,7 +23,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.whitesource.agent.api.dispatch.CheckPoliciesRequest;
 import org.whitesource.agent.api.dispatch.UpdateInventoryRequest;
 import org.whitesource.agent.api.model.AgentProjectInfo;
-import org.whitesource.agent.api.model.DependencyInfo;
 
 import java.util.ArrayList;
 

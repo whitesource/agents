@@ -15,8 +15,6 @@
  */
 package org.whitesource.agent.api.model;
 
-import org.whitesource.agent.api.APIConstants;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
