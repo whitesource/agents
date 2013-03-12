@@ -391,19 +391,6 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.whitesource</groupId>
-                        <artifactId>whitesource-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>update-whitesource</id>
-                                <phase>deploy</phase>
-                                <goals>
-                                    <goal>update</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
                         <groupId>com.github.github</groupId>
                         <artifactId>site-maven-plugin</artifactId>
                         <executions>
