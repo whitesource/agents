@@ -225,13 +225,7 @@ public class PolicyCheckReport {
 
         // sort by count descending
         List<Map.Entry<String, Integer>> licenses = new ArrayList<Map.Entry<String, Integer>>(licenseHistogram.entrySet());
-        Collections.sort(licenses, new Comparator<Map.Entry<String, Integer>>() {
-
-            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-                return o2.getValue().compareTo(o1.getValue());
-            }
-        });
-
+        Collections.sort(licenses, new ValueComparator());
 
         // create data points
         if (!licenses.isEmpty()) {
@@ -258,6 +252,15 @@ public class PolicyCheckReport {
         }
 
         return dataPoints;
+    }
+
+    /* --- Nested classes --- */
+
+    static class ValueComparator implements Comparator<Map.Entry<String, Integer>> {
+        @Override
+        public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+            return o2.getValue().compareTo(o1.getValue());
+        }
     }
 
     /* --- Getters / Setters --- */

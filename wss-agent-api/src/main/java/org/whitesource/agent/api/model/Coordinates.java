@@ -88,23 +88,15 @@ public class Coordinates implements Serializable {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        if (obj.getClass() != getClass()) {
-            return false;
-        }
+        if (obj == null) return false;
+        if (obj == this) return true;
+        if (obj.getClass() != getClass()) return false;
 
         Coordinates other = (Coordinates) obj;
 
-        boolean isEqual = (groupId == null) ? (other.groupId == null) : groupId.equals(other.groupId);
-        isEqual = isEqual && ((artifactId == null) ? (other.artifactId == null) : artifactId.equals(other.artifactId));
-        isEqual = isEqual && ((version == null) ? (other.version == null) : version.equals(other.version));
-
-        return isEqual;
+        return  (groupId == null) ? (other.groupId == null) : groupId.equals(other.groupId)
+                && ((artifactId == null) ? (other.artifactId == null) : artifactId.equals(other.artifactId))
+                && ((version == null) ? (other.version == null) : version.equals(other.version));
     }
 
     /* --- Getters / Setters --- */
