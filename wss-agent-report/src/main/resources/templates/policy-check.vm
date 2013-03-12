@@ -62,7 +62,7 @@
 #end
 
 #macro ( projectDependenciesTree $root)
-    #if ($root.children.size > 0)
+    #if ($root.children.size() > 0)
         <ul>
             #foreach ($child in $root.children)
                 #dependencyNode ($child)
