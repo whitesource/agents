@@ -106,33 +106,20 @@ public class DependencyInfo implements Serializable {
 
 	@Override
 	public int hashCode() {
-		int code = APIConstants.HASH_CODE_SEED;
-		code = APIConstants.HASH_CODE_FACTOR * code + ((groupId == null) ? 0 : groupId.hashCode());
-		code = APIConstants.HASH_CODE_FACTOR * code + ((artifactId == null) ? 0 : artifactId.hashCode());
-		code = APIConstants.HASH_CODE_FACTOR * code + ((version == null) ? 0 : version.hashCode());
-		
-		return code;
+		return new Coordinates(groupId, artifactId, version).hashCode();
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false; 
-		}
-	    if (obj == this) {
-	    	return true; 
-	    }
-	    if (obj.getClass() != getClass()) {
-	      return false;
-	    }
-	    
+        if (obj == null) { return false; }
+        if (obj == this) { return true; }
+        if (obj.getClass() != getClass()) { return false; }
+
 		DependencyInfo other = (DependencyInfo) obj;
 		
-		boolean isEqual = (groupId == null) ? (other.groupId == null) : groupId.equals(other.groupId);
-		isEqual = isEqual && ((artifactId == null) ? (other.artifactId == null) : artifactId.equals(other.artifactId));
-		isEqual = isEqual && ((version == null) ? (other.version == null) : version.equals(other.version));
-		
-		return isEqual;    
+		return (groupId == null) ? (other.groupId == null) : groupId.equals(other.groupId)
+                && ((artifactId == null) ? (other.artifactId == null) : artifactId.equals(other.artifactId))
+                && ((version == null) ? (other.version == null) : version.equals(other.version));
 	}
 
 	/* --- Getters / Setters --- */

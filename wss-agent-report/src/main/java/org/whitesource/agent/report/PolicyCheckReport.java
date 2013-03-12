@@ -24,10 +24,7 @@ import org.whitesource.agent.api.dispatch.CheckPoliciesResult;
 import org.whitesource.agent.api.model.ResourceInfo;
 import org.whitesource.agent.report.model.LicenseHistogramDataPoint;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.zip.ZipOutputStream;
@@ -225,13 +222,7 @@ public class PolicyCheckReport {
 
         // sort by count descending
         List<Map.Entry<String, Integer>> licenses = new ArrayList<Map.Entry<String, Integer>>(licenseHistogram.entrySet());
-        Collections.sort(licenses, new Comparator<Map.Entry<String, Integer>>() {
-
-            public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-                return o2.getValue().compareTo(o1.getValue());
-            }
-        });
-
+        Collections.sort(licenses, new ValueComparator());
 
         // create data points
         if (!licenses.isEmpty()) {
@@ -258,6 +249,18 @@ public class PolicyCheckReport {
         }
 
         return dataPoints;
+    }
+
+    /* --- Nested classes --- */
+
+    static class ValueComparator implements Comparator<Map.Entry<String, Integer>>, Serializable {
+
+        private static final long serialVersionUID = 2134689708073092860L;
+
+        @Override
+        public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+            return o2.getValue().compareTo(o1.getValue());
+        }
     }
 
     /* --- Getters / Setters --- */
