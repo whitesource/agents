@@ -21,6 +21,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -114,9 +116,28 @@ public class WssServiceClientImpl implements WssServiceClient {
 
 	@Override
 	public void setProxy(String host, int port, String username, String password) {
+        if (host == null || host.trim().length() == 0) {
+            return;
+        }
+        if (port < 0 || port > 65535) {
+            return;
+        }
+
 		HttpHost proxy = new HttpHost(host, port);
 		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
-        httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
+
+        if (username != null && username.trim().length() > 0) {
+            Credentials credentials;
+            if (username.indexOf('/') >= 0) {
+                credentials = new NTCredentials(username + ":" + password);
+            } else if (username.indexOf('\\') >= 0) {
+                username = username.replace('\\','/');
+                credentials = new NTCredentials(username + ":" + password);
+            } else {
+                credentials = new UsernamePasswordCredentials(username, password);
+            }
+            httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, credentials);
+        }
 	}
 
 	public void setConnectionTimeout(int timeout) {
