@@ -46,10 +46,6 @@
                 <plugins>
                     <plugin>
                         <groupId>com.github.github</groupId>
-                        <artifactId>downloads-maven-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>com.github.github</groupId>
                         <artifactId>site-maven-plugin</artifactId>
                         <configuration>
                             <path>wss-agent-report</path>
