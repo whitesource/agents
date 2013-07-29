@@ -38,7 +38,11 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 	
 	protected String orgToken;
 	
-	protected long timeStamp;
+	protected String product;
+
+    protected String productVersion;
+
+    protected long timeStamp;
 	
 	/* --- Constructors --- */
 
@@ -72,7 +76,7 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 		this.type  = type;
 		this.agent = agent;
 		this.agentVersion = agentVersion;
-		this.timeStamp = System.currentTimeMillis();
+        this.timeStamp = System.currentTimeMillis();
 	}
 
 	/* --- Interface implementation methods --- */
@@ -93,10 +97,18 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 		return agentVersion;
 	}
 
-	public long timeStamp() {
-		return timeStamp;
-	}
-	
+    public String product() {
+        return product;
+    }
+
+    public String productVersion() {
+        return productVersion;
+    }
+
+    public long timeStamp() {
+        return timeStamp;
+    }
+
 	/* --- Getters / Setters --- */
 
 	public void setAgent(String agent) {
@@ -110,9 +122,16 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 	public void setOrgToken(String orgToken) {
 		this.orgToken = orgToken;
 	}
-	
-	public void setTimeStamp(long timeStamp) {
-		this.timeStamp = timeStamp;
-	}
 
+    public void setProduct(String product) {
+        this.product = product;
+    }
+
+    public void setProductVersion(String productVersion) {
+        this.productVersion = productVersion;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 }

@@ -71,16 +71,20 @@ public class WhitesourceServiceTest {
         WhitesourceService service = new WhitesourceService();
         service.setClient(client);
 
-        service.update("orgToken", new ArrayList<AgentProjectInfo>());
+        service.update("orgToken", "product", "productVersion", new ArrayList<AgentProjectInfo>());
         ArgumentCaptor<UpdateInventoryRequest> updateCaptor = ArgumentCaptor.forClass(UpdateInventoryRequest.class);
         verify(client).updateInventory(updateCaptor.capture());
         assertEquals("orgToken", updateCaptor.getValue().orgToken());
+        assertEquals("product", updateCaptor.getValue().product());
+        assertEquals("productVersion", updateCaptor.getValue().productVersion());
         assertTrue(updateCaptor.getValue().getProjects().isEmpty());
 
-        service.checkPolicies("orgToken", new ArrayList<AgentProjectInfo>());
+        service.checkPolicies("orgToken", "product", "productVersion", new ArrayList<AgentProjectInfo>());
         ArgumentCaptor<CheckPoliciesRequest> checkPoliciesCaptor = ArgumentCaptor.forClass(CheckPoliciesRequest.class);
         verify(client).checkPolicies(checkPoliciesCaptor.capture());
         assertEquals("orgToken", checkPoliciesCaptor.getValue().orgToken());
+        assertEquals("product", updateCaptor.getValue().product());
+        assertEquals("productVersion", updateCaptor.getValue().productVersion());
     }
 
 }

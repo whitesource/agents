@@ -61,4 +61,12 @@ public interface WssServiceClient {
      */
     void setProxy(String host, int port, String username, String password);
 
+
+    /**
+     * The method adjust the connection timeout limit to White Source servers.
+     *
+     * @param timeout In milliseconds.
+     */
+    void setConnectionTimeout(int timeout);
+
 }

@@ -60,14 +60,18 @@ public class WhitesourceService {
     /**
      * The method update the White Source organization account with the given OSS information.
      *
-     * @param orgToken     Orgnization token uniquely identifying the account at white source..
+     * @param orgToken     Organization token uniquely identifying the account at white source..
      * @param projectInfos OSS usage information to send to white source.
      * @return Result of updating white source.
      * @throws WssServiceException In case of errors while updating white source.
      */
-    public UpdateInventoryResult update(String orgToken, Collection<AgentProjectInfo> projectInfos)
+    public UpdateInventoryResult update(String orgToken,
+                                        String product,
+                                        String productVersion,
+                                        Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
-        return client.updateInventory(requestFactory.newUpdateInventoryRequest(orgToken, projectInfos));
+        return client.updateInventory(
+                requestFactory.newUpdateInventoryRequest(orgToken, product, productVersion, projectInfos));
     }
 
     /**
@@ -78,9 +82,13 @@ public class WhitesourceService {
      * @return Potential result of applying the currently defined policies.
      * @throws WssServiceException In case of errors while checking the policies with white source.
      */
-    public CheckPoliciesResult checkPolicies(String orgToken, Collection<AgentProjectInfo> projectInfos)
+    public CheckPoliciesResult checkPolicies(String orgToken,
+                                             String product,
+                                             String productVersion,
+                                             Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
-        return client.checkPolicies(requestFactory.newCheckPoliciesRequest(orgToken, projectInfos));
+        return client.checkPolicies(
+                requestFactory.newCheckPoliciesRequest(orgToken, product, productVersion, projectInfos));
     }
 
     /**

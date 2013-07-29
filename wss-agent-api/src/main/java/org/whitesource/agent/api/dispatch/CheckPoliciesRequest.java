@@ -17,6 +17,7 @@ package org.whitesource.agent.api.dispatch;
 
 import org.whitesource.agent.api.model.AgentProjectInfo;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -38,17 +39,33 @@ public class CheckPoliciesRequest extends BaseRequest<CheckPoliciesResult> {
 
 	/* --- Constructors --- */
 
+    /**
+     * Default constructor
+     */
+    public CheckPoliciesRequest() {
+        super(RequestType.CHECK_POLICIES);
+        projects = new ArrayList<AgentProjectInfo>();
+    }
+
+    /**
+     * Constructor
+     *
+     * @param projects Open Source usage statement to check against policies.
+     */
+    public CheckPoliciesRequest(Collection<AgentProjectInfo> projects) {
+        this();
+        this.projects = projects;
+    }
+
 	/**
 	 * Constructor
 	 *
 	 * @param orgToken WhiteSource organization token.
-	 * @param projects Projects status statement to update.
+	 * @param projects Open Source usage statement to check against policies.
 	 */
 	public CheckPoliciesRequest(String orgToken, Collection<AgentProjectInfo> projects) {
-		super(RequestType.CHECK_POLICIES);
-		
+		this(projects);
 		this.orgToken = orgToken;
-		this.projects = projects;
 	}
 
 	/* --- Getters / Setters --- */

@@ -273,7 +273,7 @@
                 <plugin>
                     <groupId>org.whitesource</groupId>
                     <artifactId>whitesource-maven-plugin</artifactId>
-                    <version>1.1.5</version>
+                    <version>1.1.6-SNAPSHOT</version>
                     <configuration>
                         <orgToken>${whitesource.orgToken}</orgToken>
                         <moduleTokens>

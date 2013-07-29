@@ -42,13 +42,23 @@ public interface ServiceRequest<R> extends Serializable {
 	String agentVersion();
 
 	/**
-	 * @return WhiteSource service token for the organization.
+	 * @return WhiteSource service token of the organization to update.
 	 */
 	String orgToken();
-	
-	/**
-	 * @return Time stamp when the request created (client side)
-	 */
-	long timeStamp() ;
-	
+
+    /**
+     * @return Name or WhiteSource service token of the product to update.
+     */
+    String product();
+
+    /**
+     * @return Version of the product to update.
+     */
+    String productVersion();
+
+    /**
+     * @return Time stamp when the request created (client side)
+     */
+    long timeStamp() ;
+
 }

@@ -55,10 +55,23 @@ public class RequestFactory {
      * @return Newly created request to update organization inventory.
      */
     public UpdateInventoryRequest newUpdateInventoryRequest(String orgToken, Collection<AgentProjectInfo> projects) {
-        UpdateInventoryRequest request = new UpdateInventoryRequest(orgToken, projects);
-        prepareRequest(request);
+        return newUpdateInventoryRequest(orgToken, null, null, projects);
+    }
 
-        return request;
+    /**
+     * Create new Inventory Update request.
+     *
+     * @param orgToken WhiteSource organization token.
+     * @param projects Projects status statement to update.
+     * @param product Name or WhiteSource service token of the product to update.
+     * @param productVersion Version of the product to update.
+     * @return Newly created request to update organization inventory.
+     */
+    public UpdateInventoryRequest newUpdateInventoryRequest(String orgToken,
+                                                            String product,
+                                                            String productVersion,
+                                                            Collection<AgentProjectInfo> projects) {
+        return (UpdateInventoryRequest) prepareRequest(new UpdateInventoryRequest(projects), orgToken, product, productVersion);
     }
 
     /**
@@ -69,22 +82,35 @@ public class RequestFactory {
      * @return Newly created request to check policies application.
      */
     public CheckPoliciesRequest newCheckPoliciesRequest(String orgToken, Collection<AgentProjectInfo> projects) {
-        CheckPoliciesRequest request = new CheckPoliciesRequest(orgToken, projects);
-        prepareRequest(request);
+        return newCheckPoliciesRequest(orgToken, null, null, projects);
+    }
 
-        return request;
+    /**
+     * Create new Check policies request.
+     *
+     * @param orgToken WhiteSource organization token.
+     * @param projects Projects status statement to check.
+     * @param product Name or WhiteSource service token of the product whose policies to check.
+     * @param productVersion Version of the product whose policies to check.
+     * @return Newly created request to check policies application.
+     */
+    public CheckPoliciesRequest newCheckPoliciesRequest(String orgToken,
+                                                        String product,
+                                                        String productVersion,
+                                                        Collection<AgentProjectInfo> projects) {
+        return (CheckPoliciesRequest) prepareRequest(new CheckPoliciesRequest(projects), orgToken, product, productVersion);
     }
 
     /* --- Protected methods --- */
 
-    /**
-     * The method populate the given request with basic information.
-     *
-     * @param request Service request to prepare.
-     */
-    protected void prepareRequest(BaseRequest<?> request) {
+    protected <R> BaseRequest<R> prepareRequest(BaseRequest<R> request, String orgToken, String product, String productVersion) {
         request.setAgent(agent);
         request.setAgentVersion(agentVersion);
+        request.setOrgToken(orgToken);
+        request.setProduct(product);
+        request.setProductVersion(productVersion);
+
+        return request;
     }
 
 }

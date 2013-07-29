@@ -27,13 +27,14 @@ public final class APIConstants {
 	/* --- Parameters --- */
 	
 	public static final String PARAM_TOKEN = "token";
-	public static final String PARAM_TIME_STAMP = "timeStamp";
-	public static final String PARAM_PROPERTIES = "properties";
+	public static final String PARAM_PRODUCT = "product";
+	public static final String PARAM_PRODUCT_VERSION = "productVersion";
 	public static final String PARAM_DIFF = "diff";
 	public static final String PARAM_DEPENDENCIES = "dependencies";
 	public static final String PARAM_AGENT = "agent";
 	public static final String PARAM_AGENT_VERSION = "agentVersion";
 	public static final String PARAM_REQUEST_TYPE = "type";
+    public static final String PARAM_TIME_STAMP = "timeStamp";
 	
 	/* --- Messages --- */
 	

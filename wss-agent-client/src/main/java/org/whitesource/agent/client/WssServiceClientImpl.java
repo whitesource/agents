@@ -140,6 +140,7 @@ public class WssServiceClientImpl implements WssServiceClient {
         }
 	}
 
+    @Override
 	public void setConnectionTimeout(int timeout) {
 		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), timeout);
 		HttpConnectionParams.setSoTimeout(httpClient.getParams(), timeout);
@@ -205,7 +206,9 @@ public class WssServiceClientImpl implements WssServiceClient {
 		nvps.add(new BasicNameValuePair(APIConstants.PARAM_AGENT, request.agent()));
 		nvps.add(new BasicNameValuePair(APIConstants.PARAM_AGENT_VERSION, request.agentVersion()));
 		nvps.add(new BasicNameValuePair(APIConstants.PARAM_TOKEN, request.orgToken()));
-		
+		nvps.add(new BasicNameValuePair(APIConstants.PARAM_PRODUCT, request.product()));
+		nvps.add(new BasicNameValuePair(APIConstants.PARAM_PRODUCT_VERSION, request.productVersion()));
+
 		switch (type) {
 		case UPDATE:
 			nvps.add(new BasicNameValuePair(APIConstants.PARAM_TIME_STAMP, String.valueOf(request.timeStamp())));

@@ -158,8 +158,6 @@ public class WssServiceClientTest {
                         assertEquals(nvp.getValue(), checkPoliciesRequest.agentVersion());
                     } else if (nvp.getName().equals(APIConstants.PARAM_TOKEN)) {
                         assertEquals(nvp.getValue(), checkPoliciesRequest.orgToken());
-                    } else if (nvp.getName().equals(APIConstants.PARAM_TIME_STAMP)) {
-                        assertEquals(nvp.getValue(), Long.toString(checkPoliciesRequest.timeStamp()));
                     } else if (nvp.getName().equals(APIConstants.PARAM_DIFF)) {
                         Gson gson = new Gson();
                         Type type = new TypeToken<Collection<AgentProjectInfo>>() {
