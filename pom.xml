@@ -29,8 +29,7 @@
         <connection>scm:git:git@github.com:whitesource/agents.git</connection>
         <developerConnection>scm:git:git@github.com:whitesource/agents.git</developerConnection>
         <url>git@github.com:whitesource/agents.git</url>
-	  <tag>HEAD</tag>
-  </scm>
+    </scm>
     <issueManagement>
         <url>https://github.com/whitesource/agents/issues</url>
         <system>GitHub Issues</system>
@@ -161,7 +160,7 @@
                             <artifactId>maven-plugin-plugin</artifactId>
                             <version>3.1</version>
                         </plugin>
-						<plugin>
+                        <plugin>
                             <groupId>org.apache.maven.plugins</groupId>
                             <artifactId>maven-jxr-plugin</artifactId>
                             <version>2.3</version>

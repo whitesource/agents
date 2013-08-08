@@ -15,6 +15,7 @@
  */
 package org.whitesource.agent.client;
 
+import com.btr.proxy.search.ProxySearch;
 import com.google.gson.Gson;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,6 +42,7 @@ import org.whitesource.agent.api.APIConstants;
 import org.whitesource.agent.api.dispatch.*;
 
 import java.io.IOException;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,11 +58,14 @@ public class WssServiceClientImpl implements WssServiceClient {
 	/* --- Static members --- */
 
 	public static final int DEFAULT_CONNECTION_TIMEOUT = 5 * 60 * 1000;
-	
-	private static final Log logger = LogFactory.getLog(WssServiceClientImpl.class);
-	
+
+    public static final String HTTP_PROXY_USER = "http.proxyUser";
+    public static final String HTTP_PROXY_PASSWORD = "http.proxyPassword";
+
+    private static final Log logger = LogFactory.getLog(WssServiceClientImpl.class);
+
 	/* --- Members --- */
-	
+
 	protected String serviceUrl;
 	
 	protected DefaultHttpClient httpClient;
@@ -95,6 +100,7 @@ public class WssServiceClientImpl implements WssServiceClient {
 		HttpConnectionParams.setSoTimeout(params, DEFAULT_CONNECTION_TIMEOUT);
         HttpClientParams.setRedirecting(params, true);
 		httpClient = new DefaultHttpClient(params);
+        findDefaultProxy();
 	}
 
 	/* --- Interface implementation methods --- */
@@ -125,8 +131,10 @@ public class WssServiceClientImpl implements WssServiceClient {
 
 		HttpHost proxy = new HttpHost(host, port);
 		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+        logger.info("Using proxy: " + proxy.toHostString());
 
         if (username != null && username.trim().length() > 0) {
+            logger.info("Proxy username: " + username);
             Credentials credentials;
             if (username.indexOf('/') >= 0) {
                 credentials = new NTCredentials(username + ":" + password);
@@ -255,6 +263,38 @@ public class WssServiceClientImpl implements WssServiceClient {
 		
 		return data;
 	}
+
+    /* --- Private methods --- */
+
+    private void findDefaultProxy() {
+        ProxySearch proxySearch = new ProxySearch();
+        proxySearch.addStrategy(ProxySearch.Strategy.JAVA);
+        proxySearch.addStrategy(ProxySearch.Strategy.ENV_VAR);
+        proxySearch.addStrategy(ProxySearch.Strategy.OS_DEFAULT);
+        proxySearch.addStrategy(ProxySearch.Strategy.BROWSER);
+        ProxySelector proxySelector = proxySearch.getProxySelector();
+
+        if (proxySelector != null) {
+            ProxySelector.setDefault(proxySelector);
+            try {
+                List<Proxy> proxyList = proxySelector.select(new URI(serviceUrl));
+                if (proxyList != null && !proxyList.isEmpty()) {
+                    for (Proxy proxy : proxyList) {
+                        InetSocketAddress address = (InetSocketAddress) proxy.address();
+                        if (address != null) {
+                            String host = address.getHostName();
+                            int port = address.getPort();
+                            String username = System.getProperty(HTTP_PROXY_USER);
+                            String password = System.getProperty(HTTP_PROXY_PASSWORD);
+                            setProxy(host, port, username, password);
+                        }
+                    }
+                }
+            } catch (URISyntaxException e) {
+                logger.error("Bad service url: " + serviceUrl, e);
+            }
+        }
+    }
 	
 	/* --- Getters  --- */
 		

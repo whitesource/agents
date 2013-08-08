@@ -25,10 +25,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.localserver.LocalTestServer;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.whitesource.agent.api.APIConstants;
 import org.whitesource.agent.api.dispatch.*;
@@ -340,6 +337,15 @@ public class WssServiceClientTest {
         });
 
         client.checkPolicies(requestFactory.newCheckPoliciesRequest("orgToken", null));
+    }
+
+    @Ignore
+    @Test
+    public void testLiveProxy() throws WssServiceException {
+        WssServiceClientImpl client1 = new WssServiceClientImpl();
+        client1.setProxy("91.108.157.13",8080, null, null);
+        CheckPoliciesResult result = client1.checkPolicies(requestFactory.newCheckPoliciesRequest("orgToken", null));
+        assertNotNull(result);
     }
 
     /* --- Private methods --- */

@@ -31,6 +31,11 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.btr</groupId>
+            <artifactId>proxy-vole</artifactId>
+            <version>20121203</version>
+        </dependency>
 
         <!-- Testing -->
         <dependency>

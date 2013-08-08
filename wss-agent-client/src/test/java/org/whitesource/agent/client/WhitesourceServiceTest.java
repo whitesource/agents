@@ -63,7 +63,6 @@ public class WhitesourceServiceTest {
 
         service = new WhitesourceService("agent", "agentVersion", "serviceUrl");
         assertEquals("serviceUrl", ((WssServiceClientImpl) service.getClient()).getServiceUrl());
-
     }
 
     @Test
