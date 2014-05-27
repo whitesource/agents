@@ -15,7 +15,9 @@
  */
 package org.whitesource.agent.report;
 
+import com.google.gson.Gson;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
@@ -137,6 +139,29 @@ public class PolicyCheckReport {
         }
 
         return reportFile;
+    }
+
+    public File generateJson(File outputDir) throws IOException {
+        if (result == null) {
+            throw new IllegalStateException("Check policies result is null");
+        }
+
+        // prepare working directory
+        File workDir = new File(outputDir, "whitesource");
+        if (!workDir.exists() && !workDir.mkdir()) {
+            throw new IOException("Unable to make output directory: " + workDir);
+        }
+
+        Gson gson = new Gson();
+        FileWriter fw = new FileWriter(new File(workDir, "checkPolicies-json.txt"));
+        try {
+            fw.write(StringEscapeUtils.unescapeJava(gson.toJson(result)));
+            fw.flush();
+        } finally {
+            FileUtils.close(fw);
+        }
+
+        return workDir;
     }
 
     /* --- Protected methods --- */
