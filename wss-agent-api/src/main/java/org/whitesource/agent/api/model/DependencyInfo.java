@@ -15,6 +15,8 @@
  */
 package org.whitesource.agent.api.model;
 
+import org.whitesource.agent.api.APIConstants;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -102,23 +104,44 @@ public class DependencyInfo implements Serializable {
 		return sb.toString();
 	}
 
-	@Override
-	public int hashCode() {
-		return new Coordinates(groupId, artifactId, version).hashCode();
-	}
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof DependencyInfo)) return false;
 
-	@Override
-	public boolean equals(Object obj) {
-        if (obj == null) { return false; }
-        if (obj == this) { return true; }
-        if (obj.getClass() != getClass()) { return false; }
+        DependencyInfo that = (DependencyInfo) o;
 
-		DependencyInfo other = (DependencyInfo) obj;
-		
-		return (groupId == null) ? (other.groupId == null) : groupId.equals(other.groupId)
-                && ((artifactId == null) ? (other.artifactId == null) : artifactId.equals(other.artifactId))
-                && ((version == null) ? (other.version == null) : version.equals(other.version));
-	}
+        if (sha1 != null) {
+            return sha1.equals(that.sha1);
+        } else if (that.sha1 != null ) {
+            return false;
+        }
+        if (optional != that.optional) return false;
+        if (artifactId != null ? !artifactId.equals(that.artifactId) : that.artifactId != null) return false;
+        if (classifier != null ? !classifier.equals(that.classifier) : that.classifier != null) return false;
+        if (exclusions != null ? !exclusions.equals(that.exclusions) : that.exclusions != null) return false;
+        if (groupId != null ? !groupId.equals(that.groupId) : that.groupId != null) return false;
+        if (scope != null ? !scope.equals(that.scope) : that.scope != null) return false;
+        if (type != null ? !type.equals(that.type) : that.type != null) return false;
+        if (version != null ? !version.equals(that.version) : that.version != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = APIConstants.HASH_CODE_SEED;
+        result = APIConstants.HASH_CODE_FACTOR * result + (groupId != null ? groupId.hashCode() : 0);
+        result = APIConstants.HASH_CODE_FACTOR * result + (artifactId != null ? artifactId.hashCode() : 0);
+        result = APIConstants.HASH_CODE_FACTOR * result + (version != null ? version.hashCode() : 0);
+        result = APIConstants.HASH_CODE_FACTOR * result + (type != null ? type.hashCode() : 0);
+        result = APIConstants.HASH_CODE_FACTOR * result + (classifier != null ? classifier.hashCode() : 0);
+        result = APIConstants.HASH_CODE_FACTOR * result + (scope != null ? scope.hashCode() : 0);
+        result = APIConstants.HASH_CODE_FACTOR * result + (sha1 != null ? sha1.hashCode() : 0);
+        result = APIConstants.HASH_CODE_FACTOR * result + (exclusions != null ? exclusions.hashCode() : 0);
+        result = APIConstants.HASH_CODE_FACTOR * result + (optional ? 1 : 0);
+        return result;
+    }
 
 	/* --- Getters / Setters --- */
 

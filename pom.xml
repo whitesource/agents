@@ -9,7 +9,7 @@
 
     <groupId>org.whitesource</groupId>
     <artifactId>wss-agent-parent</artifactId>
-    <version>1.2.7-SNAPSHOT</version>
+    <version>1.2.8-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>White Source agent API</name>
@@ -45,9 +45,9 @@
             <email>rami.sass@whitesourcesoftware.com</email>
         </developer>
         <developer>
-            <id>edo.shor</id>
-            <name>Edo Shor</name>
-            <email>edo.shor@whitesourcesoftware.com</email>
+            <id>itai.marko</id>
+            <name>itai.marko</name>
+            <email>itai.marko@whitesourcesoftware.com</email>
         </developer>
         <developer>
             <id>tom.shapira</id>
