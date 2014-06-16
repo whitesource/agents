@@ -16,6 +16,7 @@
 package org.whitesource.agent.client;
 
 import org.whitesource.agent.api.dispatch.CheckPoliciesResult;
+import org.whitesource.agent.api.dispatch.GetInHouseRulesResult;
 import org.whitesource.agent.api.dispatch.RequestFactory;
 import org.whitesource.agent.api.dispatch.UpdateInventoryResult;
 import org.whitesource.agent.api.model.AgentProjectInfo;
@@ -89,6 +90,10 @@ public class WhitesourceService {
             throws WssServiceException {
         return client.checkPolicies(
                 requestFactory.newCheckPoliciesRequest(orgToken, product, productVersion, projectInfos));
+    }
+
+    public GetInHouseRulesResult getInHouseRules(String orgToken) throws WssServiceException {
+        return client.getInHouseRules(requestFactory.newGetInHouseRulesRequest(orgToken));
     }
 
     /**

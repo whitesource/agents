@@ -57,6 +57,8 @@ public class DependencyInfo implements Serializable {
 
     private Collection<DependencyInfo> children;
 
+    private boolean inHouse;
+
 	/* --- Constructors --- */
 
 	/**
@@ -234,5 +236,13 @@ public class DependencyInfo implements Serializable {
 
     public void setChildren(Collection<DependencyInfo> children) {
         this.children = children;
+    }
+
+    public boolean isInHouse() {
+        return inHouse;
+    }
+
+    public void setInHouse(boolean inHouse) {
+        this.inHouse = inHouse;
     }
 }
