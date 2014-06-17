@@ -55,10 +55,6 @@ public class DependencyInfo implements Serializable {
 
 	private boolean optional;
 
-    private Collection<DependencyInfo> children;
-
-    private boolean inHouse;
-
 	/* --- Constructors --- */
 
 	/**
@@ -66,7 +62,6 @@ public class DependencyInfo implements Serializable {
 	 */
 	public DependencyInfo() {
 		exclusions = new ArrayList<ExclusionInfo>();
-        children = new ArrayList<DependencyInfo>();
 	}
 	
 	/**
@@ -230,19 +225,4 @@ public class DependencyInfo implements Serializable {
 		this.optional = optional;
 	}
 
-    public Collection<DependencyInfo> getChildren() {
-        return children;
-    }
-
-    public void setChildren(Collection<DependencyInfo> children) {
-        this.children = children;
-    }
-
-    public boolean isInHouse() {
-        return inHouse;
-    }
-
-    public void setInHouse(boolean inHouse) {
-        this.inHouse = inHouse;
-    }
 }

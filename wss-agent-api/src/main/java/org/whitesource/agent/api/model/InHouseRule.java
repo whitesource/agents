@@ -55,6 +55,29 @@ public class InHouseRule implements Serializable {
         this.nameRegex = nameRegex;
     }
 
+    /* --- Overridden methods --- */
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (StringUtils.isNotBlank(nameRegex)) {
+            sb.append("name: ");
+            sb.append(nameRegex);
+        } else {
+            if (StringUtils.isNotBlank(groupIdRegex)) {
+                sb.append("g: ");
+                sb.append(groupIdRegex);
+                sb.append(" ");
+            }
+
+            if (StringUtils.isNotBlank(artifactIdRegex)) {
+                sb.append("a: ");
+                sb.append(artifactIdRegex);
+            }
+        }
+        return sb.toString();
+    }
+
     /* --- Public methods --- */
 
     public boolean match(String groupId, String artifactId) {
