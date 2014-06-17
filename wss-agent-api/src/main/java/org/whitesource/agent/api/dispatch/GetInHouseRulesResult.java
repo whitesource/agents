@@ -27,7 +27,7 @@ import java.util.Collection;
  * 
  * @author tom.shapira
  *
- * @since 1.2.9
+ * @since 1.3.0
  */
 public class GetInHouseRulesResult implements Serializable {
 

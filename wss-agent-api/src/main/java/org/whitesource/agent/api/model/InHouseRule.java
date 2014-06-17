@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * Represents a rule by which in-house libraries will be matched.
  *
  * @author tom.shapira
- * @since 1.2.9
+ * @since 1.3.0
  */
 public class InHouseRule implements Serializable {
 
