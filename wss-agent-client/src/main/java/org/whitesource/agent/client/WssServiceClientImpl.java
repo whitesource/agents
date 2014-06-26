@@ -116,11 +116,6 @@ public class WssServiceClientImpl implements WssServiceClient {
     }
 
     @Override
-    public GetInHouseRulesResult getInHouseRules(GetInHouseRulesRequest request) throws WssServiceException {
-        return service(request);
-    }
-
-    @Override
 	public void shutdown() {
 		httpClient.getConnectionManager().shutdown();	
 	}
@@ -190,9 +185,6 @@ public class WssServiceClientImpl implements WssServiceClient {
             case CHECK_POLICIES:
                 result = (R) gson.fromJson(data, CheckPoliciesResult.class);
                 break;
-            case GET_IN_HOUSE_RULES:
-                result = (R) gson.fromJson(data, GetInHouseRulesResult.class);
-                break;
             default:
                 throw new IllegalStateException("Unsupported request type.");
             }
@@ -233,9 +225,6 @@ public class WssServiceClientImpl implements WssServiceClient {
         case CHECK_POLICIES:
             nvps.add(new BasicNameValuePair(APIConstants.PARAM_TIME_STAMP, String.valueOf(request.timeStamp())));
             nvps.add(new BasicNameValuePair(APIConstants.PARAM_DIFF, gson.toJson(((CheckPoliciesRequest) request).getProjects())));
-            break;
-        case GET_IN_HOUSE_RULES:
-            nvps.add(new BasicNameValuePair(APIConstants.PARAM_TIME_STAMP, String.valueOf(request.timeStamp())));
             break;
 		default:
 			break;

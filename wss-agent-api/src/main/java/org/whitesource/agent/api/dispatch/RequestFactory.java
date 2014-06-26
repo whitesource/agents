@@ -101,16 +101,6 @@ public class RequestFactory {
         return (CheckPoliciesRequest) prepareRequest(new CheckPoliciesRequest(projects), orgToken, product, productVersion);
     }
 
-    /**
-     * Creates new Get In House rules request.
-     *
-     * @param orgToken WhiteSource organization token.
-     * @return Newly created request to get in house rules.
-     */
-    public GetInHouseRulesRequest newGetInHouseRulesRequest(String orgToken) {
-        return (GetInHouseRulesRequest) prepareRequest(new GetInHouseRulesRequest(), orgToken, null, null);
-    }
-
     /* --- Protected methods --- */
 
     protected <R> BaseRequest<R> prepareRequest(BaseRequest<R> request, String orgToken, String product, String productVersion) {

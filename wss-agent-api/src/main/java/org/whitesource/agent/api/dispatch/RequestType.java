@@ -23,6 +23,5 @@ package org.whitesource.agent.api.dispatch;
 public enum RequestType {
 	UPDATE,
     CHECK_POLICIES,
-    GET_IN_HOUSE_RULES,
 
 }

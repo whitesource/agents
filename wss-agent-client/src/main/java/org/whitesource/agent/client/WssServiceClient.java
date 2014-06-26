@@ -15,7 +15,10 @@
  */
 package org.whitesource.agent.client;
 
-import org.whitesource.agent.api.dispatch.*;
+import org.whitesource.agent.api.dispatch.CheckPoliciesRequest;
+import org.whitesource.agent.api.dispatch.CheckPoliciesResult;
+import org.whitesource.agent.api.dispatch.UpdateInventoryRequest;
+import org.whitesource.agent.api.dispatch.UpdateInventoryResult;
 
 /**
  * The interface describes the functionality to be exposed by a client implementation to the White Source agent service.
@@ -41,14 +44,6 @@ public interface WssServiceClient {
      * @throws WssServiceException In case an error occurred during the call to White Source server.
      */
     CheckPoliciesResult checkPolicies(CheckPoliciesRequest request) throws WssServiceException;
-
-    /**
-     * The method calls the WhiteSource service for getting in-house rules.
-     * @param request Get In House rules request.
-     * @return Get In House rules result.
-     * @throws WssServiceException In case an error occurred during the call to White Source server.
-     */
-    GetInHouseRulesResult getInHouseRules(GetInHouseRulesRequest request) throws WssServiceException;
 
     /**
      * The method close all connections and release resources.

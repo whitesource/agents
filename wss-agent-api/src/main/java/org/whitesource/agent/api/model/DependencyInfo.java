@@ -51,9 +51,11 @@ public class DependencyInfo implements Serializable {
 
 	private String systemPath;
 
-	private Collection<ExclusionInfo> exclusions;
+    private boolean optional;
 
-	private boolean optional;
+    private Collection<DependencyInfo> children;
+
+	private Collection<ExclusionInfo> exclusions;
 
 	/* --- Constructors --- */
 
@@ -61,6 +63,7 @@ public class DependencyInfo implements Serializable {
 	 * Default constructor
 	 */
 	public DependencyInfo() {
+        children = new ArrayList<DependencyInfo>();
 		exclusions = new ArrayList<ExclusionInfo>();
 	}
 	
@@ -225,4 +228,11 @@ public class DependencyInfo implements Serializable {
 		this.optional = optional;
 	}
 
+    public Collection<DependencyInfo> getChildren() {
+        return children;
+    }
+
+    public void setChildren(Collection<DependencyInfo> children) {
+        this.children = children;
+    }
 }
