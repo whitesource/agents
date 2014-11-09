@@ -40,11 +40,14 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.whitesource.agent.api.APIConstants;
 import org.whitesource.agent.api.dispatch.*;
+import sun.misc.BASE64Encoder;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.GZIPOutputStream;
 
 
 /**
@@ -61,6 +64,7 @@ public class WssServiceClientImpl implements WssServiceClient {
 
     public static final String HTTP_PROXY_USER = "http.proxyUser";
     public static final String HTTP_PROXY_PASSWORD = "http.proxyPassword";
+    public static final String UTF_8 = "UTF-8";
 
     private static final Log logger = LogFactory.getLog(WssServiceClientImpl.class);
 
@@ -216,26 +220,58 @@ public class WssServiceClientImpl implements WssServiceClient {
 		nvps.add(new BasicNameValuePair(APIConstants.PARAM_TOKEN, request.orgToken()));
 		nvps.add(new BasicNameValuePair(APIConstants.PARAM_PRODUCT, request.product()));
 		nvps.add(new BasicNameValuePair(APIConstants.PARAM_PRODUCT_VERSION, request.productVersion()));
+        nvps.add(new BasicNameValuePair(APIConstants.PARAM_TIME_STAMP, String.valueOf(request.timeStamp())));
 
+        String jsonDiff = null;
 		switch (type) {
-		case UPDATE:
-			nvps.add(new BasicNameValuePair(APIConstants.PARAM_TIME_STAMP, String.valueOf(request.timeStamp())));
-			nvps.add(new BasicNameValuePair(APIConstants.PARAM_DIFF, gson.toJson(((UpdateInventoryRequest) request).getProjects())));
-			break;
-        case CHECK_POLICIES:
-            nvps.add(new BasicNameValuePair(APIConstants.PARAM_TIME_STAMP, String.valueOf(request.timeStamp())));
-            nvps.add(new BasicNameValuePair(APIConstants.PARAM_DIFF, gson.toJson(((CheckPoliciesRequest) request).getProjects())));
-            break;
-		default:
-			break;
+            case UPDATE:
+                jsonDiff = gson.toJson(((UpdateInventoryRequest) request).getProjects());
+                break;
+            case CHECK_POLICIES:
+                jsonDiff = gson.toJson(((CheckPoliciesRequest) request).getProjects());
+                break;
+            default: break;
 		}
-		
+
+        // compress json before sending
+        String compressedString = compressDiff(jsonDiff);
+        nvps.add(new BasicNameValuePair(APIConstants.PARAM_DIFF, compressedString));
+
 		httpRequest.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 		
 		return httpRequest;
 	}
 
-	/**
+    /**
+     * The method compresses the diff json string using gzip.
+     *
+     * @param diff The json string sent as "diff" value.
+     *
+     * @return The compressed string.
+     *
+     * @throws IOException
+     */
+    protected String compressDiff(String diff) throws IOException{
+        String result;
+        if (diff != null && diff.length() > 0) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(diff.length());
+            try {
+                GZIPOutputStream gzipos = new GZIPOutputStream(baos);
+                gzipos.write(diff.getBytes(UTF_8));
+                gzipos.close();
+                baos.close();
+                result = new BASE64Encoder().encode(baos.toByteArray());
+            } catch (IOException e) {
+                logger.debug("Unable to compress diff, sending original");
+                result = diff;
+            }
+        } else {
+            result = diff;
+        }
+        return result;
+    }
+
+    /**
 	 * The method extract the data from the given {@link org.whitesource.agent.api.dispatch.ResultEnvelope}.
 	 * 
 	 * @param response HTTP response as string.
@@ -295,7 +331,7 @@ public class WssServiceClientImpl implements WssServiceClient {
             }
         }
     }
-	
+
 	/* --- Getters  --- */
 		
 	public String getServiceUrl() {
