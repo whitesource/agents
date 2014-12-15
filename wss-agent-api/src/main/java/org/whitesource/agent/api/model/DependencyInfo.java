@@ -20,12 +20,12 @@ import org.whitesource.agent.api.APIConstants;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * WhiteSource Model for a project's dependency 
  * 
  * @author tom.shapira
- *
  */
 public class DependencyInfo implements Serializable {
 
@@ -57,6 +57,12 @@ public class DependencyInfo implements Serializable {
 
 	private Collection<ExclusionInfo> exclusions;
 
+    private Collection<String> licenses;
+
+    private Collection<CopyrightInfo> copyrights;
+
+    private Date lastModified;
+
 	/* --- Constructors --- */
 
 	/**
@@ -65,6 +71,8 @@ public class DependencyInfo implements Serializable {
 	public DependencyInfo() {
         children = new ArrayList<DependencyInfo>();
 		exclusions = new ArrayList<ExclusionInfo>();
+        licenses = new ArrayList<String>();
+        copyrights = new ArrayList<CopyrightInfo>();
 	}
 	
 	/**
@@ -144,6 +152,16 @@ public class DependencyInfo implements Serializable {
         result = APIConstants.HASH_CODE_FACTOR * result + (exclusions != null ? exclusions.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (optional ? 1 : 0);
         return result;
+    }
+
+    /* --- Public methods --- */
+
+    public boolean hasLicenses() {
+        return licenses != null && !licenses.isEmpty();
+    }
+
+    public boolean hasCopyrights() {
+        return copyrights != null && !copyrights.isEmpty();
     }
 
 	/* --- Getters / Setters --- */
@@ -234,5 +252,29 @@ public class DependencyInfo implements Serializable {
 
     public void setChildren(Collection<DependencyInfo> children) {
         this.children = children;
+    }
+
+    public Collection<String> getLicenses() {
+        return licenses;
+    }
+
+    public void setLicenses(Collection<String> licenses) {
+        this.licenses = licenses;
+    }
+
+    public Collection<CopyrightInfo> getCopyrights() {
+        return copyrights;
+    }
+
+    public void setCopyrights(Collection<CopyrightInfo> copyrights) {
+        this.copyrights = copyrights;
+    }
+
+    public Date getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(Date lastModified) {
+        this.lastModified = lastModified;
     }
 }

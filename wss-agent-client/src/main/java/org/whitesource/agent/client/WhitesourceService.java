@@ -17,6 +17,7 @@ package org.whitesource.agent.client;
 
 import org.whitesource.agent.api.dispatch.CheckPoliciesResult;
 import org.whitesource.agent.api.dispatch.RequestFactory;
+import org.whitesource.agent.api.dispatch.UpdateInventoryRequest;
 import org.whitesource.agent.api.dispatch.UpdateInventoryResult;
 import org.whitesource.agent.api.model.AgentProjectInfo;
 
@@ -75,9 +76,25 @@ public class WhitesourceService {
     }
 
     /**
+     * The method generates a file with json representation of the update request.
+     *
+     * @param orgToken          Organization token uniquely identifying the account at white source..
+     * @param product           The product name or token to update.
+     * @param productVersion    The product version.
+     * @param projectInfos      OSS usage information to send to white source.
+     * @return UpdateInventoryRequest.
+     */
+    public UpdateInventoryRequest offlineUpdate(String orgToken,
+                              String product,
+                              String productVersion,
+                              Collection<AgentProjectInfo> projectInfos) {
+        return requestFactory.newUpdateInventoryRequest(orgToken, product, productVersion, projectInfos);
+    }
+
+    /**
      * The method check the policies application of the given OSS information.
      *
-     * @param orgToken     Orgnization token uniquely identifying the account at white source..
+     * @param orgToken     Organization token uniquely identifying the account at white source..
      * @param projectInfos OSS usage information to send to white source.
      * @return Potential result of applying the currently defined policies.
      * @throws WssServiceException In case of errors while checking the policies with white source.

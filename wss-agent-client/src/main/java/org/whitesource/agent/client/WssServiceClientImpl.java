@@ -39,15 +39,13 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.whitesource.agent.api.APIConstants;
+import org.whitesource.agent.api.ZipUtils;
 import org.whitesource.agent.api.dispatch.*;
-import sun.misc.BASE64Encoder;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.GZIPOutputStream;
 
 
 /**
@@ -64,7 +62,6 @@ public class WssServiceClientImpl implements WssServiceClient {
 
     public static final String HTTP_PROXY_USER = "http.proxyUser";
     public static final String HTTP_PROXY_PASSWORD = "http.proxyPassword";
-    public static final String UTF_8 = "UTF-8";
 
     private static final Log logger = LogFactory.getLog(WssServiceClientImpl.class);
 
@@ -234,42 +231,13 @@ public class WssServiceClientImpl implements WssServiceClient {
 		}
 
         // compress json before sending
-        String compressedString = compressDiff(jsonDiff);
+        String compressedString = ZipUtils.compress(jsonDiff);
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_DIFF, compressedString));
 
 		httpRequest.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
 		
 		return httpRequest;
 	}
-
-    /**
-     * The method compresses the diff json string using gzip.
-     *
-     * @param diff The json string sent as "diff" value.
-     *
-     * @return The compressed string.
-     *
-     * @throws IOException
-     */
-    protected String compressDiff(String diff) throws IOException{
-        String result;
-        if (diff != null && diff.length() > 0) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(diff.length());
-            try {
-                GZIPOutputStream gzipos = new GZIPOutputStream(baos);
-                gzipos.write(diff.getBytes(UTF_8));
-                gzipos.close();
-                baos.close();
-                result = new BASE64Encoder().encode(baos.toByteArray());
-            } catch (IOException e) {
-                logger.debug("Unable to compress diff, sending original");
-                result = diff;
-            }
-        } else {
-            result = diff;
-        }
-        return result;
-    }
 
     /**
 	 * The method extract the data from the given {@link org.whitesource.agent.api.dispatch.ResultEnvelope}.
