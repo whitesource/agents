@@ -15,8 +15,13 @@
  */
 package org.whitesource.agent.api;
 
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
+import org.whitesource.agent.api.model.DependencyInfo;
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -28,9 +33,20 @@ import java.security.NoSuchAlgorithmException;
  */
 public final class ChecksumUtils {
     
-      /* --- Static members --- */
+    /* --- Static members --- */
 
     private static final int BUFFER_SIZE = 32 * 1024;
+
+    private static final int PARTIAL_SHA1_LINES = 100;
+
+    /* --- Constructors --- */
+
+    /**
+     * Private default constructor
+     */
+    private ChecksumUtils() {
+        // avoid instantiation
+    }
 
     /* --- Static methods --- */
 
@@ -45,7 +61,6 @@ public final class ChecksumUtils {
      * @throws IllegalStateException when no algorithm for SHA-1 can be found.
      */
     public static String calculateSHA1(File resourceFile) throws IOException {
-
         MessageDigest messageDigest;
         try {
             messageDigest = MessageDigest.getInstance("SHA-1");
@@ -68,15 +83,49 @@ public final class ChecksumUtils {
                 // ignore
             }
         }
-
         return toHex(messageDigest.digest());
+    }
+
+    public static void calculateHeaderAndFooterSha1(File file, DependencyInfo dependencyInfo) {
+        try {
+            int lines = FileUtils.readLines(file).size();
+            if (lines > PARTIAL_SHA1_LINES) {
+                // get lines to read
+                int i = (int) (Math.log((double) lines / PARTIAL_SHA1_LINES) / Math.log(2));
+                int linesToRead = (int) (50 * Math.pow(2, i));
+
+                StringBuilder header = new StringBuilder();
+                StringBuilder footer = new StringBuilder();
+                int lineIndex = 0;
+
+                for (String line : FileUtils.readLines(file)) {
+                    // read header
+                    if (lineIndex < linesToRead) {
+                        header.append(line);
+                    }
+
+                    // read footer
+                    if (lineIndex >= lines - linesToRead) {
+                        footer.append(line);
+                    }
+                    lineIndex++;
+                }
+
+                // calculate sha1s
+                dependencyInfo.setHeaderSha1(DigestUtils.shaHex(header.toString()));
+                dependencyInfo.setFooterSha1(DigestUtils.shaHex(footer.toString()));
+            }
+        } catch (FileNotFoundException e) {
+            // ignore
+        } catch (IOException e) {
+            // ignore
+        }
     }
 
     /* --- Private static methods --- */
 
     private static String toHex(byte[] bytes) {
         StringBuilder sb = new StringBuilder(bytes.length * 2);
-
         for (byte aByte : bytes) {
             int b = aByte & 0xFF;
             if (b < 0x10) {
@@ -84,17 +133,7 @@ public final class ChecksumUtils {
             }
             sb.append(Integer.toHexString(b));
         }
-
         return sb.toString();
-    }
-
-    /* --- Constructors --- */
-
-    /**
-     * Private default constructor
-     */
-    private ChecksumUtils() {
-        // avoid instantiation
     }
 
 }

@@ -49,6 +49,16 @@ public class DependencyInfo implements Serializable {
 	
 	private String sha1;
 
+    private String headerSha1;
+
+    private String footerSha1;
+
+    private String utf8Sha1;
+
+    private String commentlessSha1;
+
+    private String noNewLinesSha1;
+
 	private String systemPath;
 
     private boolean optional;
@@ -276,5 +286,45 @@ public class DependencyInfo implements Serializable {
 
     public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public String getHeaderSha1() {
+        return headerSha1;
+    }
+
+    public void setHeaderSha1(String headerSha1) {
+        this.headerSha1 = headerSha1;
+    }
+
+    public String getFooterSha1() {
+        return footerSha1;
+    }
+
+    public void setFooterSha1(String footerSha1) {
+        this.footerSha1 = footerSha1;
+    }
+
+    public String getUtf8Sha1() {
+        return utf8Sha1;
+    }
+
+    public void setUtf8Sha1(String utf8Sha1) {
+        this.utf8Sha1 = utf8Sha1;
+    }
+
+    public String getCommentlessSha1() {
+        return commentlessSha1;
+    }
+
+    public void setCommentlessSha1(String commentlessSha1) {
+        this.commentlessSha1 = commentlessSha1;
+    }
+
+    public String getNoNewLinesSha1() {
+        return noNewLinesSha1;
+    }
+
+    public void setNoNewLinesSha1(String noNewLinesSha1) {
+        this.noNewLinesSha1 = noNewLinesSha1;
     }
 }
