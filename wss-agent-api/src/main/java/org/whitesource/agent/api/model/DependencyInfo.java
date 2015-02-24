@@ -59,6 +59,8 @@ public class DependencyInfo implements Serializable {
 
     private String noNewLinesSha1;
 
+    private String otherPlatformSha1;
+
 	private String systemPath;
 
     private boolean optional;
@@ -326,5 +328,13 @@ public class DependencyInfo implements Serializable {
 
     public void setNoNewLinesSha1(String noNewLinesSha1) {
         this.noNewLinesSha1 = noNewLinesSha1;
+    }
+
+    public String getOtherPlatformSha1() {
+        return otherPlatformSha1;
+    }
+
+    public void setOtherPlatformSha1(String otherPlatformSha1) {
+        this.otherPlatformSha1 = otherPlatformSha1;
     }
 }
