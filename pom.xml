@@ -9,7 +9,7 @@
 
     <groupId>org.whitesource</groupId>
     <artifactId>wss-agent-parent</artifactId>
-    <version>2.2.2-SNAPSHOT</version>
+    <version>2.2.2</version>
     <packaging>pom</packaging>
 
     <name>White Source agent API</name>
@@ -29,7 +29,8 @@
         <connection>scm:git:git@github.com:whitesource/agents.git</connection>
         <developerConnection>scm:git:git@github.com:whitesource/agents.git</developerConnection>
         <url>git@github.com:whitesource/agents.git</url>
-    </scm>
+      <tag>release-tag-2.2.2</tag>
+  </scm>
     <issueManagement>
         <url>https://github.com/whitesource/agents/issues</url>
         <system>GitHub Issues</system>
