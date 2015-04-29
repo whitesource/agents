@@ -58,7 +58,7 @@ public class WssServiceClientImpl implements WssServiceClient {
 
 	/* --- Static members --- */
 
-	public static final int DEFAULT_CONNECTION_TIMEOUT = 5 * 60 * 1000;
+	public static final int DEFAULT_CONNECTION_TIMEOUT = 15 * 60 * 1000;
 
     public static final String HTTP_PROXY_USER = "http.proxyUser";
     public static final String HTTP_PROXY_PASSWORD = "http.proxyPassword";
