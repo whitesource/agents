@@ -16,6 +16,7 @@
 package org.whitesource.agent.report;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.whitesource.agent.api.ZipUtils;
 import org.whitesource.agent.api.dispatch.UpdateInventoryRequest;
 
@@ -51,10 +52,12 @@ public class OfflineUpdateRequest {
      *
      * @param outputDir Directory where request file will be created.
      * @param zip Whether or not to zip the request.
+     * @param prettyJson Whether or not to parse the json before writing to file (only if zip is false).
+     *
      * @return File reference to the resulting request.
      * @throws java.io.IOException In case of errors during file generation process.
      */
-    public File generate(File outputDir, boolean zip) throws IOException {
+    public File generate(File outputDir, boolean zip, boolean prettyJson) throws IOException {
         if (request == null) {
             throw new IllegalStateException("Update inventory request is null");
         }
@@ -65,10 +68,15 @@ public class OfflineUpdateRequest {
             throw new IOException("Unable to make output directory: " + workDir);
         }
 
-        // compress json
-        String json = new Gson().toJson(request);
+        String json;
         if (zip) {
+            json = new Gson().toJson(request);
             json = ZipUtils.compress(json);
+        } else if (prettyJson) {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            json = gson.toJson(request);
+        } else {
+            json = new Gson().toJson(request);
         }
 
         // write to file
