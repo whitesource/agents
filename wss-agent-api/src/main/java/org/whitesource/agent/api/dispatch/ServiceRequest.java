@@ -59,6 +59,11 @@ public interface ServiceRequest<R> extends Serializable {
     /**
      * @return Time stamp when the request created (client side)
      */
-    long timeStamp() ;
+    long timeStamp();
+
+    /**
+     * @return Email of the WhiteSource user that issues this request.
+     */
+    String requesterEmail();
 
 }

@@ -35,6 +35,7 @@ public final class APIConstants {
 	public static final String PARAM_AGENT_VERSION = "agentVersion";
 	public static final String PARAM_REQUEST_TYPE = "type";
     public static final String PARAM_TIME_STAMP = "timeStamp";
+    public static final String PARAM_REQUESTER_EMAIL = "requesterEmail";
 	
 	/* --- Messages --- */
 	

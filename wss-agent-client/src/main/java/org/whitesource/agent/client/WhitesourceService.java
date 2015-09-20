@@ -59,10 +59,12 @@ public class WhitesourceService {
     /* --- Public methods --- */
 
     /**
-     * The method update the White Source organization account with the given OSS information.
+     * Updates the White Source organization account with the given OSS information.
      *
-     * @param orgToken     Organization token uniquely identifying the account at white source..
-     * @param projectInfos OSS usage information to send to white source.
+     * @param orgToken       Organization token uniquely identifying the account at white source.
+     * @param product        The product name or token to update.
+     * @param productVersion The product version.
+     * @param projectInfos   OSS usage information to send to white source.
      * @return Result of updating white source.
      * @throws WssServiceException In case of errors while updating white source.
      */
@@ -71,14 +73,34 @@ public class WhitesourceService {
                                         String productVersion,
                                         Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
-        return client.updateInventory(
-                requestFactory.newUpdateInventoryRequest(orgToken, product, productVersion, projectInfos));
+        return update(orgToken, null, product, productVersion, projectInfos);
     }
 
     /**
-     * The method generates a file with json representation of the update request.
+     * Updates the White Source organization account with the given OSS information.
      *
-     * @param orgToken          Organization token uniquely identifying the account at white source..
+     * @param orgToken          Organization token uniquely identifying the account at white source.
+     * @param requesterEmail    Email of the WhiteSource user that requests to update WhiteSource.
+     * @param product           The product name or token to update.
+     * @param productVersion    The product version.
+     * @param projectInfos      OSS usage information to send to white source.
+     * @return Result of updating white source.
+     * @throws WssServiceException
+     */
+    public UpdateInventoryResult update(String orgToken,
+                                        String requesterEmail,
+                                        String product,
+                                        String productVersion,
+                                        Collection<AgentProjectInfo> projectInfos)
+            throws WssServiceException {
+        return client.updateInventory(
+                requestFactory.newUpdateInventoryRequest(orgToken, requesterEmail, product, productVersion, projectInfos));
+    }
+
+    /**
+     * Generates a file with json representation of the update request.
+     *
+     * @param orgToken          Organization token uniquely identifying the account at white source.
      * @param product           The product name or token to update.
      * @param productVersion    The product version.
      * @param projectInfos      OSS usage information to send to white source.
@@ -92,10 +114,12 @@ public class WhitesourceService {
     }
 
     /**
-     * The method check the policies application of the given OSS information.
+     * Checks the policies application of the given OSS information.
      *
-     * @param orgToken     Organization token uniquely identifying the account at white source..
-     * @param projectInfos OSS usage information to send to white source.
+     * @param orgToken          Organization token uniquely identifying the account at white source.
+     * @param product           The product name or token to update.
+     * @param productVersion    The product version.
+     * @param projectInfos      OSS usage information to send to white source.
      * @return Potential result of applying the currently defined policies.
      * @throws WssServiceException In case of errors while checking the policies with white source.
      */

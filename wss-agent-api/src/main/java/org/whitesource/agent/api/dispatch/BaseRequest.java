@@ -43,6 +43,8 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
     protected String productVersion;
 
     protected long timeStamp;
+
+    protected String requesterEmail;
 	
 	/* --- Constructors --- */
 
@@ -80,33 +82,45 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 	}
 
 	/* --- Interface implementation methods --- */
-	
+
+    @Override
 	public RequestType type() {
 		return type;
 	}
-	
+
+    @Override
 	public String orgToken() {
 		return orgToken;
 	}
-	
+
+    @Override
 	public String agent() {
 		return agent;
 	}
 
+    @Override
 	public String agentVersion() {
 		return agentVersion;
 	}
 
+    @Override
     public String product() {
         return product;
     }
 
+    @Override
     public String productVersion() {
         return productVersion;
     }
 
+    @Override
     public long timeStamp() {
         return timeStamp;
+    }
+
+    @Override
+    public String requesterEmail() {
+        return requesterEmail;
     }
 
 	/* --- Getters / Setters --- */
@@ -133,5 +147,9 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 
     public void setTimeStamp(long timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public void setRequesterEmail(String requesterEmail) {
+        this.requesterEmail = requesterEmail;
     }
 }

@@ -55,7 +55,7 @@ public class RequestFactory {
      * @return Newly created request to update organization inventory.
      */
     public UpdateInventoryRequest newUpdateInventoryRequest(String orgToken, Collection<AgentProjectInfo> projects) {
-        return newUpdateInventoryRequest(orgToken, null, null, projects);
+        return newUpdateInventoryRequest(orgToken, null, null, null, projects);
     }
 
     /**
@@ -71,7 +71,25 @@ public class RequestFactory {
                                                             String product,
                                                             String productVersion,
                                                             Collection<AgentProjectInfo> projects) {
-        return (UpdateInventoryRequest) prepareRequest(new UpdateInventoryRequest(projects), orgToken, product, productVersion);
+        return newUpdateInventoryRequest(orgToken, null, product, productVersion, projects);
+    }
+
+    /**
+     * Create new Inventory Update request.
+     *
+     * @param orgToken WhiteSource organization token.
+     * @param requesterEmail Email of the WhiteSource user that requests to update WhiteSource.
+     * @param projects Projects status statement to update.
+     * @param product Name or WhiteSource service token of the product to update.
+     * @param productVersion Version of the product to update.
+     * @return Newly created request to update organization inventory.
+     */
+    public UpdateInventoryRequest newUpdateInventoryRequest(String orgToken,
+                                                            String requesterEmail,
+                                                            String product,
+                                                            String productVersion,
+                                                            Collection<AgentProjectInfo> projects) {
+        return (UpdateInventoryRequest) prepareRequest(new UpdateInventoryRequest(projects), orgToken, requesterEmail, product, productVersion);
     }
 
     /**
@@ -98,17 +116,18 @@ public class RequestFactory {
                                                         String product,
                                                         String productVersion,
                                                         Collection<AgentProjectInfo> projects) {
-        return (CheckPoliciesRequest) prepareRequest(new CheckPoliciesRequest(projects), orgToken, product, productVersion);
+        return (CheckPoliciesRequest) prepareRequest(new CheckPoliciesRequest(projects), orgToken, null, product, productVersion);
     }
 
     /* --- Protected methods --- */
 
-    protected <R> BaseRequest<R> prepareRequest(BaseRequest<R> request, String orgToken, String product, String productVersion) {
+    protected <R> BaseRequest<R> prepareRequest(BaseRequest<R> request, String orgToken, String requesterEmail, String product, String productVersion) {
         request.setAgent(agent);
         request.setAgentVersion(agentVersion);
         request.setOrgToken(orgToken);
         request.setProduct(product);
         request.setProductVersion(productVersion);
+        request.setRequesterEmail(requesterEmail);
 
         return request;
     }
