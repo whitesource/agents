@@ -15,10 +15,7 @@
  */
 package org.whitesource.agent.client;
 
-import org.whitesource.agent.api.dispatch.CheckPoliciesRequest;
-import org.whitesource.agent.api.dispatch.CheckPoliciesResult;
-import org.whitesource.agent.api.dispatch.UpdateInventoryRequest;
-import org.whitesource.agent.api.dispatch.UpdateInventoryResult;
+import org.whitesource.agent.api.dispatch.*;
 
 /**
  * The interface describes the functionality to be exposed by a client implementation to the White Source agent service.
@@ -42,8 +39,17 @@ public interface WssServiceClient {
      * @param request Check Policies request.
      * @return Check Policies result.
      * @throws WssServiceException In case an error occurred during the call to White Source server.
+     * @deprecated Use {@link WssServiceClient#checkPolicyCompliance(CheckPolicyComplianceRequest)}
      */
     CheckPoliciesResult checkPolicies(CheckPoliciesRequest request) throws WssServiceException;
+
+    /**
+     * The method call the White Source service for checking policies application.
+     * @param request Check Policies request.
+     * @return Check Policies result.
+     * @throws WssServiceException In case an error occurred during the call to White Source server.
+     */
+    CheckPolicyComplianceResult checkPolicyCompliance(CheckPolicyComplianceRequest request) throws WssServiceException;
 
     /**
      * The method close all connections and release resources.

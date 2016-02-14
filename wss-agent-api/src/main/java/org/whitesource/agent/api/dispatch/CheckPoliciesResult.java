@@ -15,120 +15,36 @@
  */
 package org.whitesource.agent.api.dispatch;
 
-import org.whitesource.agent.api.model.PolicyCheckResourceNode;
-import org.whitesource.agent.api.model.ResourceInfo;
-
-import java.io.Serializable;
-import java.util.*;
-
-
 /**
  * Result of the check policies operation.
  * 
  * @author Edo.Shor
  *
  * @since 1.2.0
+ *
+ * @deprecated Use {@link CheckPolicyComplianceResult}.
  */
-public class CheckPoliciesResult implements Serializable {
+public class CheckPoliciesResult extends BaseCheckPoliciesResult {
 
     /* --- Static members --- */
 
     private static final long serialVersionUID = 7083481460957821913L;
 
-	/* --- Members --- */
-
-    /**
-     * Name of organization in.
-     */
-	private String organization;
-
-    /**
-     * Map of project name to the root of its dependency graph with policies application result.
-     */
-	private Map<String, PolicyCheckResourceNode> existingProjects;
-
-    /**
-     * Map of project name to the root of its dependency graph with policies application result.
-     */
-	private Map<String, PolicyCheckResourceNode> newProjects;
-
-    /**
-     * Map of project name to its set of new resources to insert into inventory.
-     */
-    private Map<String, Collection<ResourceInfo>> projectNewResources;
-
 	/* --- Constructors --- */
 
-	/**
-	 * Default constructor
-	 */
-	public CheckPoliciesResult() {
-		existingProjects = new HashMap<String, PolicyCheckResourceNode>();
-        newProjects = new HashMap<String, PolicyCheckResourceNode>();
-        projectNewResources = new HashMap<String, Collection<ResourceInfo>>();
-	}
-
-	/**
-	 * Constructor
-	 *
-	 * @param organization Name of the domain.
-	 */
-	public CheckPoliciesResult(String organization) {
-		this();
-		this.organization = organization;
-	}
-
-    /* --- Public methods --- */
+    /**
+     * Default constructor
+     */
+    public CheckPoliciesResult() {
+        super();
+    }
 
     /**
-     * @return True if some project in this result have some rejected dependency.
+     * Constructor
+     *
+     * @param organization Name of the domain.
      */
-    public boolean hasRejections() {
-        boolean hasRejections = false;
-
-        Collection<PolicyCheckResourceNode> roots = new ArrayList<PolicyCheckResourceNode>();
-        roots.addAll(getExistingProjects().values());
-        roots.addAll(getNewProjects().values());
-
-        Iterator<PolicyCheckResourceNode> iterator = roots.iterator();
-        while (iterator.hasNext() && !hasRejections ) {
-            hasRejections = iterator.next().hasRejections();
-        }        
-
-        return hasRejections;
-    }
-
-	/* --- Getters / Setters --- */ 
-
-	public String getOrganization() {
-		return organization;
-	}
-
-	public void setOrganization(String organization) {
-		this.organization = organization;
-	}
-
-    public Map<String, PolicyCheckResourceNode> getNewProjects() {
-        return newProjects;
-    }
-
-    public void setNewProjects(Map<String, PolicyCheckResourceNode> newProjects) {
-        this.newProjects = newProjects;
-    }
-
-    public Map<String, PolicyCheckResourceNode> getExistingProjects() {
-        return existingProjects;
-    }
-
-    public void setExistingProjects(Map<String, PolicyCheckResourceNode> existingProjects) {
-        this.existingProjects = existingProjects;
-    }
-
-    public Map<String, Collection<ResourceInfo>> getProjectNewResources() {
-        return projectNewResources;
-    }
-
-    public void setProjectNewResources(Map<String, Collection<ResourceInfo>> projectNewResources) {
-        this.projectNewResources = projectNewResources;
+    public CheckPoliciesResult(String organization) {
+        super(organization);
     }
 }

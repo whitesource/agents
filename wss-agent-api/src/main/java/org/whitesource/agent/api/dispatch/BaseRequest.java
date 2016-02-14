@@ -15,6 +15,11 @@
  */
 package org.whitesource.agent.api.dispatch;
 
+import org.whitesource.agent.api.model.AgentProjectInfo;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
  * Base, abstract, implementation of the interface.
  * 
@@ -45,7 +50,9 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
     protected long timeStamp;
 
     protected String requesterEmail;
-	
+
+	protected Collection<AgentProjectInfo> projects;
+
 	/* --- Constructors --- */
 
 	/**
@@ -56,10 +63,10 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 	public BaseRequest(RequestType type) {
 		this(type, null, null);
 	}
-	
+
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param type Request operation type.
 	 * @param agent Agent type identifier.
 	 */
@@ -69,7 +76,7 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param type Request operation type.
 	 * @param agent Agent type identifier.
 	 * @param agentVersion Agent version.
@@ -79,6 +86,7 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 		this.agent = agent;
 		this.agentVersion = agentVersion;
         this.timeStamp = System.currentTimeMillis();
+		projects = new ArrayList<AgentProjectInfo>();
 	}
 
 	/* --- Interface implementation methods --- */
@@ -152,4 +160,12 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
     public void setRequesterEmail(String requesterEmail) {
         this.requesterEmail = requesterEmail;
     }
+
+	public Collection<AgentProjectInfo> getProjects() {
+		return projects;
+	}
+
+	public void setProjects(Collection<AgentProjectInfo> projects) {
+		this.projects = projects;
+	}
 }

@@ -26,6 +26,8 @@ import java.util.Collection;
  * @author Edo.Shor
  *
  * @since 1.2.0
+ *
+ * @deprecated Use {@link CheckPolicyComplianceRequest}.
  */
 public class CheckPoliciesRequest extends BaseRequest<CheckPoliciesResult> {
 
@@ -44,7 +46,6 @@ public class CheckPoliciesRequest extends BaseRequest<CheckPoliciesResult> {
      */
     public CheckPoliciesRequest() {
         super(RequestType.CHECK_POLICIES);
-        projects = new ArrayList<AgentProjectInfo>();
     }
 
     /**
@@ -66,16 +67,6 @@ public class CheckPoliciesRequest extends BaseRequest<CheckPoliciesResult> {
 	public CheckPoliciesRequest(String orgToken, Collection<AgentProjectInfo> projects) {
 		this(projects);
 		this.orgToken = orgToken;
-	}
-
-	/* --- Getters / Setters --- */
-
-	public Collection<AgentProjectInfo> getProjects() {
-		return projects;
-	}
-
-	public void setProjects(Collection<AgentProjectInfo> projects) {
-		this.projects = projects;
 	}
 
 }

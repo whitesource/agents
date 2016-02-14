@@ -31,10 +31,6 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
 	
 	private static final long serialVersionUID = 7731258010033962980L;
 	
-	/* --- Members --- */
-
-	protected Collection<AgentProjectInfo> projects;
-
 	/* --- Constructors --- */
 
     /**
@@ -42,7 +38,6 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
      */
     public UpdateInventoryRequest() {
         super(RequestType.UPDATE);
-        projects = new ArrayList<AgentProjectInfo>();
     }
 
     /**
@@ -66,15 +61,4 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
 		this(projects);
 		this.orgToken = orgToken;
 	}
-
-	/* --- Getters / Setters --- */
-
-	public Collection<AgentProjectInfo> getProjects() {
-		return projects;
-	}
-
-	public void setProjects(Collection<AgentProjectInfo> projects) {
-		this.projects = projects;
-	}
-
 }

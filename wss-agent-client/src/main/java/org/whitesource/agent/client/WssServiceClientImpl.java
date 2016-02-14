@@ -116,7 +116,13 @@ public class WssServiceClientImpl implements WssServiceClient {
         return service(request);
     }
 
-    @Override
+	@Override
+	public CheckPolicyComplianceResult checkPolicyCompliance(CheckPolicyComplianceRequest request) throws WssServiceException {
+		return service(request);
+	}
+
+
+	@Override
 	public void shutdown() {
 		httpClient.getConnectionManager().shutdown();	
 	}
@@ -186,6 +192,9 @@ public class WssServiceClientImpl implements WssServiceClient {
             case CHECK_POLICIES:
                 result = (R) gson.fromJson(data, CheckPoliciesResult.class);
                 break;
+			case CHECK_POLICY_COMPLIANCE:
+				result = (R) gson.fromJson(data, CheckPolicyComplianceResult.class);
+				break;
             default:
                 throw new IllegalStateException("Unsupported request type.");
             }

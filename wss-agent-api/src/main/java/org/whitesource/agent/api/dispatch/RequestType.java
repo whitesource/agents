@@ -23,5 +23,5 @@ package org.whitesource.agent.api.dispatch;
 public enum RequestType {
 	UPDATE,
     CHECK_POLICIES,
-
+    CHECK_POLICY_COMPLIANCE,
 }

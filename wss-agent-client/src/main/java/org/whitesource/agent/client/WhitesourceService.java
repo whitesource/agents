@@ -15,10 +15,7 @@
  */
 package org.whitesource.agent.client;
 
-import org.whitesource.agent.api.dispatch.CheckPoliciesResult;
-import org.whitesource.agent.api.dispatch.RequestFactory;
-import org.whitesource.agent.api.dispatch.UpdateInventoryRequest;
-import org.whitesource.agent.api.dispatch.UpdateInventoryResult;
+import org.whitesource.agent.api.dispatch.*;
 import org.whitesource.agent.api.model.AgentProjectInfo;
 
 import java.util.Collection;
@@ -122,6 +119,7 @@ public class WhitesourceService {
      * @param projectInfos      OSS usage information to send to white source.
      * @return Potential result of applying the currently defined policies.
      * @throws WssServiceException In case of errors while checking the policies with white source.
+     * @deprecated Use {@link WhitesourceService#checkPolicyCompliance(String, String, String, Collection, boolean)}.
      */
     public CheckPoliciesResult checkPolicies(String orgToken,
                                              String product,
@@ -130,6 +128,27 @@ public class WhitesourceService {
             throws WssServiceException {
         return client.checkPolicies(
                 requestFactory.newCheckPoliciesRequest(orgToken, product, productVersion, projectInfos));
+    }
+
+    /**
+     * Checks the policies application of the given OSS information.
+     *
+     * @param orgToken          Organization token uniquely identifying the account at white source.
+     * @param product           The product name or token to update.
+     * @param productVersion    The product version.
+     * @param projectInfos      OSS usage information to send to white source.
+     * @param allDependencies  Boolean to check new data only or not.
+     * @return Potential result of applying the currently defined policies.
+     * @throws WssServiceException In case of errors while checking the policies with white source.
+     */
+    public CheckPolicyComplianceResult checkPolicyCompliance(String orgToken,
+                                             String product,
+                                             String productVersion,
+                                             Collection<AgentProjectInfo> projectInfos,
+                                             boolean allDependencies)
+            throws WssServiceException {
+        return client.checkPolicyCompliance(
+                requestFactory.newCheckPolicyComplianceRequest(orgToken, product, productVersion, projectInfos, allDependencies));
     }
 
     /**

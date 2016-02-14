@@ -99,6 +99,7 @@ public class RequestFactory {
      * @param projects Projects status statement to check.
      * @return Newly created request to check policies application.
      */
+
     public CheckPoliciesRequest newCheckPoliciesRequest(String orgToken, Collection<AgentProjectInfo> projects) {
         return newCheckPoliciesRequest(orgToken, null, null, projects);
     }
@@ -111,12 +112,31 @@ public class RequestFactory {
      * @param product Name or WhiteSource service token of the product whose policies to check.
      * @param productVersion Version of the product whose policies to check.
      * @return Newly created request to check policies application.
+     * @deprecated Use {@link RequestFactory#newCheckPolicyComplianceRequest(String, String, String, Collection, boolean)}
      */
     public CheckPoliciesRequest newCheckPoliciesRequest(String orgToken,
                                                         String product,
                                                         String productVersion,
                                                         Collection<AgentProjectInfo> projects) {
         return (CheckPoliciesRequest) prepareRequest(new CheckPoliciesRequest(projects), orgToken, null, product, productVersion);
+    }
+
+    /**
+     * Create new Check policies request.
+     *
+     * @param orgToken WhiteSource organization token.
+     * @param projects Projects status statement to check.
+     * @param product Name or WhiteSource service token of the product whose policies to check.
+     * @param productVersion Version of the product whose policies to check.
+     * @param allDependencies boolean check that all/added dependencies sent to WhiteSource
+     * @return Newly created request to check policies application.
+     */
+    public CheckPolicyComplianceRequest newCheckPolicyComplianceRequest(String orgToken,
+                                                                        String product,
+                                                                        String productVersion,
+                                                                        Collection<AgentProjectInfo> projects,
+                                                                        boolean allDependencies) {
+        return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, allDependencies), orgToken, null, product, productVersion);
     }
 
     /* --- Protected methods --- */
@@ -128,7 +148,6 @@ public class RequestFactory {
         request.setProduct(product);
         request.setProductVersion(productVersion);
         request.setRequesterEmail(requesterEmail);
-
         return request;
     }
 

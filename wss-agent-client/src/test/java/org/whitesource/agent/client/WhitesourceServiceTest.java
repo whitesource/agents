@@ -84,6 +84,7 @@ public class WhitesourceServiceTest {
         assertEquals("orgToken", checkPoliciesCaptor.getValue().orgToken());
         assertEquals("product", updateCaptor.getValue().product());
         assertEquals("productVersion", updateCaptor.getValue().productVersion());
+
     }
 
 }
