@@ -22,7 +22,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
+import org.whitesource.agent.api.dispatch.BaseCheckPoliciesResult;
 import org.whitesource.agent.api.dispatch.CheckPoliciesResult;
+import org.whitesource.agent.api.dispatch.CheckPolicyComplianceResult;
 import org.whitesource.agent.api.model.ResourceInfo;
 import org.whitesource.agent.report.model.LicenseHistogramDataPoint;
 
@@ -51,7 +53,7 @@ public class PolicyCheckReport {
 
     /* --- Members --- */
 
-    private CheckPoliciesResult result;
+    private BaseCheckPoliciesResult result;
 
     private String buildName;
 
@@ -64,7 +66,7 @@ public class PolicyCheckReport {
      *
      * @param result
      */
-    public PolicyCheckReport(CheckPoliciesResult result) {
+    public PolicyCheckReport(BaseCheckPoliciesResult result) {
         this.result = result;
     }
 
@@ -75,7 +77,7 @@ public class PolicyCheckReport {
      * @param buildName
      * @param buildNumber
      */
-    public PolicyCheckReport(CheckPoliciesResult result, String buildName, String buildNumber) {
+    public PolicyCheckReport(BaseCheckPoliciesResult result, String buildName, String buildNumber) {
         this(result);
         this.buildName = buildName;
         this.buildNumber = buildNumber;
@@ -232,7 +234,7 @@ public class PolicyCheckReport {
 
     /* --- Private methods --- */
 
-    private Collection<LicenseHistogramDataPoint> createLicenseHistogram(CheckPoliciesResult result) {
+    private Collection<LicenseHistogramDataPoint> createLicenseHistogram(BaseCheckPoliciesResult result) {
         Collection<LicenseHistogramDataPoint> dataPoints = new ArrayList<LicenseHistogramDataPoint>();
 
         // create distribution histogram
@@ -290,11 +292,11 @@ public class PolicyCheckReport {
 
     /* --- Getters / Setters --- */
 
-    public CheckPoliciesResult getResult() {
+    public BaseCheckPoliciesResult getResult() {
         return result;
     }
 
-    public void setResult(CheckPoliciesResult result) {
+    public void setResult(BaseCheckPoliciesResult result) {
         this.result = result;
     }
 

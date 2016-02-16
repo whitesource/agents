@@ -237,6 +237,9 @@ public class WssServiceClientImpl implements WssServiceClient {
             case CHECK_POLICIES:
                 jsonDiff = gson.toJson(((CheckPoliciesRequest) request).getProjects());
                 break;
+			case CHECK_POLICY_COMPLIANCE:POLICIES:
+				jsonDiff = gson.toJson(((CheckPolicyComplianceRequest) request).getProjects());
+				break;
             default: break;
 		}
 

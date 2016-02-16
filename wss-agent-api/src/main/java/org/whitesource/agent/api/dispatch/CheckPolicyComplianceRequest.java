@@ -19,13 +19,15 @@ public class CheckPolicyComplianceRequest extends BaseRequest<CheckPolicyComplia
 
     /* --- Members --- */
 
+    protected Collection<AgentProjectInfo> projects;
+
     /**
      * When set to true, check that all dependencies sent to WhiteSource comply with organization policies.
      * When set to false, check that the added dependencies sent to WhiteSource comply with organization policies.
      */
     protected boolean allDependencies;
 
-    /* --- Constructors --- */
+     /* --- Constructors --- */
 
     /**
      * Default constructor
@@ -47,8 +49,20 @@ public class CheckPolicyComplianceRequest extends BaseRequest<CheckPolicyComplia
         this.allDependencies = allDependencies;
     }
 
+    /**
+     * Constructor
+     *
+     * @param orgToken WhiteSource organization token.
+     * @param projects Open Source usage statement to check against policies.
+     * @param allDependencies Check policies for the all the Inventory or just for the new one.
+     */
+    public CheckPolicyComplianceRequest(String orgToken, Collection<AgentProjectInfo> projects, boolean allDependencies) {
+        this(projects, allDependencies);
+        this.orgToken = orgToken;
+    }
 
     /* --- Getters / Setters --- */
+
 
     public boolean isAllDependencies() {
         return allDependencies;
@@ -56,5 +70,16 @@ public class CheckPolicyComplianceRequest extends BaseRequest<CheckPolicyComplia
 
     public void setAllDependencies(boolean allDependencies) {
         this.allDependencies = allDependencies;
+    }
+
+
+    @Override
+    public Collection<AgentProjectInfo> getProjects() {
+        return projects;
+    }
+
+    @Override
+    public void setProjects(Collection<AgentProjectInfo> projects) {
+        this.projects = projects;
     }
 }
