@@ -229,15 +229,17 @@ public class WssServiceClientImpl implements WssServiceClient {
 		nvps.add(new BasicNameValuePair(APIConstants.PARAM_PRODUCT_VERSION, request.productVersion()));
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_TIME_STAMP, String.valueOf(request.timeStamp())));
 
-        String jsonDiff = null;
+
+		String jsonDiff = null;
 		switch (type) {
-            case UPDATE:
-                jsonDiff = gson.toJson(((UpdateInventoryRequest) request).getProjects());
-                break;
-            case CHECK_POLICIES:
-                jsonDiff = gson.toJson(((CheckPoliciesRequest) request).getProjects());
-                break;
-			case CHECK_POLICY_COMPLIANCE:POLICIES:
+			case UPDATE:
+				jsonDiff = gson.toJson(((UpdateInventoryRequest) request).getProjects());
+				break;
+			case CHECK_POLICIES:
+				jsonDiff = gson.toJson(((CheckPoliciesRequest) request).getProjects());
+				break;
+			case CHECK_POLICY_COMPLIANCE:
+				nvps.add(new BasicNameValuePair(APIConstants.PARAM_ALL_DEPENDENCIES,String.valueOf(((CheckPolicyComplianceRequest)request).isAllDependencies())));
 				jsonDiff = gson.toJson(((CheckPolicyComplianceRequest) request).getProjects());
 				break;
             default: break;

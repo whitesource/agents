@@ -46,6 +46,7 @@ public class CheckPoliciesRequest extends BaseRequest<CheckPoliciesResult> {
      */
     public CheckPoliciesRequest() {
         super(RequestType.CHECK_POLICIES);
+        projects = new ArrayList<AgentProjectInfo>();
     }
 
     /**
@@ -58,6 +59,7 @@ public class CheckPoliciesRequest extends BaseRequest<CheckPoliciesResult> {
         this.projects = projects;
     }
 
+
 	/**
 	 * Constructor
 	 *
@@ -68,5 +70,16 @@ public class CheckPoliciesRequest extends BaseRequest<CheckPoliciesResult> {
 		this(projects);
 		this.orgToken = orgToken;
 	}
+
+	/* --- Getters / Setters --- */
+
+	public Collection<AgentProjectInfo> getProjects() {
+		return projects;
+	}
+
+	public void setProjects(Collection<AgentProjectInfo> projects) {
+		this.projects = projects;
+	}
+
 
 }
