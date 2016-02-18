@@ -59,6 +59,14 @@ public class ModelSerializationTest {
     }
 
     @Test
+    public void testCheckPolicyComplianceRequest() {
+        Collection<AgentProjectInfo> projectInfos = createTestProjects();
+        CheckPolicyComplianceRequest request = requestFactory.newCheckPolicyComplianceRequest("orgToken", projectInfos, true);
+        CheckPolicyComplianceRequest deserializedRequest = testRequest(request, CheckPolicyComplianceRequest.class);
+        assertProjectsEquals(deserializedRequest.getProjects(), request.getProjects());
+    }
+
+    @Test
     public void testUpdateInventoryResult() {
         UpdateInventoryResult result = new UpdateInventoryResult();
         result.setOrganization("organization");

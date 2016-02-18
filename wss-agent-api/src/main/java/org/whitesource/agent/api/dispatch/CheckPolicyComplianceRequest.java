@@ -18,8 +18,6 @@ public class CheckPolicyComplianceRequest extends BaseRequest<CheckPolicyComplia
 
     /* --- Members --- */
 
-    protected Collection<AgentProjectInfo> projects;
-
     /**
      * When set to true, check that all dependencies sent to WhiteSource comply with organization policies.
      * When set to false, check that the added dependencies sent to WhiteSource comply with organization policies.
@@ -69,15 +67,5 @@ public class CheckPolicyComplianceRequest extends BaseRequest<CheckPolicyComplia
 
     public void setForceCheckAllDependencies(boolean forceCheckAllDependencies) {
         this.forceCheckAllDependencies = forceCheckAllDependencies;
-    }
-
-    @Override
-    public Collection<AgentProjectInfo> getProjects() {
-        return projects;
-    }
-
-    @Override
-    public void setProjects(Collection<AgentProjectInfo> projects) {
-        this.projects = projects;
     }
 }

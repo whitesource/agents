@@ -137,7 +137,7 @@ public class WhitesourceService {
      * @param product           The product name or token to update.
      * @param productVersion    The product version.
      * @param projectInfos      OSS usage information to send to white source.
-     * @param allDependencies  Boolean to check new data only or not.
+     * @param forceCheckAllDependencies  Boolean to check new data only or not.
      * @return Potential result of applying the currently defined policies.
      * @throws WssServiceException In case of errors while checking the policies with white source.
      */
@@ -145,10 +145,10 @@ public class WhitesourceService {
                                              String product,
                                              String productVersion,
                                              Collection<AgentProjectInfo> projectInfos,
-                                             boolean allDependencies)
+                                             boolean forceCheckAllDependencies)
             throws WssServiceException {
         return client.checkPolicyCompliance(
-                requestFactory.newCheckPolicyComplianceRequest(orgToken, product, productVersion, projectInfos, allDependencies));
+                requestFactory.newCheckPolicyComplianceRequest(orgToken, product, productVersion, projectInfos, forceCheckAllDependencies));
     }
 
     /**

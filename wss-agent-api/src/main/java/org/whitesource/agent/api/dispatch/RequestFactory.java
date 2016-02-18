@@ -126,17 +126,30 @@ public class RequestFactory {
      *
      * @param orgToken WhiteSource organization token.
      * @param projects Projects status statement to check.
+     * @param forceCheckAllDependencies boolean check that all/added dependencies sent to WhiteSource
+     * @return Newly created request to check policies application.
+     */
+
+    public CheckPolicyComplianceRequest newCheckPolicyComplianceRequest(String orgToken, Collection<AgentProjectInfo> projects, boolean forceCheckAllDependencies) {
+        return newCheckPolicyComplianceRequest(orgToken, null, null, projects, forceCheckAllDependencies);
+    }
+    
+    /**
+     * Create new Check policies request.
+     *
+     * @param orgToken WhiteSource organization token.
+     * @param projects Projects status statement to check.
      * @param product Name or WhiteSource service token of the product whose policies to check.
      * @param productVersion Version of the product whose policies to check.
-     * @param allDependencies boolean check that all/added dependencies sent to WhiteSource
+     * @param forceCheckAllDependencies boolean check that all/added dependencies sent to WhiteSource
      * @return Newly created request to check policies application.
      */
     public CheckPolicyComplianceRequest newCheckPolicyComplianceRequest(String orgToken,
                                                                         String product,
                                                                         String productVersion,
                                                                         Collection<AgentProjectInfo> projects,
-                                                                        boolean allDependencies) {
-        return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, allDependencies), orgToken, null, product, productVersion);
+                                                                        boolean forceCheckAllDependencies) {
+        return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, forceCheckAllDependencies), orgToken, null, product, productVersion);
     }
 
     /* --- Protected methods --- */
