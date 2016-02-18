@@ -2,7 +2,6 @@ package org.whitesource.agent.api.dispatch;
 
 import org.whitesource.agent.api.model.AgentProjectInfo;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -25,7 +24,7 @@ public class CheckPolicyComplianceRequest extends BaseRequest<CheckPolicyComplia
      * When set to true, check that all dependencies sent to WhiteSource comply with organization policies.
      * When set to false, check that the added dependencies sent to WhiteSource comply with organization policies.
      */
-    protected boolean allDependencies;
+    protected boolean forceCheckAllDependencies;
 
      /* --- Constructors --- */
 
@@ -34,19 +33,19 @@ public class CheckPolicyComplianceRequest extends BaseRequest<CheckPolicyComplia
      */
     public CheckPolicyComplianceRequest() {
         super(RequestType.CHECK_POLICY_COMPLIANCE);
-        allDependencies = false;
+        forceCheckAllDependencies = false;
     }
 
     /**
      * Constructor
      *
      * @param projects Open Source usage statement to check against policies.
-     * @param allDependencies Check policies for the all the Inventory or just for the new one.
+     * @param forceCheckAllDependencies Check policies for the all the Inventory or just for the new one.
      */
-    public CheckPolicyComplianceRequest(Collection<AgentProjectInfo> projects, boolean allDependencies) {
+    public CheckPolicyComplianceRequest(Collection<AgentProjectInfo> projects, boolean forceCheckAllDependencies) {
         this();
         this.projects = projects;
-        this.allDependencies = allDependencies;
+        this.forceCheckAllDependencies = forceCheckAllDependencies;
     }
 
     /**
@@ -54,24 +53,23 @@ public class CheckPolicyComplianceRequest extends BaseRequest<CheckPolicyComplia
      *
      * @param orgToken WhiteSource organization token.
      * @param projects Open Source usage statement to check against policies.
-     * @param allDependencies Check policies for the all the Inventory or just for the new one.
+     * @param forceCheckAllDependencies Check policies for the all the Inventory or just for the new one.
      */
-    public CheckPolicyComplianceRequest(String orgToken, Collection<AgentProjectInfo> projects, boolean allDependencies) {
-        this(projects, allDependencies);
+    public CheckPolicyComplianceRequest(String orgToken, Collection<AgentProjectInfo> projects, boolean forceCheckAllDependencies) {
+        this(projects, forceCheckAllDependencies);
         this.orgToken = orgToken;
     }
 
     /* --- Getters / Setters --- */
 
 
-    public boolean isAllDependencies() {
-        return allDependencies;
+    public boolean isForceCheckAllDependencies() {
+        return forceCheckAllDependencies;
     }
 
-    public void setAllDependencies(boolean allDependencies) {
-        this.allDependencies = allDependencies;
+    public void setForceCheckAllDependencies(boolean forceCheckAllDependencies) {
+        this.forceCheckAllDependencies = forceCheckAllDependencies;
     }
-
 
     @Override
     public Collection<AgentProjectInfo> getProjects() {

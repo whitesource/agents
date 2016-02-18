@@ -36,7 +36,7 @@ public final class APIConstants {
 	public static final String PARAM_REQUEST_TYPE = "type";
     public static final String PARAM_TIME_STAMP = "timeStamp";
     public static final String PARAM_REQUESTER_EMAIL = "requesterEmail";
-	public static final String PARAM_ALL_DEPENDENCIES = "allDependencies";
+	public static final String PARAM_FORCE_CHECK_ALL_DEPENDENCIES = "forceCheckAllDependencies";
 	
 	/* --- Messages --- */
 	

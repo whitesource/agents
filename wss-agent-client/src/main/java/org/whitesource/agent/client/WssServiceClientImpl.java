@@ -239,7 +239,8 @@ public class WssServiceClientImpl implements WssServiceClient {
 				jsonDiff = gson.toJson(((CheckPoliciesRequest) request).getProjects());
 				break;
 			case CHECK_POLICY_COMPLIANCE:
-				nvps.add(new BasicNameValuePair(APIConstants.PARAM_ALL_DEPENDENCIES,String.valueOf(((CheckPolicyComplianceRequest)request).isAllDependencies())));
+				nvps.add(new BasicNameValuePair(APIConstants.PARAM_FORCE_CHECK_ALL_DEPENDENCIES,
+						String.valueOf(((CheckPolicyComplianceRequest)request).isForceCheckAllDependencies())));
 				jsonDiff = gson.toJson(((CheckPolicyComplianceRequest) request).getProjects());
 				break;
             default: break;
