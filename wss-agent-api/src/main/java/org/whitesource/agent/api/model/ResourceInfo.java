@@ -35,10 +35,16 @@ public class ResourceInfo implements Serializable {
     /* --- Members --- */
 
     private String displayName;
-
     private String link;
-
     private Collection<String> licenses;
+
+    /**
+     * @since 2.2.8
+     */
+    private String sha1;
+    private Collection<VulnerabilityInfo> vulnerabilities;
+    private String homepageUrl;
+    private String description;
 
     /* --- Constructors --- */
 
@@ -47,6 +53,7 @@ public class ResourceInfo implements Serializable {
      */
     public ResourceInfo() {
         licenses = new ArrayList<String>();
+        vulnerabilities = new ArrayList<VulnerabilityInfo>();
     }
 
     /**
@@ -90,5 +97,37 @@ public class ResourceInfo implements Serializable {
 
     public void setLicenses(Collection<String> licenses) {
         this.licenses = licenses;
+    }
+
+    public String getSha1() {
+        return sha1;
+    }
+
+    public void setSha1(String sha1) {
+        this.sha1 = sha1;
+    }
+
+    public Collection<VulnerabilityInfo> getVulnerabilities() {
+        return vulnerabilities;
+    }
+
+    public void setVulnerabilities(Collection<VulnerabilityInfo> vulnerabilities) {
+        this.vulnerabilities = vulnerabilities;
+    }
+
+    public String getHomepageUrl() {
+        return homepageUrl;
+    }
+
+    public void setHomepageUrl(String homepageUrl) {
+        this.homepageUrl = homepageUrl;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

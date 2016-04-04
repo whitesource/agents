@@ -121,6 +121,11 @@ public class WssServiceClientImpl implements WssServiceClient {
 		return service(request);
 	}
 
+	@Override
+	public GetDependencyDataResult getDependencyData(GetDependencyDataRequest request) throws WssServiceException {
+		return service(request);
+	}
+
 
 	@Override
 	public void shutdown() {
@@ -195,6 +200,9 @@ public class WssServiceClientImpl implements WssServiceClient {
 			case CHECK_POLICY_COMPLIANCE:
 				result = (R) gson.fromJson(data, CheckPolicyComplianceResult.class);
 				break;
+			case GET_DEPENDENCY_DATA:
+				result = (R) gson.fromJson(data, GetDependencyDataResult.class);
+				break;
             default:
                 throw new IllegalStateException("Unsupported request type.");
             }
@@ -242,6 +250,9 @@ public class WssServiceClientImpl implements WssServiceClient {
 				nvps.add(new BasicNameValuePair(APIConstants.PARAM_FORCE_CHECK_ALL_DEPENDENCIES,
 						String.valueOf(((CheckPolicyComplianceRequest)request).isForceCheckAllDependencies())));
 				jsonDiff = gson.toJson(((CheckPolicyComplianceRequest) request).getProjects());
+				break;
+			case GET_DEPENDENCY_DATA:
+				jsonDiff = gson.toJson(((GetDependencyDataRequest) request).getProjects());
 				break;
             default: break;
 		}

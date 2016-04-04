@@ -24,4 +24,5 @@ public enum RequestType {
 	UPDATE,
     CHECK_POLICIES,
     CHECK_POLICY_COMPLIANCE,
+    GET_DEPENDENCY_DATA
 }

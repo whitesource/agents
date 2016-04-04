@@ -152,6 +152,35 @@ public class RequestFactory {
         return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, forceCheckAllDependencies), orgToken, null, product, productVersion);
     }
 
+
+    /**
+     * Create new Dependency Data request.
+     *
+     * @param orgToken WhiteSource organization token.
+     * @param projects Projects status statement to check.
+     * @return Newly created request to get Dependency Additional Data (Licenses, Description, homepageUrl and Vulnerabilities).
+     */
+
+    public GetDependencyDataRequest newDependencyDataRequest(String orgToken, Collection<AgentProjectInfo> projects) {
+        return newDependencyDataRequest(orgToken, null, null, projects);
+    }
+
+    /**
+     * Create new Dependency Data request.
+     *
+     * @param orgToken WhiteSource organization token.
+     * @param projects Projects status statement to check.
+     * @param product Name or WhiteSource service token of the product whose policies to check.
+     * @param productVersion Version of the product whose policies to check.
+     * @return Newly created request to get Dependency Additional Data (Licenses, Description, homepageUrl and Vulnerabilities).
+     */
+    public GetDependencyDataRequest newDependencyDataRequest(String orgToken,
+                                                             String product,
+                                                             String productVersion,
+                                                             Collection<AgentProjectInfo> projects) {
+        return (GetDependencyDataRequest) prepareRequest(new GetDependencyDataRequest(projects), orgToken, null, product, productVersion);
+    }
+
     /* --- Protected methods --- */
 
     protected <R> BaseRequest<R> prepareRequest(BaseRequest<R> request, String orgToken, String requesterEmail, String product, String productVersion) {

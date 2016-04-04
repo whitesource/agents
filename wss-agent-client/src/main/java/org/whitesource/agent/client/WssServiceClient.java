@@ -52,6 +52,14 @@ public interface WssServiceClient {
     CheckPolicyComplianceResult checkPolicyCompliance(CheckPolicyComplianceRequest request) throws WssServiceException;
 
     /**
+     * The method call the White Source service for getting additional dependency data.
+     * @param request Get Dependency Data request.
+     * @return Get Dependency Data result.
+     * @throws WssServiceException In case an error occurred during the call to White Source server.
+     */
+    GetDependencyDataResult getDependencyData(GetDependencyDataRequest request) throws WssServiceException;
+
+    /**
      * The method close all connections and release resources.
      * No communication can be done on this client after the method is invoked.
      */

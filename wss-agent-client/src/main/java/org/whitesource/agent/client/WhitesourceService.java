@@ -152,6 +152,25 @@ public class WhitesourceService {
     }
 
     /**
+     * Gets additional data for given dependencies.
+     *
+     * @param orgToken          Organization token uniquely identifying the account at white source.
+     * @param product           The product name or token to update.
+     * @param productVersion    The product version.
+     * @param projectInfos      OSS usage information to send to white source.
+     * @return Potential result of the dependencies additional data(license, description, homePageUrl, vulnerabilities, sha1 and displayName).
+     * @throws WssServiceException In case of errors while getting additional dependency data with white source.
+     */
+    public GetDependencyDataResult getDependencyData(String orgToken,
+                                                     String product,
+                                                     String productVersion,
+                                                     Collection<AgentProjectInfo> projectInfos)
+            throws WssServiceException {
+        return client.getDependencyData(
+                requestFactory.newDependencyDataRequest(orgToken, product, productVersion, projectInfos));
+    }
+
+    /**
      * The method close the underlying client to the White Source service.
      *
      * @see org.whitesource.agent.client.WssServiceClient#shutdown()

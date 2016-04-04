@@ -53,7 +53,15 @@ public class ZipUtils {
                 gzipos.write(text.getBytes(UTF_8));
                 gzipos.close();
                 baos.close();
-                result = new BASE64Encoder().encode(baos.toByteArray());
+                result = (new BASE64Encoder()).encode(baos.toByteArray());
+                /* TODO
+                Replace result raw to this one : result = Base64.encodeBase64String(baos.toByteArray());
+                See :
+                Should not be using classes that are in sun.* packages - those classes are not part of the public API
+                Java and can change in any new Java version
+                http://stackoverflow.com/questions/29692146/java-lang-noclassdeffounderror-sun-misc-base64encoder
+                http://www.oracle.com/technetwork/java/faq-sun-packages-142232.html
+                */
             } catch (IOException e) {
                 result = text;
             } finally {
