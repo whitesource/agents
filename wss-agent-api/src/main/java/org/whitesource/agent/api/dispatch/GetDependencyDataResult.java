@@ -53,7 +53,6 @@ public class GetDependencyDataResult implements Serializable {
      * Default constructor
      */
     public GetDependencyDataResult() {
-
         resources = new ArrayList<ResourceInfo>();
     }
 

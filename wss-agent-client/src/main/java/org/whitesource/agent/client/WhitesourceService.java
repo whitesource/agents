@@ -44,13 +44,17 @@ public class WhitesourceService {
     }
 
     public WhitesourceService(final String agent, final String agentVersion, final String serviceUrl) {
+        this(agent, agentVersion, serviceUrl, true);
+    }
+
+    public WhitesourceService(final String agent, final String agentVersion, final String serviceUrl, boolean setProxy) {
         requestFactory = new RequestFactory(agent, agentVersion);
 
         String url = serviceUrl;
         if (url == null || url.trim().length() == 0) {
             url = System.getProperty(ClientConstants.SERVICE_URL_KEYWORD, ClientConstants.DEFAULT_SERVICE_URL);
         }
-        client = new WssServiceClientImpl(url);
+        client = new WssServiceClientImpl(url, setProxy);
     }
 
     /* --- Public methods --- */

@@ -88,20 +88,32 @@ public class WssServiceClientImpl implements WssServiceClient {
 	 * @param serviceUrl WhiteSource service URL to use.
 	 */
 	public WssServiceClientImpl(String serviceUrl) {
-        gson = new Gson();
+		this(serviceUrl, true);
+	}
 
-        if (serviceUrl == null || serviceUrl.length() == 0) {
-            this.serviceUrl = ClientConstants.DEFAULT_SERVICE_URL;
-        } else {
-		    this.serviceUrl = serviceUrl;
-        }
+	/**
+	 * Constructor
+	 *
+	 * @param serviceUrl WhiteSource service URL to use.
+	 * @param setProxy WhiteSource set proxy, whether the proxy settings defined or not.
+	 */
+	public WssServiceClientImpl(String serviceUrl, boolean setProxy) {
+		gson = new Gson();
+
+		if (serviceUrl == null || serviceUrl.length() == 0) {
+			this.serviceUrl = ClientConstants.DEFAULT_SERVICE_URL;
+		} else {
+			this.serviceUrl = serviceUrl;
+		}
 
 		HttpParams params = new BasicHttpParams();
 		HttpConnectionParams.setConnectionTimeout(params, DEFAULT_CONNECTION_TIMEOUT);
 		HttpConnectionParams.setSoTimeout(params, DEFAULT_CONNECTION_TIMEOUT);
-        HttpClientParams.setRedirecting(params, true);
+		HttpClientParams.setRedirecting(params, true);
 		httpClient = new DefaultHttpClient(params);
-        findDefaultProxy();
+		if (setProxy) {
+			findDefaultProxy();
+		}
 	}
 
 	/* --- Interface implementation methods --- */
