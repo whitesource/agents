@@ -58,10 +58,9 @@ public class WssServiceClientImpl implements WssServiceClient {
 
 	/* --- Static members --- */
 
-	public static final int DEFAULT_CONNECTION_TIMEOUT = 15 * 60 * 1000;
-
     public static final String HTTP_PROXY_USER = "http.proxyUser";
     public static final String HTTP_PROXY_PASSWORD = "http.proxyPassword";
+    public static final int TO_MILLISECONDS = 60 * 1000;
 
     private static final Log logger = LogFactory.getLog(WssServiceClientImpl.class);
 
@@ -72,7 +71,9 @@ public class WssServiceClientImpl implements WssServiceClient {
 	protected DefaultHttpClient httpClient;
 
     protected Gson gson;
-	
+
+	protected int connectionTimeout;
+
 	/* --- Constructors --- */
 	
 	/**
@@ -98,6 +99,17 @@ public class WssServiceClientImpl implements WssServiceClient {
 	 * @param setProxy WhiteSource set proxy, whether the proxy settings defined or not.
 	 */
 	public WssServiceClientImpl(String serviceUrl, boolean setProxy) {
+		this(serviceUrl, setProxy, ClientConstants.DEFAULT_CONNECTION_TIMEOUT_MINUTES);
+	}
+
+	/**
+	 * Constructor
+	 *
+	 * @param serviceUrl WhiteSource service URL to use.
+	 * @param setProxy WhiteSource set proxy, whether the proxy settings is defined or not.
+	 * @param connectionTimeoutMinutes WhiteSource connection timeout, whether the connection timeout is defined or not (default to 60 minutes).
+	 */
+	public WssServiceClientImpl(String serviceUrl, boolean setProxy, int connectionTimeoutMinutes) {
 		gson = new Gson();
 
 		if (serviceUrl == null || serviceUrl.length() == 0) {
@@ -106,9 +118,15 @@ public class WssServiceClientImpl implements WssServiceClient {
 			this.serviceUrl = serviceUrl;
 		}
 
+		if (connectionTimeoutMinutes <= 0) {
+			this.connectionTimeout = ClientConstants.DEFAULT_CONNECTION_TIMEOUT_MINUTES * TO_MILLISECONDS;
+		} else {
+			this.connectionTimeout = connectionTimeoutMinutes * TO_MILLISECONDS;
+		}
+
 		HttpParams params = new BasicHttpParams();
-		HttpConnectionParams.setConnectionTimeout(params, DEFAULT_CONNECTION_TIMEOUT);
-		HttpConnectionParams.setSoTimeout(params, DEFAULT_CONNECTION_TIMEOUT);
+		HttpConnectionParams.setConnectionTimeout(params, this.connectionTimeout);
+		HttpConnectionParams.setSoTimeout(params, this.connectionTimeout);
 		HttpClientParams.setRedirecting(params, true);
 		httpClient = new DefaultHttpClient(params);
 		if (setProxy) {
@@ -347,6 +365,10 @@ public class WssServiceClientImpl implements WssServiceClient {
 
 	public HttpClient getHttpClient() {
 		return httpClient;
+	}
+
+	public int getConnectionTimeout() {
+		return connectionTimeout;
 	}
 
 }

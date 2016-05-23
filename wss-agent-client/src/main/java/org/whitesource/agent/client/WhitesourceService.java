@@ -48,13 +48,23 @@ public class WhitesourceService {
     }
 
     public WhitesourceService(final String agent, final String agentVersion, final String serviceUrl, boolean setProxy) {
+        this(agent, agentVersion, serviceUrl, setProxy, ClientConstants.DEFAULT_CONNECTION_TIMEOUT_MINUTES);
+    }
+
+    public WhitesourceService(final String agent, final String agentVersion, final String serviceUrl, boolean setProxy,
+                              int connectionTimeoutMinutes) {
         requestFactory = new RequestFactory(agent, agentVersion);
 
         String url = serviceUrl;
         if (url == null || url.trim().length() == 0) {
             url = System.getProperty(ClientConstants.SERVICE_URL_KEYWORD, ClientConstants.DEFAULT_SERVICE_URL);
         }
-        client = new WssServiceClientImpl(url, setProxy);
+
+        if (connectionTimeoutMinutes <= 0) {
+            connectionTimeoutMinutes = Integer.parseInt(System.getProperty(ClientConstants.CONNECTION_TIMEOUT_KEYWORD,
+                    String.valueOf(ClientConstants.DEFAULT_CONNECTION_TIMEOUT_MINUTES)));
+        }
+        client = new WssServiceClientImpl(url, setProxy, connectionTimeoutMinutes);
     }
 
     /* --- Public methods --- */
