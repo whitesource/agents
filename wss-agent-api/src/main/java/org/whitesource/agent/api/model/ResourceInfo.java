@@ -69,6 +69,25 @@ public class ResourceInfo implements Serializable {
     /* --- Overridden methods --- */
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ResourceInfo)) return false;
+
+        ResourceInfo that = (ResourceInfo) o;
+
+        if (displayName != null ? !displayName.equals(that.displayName) : that.displayName != null) return false;
+        return sha1 != null ? sha1.equals(that.sha1) : that.sha1 == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = displayName != null ? displayName.hashCode() : 0;
+        result = 31 * result + (sha1 != null ? sha1.hashCode() : 0);
+        return result;
+    }
+
+    @Override
     public String toString() {
         return displayName;
     }

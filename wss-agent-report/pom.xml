@@ -23,7 +23,7 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- Utilties -->
+        <!-- Utilities -->
         <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity</artifactId>

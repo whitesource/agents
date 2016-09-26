@@ -16,6 +16,7 @@
 package org.whitesource.agent.report;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -23,9 +24,12 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.whitesource.agent.api.dispatch.BaseCheckPoliciesResult;
-import org.whitesource.agent.api.dispatch.CheckPoliciesResult;
-import org.whitesource.agent.api.dispatch.CheckPolicyComplianceResult;
+import org.whitesource.agent.api.model.PolicyCheckResourceNode;
+import org.whitesource.agent.api.model.RequestPolicyInfo;
 import org.whitesource.agent.api.model.ResourceInfo;
+import org.whitesource.agent.report.summary.PolicyRejectionReport;
+import org.whitesource.agent.report.summary.RejectingPolicy;
+import org.whitesource.agent.report.summary.RejectedLibrary;
 import org.whitesource.agent.report.model.LicenseHistogramDataPoint;
 
 import java.io.*;
@@ -50,13 +54,14 @@ public class PolicyCheckReport {
     private static final int LICENSE_LIMIT = 6;
     private static final String OTHER_LICENSE = "Other types";
 
+    public static final String REJECT = "Reject";
+    public static final String CHECK_POLICIES_JSON_FILE = "checkPolicies-json.txt";
+    public static final String POLICY_REJECTION_SUMMARY_FILE = "policyRejectionSummary.json";
 
     /* --- Members --- */
 
     private BaseCheckPoliciesResult result;
-
     private String buildName;
-
     private String buildNumber;
 
     /* --- Constructors --- */
@@ -154,14 +159,25 @@ public class PolicyCheckReport {
             throw new IOException("Unable to make output directory: " + workDir);
         }
 
-        Gson gson = new Gson();
-        FileWriter fw = new FileWriter(new File(workDir, "checkPolicies-json.txt"));
-        try {
-            fw.write(StringEscapeUtils.unescapeJava(gson.toJson(result)));
-            fw.flush();
-        } finally {
-            FileUtils.close(fw);
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        writeToFile(new File(workDir, CHECK_POLICIES_JSON_FILE), gson.toJson(result));
+
+        // summarized policy rejection report
+        Map<RequestPolicyInfo, RejectingPolicy> policyToSummaryMap = new HashMap<RequestPolicyInfo, RejectingPolicy>();
+        for (Map.Entry<String, PolicyCheckResourceNode> entry : result.getExistingProjects().entrySet()) {
+            updatePolicyRejectionSummary(entry.getValue(), entry.getKey(), policyToSummaryMap);
         }
+        for (Map.Entry<String, PolicyCheckResourceNode> entry : result.getNewProjects().entrySet()) {
+            updatePolicyRejectionSummary(entry.getValue(), entry.getKey(), policyToSummaryMap);
+        }
+
+        PolicyRejectionReport report = new PolicyRejectionReport();
+        for (RejectingPolicy rejectingPolicy : policyToSummaryMap.values()) {
+            report.getRejectingPolicies().add(rejectingPolicy);
+            report.getSummary().setTotalRejectedLibraries(
+                    report.getSummary().getTotalRejectedLibraries() + rejectingPolicy.getRejectedLibraries().size());
+        }
+        writeToFile(new File(workDir, POLICY_REJECTION_SUMMARY_FILE), gson.toJson(report));
 
         return workDir;
     }
@@ -232,6 +248,16 @@ public class PolicyCheckReport {
         FileUtils.copyResource(TEMPLATE_FOLDER + CSS_FILE, new File(workDir, CSS_FILE));
     }
 
+    protected void writeToFile(File file, String json) throws IOException {
+        FileWriter fw = new FileWriter(file);
+        try {
+            fw.write(StringEscapeUtils.unescapeJava(json));
+            fw.flush();
+        } finally {
+            FileUtils.close(fw);
+        }
+    }
+
     /* --- Private methods --- */
 
     private Collection<LicenseHistogramDataPoint> createLicenseHistogram(BaseCheckPoliciesResult result) {
@@ -276,6 +302,38 @@ public class PolicyCheckReport {
         }
 
         return dataPoints;
+    }
+
+    private void updatePolicyRejectionSummary(PolicyCheckResourceNode node, String projectName,
+                                              Map<RequestPolicyInfo, RejectingPolicy> policyResourceMap) {
+        RequestPolicyInfo policy = node.getPolicy();
+        if (policy != null && policy.getActionType().equals(REJECT)) {
+            RejectingPolicy rejectingPolicy = policyResourceMap.get(policy);
+            if (rejectingPolicy == null) {
+                rejectingPolicy = new RejectingPolicy(policy.getDisplayName(), policy.getFilterType(), policy.isProjectLevel());
+                policyResourceMap.put(policy, rejectingPolicy);
+            }
+
+            Set<RejectedLibrary> rejectedResources = rejectingPolicy.getRejectedLibraries();
+            ResourceInfo resource = node.getResource();
+            RejectedLibrary rejectedLibrary = new RejectedLibrary(resource.getDisplayName(), resource.getSha1(), resource.getLink());
+            if (rejectedResources.contains(rejectedLibrary)) {
+                for (RejectedLibrary summary : rejectedResources) {
+                    if (rejectedLibrary.equals(summary)) {
+                        // add project to existing resource
+                        summary.getProjects().add(projectName);
+                        break;
+                    }
+                }
+            } else {
+                rejectedLibrary.getProjects().add(projectName);
+                rejectedResources.add(rejectedLibrary);
+            }
+        }
+
+        for (PolicyCheckResourceNode childNode : node.getChildren()) {
+            updatePolicyRejectionSummary(childNode, projectName, policyResourceMap);
+        }
     }
 
     /* --- Nested classes --- */

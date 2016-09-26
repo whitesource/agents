@@ -61,6 +61,35 @@ public class RequestPolicyInfo implements Serializable {
         this.displayName = displayName;
     }
 
+    /* --- Overridden methods --- */
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof RequestPolicyInfo)) return false;
+
+        RequestPolicyInfo that = (RequestPolicyInfo) o;
+
+        if (projectLevel != that.projectLevel) return false;
+        if (displayName != null ? !displayName.equals(that.displayName) : that.displayName != null) return false;
+        if (filterType != null ? !filterType.equals(that.filterType) : that.filterType != null) return false;
+        if (filterLogic != null ? !filterLogic.equals(that.filterLogic) : that.filterLogic != null) return false;
+        if (actionType != null ? !actionType.equals(that.actionType) : that.actionType != null) return false;
+        return actionLogic != null ? actionLogic.equals(that.actionLogic) : that.actionLogic == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = displayName != null ? displayName.hashCode() : 0;
+        result = 31 * result + (filterType != null ? filterType.hashCode() : 0);
+        result = 31 * result + (filterLogic != null ? filterLogic.hashCode() : 0);
+        result = 31 * result + (actionType != null ? actionType.hashCode() : 0);
+        result = 31 * result + (actionLogic != null ? actionLogic.hashCode() : 0);
+        result = 31 * result + (projectLevel ? 1 : 0);
+        return result;
+    }
+
     /* --- Getters / Setters --- */
 
     public String getDisplayName() {
