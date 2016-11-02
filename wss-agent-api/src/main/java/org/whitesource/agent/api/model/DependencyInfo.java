@@ -53,6 +53,10 @@ public class DependencyInfo implements Serializable {
 
     private String footerSha1;
 
+    private String mostSigBitSha1;
+
+    private String leastSigBitSha1;
+
     private String utf8Sha1;
 
     private String commentlessSha1;
@@ -336,5 +340,21 @@ public class DependencyInfo implements Serializable {
 
     public void setOtherPlatformSha1(String otherPlatformSha1) {
         this.otherPlatformSha1 = otherPlatformSha1;
+    }
+
+    public String getLeastSigBitSha1() {
+        return leastSigBitSha1;
+    }
+
+    public void setLeastSigBitSha1(String leastSigBitSha1) {
+        this.leastSigBitSha1 = leastSigBitSha1;
+    }
+
+    public String getMostSigBitSha1() {
+        return mostSigBitSha1;
+    }
+
+    public void setMostSigBitSha1(String mostSigBitSha1) {
+        this.mostSigBitSha1 = mostSigBitSha1;
     }
 }

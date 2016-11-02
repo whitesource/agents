@@ -31,6 +31,16 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
+
+
+		<!-- !REMOVE AFTER CHECKS -->
+		<!-- Necessary for DirectoryScanner for globbing the dependency directory -->
+		<dependency>
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant</artifactId>
+			<version>1.9.4</version>
+		</dependency>
+
 	</dependencies>
 	
 	<profiles>

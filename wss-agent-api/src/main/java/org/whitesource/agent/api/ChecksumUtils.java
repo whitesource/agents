@@ -17,12 +17,10 @@ package org.whitesource.agent.api;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.whitesource.agent.api.model.DependencyInfo;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -38,6 +36,10 @@ public final class ChecksumUtils {
     private static final int BUFFER_SIZE = 32 * 1024;
 
     private static final int PARTIAL_SHA1_LINES = 100;
+
+    private static final String EMPTY_STRING = "";
+
+
 
     /* --- Constructors --- */
 
@@ -86,6 +88,18 @@ public final class ChecksumUtils {
         return toHex(messageDigest.digest());
     }
 
+    public static String calculateSHA1TEST(byte[] fileWithoutSpaces) throws IOException {
+        MessageDigest messageDigest;
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-1");
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException(e.getMessage(), e);
+        }
+                messageDigest.update( fileWithoutSpaces, 0, fileWithoutSpaces.length);
+//            }
+        return toHex(messageDigest.digest());
+    }
+
     public static void calculateHeaderAndFooterSha1(File file, DependencyInfo dependencyInfo) {
         try {
             int lines = FileUtils.readLines(file).size();
@@ -124,7 +138,7 @@ public final class ChecksumUtils {
 
     /* --- Private static methods --- */
 
-    private static String toHex(byte[] bytes) {
+    public static String toHex(byte[] bytes) {
         StringBuilder sb = new StringBuilder(bytes.length * 2);
         for (byte aByte : bytes) {
             int b = aByte & 0xFF;
@@ -134,6 +148,47 @@ public final class ChecksumUtils {
             sb.append(Integer.toHexString(b));
         }
         return sb.toString();
+    }
+
+    /**
+     * Removes all whitespaces from the text completely.
+     *
+     * @param text
+     * @return file as string
+     */
+    private static String prune(String text) {
+        final int length = text.length();
+        final StringBuilder buffer = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            char at = text.charAt(i);
+            if (!Character.isSpaceChar(at)) {
+                buffer.append(at);
+            }
+        }
+        return buffer.toString();
+    }
+
+    /**
+     * Removes all whitespaces from the text - the same way that Shir is doing for source files.
+     *
+     * @param data
+     * @return file as string
+     */
+    public static byte[] stripWhiteSpaces(byte[] data) {
+        byte[] newData = data.clone();
+        while (ArrayUtils.contains(newData,  (byte)0x0d)) {
+            newData = ArrayUtils.removeElement(newData, (byte) 0x0d);
+        }
+        while (ArrayUtils.contains(newData,  (byte)0x0a)) {
+            newData = ArrayUtils.removeElement(newData, (byte) 0x0a);
+        }
+        while (ArrayUtils.contains(newData,  (byte)0x09)) {
+            newData = ArrayUtils.removeElement(newData, (byte) 0x09);
+        }
+        while (ArrayUtils.contains(newData,  (byte)0x20)) {
+            newData = ArrayUtils.removeElement(newData, (byte) 0x20);
+        }
+        return newData;
     }
 
 }
