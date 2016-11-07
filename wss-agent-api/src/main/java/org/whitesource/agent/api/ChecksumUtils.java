@@ -17,12 +17,12 @@ package org.whitesource.agent.api;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.ArrayUtils;
 import org.whitesource.agent.api.model.DependencyInfo;
 
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 /**
  * Utility class to calculate SHA-1 hash codes for files.
@@ -37,9 +37,11 @@ public final class ChecksumUtils {
 
     private static final int PARTIAL_SHA1_LINES = 100;
 
-    private static final String EMPTY_STRING = "";
+    public static final int FILE_MIN_SIZE= 1024 * 2;
 
+    public static final int FILE_SMALL_SIZE = 1024 * 3;
 
+    public static final double FILE_SMALL_BUCKET_SIZE = 1024 * 1.25;
 
     /* --- Constructors --- */
 
@@ -88,15 +90,23 @@ public final class ChecksumUtils {
         return toHex(messageDigest.digest());
     }
 
-    public static String calculateSHA1TEST(byte[] fileWithoutSpaces) throws IOException {
+    /**
+     * Calculates the given file's SHA-1 hash code.
+     *
+     * @param byteArray to calculate
+     *
+     * @return Calculated SHA-1 for the given byteArray.
+     *
+     * @throws IllegalStateException when no algorithm for SHA-1 can be found.
+     */
+    public static String calculateByteArraySHA1(byte[] byteArray) throws IOException {
         MessageDigest messageDigest;
         try {
             messageDigest = MessageDigest.getInstance("SHA-1");
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
-                messageDigest.update( fileWithoutSpaces, 0, fileWithoutSpaces.length);
-//            }
+                messageDigest.update( byteArray, 0, byteArray.length);
         return toHex(messageDigest.digest());
     }
 
@@ -135,10 +145,60 @@ public final class ChecksumUtils {
             // ignore
         }
     }
+    public static DependencyInfo getFileHash(File file, DependencyInfo dependencyInfo) throws IOException {
+        // Ignore files smaller than 2kb
+        if (file.length() <= FILE_MIN_SIZE) {
+            return null;
+        }
+        // Get file bytes
+        byte[] fileToByte = FileUtils.readFileToByteArray(file);
+
+        //Remove white spaces
+        byte[] bytesWithoutSpaces = stripWhiteSpaces(fileToByte);
+
+        long fileSize = bytesWithoutSpaces.length;
+        // Ignore files smaller than 2kb
+        if (fileSize <= FILE_MIN_SIZE) {
+            return null;
+        }
+        // Handle 2kb->3kb files
+        else if (fileSize <= FILE_SMALL_SIZE) {
+            return hashBuckets(bytesWithoutSpaces , FILE_SMALL_BUCKET_SIZE, dependencyInfo);
+        }
+
+        else if (file != null && fileSize > FILE_SMALL_SIZE) {
+            int baseLowNumber = 1;
+            int digits = (int) Math.log10(fileSize);
+            int i = 0;
+            while (i < digits) {
+                baseLowNumber  = baseLowNumber * 10;
+                i++;
+            }
+            double highNumber = Math.ceil((fileSize + 1) / (float) baseLowNumber) * baseLowNumber;
+            double lowNumber = highNumber - baseLowNumber;
+            double bucketSize = (highNumber + lowNumber) / 4;
+            return hashBuckets(bytesWithoutSpaces, bucketSize, dependencyInfo);
+        }
+        return null;
+    }
+
+    private static DependencyInfo hashBuckets(byte[] fileWithoutSpaces, double bucketSize, DependencyInfo dependencyInfo)
+            throws IOException {
+        // int(bucket_size) will round down the bucket_size: IE: 1.2 -> 1.0
+        int bucketIntSize = (int) bucketSize ;
+
+        // Get bytes and calculate sha1
+        byte [] mostSifBytes = Arrays.copyOfRange(fileWithoutSpaces, 0, bucketIntSize);
+        int length = fileWithoutSpaces.length;
+        byte [] listSigBytes = Arrays.copyOfRange(fileWithoutSpaces, length - bucketIntSize, length);
+        dependencyInfo.setMostSigBitSha1(calculateByteArraySHA1(mostSifBytes));
+        dependencyInfo.setLeastSigBitSha1(calculateByteArraySHA1(listSigBytes));
+        return dependencyInfo;
+    }
 
     /* --- Private static methods --- */
 
-    public static String toHex(byte[] bytes) {
+    private static String toHex(byte[] bytes) {
         StringBuilder sb = new StringBuilder(bytes.length * 2);
         for (byte aByte : bytes) {
             int b = aByte & 0xFF;
@@ -151,44 +211,19 @@ public final class ChecksumUtils {
     }
 
     /**
-     * Removes all whitespaces from the text completely.
-     *
-     * @param text
-     * @return file as string
-     */
-    private static String prune(String text) {
-        final int length = text.length();
-        final StringBuilder buffer = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
-            char at = text.charAt(i);
-            if (!Character.isSpaceChar(at)) {
-                buffer.append(at);
-            }
-        }
-        return buffer.toString();
-    }
-
-    /**
      * Removes all whitespaces from the text - the same way that Shir is doing for source files.
      *
-     * @param data
+     * @param data - byte array
      * @return file as string
      */
-    public static byte[] stripWhiteSpaces(byte[] data) {
-        byte[] newData = data.clone();
-        while (ArrayUtils.contains(newData,  (byte)0x0d)) {
-            newData = ArrayUtils.removeElement(newData, (byte) 0x0d);
-        }
-        while (ArrayUtils.contains(newData,  (byte)0x0a)) {
-            newData = ArrayUtils.removeElement(newData, (byte) 0x0a);
-        }
-        while (ArrayUtils.contains(newData,  (byte)0x09)) {
-            newData = ArrayUtils.removeElement(newData, (byte) 0x09);
-        }
-        while (ArrayUtils.contains(newData,  (byte)0x20)) {
-            newData = ArrayUtils.removeElement(newData, (byte) 0x20);
-        }
-        return newData;
+    private static byte[] stripWhiteSpaces(byte[] data) {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            for (byte b : data) {
+                if(b!=(byte)0x0d && b!=(byte)0x0a && b!=(byte)0x09 && b!=(byte)0x20 ){
+                    bos.write(b);
+                }
+            }
+        return bos.toByteArray();
     }
 
 }
