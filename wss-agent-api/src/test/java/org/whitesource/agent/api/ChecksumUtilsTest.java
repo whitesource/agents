@@ -15,7 +15,10 @@
  */
 package org.whitesource.agent.api;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.tools.ant.DirectoryScanner;
 import org.junit.Test;
+import org.whitesource.agent.api.model.DependencyInfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +45,24 @@ public class ChecksumUtilsTest {
         file = new File(URLDecoder.decode(filePath, "utf-8"));
         sha1 = ChecksumUtils.calculateSHA1(file);
         assertEquals(sha1, NON_EMPTY_FILE_SHA1);
+
+    }
+
+    @Test
+    public void testSuperHash() throws IOException {
+        DirectoryScanner scanner = new DirectoryScanner();
+        scanner.setBasedir("C:\\Users\\Anna\\Downloads\\signature-test-files\\signature-test-files\\");
+        scanner.scan();
+        String[] fileNames = scanner.getIncludedFiles();
+        File anna = new File("C:\\Users\\Anna\\Desktop\\Anna\\ann.txt");
+
+        for (String fileName : fileNames) {
+            File file = new File("C:\\Users\\Anna\\Downloads\\signature-test-files\\signature-test-files\\" + fileName);
+            DependencyInfo dependencyInfo = ChecksumUtils.getFileHash(file, new DependencyInfo());
+            if(dependencyInfo!= null) {
+                FileUtils.writeStringToFile(anna, fileName + "|" + dependencyInfo.getMostSigBitSha1() + "|" + dependencyInfo.getLeastSigBitSha1() + "\n", true);
+            }
+        }
 
     }
 
