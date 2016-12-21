@@ -88,6 +88,7 @@ public final class ChecksumUtils {
             }
         }
         return toHex(messageDigest.digest());
+        // Base64.encodeBase64("Test".getBytes())
     }
 
     /**
