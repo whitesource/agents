@@ -194,6 +194,7 @@ public final class ChecksumUtils {
         byte [] listSigBytes = Arrays.copyOfRange(fileWithoutSpaces, length - bucketIntSize, length);
         dependencyInfo.setMostSigBitSha1(calculateByteArraySHA1(mostSifBytes));
         dependencyInfo.setLeastSigBitSha1(calculateByteArraySHA1(listSigBytes));
+        dependencyInfo.setFullFileSha1(calculateByteArraySHA1(fileWithoutSpaces));
         return dependencyInfo;
     }
 

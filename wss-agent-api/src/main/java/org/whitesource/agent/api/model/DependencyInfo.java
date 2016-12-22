@@ -57,6 +57,8 @@ public class DependencyInfo implements Serializable {
 
     private String leastSigBitSha1;
 
+    private String fullFileSha1;
+
     private String utf8Sha1;
 
     private String commentlessSha1;
@@ -356,5 +358,13 @@ public class DependencyInfo implements Serializable {
 
     public void setMostSigBitSha1(String mostSigBitSha1) {
         this.mostSigBitSha1 = mostSigBitSha1;
+    }
+
+    public String getFullFileSha1() {
+        return fullFileSha1;
+    }
+
+    public void setFullFileSha1(String fullFileSha1) {
+        this.fullFileSha1 = fullFileSha1;
     }
 }
