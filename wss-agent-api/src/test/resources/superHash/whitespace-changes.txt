@@ -1,0 +1,55 @@
+/**
+ * Super hash test
+ * Copyright 2016 WhiteSource
+ */
+public static class
+        HashCalculationResult {
+
+        /* --- Members --- */
+
+                private String fullHash; private String mostSigBitsHash; private String leastSigBitsHash;
+
+        /* --- Constructors --- */
+
+        public HashCalculationResult(String fullHash) {
+            this.fullHash = fullHash;
+        }
+
+                public HashCalculationResult(String fullHash, String mostSigBitsHash, String leastSigBitsHash) {
+                    this.fullHash = fullHash;
+                    this.mostSigBitsHash = mostSigBitsHash;
+                    this.leastSigBitsHash = leastSigBitsHash;
+                }
+
+        /* --- Getters / Setters --- */
+
+public String getFullHash() {
+    return fullHash;
+}
+
+    public void setFullHash(    String fullHash             ) {
+        this.fullHash = fullHash;
+    }
+
+    public String getMostSigBitsHash() {
+        return mostSigBitsHash;
+
+    }
+
+    public void setMostSigBitsHash(String mostSigBitsHash) {
+        this.mostSigBitsHash = mostSigBitsHash;
+    }
+
+    public String getLeastSigBitsHash() {
+        return leastSigBitsHash;
+    }
+
+    public void setLeastSigBitsHash(String leastSigBitsHash) {
+        this.leastSigBitsHash = leastSigBitsHash;
+    }
+
+
+
+}
+
+

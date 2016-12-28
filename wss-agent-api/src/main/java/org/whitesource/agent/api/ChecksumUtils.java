@@ -23,6 +23,7 @@ import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * Utility class to calculate SHA-1 hash codes for files.
@@ -33,15 +34,26 @@ public final class ChecksumUtils {
     
     /* --- Static members --- */
 
-    private static final int BUFFER_SIZE = 32 * 1024;
+    public static final int BUFFER_SIZE = 32 * 1024;
 
-    private static final int PARTIAL_SHA1_LINES = 100;
+    public static final int PARTIAL_SHA1_LINES = 100;
 
-    public static final int FILE_MIN_SIZE= 1024 * 2;
+    public static final int FILE_MIN_SIZE = 1024 * 2;
 
     public static final int FILE_SMALL_SIZE = 1024 * 3;
 
     public static final double FILE_SMALL_BUCKET_SIZE = 1024 * 1.25;
+    
+    public static final String SHA_1 = "SHA-1";
+
+    public static final char ZERO = '0';
+
+    public static final byte CARRIAGE_RETURN = (byte) 0x0d;
+    public static final byte NEW_LINE = (byte) 0x0a;
+    public static final byte HORIZONTAL_TAB = (byte) 0x09;
+    public static final byte SPACE = (byte) 0x20;
+
+    public static final Collection<Byte> WHITESPACES = Arrays.asList(CARRIAGE_RETURN, NEW_LINE, HORIZONTAL_TAB, SPACE);
 
     /* --- Constructors --- */
 
@@ -55,19 +67,74 @@ public final class ChecksumUtils {
     /* --- Static methods --- */
 
     /**
+     * Calculates 3 hashes for the given file:
+     *
+     * 1. Hash of the file without new lines and whitespaces
+     * 2. Hash of the most significant bits of the file without new lines and whitespaces
+     * 3. Hash of the least significant bits of the file without new lines and whitespaces
+     * 
+     * @param file
+     * @return HashCalculationResult with all three hashes
+     * @throws IOException
+     */
+    public static HashCalculationResult calculateSuperHash(File file) throws IOException {
+        // Ignore files smaller than 2kb
+        if (file.length() <= FILE_MIN_SIZE) {
+            return null;
+        }
+        return calculateSuperHash(FileUtils.readFileToByteArray(file));
+    }
+
+    /**
+     * Calculates 3 hashes for the given bytes:
+     *
+     * 1. Hash of the file without new lines and whitespaces
+     * 2. Hash of the most significant bits of the file without new lines and whitespaces
+     * 3. Hash of the least significant bits of the file without new lines and whitespaces
+     *
+     * @param bytes
+     * @return HashCalculationResult with all three hashes
+     * @throws IOException
+     */
+    public static HashCalculationResult calculateSuperHash(byte[] bytes) throws IOException {
+        HashCalculationResult result = null;
+        // Remove white spaces
+        byte[] bytesWithoutSpaces = stripWhiteSpaces(bytes);
+
+        long fileSize = bytesWithoutSpaces.length;
+        if (fileSize <= FILE_MIN_SIZE) {
+            // Don't calculate hash for files smaller than 2kb
+        } else if (fileSize <= FILE_SMALL_SIZE) {
+            // Handle 2kb->3kb files
+            result = hashBuckets(bytesWithoutSpaces, FILE_SMALL_BUCKET_SIZE);
+        } else if (fileSize > FILE_SMALL_SIZE) {
+            int baseLowNumber = 1;
+            int digits = (int) Math.log10(fileSize);
+            int i = 0;
+            while (i < digits) {
+                baseLowNumber = baseLowNumber * 10;
+                i++;
+            }
+            double highNumber = Math.ceil((fileSize + 1) / (float) baseLowNumber) * baseLowNumber;
+            double lowNumber = highNumber - baseLowNumber;
+            double bucketSize = (highNumber + lowNumber) / 4;
+            result = hashBuckets(bytesWithoutSpaces, bucketSize);
+        }
+        return result;
+    }
+
+    /**
      * Calculates the given file's SHA-1 hash code.
      *
      * @param resourceFile File to calculate
-     *
      * @return Calculated SHA-1 for the given file.
-     *
-     * @throws IOException on file reading errors.
+     * @throws IOException           on file reading errors.
      * @throws IllegalStateException when no algorithm for SHA-1 can be found.
      */
     public static String calculateSHA1(File resourceFile) throws IOException {
         MessageDigest messageDigest;
         try {
-            messageDigest = MessageDigest.getInstance("SHA-1");
+            messageDigest = MessageDigest.getInstance(SHA_1);
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
@@ -81,7 +148,7 @@ public final class ChecksumUtils {
                 len = fis.read(buffer, 0, BUFFER_SIZE);
             }
         } finally {
-            try{
+            try {
                 fis.close();
             } catch (IOException e) {
                 // ignore
@@ -95,19 +162,17 @@ public final class ChecksumUtils {
      * Calculates the given file's SHA-1 hash code.
      *
      * @param byteArray to calculate
-     *
      * @return Calculated SHA-1 for the given byteArray.
-     *
      * @throws IllegalStateException when no algorithm for SHA-1 can be found.
      */
     public static String calculateByteArraySHA1(byte[] byteArray) throws IOException {
         MessageDigest messageDigest;
         try {
-            messageDigest = MessageDigest.getInstance("SHA-1");
+            messageDigest = MessageDigest.getInstance(SHA_1);
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
-                messageDigest.update( byteArray, 0, byteArray.length);
+        messageDigest.update(byteArray, 0, byteArray.length);
         return toHex(messageDigest.digest());
     }
 
@@ -146,66 +211,29 @@ public final class ChecksumUtils {
             // ignore
         }
     }
-    public static DependencyInfo getFileHash(File file, DependencyInfo dependencyInfo) throws IOException {
-        // Ignore files smaller than 2kb
-        if (file.length() <= FILE_MIN_SIZE) {
-            return null;
-        }
-        // Get file bytes
-        byte[] fileToByte = FileUtils.readFileToByteArray(file);
-
-        //Remove white spaces
-        byte[] bytesWithoutSpaces = stripWhiteSpaces(fileToByte);
-
-        long fileSize = bytesWithoutSpaces.length;
-        // Ignore files smaller than 2kb
-        if (fileSize <= FILE_MIN_SIZE) {
-            return null;
-        }
-        // Handle 2kb->3kb files
-        else if (fileSize <= FILE_SMALL_SIZE) {
-            return hashBuckets(bytesWithoutSpaces , FILE_SMALL_BUCKET_SIZE, dependencyInfo);
-        }
-
-        else if (file != null && fileSize > FILE_SMALL_SIZE) {
-            int baseLowNumber = 1;
-            int digits = (int) Math.log10(fileSize);
-            int i = 0;
-            while (i < digits) {
-                baseLowNumber  = baseLowNumber * 10;
-                i++;
-            }
-            double highNumber = Math.ceil((fileSize + 1) / (float) baseLowNumber) * baseLowNumber;
-            double lowNumber = highNumber - baseLowNumber;
-            double bucketSize = (highNumber + lowNumber) / 4;
-            return hashBuckets(bytesWithoutSpaces, bucketSize, dependencyInfo);
-        }
-        return null;
-    }
-
-    private static DependencyInfo hashBuckets(byte[] fileWithoutSpaces, double bucketSize, DependencyInfo dependencyInfo)
-            throws IOException {
-        // int(bucket_size) will round down the bucket_size: IE: 1.2 -> 1.0
-        int bucketIntSize = (int) bucketSize ;
-
-        // Get bytes and calculate sha1
-        byte [] mostSifBytes = Arrays.copyOfRange(fileWithoutSpaces, 0, bucketIntSize);
-        int length = fileWithoutSpaces.length;
-        byte [] listSigBytes = Arrays.copyOfRange(fileWithoutSpaces, length - bucketIntSize, length);
-        dependencyInfo.setMostSigBitSha1(calculateByteArraySHA1(mostSifBytes));
-        dependencyInfo.setLeastSigBitSha1(calculateByteArraySHA1(listSigBytes));
-        dependencyInfo.setFullFileSha1(calculateByteArraySHA1(fileWithoutSpaces));
-        return dependencyInfo;
-    }
 
     /* --- Private static methods --- */
+
+    private static HashCalculationResult hashBuckets(byte[] fileWithoutSpaces, double bucketSize) throws IOException {
+        // int(bucket_size) will round down the bucket_size: IE: 1.2 -> 1.0
+        int bucketIntSize = (int) bucketSize;
+
+        // Get bytes and calculate sha1
+        byte[] mostSigBytes = Arrays.copyOfRange(fileWithoutSpaces, 0, bucketIntSize);
+        int length = fileWithoutSpaces.length;
+        byte[] leastSigBytes = Arrays.copyOfRange(fileWithoutSpaces, length - bucketIntSize, length);
+        String fullFileHash = calculateByteArraySHA1(fileWithoutSpaces);
+        String mostSigBitsHash = calculateByteArraySHA1(mostSigBytes);
+        String leastSigBitsHash = calculateByteArraySHA1(leastSigBytes);
+        return new HashCalculationResult(fullFileHash, mostSigBitsHash, leastSigBitsHash);
+    }
 
     private static String toHex(byte[] bytes) {
         StringBuilder sb = new StringBuilder(bytes.length * 2);
         for (byte aByte : bytes) {
             int b = aByte & 0xFF;
             if (b < 0x10) {
-                sb.append('0');
+                sb.append(ZERO);
             }
             sb.append(Integer.toHexString(b));
         }
@@ -220,12 +248,60 @@ public final class ChecksumUtils {
      */
     private static byte[] stripWhiteSpaces(byte[] data) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            for (byte b : data) {
-                if(b!=(byte)0x0d && b!=(byte)0x0a && b!=(byte)0x09 && b!=(byte)0x20 ){
-                    bos.write(b);
-                }
+        for (byte b : data) {
+            if (!WHITESPACES.contains(b)) {
+                bos.write(b);
             }
+        }
         return bos.toByteArray();
     }
 
+    /* --- Nested classes --- */
+
+    public static class HashCalculationResult {
+
+        /* --- Members --- */
+
+        private String fullHash;
+        private String mostSigBitsHash;
+        private String leastSigBitsHash;
+
+        /* --- Constructors --- */
+
+        public HashCalculationResult(String fullHash) {
+            this.fullHash = fullHash;
+        }
+
+        public HashCalculationResult(String fullHash, String mostSigBitsHash, String leastSigBitsHash) {
+            this.fullHash = fullHash;
+            this.mostSigBitsHash = mostSigBitsHash;
+            this.leastSigBitsHash = leastSigBitsHash;
+        }
+
+        /* --- Getters / Setters --- */
+
+        public String getFullHash() {
+            return fullHash;
+        }
+
+        public void setFullHash(String fullHash) {
+            this.fullHash = fullHash;
+        }
+
+        public String getMostSigBitsHash() {
+            return mostSigBitsHash;
+        }
+
+        public void setMostSigBitsHash(String mostSigBitsHash) {
+            this.mostSigBitsHash = mostSigBitsHash;
+        }
+
+        public String getLeastSigBitsHash() {
+            return leastSigBitsHash;
+        }
+
+        public void setLeastSigBitsHash(String leastSigBitsHash) {
+            this.leastSigBitsHash = leastSigBitsHash;
+        }
+    }
 }

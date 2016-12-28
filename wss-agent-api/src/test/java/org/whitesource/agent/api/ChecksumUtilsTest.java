@@ -15,10 +15,7 @@
  */
 package org.whitesource.agent.api;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.tools.ant.DirectoryScanner;
 import org.junit.Test;
-import org.whitesource.agent.api.model.DependencyInfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,8 +28,12 @@ import static org.junit.Assert.assertEquals;
  */
 public class ChecksumUtilsTest {
 
+    /* --- Static members --- */
+
     private static final String EMPTY_FILE_SHA1 = "da39a3ee5e6b4b0d3255bfef95601890afd80709";
     private static final String NON_EMPTY_FILE_SHA1 = "7a3a53d8ddca62e9df1e04b56087bbbf852fe0d3";
+
+    /* --- Test methods --- */
 
     @Test
     public void testSHA1() throws IOException {
@@ -45,25 +46,37 @@ public class ChecksumUtilsTest {
         file = new File(URLDecoder.decode(filePath, "utf-8"));
         sha1 = ChecksumUtils.calculateSHA1(file);
         assertEquals(sha1, NON_EMPTY_FILE_SHA1);
-
     }
 
     @Test
     public void testSuperHash() throws IOException {
-        DirectoryScanner scanner = new DirectoryScanner();
-        scanner.setBasedir("C:\\Users\\Anna\\Downloads\\signature-test-files\\signature-test-files\\");
-        scanner.scan();
-        String[] fileNames = scanner.getIncludedFiles();
-        File anna = new File("C:\\Users\\Anna\\Desktop\\Anna\\ann.txt");
+        File originFile = new File(URLDecoder.decode(getClass().getResource("/superHash/origin.txt").getFile(), "utf-8"));
+        ChecksumUtils.HashCalculationResult originFileHashResult = ChecksumUtils.calculateSuperHash(originFile);
 
-        for (String fileName : fileNames) {
-            File file = new File("C:\\Users\\Anna\\Downloads\\signature-test-files\\signature-test-files\\" + fileName);
-            DependencyInfo dependencyInfo = ChecksumUtils.getFileHash(file, new DependencyInfo());
-            if(dependencyInfo!= null) {
-                FileUtils.writeStringToFile(anna, fileName + "|" + dependencyInfo.getMostSigBitSha1() + "|" + dependencyInfo.getLeastSigBitSha1() + "\n", true);
-            }
-        }
+        File whitespaceChangesFile = new File(URLDecoder.decode(getClass().getResource("/superHash/whitespace-changes.txt").getFile(), "utf-8"));
+        ChecksumUtils.HashCalculationResult whitespaceFileHashResult = ChecksumUtils.calculateSuperHash(whitespaceChangesFile);
 
+        File msbTestFile = new File(URLDecoder.decode(getClass().getResource("/superHash/msb-test.txt").getFile(), "utf-8"));
+        ChecksumUtils.HashCalculationResult msbTestFileHashResult = ChecksumUtils.calculateSuperHash(msbTestFile);
+
+        File lsbTestFile = new File(URLDecoder.decode(getClass().getResource("/superHash/lsb-test.txt").getFile(), "utf-8"));
+        ChecksumUtils.HashCalculationResult lsbTestFileHashResult = ChecksumUtils.calculateSuperHash(lsbTestFile);
+
+        assertEquals("Files must match despite whitespace changes", originFileHashResult.getFullHash(), whitespaceFileHashResult.getFullHash());
+        assertEquals("File msb hashes must match", originFileHashResult.getMostSigBitsHash(), msbTestFileHashResult.getMostSigBitsHash());
+        assertEquals("File lsb hashes must match", originFileHashResult.getLeastSigBitsHash(), lsbTestFileHashResult.getLeastSigBitsHash());
+
+//        DirectoryScanner scanner = new DirectoryScanner();
+//        scanner.setBasedir("C:\\Users\\User\\Downloads\\CdnJS");
+//        scanner.scan();
+//        String[] fileNames = scanner.getIncludedFiles();
+//        for (String fileName : fileNames) {
+//            File file = new File(scanner.getBasedir(), fileName);
+//            ChecksumUtils.HashCalculationResult result = ChecksumUtils.calculateSuperHash(file);
+//            if (result != null) {
+//                System.out.println(fileName + " : " + result.getFullHash() + " | " + result.getMostSigBitsHash() + " | " + result.getLeastSigBitsHash());
+//            }
+//        }
     }
 
 }
