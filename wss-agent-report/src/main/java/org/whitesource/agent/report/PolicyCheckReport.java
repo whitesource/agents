@@ -58,6 +58,8 @@ public class PolicyCheckReport {
     public static final String CHECK_POLICIES_JSON_FILE = "checkPolicies-json.txt";
     public static final String POLICY_REJECTION_SUMMARY_FILE = "policyRejectionSummary.json";
 
+    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
     /* --- Members --- */
 
     private BaseCheckPoliciesResult result;
@@ -220,20 +222,17 @@ public class PolicyCheckReport {
      */
     protected VelocityContext createTemplateContext() {
         VelocityContext context = new VelocityContext();
-
         context.put("result", result);
         context.put("hasRejections", result.hasRejections());
         context.put("licenses", createLicenseHistogram(result));
-        context.put("creationTime", SimpleDateFormat.getInstance().format(new Date()));
+        context.put("creationTime", new SimpleDateFormat(DATE_FORMAT).format(new Date()));
 
         if (StringUtils.isNotBlank(buildName)) {
             context.put("buildName", buildName);
         }
-
         if (StringUtils.isNotBlank(buildNumber)) {
             context.put("buildNumber", buildNumber);
         }
-
         return context;
     }
 
