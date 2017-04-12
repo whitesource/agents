@@ -56,8 +56,8 @@
                                     #end
                                 </div>
                             </td><td align="right">
-                            <a class='wssAnchor' href="#" onclick="toggleDetails(this, '$detailsId')" style="float:right; padding: 5px;">show details</a>
-                        </td>
+                                <a class='wssAnchor' href="#" onclick="toggleDetails(this, '$detailsId')" style="float: right; padding: 5px;">show details</a>
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -72,7 +72,7 @@
     #end
 #end
 
-#macro ( projectDependenciesTree $root)
+#macro ( projectDependenciesTree $root )
     #if ($root.children.size() > 0)
         <ul>
             #foreach ($child in $root.children)
@@ -84,7 +84,7 @@
     #end
 #end
 
-#macro ( dependencyNode $node)
+#macro ( dependencyNode $node )
     <li>
         <div class="wssDependencyNode">
             <a class='wssAnchor' href="$node.resource.link" target="_blank">$node.resource.displayName</a>
@@ -120,16 +120,14 @@
         <meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type" />
 
         <script>
-            function toggleDetails(anchor, detailsId){
+            function toggleDetails(anchor, detailsId) {
                 var details = document.getElementById(detailsId);
-
-                if(details.style.display == 'block' ) {
+                if (details.style.display == 'block') {
                     details.style.display = 'none';
-                    anchor.innerHTML = 'show details'
-                }
-                else {
+                    anchor.innerHTML = 'show details';
+                } else {
                     details.style.display = 'block';
-                    anchor.innerHTML = 'hide details'
+                    anchor.innerHTML = 'hide details';
                 }
                 return details;
             }
@@ -183,7 +181,7 @@
 		<div class='wssTextAlign'>
             #if ($result.newProjects.size() > 0)
                 <div style='padding-bottom: 5px; padding-left: 10px;'>
-                    <div class='wssProjectHeader' style="display: inline-block">New Projects</div>
+                    <div class='wssProjectHeader' style="display: inline-block;">New Projects</div>
                     <span class='wssTextColor wssProjectStats'>(found $result.newProjects.size() new projects)</span>
                </div>
                 #projectsSummary($result.newProjects "new-project")
@@ -195,7 +193,7 @@
 
             #if ($result.existingProjects.size() > 0)
                 <div style='padding-bottom: 5px; padding-left: 10px;'>
-                    <div class='wssProjectHeader' style="display: inline-block">Existing Projects</div>
+                    <div class='wssProjectHeader' style="display: inline-block;">Existing Projects</div>
                     <span class='wssTextColor wssProjectStats'>(found $result.existingProjects.size() existing projects)</span>
                 </div>
                 #projectsSummary($result.existingProjects "existing-project")
@@ -217,7 +215,7 @@
 		  		<tr>
 		  			#foreach ( $license in $licenses )
 		      		<td style='width: 100px; padding: 0px; vertical-align: bottom;'>
-		      			<table style="border-spacing: 0px 0px; width:100px; text-align:center">
+		      			<table style="border-spacing: 0px 0px; width: 100px; text-align: center">
 		                	<tr>
 		                    	<td style=' font-size:12px;'>
 		                      		$license.occurrences
@@ -244,7 +242,7 @@
 		    		<td>
 		    			<table style='width: 100px;'>
 		                  <tr>
-		                    <td class="wssTextColor" style='font-size:80%; text-align:center;' title="$license.name">
+		                    <td class="wssTextColor" style='font-size: 80%; text-align: center;' title="$license.name">
 		        				$license.shortName
 		                    </td>
 		                  </tr>
