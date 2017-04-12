@@ -25,6 +25,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Utility class to calculate SHA-1 hash codes for files.
@@ -38,6 +40,14 @@ public final class ChecksumUtils {
     private static final int BUFFER_SIZE = 32 * 1024;
 
     private static final int PARTIAL_SHA1_LINES = 100;
+
+    private static final String PLATFORM_DEPENDENT_TMP_DIRECTORY = System.getProperty("java.io.tmpdir") + File.separator + "WhiteSource-PlatformDependentFiles";
+
+    public static final String CRLF = "\r\n";
+
+    public static final String NEW_LINE = "\n";
+
+    public static final String TIME_FORMAT = "HH:mm:ss,SSS";
 
     /* --- Constructors --- */
 
@@ -122,7 +132,53 @@ public final class ChecksumUtils {
         }
     }
 
+    public static String calculateOtherPlatformSha1(File originalPlatform) throws IOException {
+        String otherPlatformSha1 = null;
+        File otherPlatformFile = createOtherPlatformFile(originalPlatform);
+        if (otherPlatformFile != null) {
+            otherPlatformSha1 = ChecksumUtils.calculateSHA1(otherPlatformFile);
+        }
+        deleteFile(otherPlatformFile);
+        return otherPlatformSha1;
+    }
+
+    public static File createOtherPlatformFile(File originalPlatform) {
+        try {
+            if (originalPlatform.length() < Runtime.getRuntime().freeMemory()) {
+                byte[] byteArray = FileUtils.readFileToByteArray(originalPlatform);
+
+                String fileText = new String(byteArray);
+                File otherPlatformFile = new File(PLATFORM_DEPENDENT_TMP_DIRECTORY, originalPlatform.getName());
+                if (fileText.contains(CRLF)) {
+                    FileUtils.write(otherPlatformFile, fileText.replaceAll(CRLF, NEW_LINE));
+                } else if (fileText.contains(NEW_LINE)) {
+                    FileUtils.write(otherPlatformFile, fileText.replaceAll(NEW_LINE, CRLF));
+                }
+                if (otherPlatformFile.exists()) {
+                    return otherPlatformFile;
+                }
+            } else {
+                return null;
+            }
+        } catch (IOException e) {
+            System.out.println(new SimpleDateFormat(TIME_FORMAT).format(new Date()) +
+                    " WHITE_SOURCE:  Failed to create other platform file " + originalPlatform.getName() +
+                    "can't be added to dependency list: " + e.getMessage());
+        }
+        return null;
+    }
+
     /* --- Private static methods --- */
+
+    private static void deleteFile(File file) {
+        if (file != null) {
+            try {
+                FileUtils.forceDelete(file);
+            } catch (IOException e) {
+                // do nothing
+            }
+        }
+    }
 
     private static String toHex(byte[] bytes) {
         StringBuilder sb = new StringBuilder(bytes.length * 2);
@@ -135,5 +191,4 @@ public final class ChecksumUtils {
         }
         return sb.toString();
     }
-
 }
