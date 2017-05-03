@@ -19,11 +19,14 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.whitesource.agent.api.model.DependencyInfo;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
-import java.util.Collection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Utility class to calculate SHA-1 hash codes for files.
@@ -34,26 +37,17 @@ public final class ChecksumUtils {
     
     /* --- Static members --- */
 
-    public static final int BUFFER_SIZE = 32 * 1024;
+    private static final int BUFFER_SIZE = 32 * 1024;
 
-    public static final int PARTIAL_SHA1_LINES = 100;
+    private static final int PARTIAL_SHA1_LINES = 100;
 
-    public static final int FILE_MIN_SIZE = 1024 * 2;
+    private static final String PLATFORM_DEPENDENT_TMP_DIRECTORY = System.getProperty("java.io.tmpdir") + File.separator + "WhiteSource-PlatformDependentFiles";
 
-    public static final int FILE_SMALL_SIZE = 1024 * 3;
+    public static final String CRLF = "\r\n";
 
-    public static final double FILE_SMALL_BUCKET_SIZE = 1024 * 1.25;
-    
-    public static final String SHA_1 = "SHA-1";
+    public static final String NEW_LINE = "\n";
 
-    public static final char ZERO = '0';
-
-    public static final byte CARRIAGE_RETURN = (byte) 0x0d;
-    public static final byte NEW_LINE = (byte) 0x0a;
-    public static final byte HORIZONTAL_TAB = (byte) 0x09;
-    public static final byte SPACE = (byte) 0x20;
-
-    public static final Collection<Byte> WHITESPACES = Arrays.asList(CARRIAGE_RETURN, NEW_LINE, HORIZONTAL_TAB, SPACE);
+    public static final String TIME_FORMAT = "HH:mm:ss,SSS";
 
     /* --- Constructors --- */
 
@@ -67,74 +61,19 @@ public final class ChecksumUtils {
     /* --- Static methods --- */
 
     /**
-     * Calculates 3 hashes for the given file:
-     *
-     * 1. Hash of the file without new lines and whitespaces
-     * 2. Hash of the most significant bits of the file without new lines and whitespaces
-     * 3. Hash of the least significant bits of the file without new lines and whitespaces
-     * 
-     * @param file
-     * @return HashCalculationResult with all three hashes
-     * @throws IOException
-     */
-    public static HashCalculationResult calculateSuperHash(File file) throws IOException {
-        // Ignore files smaller than 2kb
-        if (file.length() <= FILE_MIN_SIZE) {
-            return null;
-        }
-        return calculateSuperHash(FileUtils.readFileToByteArray(file));
-    }
-
-    /**
-     * Calculates 3 hashes for the given bytes:
-     *
-     * 1. Hash of the file without new lines and whitespaces
-     * 2. Hash of the most significant bits of the file without new lines and whitespaces
-     * 3. Hash of the least significant bits of the file without new lines and whitespaces
-     *
-     * @param bytes
-     * @return HashCalculationResult with all three hashes
-     * @throws IOException
-     */
-    public static HashCalculationResult calculateSuperHash(byte[] bytes) throws IOException {
-        HashCalculationResult result = null;
-        // Remove white spaces
-        byte[] bytesWithoutSpaces = stripWhiteSpaces(bytes);
-
-        long fileSize = bytesWithoutSpaces.length;
-        if (fileSize <= FILE_MIN_SIZE) {
-            // Don't calculate hash for files smaller than 2kb
-        } else if (fileSize <= FILE_SMALL_SIZE) {
-            // Handle 2kb->3kb files
-            result = hashBuckets(bytesWithoutSpaces, FILE_SMALL_BUCKET_SIZE);
-        } else if (fileSize > FILE_SMALL_SIZE) {
-            int baseLowNumber = 1;
-            int digits = (int) Math.log10(fileSize);
-            int i = 0;
-            while (i < digits) {
-                baseLowNumber = baseLowNumber * 10;
-                i++;
-            }
-            double highNumber = Math.ceil((fileSize + 1) / (float) baseLowNumber) * baseLowNumber;
-            double lowNumber = highNumber - baseLowNumber;
-            double bucketSize = (highNumber + lowNumber) / 4;
-            result = hashBuckets(bytesWithoutSpaces, bucketSize);
-        }
-        return result;
-    }
-
-    /**
      * Calculates the given file's SHA-1 hash code.
      *
      * @param resourceFile File to calculate
+     *
      * @return Calculated SHA-1 for the given file.
-     * @throws IOException           on file reading errors.
+     *
+     * @throws IOException on file reading errors.
      * @throws IllegalStateException when no algorithm for SHA-1 can be found.
      */
     public static String calculateSHA1(File resourceFile) throws IOException {
         MessageDigest messageDigest;
         try {
-            messageDigest = MessageDigest.getInstance(SHA_1);
+            messageDigest = MessageDigest.getInstance("SHA-1");
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
@@ -148,31 +87,12 @@ public final class ChecksumUtils {
                 len = fis.read(buffer, 0, BUFFER_SIZE);
             }
         } finally {
-            try {
+            try{
                 fis.close();
             } catch (IOException e) {
                 // ignore
             }
         }
-        return toHex(messageDigest.digest());
-        // Base64.encodeBase64("Test".getBytes())
-    }
-
-    /**
-     * Calculates the given file's SHA-1 hash code.
-     *
-     * @param byteArray to calculate
-     * @return Calculated SHA-1 for the given byteArray.
-     * @throws IllegalStateException when no algorithm for SHA-1 can be found.
-     */
-    public static String calculateByteArraySHA1(byte[] byteArray) throws IOException {
-        MessageDigest messageDigest;
-        try {
-            messageDigest = MessageDigest.getInstance(SHA_1);
-        } catch (NoSuchAlgorithmException e) {
-            throw new IllegalStateException(e.getMessage(), e);
-        }
-        messageDigest.update(byteArray, 0, byteArray.length);
         return toHex(messageDigest.digest());
     }
 
@@ -212,20 +132,52 @@ public final class ChecksumUtils {
         }
     }
 
+    public static String calculateOtherPlatformSha1(File originalPlatform) throws IOException {
+        String otherPlatformSha1 = null;
+        File otherPlatformFile = createOtherPlatformFile(originalPlatform);
+        if (otherPlatformFile != null) {
+            otherPlatformSha1 = ChecksumUtils.calculateSHA1(otherPlatformFile);
+        }
+        deleteFile(otherPlatformFile);
+        return otherPlatformSha1;
+    }
+
+    public static File createOtherPlatformFile(File originalPlatform) {
+        try {
+            if (originalPlatform.length() < Runtime.getRuntime().freeMemory()) {
+                byte[] byteArray = FileUtils.readFileToByteArray(originalPlatform);
+
+                String fileText = new String(byteArray);
+                File otherPlatformFile = new File(PLATFORM_DEPENDENT_TMP_DIRECTORY, originalPlatform.getName());
+                if (fileText.contains(CRLF)) {
+                    FileUtils.write(otherPlatformFile, fileText.replaceAll(CRLF, NEW_LINE));
+                } else if (fileText.contains(NEW_LINE)) {
+                    FileUtils.write(otherPlatformFile, fileText.replaceAll(NEW_LINE, CRLF));
+                }
+                if (otherPlatformFile.exists()) {
+                    return otherPlatformFile;
+                }
+            } else {
+                return null;
+            }
+        } catch (IOException e) {
+            System.out.println(new SimpleDateFormat(TIME_FORMAT).format(new Date()) +
+                    " WHITE_SOURCE:  Failed to create other platform file " + originalPlatform.getName() +
+                    "can't be added to dependency list: " + e.getMessage());
+        }
+        return null;
+    }
+
     /* --- Private static methods --- */
 
-    private static HashCalculationResult hashBuckets(byte[] fileWithoutSpaces, double bucketSize) throws IOException {
-        // int(bucket_size) will round down the bucket_size: IE: 1.2 -> 1.0
-        int bucketIntSize = (int) bucketSize;
-
-        // Get bytes and calculate sha1
-        byte[] mostSigBytes = Arrays.copyOfRange(fileWithoutSpaces, 0, bucketIntSize);
-        int length = fileWithoutSpaces.length;
-        byte[] leastSigBytes = Arrays.copyOfRange(fileWithoutSpaces, length - bucketIntSize, length);
-        String fullFileHash = calculateByteArraySHA1(fileWithoutSpaces);
-        String mostSigBitsHash = calculateByteArraySHA1(mostSigBytes);
-        String leastSigBitsHash = calculateByteArraySHA1(leastSigBytes);
-        return new HashCalculationResult(fullFileHash, mostSigBitsHash, leastSigBitsHash);
+    private static void deleteFile(File file) {
+        if (file != null) {
+            try {
+                FileUtils.forceDelete(file);
+            } catch (IOException e) {
+                // do nothing
+            }
+        }
     }
 
     private static String toHex(byte[] bytes) {
@@ -233,75 +185,10 @@ public final class ChecksumUtils {
         for (byte aByte : bytes) {
             int b = aByte & 0xFF;
             if (b < 0x10) {
-                sb.append(ZERO);
+                sb.append('0');
             }
             sb.append(Integer.toHexString(b));
         }
         return sb.toString();
-    }
-
-    /**
-     * Removes all whitespaces from the text - the same way that Shir is doing for source files.
-     *
-     * @param data - byte array
-     * @return file as string
-     */
-    private static byte[] stripWhiteSpaces(byte[] data) {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        for (byte b : data) {
-            if (!WHITESPACES.contains(b)) {
-                bos.write(b);
-            }
-        }
-        return bos.toByteArray();
-    }
-
-    /* --- Nested classes --- */
-
-    public static class HashCalculationResult {
-
-        /* --- Members --- */
-
-        private String fullHash;
-        private String mostSigBitsHash;
-        private String leastSigBitsHash;
-
-        /* --- Constructors --- */
-
-        public HashCalculationResult(String fullHash) {
-            this.fullHash = fullHash;
-        }
-
-        public HashCalculationResult(String fullHash, String mostSigBitsHash, String leastSigBitsHash) {
-            this.fullHash = fullHash;
-            this.mostSigBitsHash = mostSigBitsHash;
-            this.leastSigBitsHash = leastSigBitsHash;
-        }
-
-        /* --- Getters / Setters --- */
-
-        public String getFullHash() {
-            return fullHash;
-        }
-
-        public void setFullHash(String fullHash) {
-            this.fullHash = fullHash;
-        }
-
-        public String getMostSigBitsHash() {
-            return mostSigBitsHash;
-        }
-
-        public void setMostSigBitsHash(String mostSigBitsHash) {
-            this.mostSigBitsHash = mostSigBitsHash;
-        }
-
-        public String getLeastSigBitsHash() {
-            return leastSigBitsHash;
-        }
-
-        public void setLeastSigBitsHash(String leastSigBitsHash) {
-            this.leastSigBitsHash = leastSigBitsHash;
-        }
     }
 }

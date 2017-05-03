@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *#
-#macro( reject ) <span class='wssRed'>Rejections found</span> #end
-#macro( approve ) <span class='wssGreen'>All approved</span> #end
+#macro( reject ) <span class='wssRed'>Rejections Found</span> #end
+#macro( approve ) <span class='wssGreen'>All Approved</span> #end
 #macro( rejectSingle $policyName ) 
 	<div style="float: right;">
 		<span class='wssRed'>REJECTED</span>
@@ -34,22 +34,33 @@
         #set( $detailsId = "${detailsPrefix}-details-$foreach.count")
 		
         <div class='wssProjectEntry'>
-
             ## project caption
             <div style="width: 100%;" class='wssBorder wssProjectCaptionBackground'>
-                <div style="display: inline-block; padding-left: 10px;">
-                	<div class='wssTextColor wssProjectTitle'>$entry.key</div>
+                <div style="display: inline-block;">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td>
+                                <div style="padding: 5px;">$entry.key</div>
+                            </td>
+                        </tr>
+                    </table>
+                </div><div style="display: inline-block; float: right;">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td>
+                                <div style="display: inline-block;">
+                                    #if ( $entry.value.hasRejections() )
+                                        #reject()
+                                    #else
+                                        #approve()
+                                    #end
+                                </div>
+                            </td><td align="right">
+                                <a class='wssAnchor' href="#" onclick="toggleDetails(this, '$detailsId')" style="float: right; padding: 5px;">show details</a>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
-
-                <div style="display: inline-block; padding-left: 10px">
-                    #if ( $entry.value.hasRejections() )
-                        #reject()
-                    #else
-                        #approve()
-                    #end
-                </div>
-
-                <a class='wssAnchor' href="#" onclick="toggleDetails(this, '$detailsId')" style="float:right; padding: 5px;">show details</a>
             </div>
 
             ## project details
@@ -61,7 +72,7 @@
     #end
 #end
 
-#macro ( projectDependenciesTree $root)
+#macro ( projectDependenciesTree $root )
     #if ($root.children.size() > 0)
         <ul>
             #foreach ($child in $root.children)
@@ -69,11 +80,11 @@
             #end
         </ul>
     #else
-        No libraries found in project
+    <div style="padding: 10px;">No new libraries were detected in this project</div>
     #end
 #end
 
-#macro ( dependencyNode $node)
+#macro ( dependencyNode $node )
     <li>
         <div class="wssDependencyNode">
             <a class='wssAnchor' href="$node.resource.link" target="_blank">$node.resource.displayName</a>
@@ -105,22 +116,19 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
     <head>
-        <title>White Source - Policy Check Summary</title>
+        <title>WhiteSource - Policy Check Summary</title>
         <meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type" />
 
         <script>
-            function toggleDetails(anchor, detailsId){
+            function toggleDetails(anchor, detailsId) {
                 var details = document.getElementById(detailsId);
-
-                if(details.style.display == 'block' ) {
+                if (details.style.display == 'block') {
                     details.style.display = 'none';
-                    anchor.innerHTML = 'show details'
-                }
-                else {
+                    anchor.innerHTML = 'show details';
+                } else {
                     details.style.display = 'block';
-                    anchor.innerHTML = 'hide details'
+                    anchor.innerHTML = 'hide details';
                 }
-
                 return details;
             }
         </script>
@@ -131,40 +139,38 @@
     <body class='wssBody'>
     <div align="center" style="width: 100%;">
     <div class='wssContainer'>
-        <a class='wssAnchor' href="http://www.whitesourcesoftware.com" target="_blank">
-            <img align="left" src="http://saas.whitesourcesoftware.com/Wss/background/WhiteSource_Logo.png" style="left: 10;" />
+        <a class='wssAnchor' href="https://whitesourcesoftware.com" target="_blank">
+            <img align="center" src="https://saas.whitesourcesoftware.com/Wss/background/whitesource_logo_dark_small.png" style="padding-top: 10px;"/>
         </a>
 
         <div align="center">
-            <h1> &nbsp;</h1>
-            <h1 class='wssHeader'>Policy Check Summary</h1>
-            <h2>
+            <h2 class='wssHeader'>Policy Check Summary</h2>
+            <h3>
                 #if ( $hasRejections )
                     #reject()
                 #else
                     #approve()
                 #end
-            </h2>
-
-            <br/>
-
+            </h3>
         </div>
 
 		<div align='left'>
 			<div class='wssTextAlign' style="width: 500px; padding-left: 10px;">
-				<div>
-					<span class='wssGeneralIcon'></span>
-			        <div class='wssProjectHeader' style="display: inline-block">General details</div>
-		       </div>
-	            <table style="width: 100%;" class='wssTable wssTextColor'>
+	            <table style="width: 100%;" class='wssTextColor'>
 	                <tbody>
 	                    #if ($buildName)
-	                        <tr><td>Build Name</td><td>$buildName</td></tr>
+                        <div class='wssTextColor' style="padding-bottom: 10px; padding-left: 5px;">
+                            Build Name - $buildName
+                        </div>
 	                    #end
 	                    #if ($buildNumber)
-	                        <tr><td>Build Number</td><td>$buildNumber</td></tr>
+                        <div class='wssTextColor' style="padding-bottom: 10px; padding-left: 5px;">
+                            Build Number - $buildNumber
+                        </div>
                         #end
-	                    <tr><td>Report creation time</td><td>$creationTime</td></tr>
+                        <div class='wssTextColor' style="padding-left: 5px;">
+                            Report creation time - $creationTime
+                        </div>
 	                </tbody>
 	            </table>
 	        </div>
@@ -173,43 +179,50 @@
         #lineSeparator
 
 		<div class='wssTextAlign'>
-			<div style='padding-bottom: 1px;'>
-				<span class='wssProjectIcon'></span>
-		        <div class='wssProjectHeader' style="display: inline-block">New projects</div>
-		        <span class='wssTextColor wssProjectStats'>found $result.newProjects.size() new projects </span>
-	       </div>
-	        #projectsSummary($result.newProjects "new-project")
-	
+            #if ($result.newProjects.size() > 0)
+                <div style='padding-bottom: 5px; padding-left: 10px;'>
+                    <div class='wssProjectHeader' style="display: inline-block;">New Projects</div>
+                    <span class='wssTextColor wssProjectStats'>(found $result.newProjects.size() new projects)</span>
+               </div>
+                #projectsSummary($result.newProjects "new-project")
+            #else
+                <div class='wssTextColor wssProjectStats' style="padding-left: 15px; padding-top: 5px;">No new projects found</div>
+            #end
+
 			#lineSeparator
-	
-			<div style='padding-bottom: 1px;'>
-				<span class='wssProjectIcon'></span>
-		        <div class='wssProjectHeader' style="display: inline-block">Existing projects</div>
-		        <span class='wssTextColor wssProjectStats'>found $result.existingProjects.size() existing projects </span>
-		    </div>
-	        #projectsSummary($result.existingProjects "existing-project")
+
+            #if ($result.existingProjects.size() > 0)
+                <div style='padding-bottom: 5px; padding-left: 10px;'>
+                    <div class='wssProjectHeader' style="display: inline-block;">Existing Projects</div>
+                    <span class='wssTextColor wssProjectStats'>(found $result.existingProjects.size() existing projects)</span>
+                </div>
+                #projectsSummary($result.existingProjects "existing-project")
+            #else
+                <div class='wssTextColor wssProjectStats' style="padding-left: 15px; padding-top: 5px;">No existing projects were updated</div>
+            #end
         </div>
 
-		#lineSeparator
 
 		#if ( $licenses.size() > 0 )
-		<div class='wssTextAlign' style="margin: 10px;">
-			<div style='padding-bottom: 1px;'>
-				<span class='wssLicenseIcon'></span>
-		        <div class='wssProjectHeader' style="display: inline-block">License distribution</div>
+
+        #lineSeparator
+
+        <div class='wssTextAlign' style="margin: 0px 10px;">
+			<div>
+		        <div class='wssProjectHeader' style="display: inline-block">License Distribution</div>
 	       </div>
 			<table class="wssLicenses wssTextColor">
 		  		<tr>
 		  			#foreach ( $license in $licenses )
 		      		<td style='width: 100px; padding: 0px; vertical-align: bottom;'>
-		      			<table style="border-spacing: 0px 0px; width:100px; text-align:center">
+		      			<table style="border-spacing: 0px 0px; width: 100px; text-align: center">
 		                	<tr>
 		                    	<td style=' font-size:12px;'>
 		                      		$license.occurrences
 		                    	<td>
 		                  	</tr>
 		                  	<tr>
-		                    	<td style="padding-bottom:0px; padding-right:40px; padding-left:40px">
+		                    	<td style="padding-bottom: 0px; padding-right: 40px; padding-left: 40px">
 		                      		<table height="$license.height" class="wssLicenseBar" title="$license.name: $license.occurrences">
 		                        		<tr>
 		                          			<td>
@@ -229,7 +242,7 @@
 		    		<td>
 		    			<table style='width: 100px;'>
 		                  <tr>
-		                    <td class="wssTextColor" style='font-size:80%; text-align:center;' title="$license.name">
+		                    <td class="wssTextColor" style='font-size: 80%; text-align: center;' title="$license.name">
 		        				$license.shortName
 		                    </td>
 		                  </tr>
