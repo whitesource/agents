@@ -58,7 +58,7 @@
     </developers>
 
     <properties>
-        <httpclient.version>4.3.3</httpclient.version>
+        <httpclient.version>4.3.6</httpclient.version>
         <gson.version>2.2.2</gson.version>
         <junit.version>4.10</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -291,14 +291,10 @@
                 <plugin>
                     <groupId>org.whitesource</groupId>
                     <artifactId>whitesource-maven-plugin</artifactId>
-                    <version>1.1.5</version>
+                    <version>3.2.5</version>
                     <configuration>
                         <orgToken>${whitesource.orgToken}</orgToken>
-                        <moduleTokens>
-                            <wss-agent-api>98660a04-d68c-429e-b145-fd62dadd60bc</wss-agent-api>
-                            <wss-agent-api-client>49f1c563-d138-4efe-9d5e-7905c1fec809</wss-agent-api-client>
-                            <wss-agent-report>a76038fa-6466-4072-9ab8-4c80d021d1bd</wss-agent-report>
-                        </moduleTokens>
+                        <product>Agents API</product>
                     </configuration>
                 </plugin>
                 <plugin>
