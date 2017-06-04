@@ -23,31 +23,31 @@ import java.util.Collection;
 import java.util.Date;
 
 /**
- * WhiteSource Model for a project's dependency 
- * 
+ * WhiteSource Model for a project's dependency
+ *
  * @author tom.shapira
  */
 public class DependencyInfo implements Serializable {
 
-	/* --- Static members --- */
+   /* --- Static members --- */
 
-	private static final long serialVersionUID = -6212622409560068635L;
+    private static final long serialVersionUID = -6212622409560068635L;
 
-	/* --- Members --- */
+   /* --- Members --- */
 
-	private String groupId;
+    private String groupId;
 
-	private String artifactId;
+    private String artifactId;
 
-	private String version;
+    private String version;
 
-	private String type;
+    private String type;
 
-	private String classifier;
+    private String classifier;
 
-	private String scope;
-	
-	private String sha1;
+    private String scope;
+
+    private String sha1;
 
     private String headerSha1;
 
@@ -55,19 +55,25 @@ public class DependencyInfo implements Serializable {
 
     private String utf8Sha1;
 
+    private String fullHash;
+
+    private String mostSigBitsHash;
+
+    private String leastSigBitsHash;
+
     private String commentlessSha1;
 
     private String noNewLinesSha1;
 
     private String otherPlatformSha1;
 
-	private String systemPath;
+    private String systemPath;
 
     private boolean optional;
 
     private Collection<DependencyInfo> children;
 
-	private Collection<ExclusionInfo> exclusions;
+    private Collection<ExclusionInfo> exclusions;
 
     private Collection<String> licenses;
 
@@ -75,57 +81,83 @@ public class DependencyInfo implements Serializable {
 
     private Date lastModified;
 
-	/* --- Constructors --- */
+   /* --- Constructors --- */
 
-	/**
-	 * Default constructor
-	 */
-	public DependencyInfo() {
+    /**
+     * Default constructor
+     */
+    public DependencyInfo() {
         children = new ArrayList<DependencyInfo>();
-		exclusions = new ArrayList<ExclusionInfo>();
+        exclusions = new ArrayList<ExclusionInfo>();
         licenses = new ArrayList<String>();
         copyrights = new ArrayList<CopyrightInfo>();
-	}
-	
-	/**
-	 * Constructor
-	 * 
-	 * @param groupId
-	 * @param artifactId
-	 * @param version
-	 */
-	public DependencyInfo(String groupId, String artifactId, String version) {
-		this();
-		this.groupId = groupId;
-		this.artifactId = artifactId;
-		this.version = version;
-	}
+    }
 
-	/**
-	 * Constructor
-	 * 
-	 * @param sha1
-	 */
-	public DependencyInfo(String sha1) {
-		this();
-		this.sha1 = sha1;
-	}
+    /**
+     * Constructor
+     *
+     * @param groupId
+     * @param artifactId
+     * @param version
+     */
+    public DependencyInfo(String groupId, String artifactId, String version) {
+        this();
+        this.groupId = groupId;
+        this.artifactId = artifactId;
+        this.version = version;
+    }
 
-	/* --- Overridden methods --- */
+    /**
+     * Constructor
+     *
+     * @param sha1
+     */
+    public DependencyInfo(String sha1) {
+        this();
+        this.sha1 = sha1;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
 
-		sb.append("DependencyInfo@").append(Integer.toHexString(hashCode()))
-			.append("[")
-			.append("groupId= ").append(groupId).append(",")
-			.append("artifactId= ").append(artifactId).append(",")
-			.append("version= ").append(version)
-			.append(" ]");
+    /**
+     * Constructor
+     *
+     * @param sha1
+     * @param fullHash
+     */
+    public DependencyInfo(String sha1, String fullHash) {
+        this(sha1);
+        this.fullHash = fullHash;
+    }
 
-		return sb.toString();
-	}
+    /**
+     * Constructor
+     *
+     * @param sha1
+     * @param fullHash
+     * @param mostSigBitsHash
+     * @param leastSigBitsHash
+     */
+    public DependencyInfo(String sha1, String fullHash, String mostSigBitsHash, String leastSigBitsHash) {
+        this(sha1, fullHash);
+        this.mostSigBitsHash = mostSigBitsHash;
+        this.leastSigBitsHash = leastSigBitsHash;
+    }
+
+   /* --- Overridden methods --- */
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("DependencyInfo@").append(Integer.toHexString(hashCode()))
+                .append("[")
+                .append("groupId= ").append(groupId).append(",")
+                .append("artifactId= ").append(artifactId).append(",")
+                .append("version= ").append(version)
+                .append(" ]");
+
+        return sb.toString();
+    }
 
     @Override
     public final boolean equals(Object o) {
@@ -176,87 +208,87 @@ public class DependencyInfo implements Serializable {
         return copyrights != null && !copyrights.isEmpty();
     }
 
-	/* --- Getters / Setters --- */
+   /* --- Getters / Setters --- */
 
-	public String getGroupId() {
-		return groupId;
-	}
+    public String getGroupId() {
+        return groupId;
+    }
 
-	public void setGroupId(String groupId) {
-		this.groupId = groupId;
-	}
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
 
-	public String getArtifactId() {
-		return artifactId;
-	}
+    public String getArtifactId() {
+        return artifactId;
+    }
 
-	public void setArtifactId(String artifactId) {
-		this.artifactId = artifactId;
-	}
+    public void setArtifactId(String artifactId) {
+        this.artifactId = artifactId;
+    }
 
-	public String getVersion() {
-		return version;
-	}
+    public String getVersion() {
+        return version;
+    }
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public String getClassifier() {
-		return classifier;
-	}
+    public String getClassifier() {
+        return classifier;
+    }
 
-	public void setClassifier(String classifier) {
-		this.classifier = classifier;
-	}
+    public void setClassifier(String classifier) {
+        this.classifier = classifier;
+    }
 
-	public String getScope() {
-		return scope;
-	}
+    public String getScope() {
+        return scope;
+    }
 
-	public void setScope(String scope) {
-		this.scope = scope;
-	}
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
 
-	public String getSha1() {
-		return sha1;
-	}
+    public String getSha1() {
+        return sha1;
+    }
 
-	public void setSha1(String sha1) {
-		this.sha1 = sha1;
-	}
+    public void setSha1(String sha1) {
+        this.sha1 = sha1;
+    }
 
-	public String getSystemPath() {
-		return systemPath;
-	}
+    public String getSystemPath() {
+        return systemPath;
+    }
 
-	public void setSystemPath(String systemPath) {
-		this.systemPath = systemPath;
-	}
+    public void setSystemPath(String systemPath) {
+        this.systemPath = systemPath;
+    }
 
-	public Collection<ExclusionInfo> getExclusions() {
-		return exclusions;
-	}
+    public Collection<ExclusionInfo> getExclusions() {
+        return exclusions;
+    }
 
-	public void setExclusions(Collection<ExclusionInfo> exclusions) {
-		this.exclusions = exclusions;
-	}
+    public void setExclusions(Collection<ExclusionInfo> exclusions) {
+        this.exclusions = exclusions;
+    }
 
-	public boolean getOptional() {
-		return optional;
-	}
+    public boolean getOptional() {
+        return optional;
+    }
 
-	public void setOptional(boolean optional) {
-		this.optional = optional;
-	}
+    public void setOptional(boolean optional) {
+        this.optional = optional;
+    }
 
     public Collection<DependencyInfo> getChildren() {
         return children;
@@ -336,5 +368,29 @@ public class DependencyInfo implements Serializable {
 
     public void setOtherPlatformSha1(String otherPlatformSha1) {
         this.otherPlatformSha1 = otherPlatformSha1;
+    }
+
+    public String getFullHash() {
+        return fullHash;
+    }
+
+    public void setFullHash(String fullHash) {
+        this.fullHash = fullHash;
+    }
+
+    public String getMostSigBitsHash() {
+        return mostSigBitsHash;
+    }
+
+    public void setMostSigBitsHash(String mostSigBitsHash) {
+        this.mostSigBitsHash = mostSigBitsHash;
+    }
+
+    public String getLeastSigBitsHash() {
+        return leastSigBitsHash;
+    }
+
+    public void setLeastSigBitsHash(String leastSigBitsHash) {
+        this.leastSigBitsHash = leastSigBitsHash;
     }
 }
