@@ -309,7 +309,7 @@ public class PolicyCheckReport {
         if (policy != null && policy.getActionType().equals(REJECT)) {
             RejectingPolicy rejectingPolicy = policyResourceMap.get(policy);
             if (rejectingPolicy == null) {
-                rejectingPolicy = new RejectingPolicy(policy.getDisplayName(), policy.getFilterType(), policy.isProjectLevel());
+                rejectingPolicy = new RejectingPolicy(policy.getDisplayName(), policy.getFilterType(), policy.isProjectLevel(), policy.isInclusive());
                 policyResourceMap.put(policy, rejectingPolicy);
             }
 

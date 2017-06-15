@@ -43,6 +43,8 @@ public class RequestPolicyInfo implements Serializable {
 
     private boolean projectLevel;
 
+    private boolean inclusive;
+
     /* --- Constructors --- */
 
     /**
@@ -71,6 +73,7 @@ public class RequestPolicyInfo implements Serializable {
         RequestPolicyInfo that = (RequestPolicyInfo) o;
 
         if (projectLevel != that.projectLevel) return false;
+        if (inclusive != that.inclusive) return false;
         if (displayName != null ? !displayName.equals(that.displayName) : that.displayName != null) return false;
         if (filterType != null ? !filterType.equals(that.filterType) : that.filterType != null) return false;
         if (filterLogic != null ? !filterLogic.equals(that.filterLogic) : that.filterLogic != null) return false;
@@ -87,6 +90,7 @@ public class RequestPolicyInfo implements Serializable {
         result = 31 * result + (actionType != null ? actionType.hashCode() : 0);
         result = 31 * result + (actionLogic != null ? actionLogic.hashCode() : 0);
         result = 31 * result + (projectLevel ? 1 : 0);
+        result = 31 * result + (inclusive ? 1 : 0);
         return result;
     }
 
@@ -140,4 +144,11 @@ public class RequestPolicyInfo implements Serializable {
         this.projectLevel = projectLevel;
     }
 
+    public boolean isInclusive() {
+        return inclusive;
+    }
+
+    public void setInclusive(boolean inclusive) {
+        this.inclusive = inclusive;
+    }
 }

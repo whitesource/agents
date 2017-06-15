@@ -36,6 +36,7 @@ public class RejectingPolicy implements Serializable {
     private String policyName;
     private String filterType;
     private boolean productLevel;
+    private boolean inclusive;
     private Set<RejectedLibrary> rejectedLibraries;
 
     /* --- Constructors --- */
@@ -44,11 +45,12 @@ public class RejectingPolicy implements Serializable {
         rejectedLibraries = new HashSet<RejectedLibrary>();
     }
 
-    public RejectingPolicy(String policyName, String filterType, boolean productLevel) {
+    public RejectingPolicy(String policyName, String filterType, boolean productLevel, boolean inclusive) {
         this();
         this.policyName = policyName;
         this.filterType = filterType;
         this.productLevel = productLevel;
+        this.inclusive = inclusive;
     }
 
     /* --- Getters / Setters --- */
@@ -83,5 +85,13 @@ public class RejectingPolicy implements Serializable {
 
     public void setRejectedLibraries(Set<RejectedLibrary> rejectedLibraries) {
         this.rejectedLibraries = rejectedLibraries;
+    }
+
+    public boolean isInclusive() {
+        return inclusive;
+    }
+
+    public void setInclusive(boolean inclusive) {
+        this.inclusive = inclusive;
     }
 }
