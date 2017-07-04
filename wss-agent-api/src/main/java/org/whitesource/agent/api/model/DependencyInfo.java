@@ -81,7 +81,11 @@ public class DependencyInfo implements Serializable {
 
     private Date lastModified;
 
-   /* --- Constructors --- */
+	private String filename;
+
+    private DependencyType dependencyType;
+
+    /* --- Constructors --- */
 
     /**
      * Default constructor
@@ -153,7 +157,9 @@ public class DependencyInfo implements Serializable {
                 .append("[")
                 .append("groupId= ").append(groupId).append(",")
                 .append("artifactId= ").append(artifactId).append(",")
-                .append("version= ").append(version)
+                .append("version= ").append(version).append(",")
+			.append("filename= ").append(filename).append(",")
+			.append("dependencyType= ").append(dependencyType)
                 .append(" ]");
 
         return sb.toString();
@@ -392,5 +398,21 @@ public class DependencyInfo implements Serializable {
 
     public void setLeastSigBitsHash(String leastSigBitsHash) {
         this.leastSigBitsHash = leastSigBitsHash;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
+
+    public DependencyType getDependencyType() {
+        return dependencyType;
+    }
+
+    public void setDependencyType(DependencyType dependencyType) {
+        this.dependencyType = dependencyType;
     }
 }
