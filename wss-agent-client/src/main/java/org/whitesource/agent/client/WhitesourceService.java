@@ -36,24 +36,24 @@ public class WhitesourceService {
     /* --- Constructors --- */
 
     public WhitesourceService() {
-        this("generic", "1.0");
+        this("generic", "1.0", "1.0");
     }
 
-    public WhitesourceService(final String agent, final String agentVersion) {
-        this(agent, agentVersion, null);
+    public WhitesourceService(final String agent, final String agentVersion, String pluginVersion) {
+        this(agent, agentVersion, pluginVersion, null);
     }
 
-    public WhitesourceService(final String agent, final String agentVersion, final String serviceUrl) {
-        this(agent, agentVersion, serviceUrl, true);
+    public WhitesourceService(final String agent, final String agentVersion, String pluginVersion, final String serviceUrl) {
+        this(agent, agentVersion, pluginVersion, serviceUrl, true);
     }
 
-    public WhitesourceService(final String agent, final String agentVersion, final String serviceUrl, boolean setProxy) {
-        this(agent, agentVersion, serviceUrl, setProxy, ClientConstants.DEFAULT_CONNECTION_TIMEOUT_MINUTES);
+    public WhitesourceService(final String agent, final String agentVersion, String pluginVersion, final String serviceUrl, boolean setProxy) {
+        this(agent, agentVersion, pluginVersion, serviceUrl, setProxy, ClientConstants.DEFAULT_CONNECTION_TIMEOUT_MINUTES);
     }
 
-    public WhitesourceService(final String agent, final String agentVersion, final String serviceUrl, boolean setProxy,
+    public WhitesourceService(final String agent, final String agentVersion, String pluginVersion, final String serviceUrl, boolean setProxy,
                               int connectionTimeoutMinutes) {
-        requestFactory = new RequestFactory(agent, agentVersion);
+        requestFactory = new RequestFactory(agent, agentVersion, pluginVersion);
 
         String url = serviceUrl;
         if (url == null || url.trim().length() == 0) {

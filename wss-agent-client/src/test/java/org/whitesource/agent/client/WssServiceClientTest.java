@@ -66,7 +66,7 @@ public class WssServiceClientTest {
         client = new WssServiceClientImpl(serviceUrl);
         log.info("Local test server is available at " + serviceUrl);
 
-        requestFactory = new RequestFactory("Client Test", "1.0");
+        requestFactory = new RequestFactory("Client Test", "1.0", "1.0");
     }
 
     @After

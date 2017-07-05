@@ -36,7 +36,7 @@ public class ModelSerializationTest {
 
     /* --- Members --- */
 
-    private RequestFactory requestFactory = new RequestFactory("agent", "agentVersion");
+    private RequestFactory requestFactory = new RequestFactory("agent", "agentVersion", "pluginVersion");
 
     private Gson gson = new Gson();
 

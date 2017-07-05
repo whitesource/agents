@@ -33,11 +33,11 @@ public final class APIConstants {
 	public static final String PARAM_DEPENDENCIES = "dependencies";
 	public static final String PARAM_AGENT = "agent";
 	public static final String PARAM_AGENT_VERSION = "agentVersion";
+	public static final String PARAM_PLUGIN_VERSION = "pluginVersion";
 	public static final String PARAM_REQUEST_TYPE = "type";
     public static final String PARAM_TIME_STAMP = "timeStamp";
     public static final String PARAM_REQUESTER_EMAIL = "requesterEmail";
 	public static final String PARAM_FORCE_CHECK_ALL_DEPENDENCIES = "forceCheckAllDependencies";
-    public static final String PLUGIN_VERSION = "pluginVersion";
 
 	/* --- Messages --- */
 	

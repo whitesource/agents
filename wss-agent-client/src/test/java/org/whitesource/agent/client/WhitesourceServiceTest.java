@@ -51,7 +51,7 @@ public class WhitesourceServiceTest {
         assertEquals("1.0", updateRequest.agentVersion());
         assertEquals(ClientConstants.DEFAULT_SERVICE_URL, ((WssServiceClientImpl) service.getClient()).getServiceUrl());
 
-        service = new WhitesourceService("agent", "agentVersion");
+        service = new WhitesourceService("agent", "agentVersion", "pluginVersion");
         updateRequest = service.getRequestFactory().newUpdateInventoryRequest("orgToken", null);
         assertEquals("agent", updateRequest.agent());
         assertEquals("agentVersion", updateRequest.agentVersion());
@@ -61,7 +61,7 @@ public class WhitesourceServiceTest {
         service = new WhitesourceService();
         assertEquals("serviceUrl", ((WssServiceClientImpl) service.getClient()).getServiceUrl());
 
-        service = new WhitesourceService("agent", "agentVersion", "serviceUrl");
+        service = new WhitesourceService("agent", "agentVersion", "pluginVersion", "serviceUrl");
         assertEquals("serviceUrl", ((WssServiceClientImpl) service.getClient()).getServiceUrl());
     }
 

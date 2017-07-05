@@ -32,17 +32,21 @@ public class RequestFactory {
 
     private String agentVersion;
 
+    private String pluginVersion;
+
     /* --- Constructors --- */
 
     /**
      * Constructor
      *
-     * @param agent        Agent type identifier.
-     * @param agentVersion Agent version.
+     * @param agent         Agent type identifier.
+     * @param agentVersion  Agent API version.
+     * @param pluginVersion Plugin version.
      */
-    public RequestFactory(String agent, String agentVersion) {
+    public RequestFactory(String agent, String agentVersion, String pluginVersion) {
         this.agent = agent;
         this.agentVersion = agentVersion;
+        this.pluginVersion = pluginVersion;
     }
 
     /* --- Public methods --- */
@@ -186,6 +190,7 @@ public class RequestFactory {
     protected <R> BaseRequest<R> prepareRequest(BaseRequest<R> request, String orgToken, String requesterEmail, String product, String productVersion) {
         request.setAgent(agent);
         request.setAgentVersion(agentVersion);
+        request.setPluginVersion(pluginVersion);
         request.setOrgToken(orgToken);
         request.setProduct(product);
         request.setProductVersion(productVersion);

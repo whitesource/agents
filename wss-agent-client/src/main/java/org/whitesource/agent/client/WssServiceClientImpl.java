@@ -266,7 +266,7 @@ public class WssServiceClientImpl implements WssServiceClient {
 		nvps.add(new BasicNameValuePair(APIConstants.PARAM_PRODUCT, request.product()));
 		nvps.add(new BasicNameValuePair(APIConstants.PARAM_PRODUCT_VERSION, request.productVersion()));
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_TIME_STAMP, String.valueOf(request.timeStamp())));
-        nvps.add(new BasicNameValuePair(APIConstants.PLUGIN_VERSION, String.valueOf(request.pluginVersion())));
+        nvps.add(new BasicNameValuePair(APIConstants.PARAM_PLUGIN_VERSION, String.valueOf(request.pluginVersion())));
 
 
 		String jsonDiff = null;
