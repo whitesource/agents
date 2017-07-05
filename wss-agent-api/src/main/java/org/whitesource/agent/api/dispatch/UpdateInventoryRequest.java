@@ -17,7 +17,6 @@ package org.whitesource.agent.api.dispatch;
 
 import org.whitesource.agent.api.model.AgentProjectInfo;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -49,7 +48,6 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
         this();
         this.projects = projects;
     }
-
 
 	/**
 	 * Constructor

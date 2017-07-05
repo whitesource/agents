@@ -15,7 +15,6 @@
  */
 package org.whitesource.agent.api.dispatch;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -25,7 +24,7 @@ import java.util.Collection;
  * 
  * @author Edo.Shor
  */
-public class UpdateInventoryResult implements Serializable {
+public class UpdateInventoryResult extends BaseResult {
 
     /* --- Static members --- */
 
@@ -52,7 +51,7 @@ public class UpdateInventoryResult implements Serializable {
 	
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param organization Name of the domain.
 	 */
 	public UpdateInventoryResult(String organization) {

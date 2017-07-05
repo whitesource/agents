@@ -40,7 +40,9 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 	protected String agent;
 	
 	protected String agentVersion;
-	
+
+	protected String pluginVersion;
+
 	protected String orgToken;
 	
 	protected String product;
@@ -61,7 +63,7 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 	 * @param type Request operation type.
 	 */
 	public BaseRequest(RequestType type) {
-		this(type, null, null);
+		this(type, null, null, null);
 	}
 
 	/**
@@ -71,7 +73,7 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 	 * @param agent Agent type identifier.
 	 */
 	public BaseRequest(RequestType type, String agent) {
-		this(type, agent, null);
+		this(type, agent, null, null);
 	}
 
 	/**
@@ -80,11 +82,13 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 	 * @param type Request operation type.
 	 * @param agent Agent type identifier.
 	 * @param agentVersion Agent version.
+	 * @param pluginVersion Plugin version.
 	 */
-	public BaseRequest(RequestType type, String agent, String agentVersion) {
+	public BaseRequest(RequestType type, String agent, String agentVersion, String pluginVersion) {
 		this.type  = type;
 		this.agent = agent;
 		this.agentVersion = agentVersion;
+		this.pluginVersion = pluginVersion;
         this.timeStamp = System.currentTimeMillis();
 		projects = new ArrayList<AgentProjectInfo>();
 	}
@@ -111,7 +115,12 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 		return agentVersion;
 	}
 
-    @Override
+	@Override
+	public String pluginVersion() {
+		return pluginVersion;
+	}
+
+	@Override
     public String product() {
         return product;
     }
@@ -139,6 +148,10 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 
 	public void setAgentVersion(String agentVersion) {
 		this.agentVersion = agentVersion;
+	}
+
+	public void setPluginVersion(String pluginVersion) {
+		this.pluginVersion = pluginVersion;
 	}
 
 	public void setOrgToken(String orgToken) {

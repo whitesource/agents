@@ -18,16 +18,14 @@ package org.whitesource.agent.api.dispatch;
 import org.whitesource.agent.api.model.PolicyCheckResourceNode;
 import org.whitesource.agent.api.model.ResourceInfo;
 
-import java.io.Serializable;
 import java.util.*;
-
 
 /**
  * Base, abstract Result of check policy requests.
  * 
  * @author anna.rozin
  */
-public abstract class BaseCheckPoliciesResult implements Serializable {
+public abstract class BaseCheckPoliciesResult extends BaseResult {
 
     /* --- Static members --- */
 
