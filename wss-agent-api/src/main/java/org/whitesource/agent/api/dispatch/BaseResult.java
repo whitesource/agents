@@ -13,6 +13,11 @@ public class BaseResult implements Serializable {
 
     /* --- Members --- */
 
+    /**
+     * Name of organization in.
+     */
+    private String organization;
+
     private String requestToken;
 
     /* --- Constructors --- */
@@ -21,6 +26,14 @@ public class BaseResult implements Serializable {
     }
 
     /* --- Getters / Setters --- */
+
+    public String getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(String organization) {
+        this.organization = organization;
+    }
 
     public String getRequestToken() {
         return requestToken;

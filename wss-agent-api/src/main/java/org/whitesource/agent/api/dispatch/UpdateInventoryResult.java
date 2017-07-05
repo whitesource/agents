@@ -32,8 +32,6 @@ public class UpdateInventoryResult extends BaseResult {
 
     /* --- Members --- */
 	
-	private String organization;
-	
 	private Collection<String> updatedProjects;
 	
 	private Collection<String> createdProjects;
@@ -56,19 +54,11 @@ public class UpdateInventoryResult extends BaseResult {
 	 */
 	public UpdateInventoryResult(String organization) {
 		this();
-		this.organization = organization;
+		setOrganization(organization);
 	}
 
 	/* --- Getters / Setters --- */ 
 
-	public String getOrganization() {
-		return organization;
-	}
-
-	public void setOrganization(String organization) {
-		this.organization = organization;
-	}
-	
 	public Collection<String> getUpdatedProjects() {
 		return updatedProjects;
 	}

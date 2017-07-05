@@ -45,5 +45,6 @@ public class CheckPoliciesResult extends BaseCheckPoliciesResult {
      * @param organization Name of the domain.
      */
     public CheckPoliciesResult(String organization) {
+        super(organization);
     }
 }

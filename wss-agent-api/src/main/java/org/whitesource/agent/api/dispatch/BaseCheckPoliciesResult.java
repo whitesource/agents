@@ -34,11 +34,6 @@ public abstract class BaseCheckPoliciesResult extends BaseResult {
 	/* --- Members --- */
 
 	/**
-	 * Name of organization in.
-	 */
-	private String organization;
-
-	/**
 	 * Map of project name to the root of its dependency graph with policies application result.
 	 */
 	private Map<String, PolicyCheckResourceNode> existingProjects;
@@ -71,7 +66,7 @@ public abstract class BaseCheckPoliciesResult extends BaseResult {
 	 */
 	public BaseCheckPoliciesResult(String organization) {
 		this();
-		this.organization = organization;
+		setOrganization(organization);
 	}
 
     /* --- Public methods --- */
@@ -95,14 +90,6 @@ public abstract class BaseCheckPoliciesResult extends BaseResult {
 	}
 
 	/* --- Getters / Setters --- */
-
-	public String getOrganization() {
-		return organization;
-	}
-
-	public void setOrganization(String organization) {
-		this.organization = organization;
-	}
 
 	public Map<String, PolicyCheckResourceNode> getNewProjects() {
 		return newProjects;
