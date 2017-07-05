@@ -158,8 +158,8 @@ public class DependencyInfo implements Serializable {
                 .append("groupId= ").append(groupId).append(",")
                 .append("artifactId= ").append(artifactId).append(",")
                 .append("version= ").append(version).append(",")
-			.append("filename= ").append(filename).append(",")
-			.append("dependencyType= ").append(dependencyType)
+			    .append("filename= ").append(filename).append(",")
+			    .append("dependencyType= ").append(dependencyType)
                 .append(" ]");
 
         return sb.toString();
@@ -185,6 +185,8 @@ public class DependencyInfo implements Serializable {
         if (scope != null ? !scope.equals(that.scope) : that.scope != null) return false;
         if (type != null ? !type.equals(that.type) : that.type != null) return false;
         if (version != null ? !version.equals(that.version) : that.version != null) return false;
+        if (filename != null ? !filename.equals(that.filename) : that.filename != null) return false;
+        if (dependencyType != null ? !dependencyType.equals(that.dependencyType) : that.dependencyType != null) return false;
 
         return true;
     }
@@ -201,6 +203,8 @@ public class DependencyInfo implements Serializable {
         result = APIConstants.HASH_CODE_FACTOR * result + (sha1 != null ? sha1.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (exclusions != null ? exclusions.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (optional ? 1 : 0);
+        result = APIConstants.HASH_CODE_FACTOR * result + (filename != null ? filename.hashCode() : 0);
+        result = APIConstants.HASH_CODE_FACTOR * result + (dependencyType != null ? dependencyType.hashCode() : 0);
         return result;
     }
 
