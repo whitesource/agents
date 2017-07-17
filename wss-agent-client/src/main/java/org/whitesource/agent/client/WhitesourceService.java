@@ -67,6 +67,17 @@ public class WhitesourceService {
         client = new WssServiceClientImpl(url, setProxy, connectionTimeoutMinutes);
     }
 
+    // backward compatibility methods (plugin version is not a parameter)
+
+    public WhitesourceService(final String agent, final String agentVersion, final String serviceUrl, boolean setProxy) {
+        this(agent, agentVersion, serviceUrl, setProxy, ClientConstants.DEFAULT_CONNECTION_TIMEOUT_MINUTES);
+    }
+
+    public WhitesourceService(final String agent, final String agentVersion, final String serviceUrl, boolean setProxy,
+                              int connectionTimeoutMinutes){
+        this(agent, agentVersion, null, serviceUrl, setProxy, connectionTimeoutMinutes);
+    }
+
     /* --- Public methods --- */
 
     /**
