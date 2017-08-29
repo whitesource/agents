@@ -36,54 +36,31 @@ public class DependencyInfo implements Serializable {
    /* --- Members --- */
 
     private String groupId;
-
     private String artifactId;
-
     private String version;
-
     private String type;
-
     private String classifier;
-
     private String scope;
-
     private String sha1;
-
     private String headerSha1;
-
     private String footerSha1;
-
     private String utf8Sha1;
-
     private String fullHash;
-
     private String mostSigBitsHash;
-
     private String leastSigBitsHash;
-
     private String commentlessSha1;
-
     private String noNewLinesSha1;
-
     private String otherPlatformSha1;
-
     private String systemPath;
-
     private boolean optional;
-
     private Collection<DependencyInfo> children;
-
     private Collection<ExclusionInfo> exclusions;
-
     private Collection<String> licenses;
-
     private Collection<CopyrightInfo> copyrights;
-
     private Date lastModified;
-
 	private String filename;
-
     private DependencyType dependencyType;
+    private String md5;
 
     /* --- Constructors --- */
 
@@ -120,7 +97,6 @@ public class DependencyInfo implements Serializable {
         this();
         this.sha1 = sha1;
     }
-
 
     /**
      * Constructor
@@ -418,5 +394,13 @@ public class DependencyInfo implements Serializable {
 
     public void setDependencyType(DependencyType dependencyType) {
         this.dependencyType = dependencyType;
+    }
+
+    public String getMd5() {
+        return md5;
+    }
+
+    public void setMd5(String md5) {
+        this.md5 = md5;
     }
 }
