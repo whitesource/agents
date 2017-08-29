@@ -61,19 +61,23 @@ public final class ChecksumUtils {
     /* --- Static methods --- */
 
     /**
-     * Calculates the given file's SHA-1 hash code.
+     * Calculates the given file's algorithm hash code.
      *
      * @param resourceFile File to calculate
      *
-     * @return Calculated SHA-1 for the given file.
+     * @return Calculated checksum for the given file.
      *
      * @throws IOException on file reading errors.
-     * @throws IllegalStateException when no algorithm for SHA-1 can be found.
+     * @throws IllegalStateException when no algorithm for checksum can be found.
      */
     public static String calculateSHA1(File resourceFile) throws IOException {
+        return calculateHash(resourceFile, HashAlgorithm.SHA1);
+    }
+
+    public static String calculateHash(File resourceFile, HashAlgorithm algorithm) throws IOException{
         MessageDigest messageDigest;
         try {
-            messageDigest = MessageDigest.getInstance("SHA-1");
+            messageDigest = MessageDigest.getInstance(algorithm.getAlgorithm());
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException(e.getMessage(), e);
         }
@@ -87,7 +91,7 @@ public final class ChecksumUtils {
                 len = fis.read(buffer, 0, BUFFER_SIZE);
             }
         } finally {
-            try{
+            try {
                 fis.close();
             } catch (IOException e) {
                 // ignore
@@ -170,16 +174,6 @@ public final class ChecksumUtils {
 
     /* --- Private static methods --- */
 
-    private static void deleteFile(File file) {
-        if (file != null) {
-            try {
-                FileUtils.forceDelete(file);
-            } catch (IOException e) {
-                // do nothing
-            }
-        }
-    }
-
     private static String toHex(byte[] bytes) {
         StringBuilder sb = new StringBuilder(bytes.length * 2);
         for (byte aByte : bytes) {
@@ -191,4 +185,15 @@ public final class ChecksumUtils {
         }
         return sb.toString();
     }
+
+    private static void deleteFile(File file) {
+        if (file != null) {
+            try {
+                FileUtils.forceDelete(file);
+            } catch (IOException e) {
+                // do nothing
+            }
+        }
+    }
+
 }
