@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2012 White Source Ltd.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,9 +18,7 @@ package org.whitesource.agent.api.model;
 import org.whitesource.agent.api.APIConstants;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 
 /**
  * WhiteSource Model for a project's dependency
@@ -29,11 +27,11 @@ import java.util.Date;
  */
 public class DependencyInfo implements Serializable {
 
-   /* --- Static members --- */
+    /* --- Static members --- */
 
     private static final long serialVersionUID = -6212622409560068635L;
 
-   /* --- Members --- */
+    /* --- Members --- */
 
     private String groupId;
     private String artifactId;
@@ -58,9 +56,10 @@ public class DependencyInfo implements Serializable {
     private Collection<String> licenses;
     private Collection<CopyrightInfo> copyrights;
     private Date lastModified;
-	private String filename;
+    private String filename;
     private DependencyType dependencyType;
     private String md5;
+    private DependencyHintsInfo hints;
 
     /* --- Constructors --- */
 
@@ -68,10 +67,10 @@ public class DependencyInfo implements Serializable {
      * Default constructor
      */
     public DependencyInfo() {
-        children = new ArrayList<DependencyInfo>();
-        exclusions = new ArrayList<ExclusionInfo>();
-        licenses = new ArrayList<String>();
-        copyrights = new ArrayList<CopyrightInfo>();
+        children = new ArrayList<>();
+        exclusions = new ArrayList<>();
+        licenses = new ArrayList<>();
+        copyrights = new ArrayList<>();
     }
 
     /**
@@ -150,7 +149,7 @@ public class DependencyInfo implements Serializable {
 
         if (sha1 != null) {
             return sha1.equals(that.sha1);
-        } else if (that.sha1 != null ) {
+        } else if (that.sha1 != null) {
             return false;
         }
         if (optional != that.optional) return false;
@@ -402,5 +401,13 @@ public class DependencyInfo implements Serializable {
 
     public void setMd5(String md5) {
         this.md5 = md5;
+    }
+
+    public DependencyHintsInfo getHints() {
+        return hints;
+    }
+
+    public void setHints(DependencyHintsInfo hints) {
+        this.hints = hints;
     }
 }
