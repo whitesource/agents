@@ -15,6 +15,7 @@
  */
 package org.whitesource.agent.api;
 
+import org.apache.commons.lang.StringUtils;
 import org.boris.pecoff4j.PE;
 import org.boris.pecoff4j.ResourceDirectory;
 import org.boris.pecoff4j.ResourceEntry;
@@ -27,6 +28,15 @@ import org.boris.pecoff4j.resources.VersionInfo;
 import org.boris.pecoff4j.util.ResourceHelper;
 import org.whitesource.agent.api.model.DependencyHintsInfo;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.MessageFormat;
+import java.util.logging.Logger;
+
+import static com.sun.jna.Platform.isWindows;
+
 /**
  * Utility class for populating hint data.
  *
@@ -36,13 +46,28 @@ public final class HintUtils {
 
     /* --- Static members --- */
 
-    // hints for .NET (dll, exe)
-    public static final String COMPANY_NAME = "CompanyName";
-    public static final String FILE_VERSION = "FileVersion";
-    public static final String COPYRIGHT = "LegalCopyright";
-    public static final String ORIGINAL_FILE_NAME = "OriginalFilename";
-    public static final String PRODUCT_NAME = "ProductName";
-    public static final String PRODUCT_VERSION = "ProductVersion";
+    private static final Logger logger = Logger.getLogger(HintUtils.class.getName());
+
+    // patterns
+    private static final String PORTABLE_EXECUTABLES_PATTERN = ".*\\.dll|.*\\.exe|.*\\.msi";
+    private static final String COMMA_SPLIT = ",";
+    private static final String EQUAL_SPLIT = "=";
+    private static final String AUTH_CODE_SIGNATURE_ISSUER_PATTERN = "(Get-AuthenticodeSignature {0}).SignerCertificate.IssuerName";
+    private static final String AUTH_CODE_SIGNATURE_SUBJECT_PATTERN = "(Get-AuthenticodeSignature {0}).SignerCertificate.Subject";
+    private static final String POWER_SHELL = "powershell.exe";
+    private static final String POWER_SHELL_COMMAND = "-Command";
+
+    // PE hints for .NET (dll, exe)
+    private static final String COMPANY_NAME = "CompanyName";
+    private static final String FILE_VERSION = "FileVersion";
+    private static final String COPYRIGHT = "LegalCopyright";
+    private static final String ORIGINAL_FILE_NAME = "OriginalFilename";
+    private static final String PRODUCT_NAME = "ProductName";
+    private static final String PRODUCT_VERSION = "ProductVersion";
+    private static final String MISSING_VALUE = "N/A";
+
+    // Signature hint for .NET (dll, exe)
+    private static final String COMMON_NAME_PARAMETER = "CN";
 
     /* --- Constructors --- */
 
@@ -55,7 +80,19 @@ public final class HintUtils {
 
     /* --- Static methods --- */
 
-    public static DependencyHintsInfo getPortableExecutableHints(String filename) {
+    public static DependencyHintsInfo getHints(String filename) {
+        DependencyHintsInfo hints = null;
+        if (StringUtils.isNotBlank(filename)) {
+            if (filename.matches(PORTABLE_EXECUTABLES_PATTERN)) {
+                hints = getPortableExecutableHints(filename);
+            }
+        }
+        return hints;
+    }
+
+    /* --- Private methods --- */
+
+    private static DependencyHintsInfo getPortableExecutableHints(String filename) {
         DependencyHintsInfo hints = null;
         try {
             // parse PE (Portable Executable) file
@@ -67,35 +104,69 @@ public final class HintUtils {
             StringFileInfo stringFileInfo = version.getStringFileInfo();
             StringTable table = stringFileInfo.getTable(0);
 
-            // collect hints
+            // collect general details
             hints = new DependencyHintsInfo();
             for (int i = 0; i < table.getCount(); i++) {
                 String value = table.getString(i).getValue();
-                switch (table.getString(i).getKey()) {
-                    case COMPANY_NAME:
-                        hints.setCompanyName(value);
-                        break;
-                    case FILE_VERSION:
-                        hints.setFileVersion(value);
-                        break;
-                    case COPYRIGHT:
-                        hints.setCopyright(value);
-                        break;
-                    case ORIGINAL_FILE_NAME:
-                        hints.setOriginalFilename(value);
-                        break;
-                    case PRODUCT_NAME:
-                        hints.setProductName(value);
-                        break;
-                    case PRODUCT_VERSION:
-                        hints.setProductVersion(value);
-                        break;
-                    default: break;
+                if (StringUtils.isNotBlank(value) && !value.equals(MISSING_VALUE)) {
+                    switch (table.getString(i).getKey()) {
+                        case COMPANY_NAME:
+                            hints.setCompanyName(value);
+                            break;
+                        case FILE_VERSION:
+                            hints.setFileVersion(value);
+                            break;
+                        case COPYRIGHT:
+                            hints.setCopyright(value);
+                            break;
+                        case ORIGINAL_FILE_NAME:
+                            hints.setOriginalFilename(value);
+                            break;
+                        case PRODUCT_NAME:
+                            hints.setProductName(value);
+                            break;
+                        case PRODUCT_VERSION:
+                            hints.setProductVersion(value);
+                            break;
+                        default: break;
+                    }
+                }
+            }
+
+            if (isWindows()) {
+                hints.setIssuerCommonName(executePowerShellCommand(MessageFormat.format(AUTH_CODE_SIGNATURE_ISSUER_PATTERN, filename)));
+                hints.setSubjectCommonName(executePowerShellCommand(MessageFormat.format(AUTH_CODE_SIGNATURE_SUBJECT_PATTERN, filename)));
+            }
+
+            // TODO handle msi
+
+        } catch (Exception e) {
+            // do nothing
+        }
+        return hints;
+    }
+
+    // Get the signature from file by execute process from power shell
+    private static String executePowerShellCommand(String command) throws IOException {
+        try {
+            String[] commandList = {POWER_SHELL, POWER_SHELL_COMMAND, command};
+            ProcessBuilder pb = new ProcessBuilder(commandList);
+            Process process = pb.start();
+
+            InputStream is = process.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+            BufferedReader br = new BufferedReader(isr);
+
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.startsWith(COMMON_NAME_PARAMETER)) {
+                    String[] values = line.split(COMMA_SPLIT);
+                    return values[0].substring(values[0].indexOf(EQUAL_SPLIT) + 1);
                 }
             }
         } catch (Exception e) {
             // do nothing
         }
-        return hints;
+        return null;
     }
 }

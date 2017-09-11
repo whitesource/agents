@@ -1,18 +1,19 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.whitesource</groupId>
-		<artifactId>wss-agent-parent</artifactId>
-		<version>2.3.9-SNAPSHOT</version>
-	</parent>
-	<artifactId>wss-agent-api</artifactId>
-	<packaging>jar</packaging>
-	
-	<name>API bindings</name>
-	<description>Java bindings for White Source API</description>
-	
-	<dependencies>
+    <parent>
+        <groupId>org.whitesource</groupId>
+        <artifactId>wss-agent-parent</artifactId>
+        <version>2.3.9-SNAPSHOT</version>
+    </parent>
+    <artifactId>wss-agent-api</artifactId>
+    <packaging>jar</packaging>
+
+    <name>API bindings</name>
+    <description>Java bindings for White Source API</description>
+
+    <dependencies>
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
@@ -28,47 +29,54 @@
             <artifactId>commons-io</artifactId>
         </dependency>
 
-		<!-- Extract .NET metadata -->
-		<dependency>
-			<groupId>org.boris</groupId>
-			<artifactId>pecoff4j</artifactId>
-			<version>0.0.2.1</version>
-		</dependency>
+        <!-- Extract .NET metadata -->
+        <dependency>
+            <groupId>org.boris</groupId>
+            <artifactId>pecoff4j</artifactId>
+            <version>0.0.2.1</version>
+        </dependency>
 
-		<!-- !REMOVE AFTER CHECKS -->
-		<!-- Necessary for DirectoryScanner for globbing the dependency directory -->
-		<dependency>
-			<groupId>org.apache.ant</groupId>
-			<artifactId>ant</artifactId>
-			<version>1.9.4</version>
-		</dependency>
+        <!-- Get current operating system-->
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna-platform</artifactId>
+            <version>4.1.0</version>
+        </dependency>
 
-		<!-- Tests -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-	
-	<profiles>
-		<profile>
-			<id>Release</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<plugins>
+        <!-- !REMOVE AFTER CHECKS -->
+        <!-- Necessary for DirectoryScanner for globbing the dependency directory -->
+        <dependency>
+            <groupId>org.apache.ant</groupId>
+            <artifactId>ant</artifactId>
+            <version>1.9.4</version>
+        </dependency>
+
+        <!-- Tests -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>Release</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
                     <plugin>
-						<groupId>com.github.github</groupId>
-						<artifactId>site-maven-plugin</artifactId>
-						<configuration>
-							<path>wss-agent-api</path>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+                        <groupId>com.github.github</groupId>
+                        <artifactId>site-maven-plugin</artifactId>
+                        <configuration>
+                            <path>wss-agent-api</path>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

@@ -38,6 +38,10 @@ public class DependencyHintsInfo implements Serializable {
     private String productName;
     private String productVersion;
 
+    // signature details
+    private String issuerCommonName;
+    private String subjectCommonName;
+
     /* --- Constructors --- */
 
     public DependencyHintsInfo() {
@@ -93,4 +97,19 @@ public class DependencyHintsInfo implements Serializable {
         this.productVersion = productVersion;
     }
 
+    public String getIssuerCommonName() {
+        return issuerCommonName;
+    }
+
+    public void setIssuerCommonName(String issuerCommonName) {
+        this.issuerCommonName = issuerCommonName;
+    }
+
+    public String getSubjectCommonName() {
+        return subjectCommonName;
+    }
+
+    public void setSubjectCommonName(String subjectCommonName) {
+        this.subjectCommonName = subjectCommonName;
+    }
 }

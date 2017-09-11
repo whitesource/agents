@@ -21,6 +21,7 @@ import org.whitesource.agent.api.model.DependencyHintsInfo;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 /**
@@ -32,21 +33,59 @@ public class HintUtilsTest {
 
     /* --- Static members --- */
 
-    private static final String ZED_GRAPH_DLL = "/pecoff4j/ZedGraph.dll";
+    private static final String DLL_FILE = "/pecoff4j/Signature.dll";
+    private static final String EXE_FILE = "/pecoff4j/java-rmi.exe";
+    private static final String MSI_FILE = "/pecoff4j/3ba03ffe.msi";
+    private static final String JAR_FILE = "/pecoff4j/aopalliance-1.0.jar";
+    private static final String UTF_8 = "utf-8";
 
     /* --- Test methods --- */
 
     @Test
-    public void testDependencyHintsInfo() throws IOException {
-        File dllFile = new File(URLDecoder.decode(getClass().getResource(ZED_GRAPH_DLL).getFile(), "utf-8"));
-        DependencyHintsInfo dependencyHintsInfo = HintUtils.getPortableExecutableHints(dllFile.getPath());
+    public void testGetHintsDll() throws IOException {
+        File file = getResourceFile(DLL_FILE);
+        DependencyHintsInfo dependencyHintsInfo = HintUtils.getHints(file.getPath());
         Assert.assertNotNull(dependencyHintsInfo);
-        Assert.assertEquals("John Champion, et al.", dependencyHintsInfo.getCompanyName());
-        Assert.assertEquals("5.1.7.430", dependencyHintsInfo.getFileVersion());
-        Assert.assertEquals("Copyright © 2003-2007 John Champion", dependencyHintsInfo.getCopyright());
-        Assert.assertEquals("ZedGraph.dll", dependencyHintsInfo.getOriginalFilename());
-        Assert.assertEquals("ZedGraph Library", dependencyHintsInfo.getProductName());
-        Assert.assertEquals("5.1.7.430", dependencyHintsInfo.getProductVersion());
+        Assert.assertEquals("Microsoft Corporation", dependencyHintsInfo.getCompanyName());
+        Assert.assertEquals("6.1.40302.0", dependencyHintsInfo.getFileVersion());
+        Assert.assertEquals("© Microsoft Corporation.  All rights reserved.", dependencyHintsInfo.getCopyright());
+        Assert.assertEquals("EntityFramework.SqlServer.dll", dependencyHintsInfo.getOriginalFilename());
+        Assert.assertEquals("Microsoft Entity Framework", dependencyHintsInfo.getProductName());
+        Assert.assertEquals("6.1.3-40302", dependencyHintsInfo.getProductVersion());
+        Assert.assertEquals("Microsoft Code Signing PCA",dependencyHintsInfo.getIssuerCommonName());
+        Assert.assertEquals("Microsoft Corporation",dependencyHintsInfo.getSubjectCommonName());
     }
 
+    @Test
+    public void testGetHintsExe() throws IOException {
+        File file = getResourceFile(EXE_FILE);
+        DependencyHintsInfo dependencyHintsInfo = HintUtils.getHints(file.getPath());
+        Assert.assertNotNull(dependencyHintsInfo);
+        Assert.assertEquals(null, dependencyHintsInfo.getCompanyName());
+        Assert.assertEquals("8.0.1520.6", dependencyHintsInfo.getFileVersion());
+        Assert.assertEquals("Copyright © 2017", dependencyHintsInfo.getCopyright());
+        Assert.assertEquals("java-rmi.exe", dependencyHintsInfo.getOriginalFilename());
+        Assert.assertEquals("OpenJDK Platform 8", dependencyHintsInfo.getProductName());
+        Assert.assertEquals("8.0.1520.6", dependencyHintsInfo.getProductVersion());
+    }
+
+    @Test
+    public void testGetHintsMsi() throws IOException {
+        File file = getResourceFile(MSI_FILE);
+        DependencyHintsInfo dependencyHintsInfo = HintUtils.getHints(file.getPath());
+        Assert.assertNotNull(dependencyHintsInfo);
+    }
+
+    @Test
+    public void testGetHintsJar() throws IOException {
+        File file = getResourceFile(JAR_FILE);
+        DependencyHintsInfo dependencyHintsInfo = HintUtils.getHints(file.getPath());
+        Assert.assertNull(dependencyHintsInfo);
+    }
+
+    /* --- Private methods --- */
+
+    private File getResourceFile(String filename) throws UnsupportedEncodingException {
+        return new File(URLDecoder.decode(getClass().getResource(filename).getFile(), UTF_8));
+    }
 }
