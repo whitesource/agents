@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.whitesource.agent.api;
+package org.whitesource.agent.hash;
 
+import com.sun.jna.Platform;
 import org.apache.commons.lang.StringUtils;
 import org.boris.pecoff4j.PE;
 import org.boris.pecoff4j.ResourceDirectory;
@@ -34,8 +35,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.MessageFormat;
 import java.util.logging.Logger;
-
-import static com.sun.jna.Platform.isWindows;
 
 /**
  * Utility class for populating hint data.
@@ -133,7 +132,7 @@ public final class HintUtils {
                 }
             }
 
-            if (isWindows()) {
+            if (Platform.isWindows()) {
                 hints.setIssuerCommonName(executePowerShellCommand(MessageFormat.format(AUTH_CODE_SIGNATURE_ISSUER_PATTERN, filename)));
                 hints.setSubjectCommonName(executePowerShellCommand(MessageFormat.format(AUTH_CODE_SIGNATURE_SUBJECT_PATTERN, filename)));
             }

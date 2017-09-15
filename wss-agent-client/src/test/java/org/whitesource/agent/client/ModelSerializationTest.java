@@ -187,7 +187,7 @@ public class ModelSerializationTest {
             assertEquals(expectedDependency.getScope(), dependency.getScope());
             assertEquals(expectedDependency.getSha1(), dependency.getSha1());
             assertEquals(expectedDependency.getSystemPath(), dependency.getSystemPath());
-            assertEquals(expectedDependency.getOptional(), dependency.getOptional());
+            assertEquals(expectedDependency.isOptional(), dependency.getOptional());
             testExclusions(dependency.getExclusions(), expectedDependency.getExclusions());
         }
     }

@@ -39,8 +39,8 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.whitesource.agent.api.APIConstants;
-import org.whitesource.agent.api.ZipUtils;
 import org.whitesource.agent.api.dispatch.*;
+import org.whitesource.agent.hash.ZipUtils;
 
 import java.io.IOException;
 import java.net.*;

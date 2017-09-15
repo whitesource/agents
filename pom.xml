@@ -61,13 +61,13 @@
 
     <modules>
         <module>wss-agent-api</module>
+        <module>wss-agent-hash-calculator</module>
         <module>wss-agent-client</module>
         <module>wss-agent-report</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
-
             <!-- Utilities -->
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
@@ -78,6 +78,11 @@
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>${gson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-lang</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>2.6</version>
             </dependency>
 
             <!-- Testing -->

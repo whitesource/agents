@@ -15,6 +15,7 @@
  */
 package org.whitesource.agent.api.model;
 
+import org.apache.commons.lang.StringUtils;
 import org.whitesource.agent.api.APIConstants;
 
 import java.io.Serializable;
@@ -58,8 +59,8 @@ public class DependencyInfo implements Serializable {
     private Date lastModified;
     private String filename;
     private DependencyType dependencyType;
-    private String md5;
     private DependencyHintsInfo hints;
+    private Map<ChecksumType, String> checksums;
 
     /* --- Constructors --- */
 
@@ -71,6 +72,7 @@ public class DependencyInfo implements Serializable {
         exclusions = new ArrayList<>();
         licenses = new ArrayList<>();
         copyrights = new ArrayList<>();
+        checksums = new TreeMap<>();
     }
 
     /**
@@ -94,7 +96,7 @@ public class DependencyInfo implements Serializable {
      */
     public DependencyInfo(String sha1) {
         this();
-        this.sha1 = sha1;
+        setSha1(sha1);
     }
 
     /**
@@ -105,7 +107,7 @@ public class DependencyInfo implements Serializable {
      */
     public DependencyInfo(String sha1, String fullHash) {
         this(sha1);
-        this.fullHash = fullHash;
+        setFullHash(fullHash);
     }
 
     /**
@@ -118,8 +120,8 @@ public class DependencyInfo implements Serializable {
      */
     public DependencyInfo(String sha1, String fullHash, String mostSigBitsHash, String leastSigBitsHash) {
         this(sha1, fullHash);
-        this.mostSigBitsHash = mostSigBitsHash;
-        this.leastSigBitsHash = leastSigBitsHash;
+        setMostSigBitsHash(mostSigBitsHash);
+        setLeastSigBitsHash(leastSigBitsHash);
     }
 
    /* --- Overridden methods --- */
@@ -193,6 +195,12 @@ public class DependencyInfo implements Serializable {
         return copyrights != null && !copyrights.isEmpty();
     }
 
+    public void addChecksum(ChecksumType checksumType, String checksum) {
+        if (StringUtils.isNotBlank(checksum)) {
+            checksums.put(checksumType, checksum);
+        }
+    }
+
    /* --- Getters / Setters --- */
 
     public String getGroupId() {
@@ -249,6 +257,7 @@ public class DependencyInfo implements Serializable {
 
     public void setSha1(String sha1) {
         this.sha1 = sha1;
+        addChecksum(ChecksumType.SHA1, sha1);
     }
 
     public String getSystemPath() {
@@ -268,6 +277,10 @@ public class DependencyInfo implements Serializable {
     }
 
     public boolean getOptional() {
+        return optional;
+    }
+
+    public boolean isOptional() {
         return optional;
     }
 
@@ -329,6 +342,7 @@ public class DependencyInfo implements Serializable {
 
     public void setUtf8Sha1(String utf8Sha1) {
         this.utf8Sha1 = utf8Sha1;
+        addChecksum(ChecksumType.SHA1_UTF8, utf8Sha1);
     }
 
     public String getCommentlessSha1() {
@@ -337,6 +351,7 @@ public class DependencyInfo implements Serializable {
 
     public void setCommentlessSha1(String commentlessSha1) {
         this.commentlessSha1 = commentlessSha1;
+        addChecksum(ChecksumType.SHA1_NO_COMMENTS, commentlessSha1);
     }
 
     public String getNoNewLinesSha1() {
@@ -353,6 +368,7 @@ public class DependencyInfo implements Serializable {
 
     public void setOtherPlatformSha1(String otherPlatformSha1) {
         this.otherPlatformSha1 = otherPlatformSha1;
+        addChecksum(ChecksumType.SHA1_OTHER_PLATFORM, otherPlatformSha1);
     }
 
     public String getFullHash() {
@@ -361,6 +377,7 @@ public class DependencyInfo implements Serializable {
 
     public void setFullHash(String fullHash) {
         this.fullHash = fullHash;
+        addChecksum(ChecksumType.SHA1_SUPER_HASH, fullHash);
     }
 
     public String getMostSigBitsHash() {
@@ -369,6 +386,7 @@ public class DependencyInfo implements Serializable {
 
     public void setMostSigBitsHash(String mostSigBitsHash) {
         this.mostSigBitsHash = mostSigBitsHash;
+        addChecksum(ChecksumType.SHA1_SUPER_HASH_MSB, mostSigBitsHash);
     }
 
     public String getLeastSigBitsHash() {
@@ -377,6 +395,7 @@ public class DependencyInfo implements Serializable {
 
     public void setLeastSigBitsHash(String leastSigBitsHash) {
         this.leastSigBitsHash = leastSigBitsHash;
+        addChecksum(ChecksumType.SHA1_SUPER_HASH_LSB, leastSigBitsHash);
     }
 
     public String getFilename() {
@@ -395,19 +414,19 @@ public class DependencyInfo implements Serializable {
         this.dependencyType = dependencyType;
     }
 
-    public String getMd5() {
-        return md5;
-    }
-
-    public void setMd5(String md5) {
-        this.md5 = md5;
-    }
-
     public DependencyHintsInfo getHints() {
         return hints;
     }
 
     public void setHints(DependencyHintsInfo hints) {
         this.hints = hints;
+    }
+
+    public Map<ChecksumType, String> getChecksums() {
+        return checksums;
+    }
+
+    public void setChecksums(Map<ChecksumType, String> checksums) {
+        this.checksums = checksums;
     }
 }

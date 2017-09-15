@@ -1,4 +1,4 @@
-package org.whitesource.agent.api;
+package org.whitesource.agent.hash;
 
 import org.apache.commons.lang.StringUtils;
 

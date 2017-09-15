@@ -17,38 +17,6 @@
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
-            <version>2.6</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.10</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
-
-        <!-- Extract .NET metadata -->
-        <dependency>
-            <groupId>org.boris</groupId>
-            <artifactId>pecoff4j</artifactId>
-            <version>0.0.2.1</version>
-        </dependency>
-
-        <!-- Get current operating system-->
-        <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna-platform</artifactId>
-            <version>4.1.0</version>
-        </dependency>
-
-        <!-- !REMOVE AFTER CHECKS -->
-        <!-- Necessary for DirectoryScanner for globbing the dependency directory -->
-        <dependency>
-            <groupId>org.apache.ant</groupId>
-            <artifactId>ant</artifactId>
-            <version>1.9.4</version>
         </dependency>
 
         <!-- Tests -->

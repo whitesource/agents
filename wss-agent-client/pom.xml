@@ -14,11 +14,15 @@
     <description>Java client implementation for the API</description>
 
     <dependencies>
-
         <!-- White Source -->
         <dependency>
             <groupId>org.whitesource</groupId>
             <artifactId>wss-agent-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.whitesource</groupId>
+            <artifactId>wss-agent-hash-calculator</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -67,7 +71,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-
     </dependencies>
 
     <build>

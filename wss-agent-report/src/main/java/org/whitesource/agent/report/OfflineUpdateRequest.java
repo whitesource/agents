@@ -17,8 +17,8 @@ package org.whitesource.agent.report;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.whitesource.agent.api.ZipUtils;
 import org.whitesource.agent.api.dispatch.UpdateInventoryRequest;
+import org.whitesource.agent.hash.ZipUtils;
 
 import java.io.File;
 import java.io.IOException;
