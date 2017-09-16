@@ -30,7 +30,6 @@ import org.boris.pecoff4j.util.ResourceHelper;
 import org.whitesource.agent.api.model.DependencyHintsInfo;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.MessageFormat;
@@ -146,7 +145,7 @@ public final class HintUtils {
     }
 
     // Get the signature from file by execute process from power shell
-    private static String executePowerShellCommand(String command) throws IOException {
+    private static String executePowerShellCommand(String command) {
         try {
             String[] commandList = {POWER_SHELL, POWER_SHELL_COMMAND, command};
             ProcessBuilder pb = new ProcessBuilder(commandList);
