@@ -31,6 +31,10 @@ import java.io.IOException;
  */
 public class OfflineUpdateRequest {
 
+    /* --- Static members --- */
+
+    public static final String UTF_8 = "UTF-8";
+
     /* --- Members --- */
 
     private UpdateInventoryRequest request;
@@ -82,7 +86,7 @@ public class OfflineUpdateRequest {
 
         // write to file
         File requestFile = new File(workDir, "update-request.txt");
-        FileUtils.writeStringToFile(requestFile, json, "UTF-8");
+        FileUtils.writeStringToFile(requestFile, json, UTF_8);
         return requestFile;
     }
 }
