@@ -15,6 +15,7 @@
  */
 package org.whitesource.agent.hash;
 
+import com.sun.jna.Platform;
 import junit.framework.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -53,8 +54,14 @@ public class HintUtilsTest {
         Assert.assertEquals("EntityFramework.SqlServer.dll", dependencyHintsInfo.getOriginalFilename());
         Assert.assertEquals("Microsoft Entity Framework", dependencyHintsInfo.getProductName());
         Assert.assertEquals("6.1.3-40302", dependencyHintsInfo.getProductVersion());
-        Assert.assertEquals("Microsoft Code Signing PCA",dependencyHintsInfo.getIssuerCommonName());
-        Assert.assertEquals("Microsoft Corporation",dependencyHintsInfo.getSubjectCommonName());
+
+        if (Platform.isWindows()) {
+            Assert.assertEquals("Microsoft Code Signing PCA", dependencyHintsInfo.getIssuerCommonName());
+            Assert.assertEquals("Microsoft Corporation", dependencyHintsInfo.getSubjectCommonName());
+        } else {
+            Assert.assertNull(dependencyHintsInfo.getIssuerCommonName());
+            Assert.assertNull(dependencyHintsInfo.getSubjectCommonName());
+        }
     }
 
     @Test

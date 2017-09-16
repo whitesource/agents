@@ -15,6 +15,7 @@
  */
 package org.whitesource.agent.hash;
 
+import junit.framework.Assert;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.whitesource.agent.api.model.ChecksumType;
@@ -65,9 +66,9 @@ public class JavaScriptHashCalculatorTest {
         String normalSha1 = hashCalculator.calculateByteArraySHA1(fileBytes);
         Map<ChecksumType, String> javascriptChecksums = hashCalculator.calculateJavaScriptHashes(fileBytes);
 
-        assertEquals(SHA1, normalSha1);
-        assertEquals(NO_HEADER_SHA1, javascriptChecksums.get(ChecksumType.SHA1_NO_HEADER));
-        assertEquals(NO_COMMENTS_SUPER_HASH, javascriptChecksums.get(ChecksumType.SHA1_NO_COMMENTS_SUPER_HASH));
+        Assert.assertEquals(SHA1, normalSha1);
+        Assert.assertEquals(NO_HEADER_SHA1, javascriptChecksums.get(ChecksumType.SHA1_NO_HEADER));
+        Assert.assertEquals(NO_COMMENTS_SUPER_HASH, javascriptChecksums.get(ChecksumType.SHA1_NO_COMMENTS_SUPER_HASH));
     }
 
 }

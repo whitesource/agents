@@ -15,13 +15,12 @@
  */
 package org.whitesource.agent.hash;
 
+import junit.framework.Assert;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URLDecoder;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author Edo.Shor
@@ -46,7 +45,8 @@ public class ChecksumUtilsTest {
         String filePath = getClass().getResource(EMPTY_FILE_TXT).getFile();
         File file = new File(URLDecoder.decode(filePath, UTF_8));
         String sha1 = ChecksumUtils.calculateSHA1(file);
-        assertEquals(sha1, EMPTY_FILE_SHA1);
+        System.out.println(sha1);
+        Assert.assertEquals(sha1, EMPTY_FILE_SHA1);
     }
 
     @Test
@@ -54,7 +54,8 @@ public class ChecksumUtilsTest {
         String filePath = getClass().getResource(NON_EMPTY_FILE_TXT).getFile();
         File file = new File(URLDecoder.decode(filePath, UTF_8));
         String sha1 = ChecksumUtils.calculateSHA1(file);
-        assertEquals(sha1, NON_EMPTY_FILE_SHA1);
+        System.out.println(sha1);
+        Assert.assertEquals(sha1, NON_EMPTY_FILE_SHA1);
     }
 
     @Test
@@ -62,7 +63,8 @@ public class ChecksumUtilsTest {
         String filePath = getClass().getResource(EMPTY_FILE_TXT).getFile();
         File file = new File(URLDecoder.decode(filePath, UTF_8));
         String md5 = ChecksumUtils.calculateHash(file, HashAlgorithm.MD5);
-        assertEquals(md5, EMPTY_FILE_MD5);
+        System.out.println(md5);
+        Assert.assertEquals(md5, EMPTY_FILE_MD5);
     }
 
     @Test
@@ -70,7 +72,8 @@ public class ChecksumUtilsTest {
         String filePath = getClass().getResource(NON_EMPTY_FILE_TXT).getFile();
         File file = new File(URLDecoder.decode(filePath, UTF_8));
         String md5 = ChecksumUtils.calculateHash(file, HashAlgorithm.MD5);
-        assertEquals(md5, NON_EMPTY_FILE_MD5);
+        System.out.println(md5);
+        Assert.assertEquals(md5, NON_EMPTY_FILE_MD5);
     }
 
     @Test
