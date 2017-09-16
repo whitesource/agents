@@ -15,6 +15,7 @@
  */
 package org.whitesource.agent.hash;
 
+import com.sun.jna.Platform;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -22,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URLDecoder;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 /**
@@ -55,11 +55,11 @@ public class HashCalculatorTest {
         filePath = getClass().getResource("/non-empty-file.txt").getFile();
         file = new File(URLDecoder.decode(filePath, "utf-8"));
         sha1 = hashCalculator.calculateSHA1(file);
-//        if (isWindows()) {
+        if (Platform.isWindows()) {
             Assert.assertEquals(WINDOWS_NON_EMPTY_FILE_SHA1, sha1);
-//        } else {
-//            Assert.assertEquals(UNIX_NON_EMPTY_FILE_SHA1, sha1);
-//        }
+        } else {
+            Assert.assertEquals(UNIX_NON_EMPTY_FILE_SHA1, sha1);
+        }
     }
 
     @Test

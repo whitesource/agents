@@ -15,6 +15,7 @@
  */
 package org.whitesource.agent.hash;
 
+import com.sun.jna.Platform;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -30,9 +31,11 @@ public class ChecksumUtilsTest {
     /* --- Static members --- */
 
     private static final String EMPTY_FILE_SHA1 = "da39a3ee5e6b4b0d3255bfef95601890afd80709";
-    private static final String NON_EMPTY_FILE_SHA1 = "7a3a53d8ddca62e9df1e04b56087bbbf852fe0d3";
+    private static final String NON_EMPTY_FILE_WINDOWS_SHA1 = "7a3a53d8ddca62e9df1e04b56087bbbf852fe0d3";
+    private static final String NON_EMPTY_FILE_UNIX_SHA1 = "e6f0001627a15d3a2b7bd8e1040649a828a13b9d";
     private static final String EMPTY_FILE_MD5 = "d41d8cd98f00b204e9800998ecf8427e";
-    private static final String NON_EMPTY_FILE_MD5 = "a14be48c41c3dc60bacc578941c42ad2";
+    private static final String NON_EMPTY_FILE_WINDOWS_MD5 = "a14be48c41c3dc60bacc578941c42ad2";
+    private static final String NON_EMPTY_FILE_UNIX_MD5 = "b5c9feed84dbcbeb9d600959f2c87d07";
 
     private static final String EMPTY_FILE_TXT = "/empty-file.txt";
     private static final String NON_EMPTY_FILE_TXT = "/non-empty-file.txt";
@@ -45,7 +48,6 @@ public class ChecksumUtilsTest {
         String filePath = getClass().getResource(EMPTY_FILE_TXT).getFile();
         File file = new File(URLDecoder.decode(filePath, UTF_8));
         String sha1 = ChecksumUtils.calculateSHA1(file);
-        System.out.println(sha1);
         Assert.assertEquals(sha1, EMPTY_FILE_SHA1);
     }
 
@@ -54,8 +56,11 @@ public class ChecksumUtilsTest {
         String filePath = getClass().getResource(NON_EMPTY_FILE_TXT).getFile();
         File file = new File(URLDecoder.decode(filePath, UTF_8));
         String sha1 = ChecksumUtils.calculateSHA1(file);
-        System.out.println(sha1);
-        Assert.assertEquals(sha1, NON_EMPTY_FILE_SHA1);
+        if (Platform.isWindows()) {
+            Assert.assertEquals(sha1, NON_EMPTY_FILE_WINDOWS_SHA1);
+        } else {
+            Assert.assertEquals(sha1, NON_EMPTY_FILE_UNIX_SHA1);
+        }
     }
 
     @Test
@@ -63,7 +68,6 @@ public class ChecksumUtilsTest {
         String filePath = getClass().getResource(EMPTY_FILE_TXT).getFile();
         File file = new File(URLDecoder.decode(filePath, UTF_8));
         String md5 = ChecksumUtils.calculateHash(file, HashAlgorithm.MD5);
-        System.out.println(md5);
         Assert.assertEquals(md5, EMPTY_FILE_MD5);
     }
 
@@ -72,8 +76,11 @@ public class ChecksumUtilsTest {
         String filePath = getClass().getResource(NON_EMPTY_FILE_TXT).getFile();
         File file = new File(URLDecoder.decode(filePath, UTF_8));
         String md5 = ChecksumUtils.calculateHash(file, HashAlgorithm.MD5);
-        System.out.println(md5);
-        Assert.assertEquals(md5, NON_EMPTY_FILE_MD5);
+        if (Platform.isWindows()) {
+            Assert.assertEquals(NON_EMPTY_FILE_WINDOWS_MD5, md5);
+        } else {
+            Assert.assertEquals(NON_EMPTY_FILE_UNIX_MD5, md5);
+        }
     }
 
     @Test
