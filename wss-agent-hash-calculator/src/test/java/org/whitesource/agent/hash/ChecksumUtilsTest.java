@@ -42,28 +42,34 @@ public class ChecksumUtilsTest {
     /* --- Test methods --- */
 
     @Test
-    public void testSHA1() throws IOException {
+    public void testEmptyFileSHA1() throws IOException {
         String filePath = getClass().getResource(EMPTY_FILE_TXT).getFile();
         File file = new File(URLDecoder.decode(filePath, UTF_8));
         String sha1 = ChecksumUtils.calculateSHA1(file);
         assertEquals(sha1, EMPTY_FILE_SHA1);
+    }
 
-        filePath = getClass().getResource(NON_EMPTY_FILE_TXT).getFile();
-        file = new File(URLDecoder.decode(filePath, UTF_8));
-        sha1 = ChecksumUtils.calculateSHA1(file);
+    @Test
+    public void testSHA1() throws IOException {
+        String filePath = getClass().getResource(NON_EMPTY_FILE_TXT).getFile();
+        File file = new File(URLDecoder.decode(filePath, UTF_8));
+        String sha1 = ChecksumUtils.calculateSHA1(file);
         assertEquals(sha1, NON_EMPTY_FILE_SHA1);
     }
 
     @Test
-    public void testMD5() throws IOException {
+    public void testEmptyFileMD5() throws IOException {
         String filePath = getClass().getResource(EMPTY_FILE_TXT).getFile();
         File file = new File(URLDecoder.decode(filePath, UTF_8));
         String md5 = ChecksumUtils.calculateHash(file, HashAlgorithm.MD5);
         assertEquals(md5, EMPTY_FILE_MD5);
+    }
 
-        filePath = getClass().getResource(NON_EMPTY_FILE_TXT).getFile();
-        file = new File(URLDecoder.decode(filePath, UTF_8));
-        md5 = ChecksumUtils.calculateHash(file, HashAlgorithm.MD5);
+    @Test
+    public void testMD5() throws IOException {
+        String filePath = getClass().getResource(NON_EMPTY_FILE_TXT).getFile();
+        File file = new File(URLDecoder.decode(filePath, UTF_8));
+        String md5 = ChecksumUtils.calculateHash(file, HashAlgorithm.MD5);
         assertEquals(md5, NON_EMPTY_FILE_MD5);
     }
 

@@ -62,7 +62,6 @@ public class JavaScriptHashCalculatorTest {
     public void testCalculateJavaScriptHash() throws IOException {
         HashCalculator hashCalculator = new HashCalculator();
         byte[] fileBytes = IOUtils.toByteArray(new URL(JQUERY_JUSTIFIED_GALLERY_URL));
-//        System.out.println(new String(fileBytes, "UTF-8"));
         String normalSha1 = hashCalculator.calculateByteArraySHA1(fileBytes);
         Map<ChecksumType, String> javascriptChecksums = hashCalculator.calculateJavaScriptHashes(fileBytes);
 
