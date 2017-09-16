@@ -17,6 +17,7 @@ package org.whitesource.agent.report;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.commons.io.FileUtils;
 import org.whitesource.agent.api.dispatch.UpdateInventoryRequest;
 import org.whitesource.agent.hash.ZipUtils;
 
@@ -81,7 +82,7 @@ public class OfflineUpdateRequest {
 
         // write to file
         File requestFile = new File(workDir, "update-request.txt");
-        org.apache.commons.io.FileUtils.writeStringToFile(requestFile, json);
+        FileUtils.writeStringToFile(requestFile, json, "UTF-8");
         return requestFile;
     }
 }
