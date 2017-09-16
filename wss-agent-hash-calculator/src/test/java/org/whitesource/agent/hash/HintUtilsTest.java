@@ -69,7 +69,7 @@ public class HintUtilsTest {
         File file = getResourceFile(EXE_FILE);
         DependencyHintsInfo dependencyHintsInfo = HintUtils.getHints(file.getPath());
         Assert.assertNotNull(dependencyHintsInfo);
-        Assert.assertEquals(null, dependencyHintsInfo.getCompanyName());
+        Assert.assertNull(dependencyHintsInfo.getCompanyName());
         Assert.assertEquals("8.0.1520.6", dependencyHintsInfo.getFileVersion());
         Assert.assertEquals("Copyright © 2017", dependencyHintsInfo.getCopyright());
         Assert.assertEquals("java-rmi.exe", dependencyHintsInfo.getOriginalFilename());
