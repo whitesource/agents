@@ -247,12 +247,16 @@
                         <showDeprecation>true</showDeprecation>
                         <showWarnings>true</showWarnings>
                         <optimize>true</optimize>
+                        <encoding>UTF-8</encoding>
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.12</version>
+                    <configuration>
+                        <argLine>-Dfile.encoding=UTF-8</argLine>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

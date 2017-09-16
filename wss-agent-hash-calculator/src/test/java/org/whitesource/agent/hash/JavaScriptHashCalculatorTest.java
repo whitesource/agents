@@ -23,6 +23,7 @@ import org.whitesource.agent.parser.ParseResult;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -42,14 +43,13 @@ public class JavaScriptHashCalculatorTest {
     private static final String NO_COMMENTS_SUPER_HASH = "8a2c586e09f02890f7dbacb945a55b1ae1f03d91";
 
     private static final String JQUERY_JUSTIFIED_GALLERY_URL = "https://cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.3/js/jquery.justifiedGallery.js";
-    private static final String UTF_8 = "utf-8";
 
     /* --- Test methods --- */
 
     @Test
     public void testParseJavaScript() throws IOException {
 //        String fileContent = IOUtils.toString(new URL("https://cdnjs.cloudflare.com/ajax/libs/hopscotch/0.2.0/js/hopscotch.js"), UTF_8);
-        String fileContent = IOUtils.toString(new URL(JQUERY_JUSTIFIED_GALLERY_URL), UTF_8);
+        String fileContent = IOUtils.toString(new URL(JQUERY_JUSTIFIED_GALLERY_URL), StandardCharsets.UTF_8);
         ParseResult parseResult = new JavaScriptParser().parse(fileContent);
         String headerlessContent = parseResult.getContentWithoutHeaderComments();
         assertTrue(headerlessContent.startsWith("(function($) {"));
@@ -61,22 +61,14 @@ public class JavaScriptHashCalculatorTest {
     @Test
     public void testCalculateJavaScriptHash() throws IOException {
         HashCalculator hashCalculator = new HashCalculator();
-        try {
-            String fileContent = IOUtils.toString(new URL(JQUERY_JUSTIFIED_GALLERY_URL), UTF_8);
-            try {
-                byte[] fileBytes = fileContent.getBytes();
-                String normalSha1 = hashCalculator.calculateByteArraySHA1(fileBytes);
-                Map<ChecksumType, String> javascriptChecksums = hashCalculator.calculateJavaScriptHashes(fileBytes);
+        byte[] fileBytes = IOUtils.toByteArray(new URL(JQUERY_JUSTIFIED_GALLERY_URL));
+//        System.out.println(new String(fileBytes, "UTF-8"));
+        String normalSha1 = hashCalculator.calculateByteArraySHA1(fileBytes);
+        Map<ChecksumType, String> javascriptChecksums = hashCalculator.calculateJavaScriptHashes(fileBytes);
 
-                assertEquals(SHA1, normalSha1);
-                assertEquals(NO_HEADER_SHA1, javascriptChecksums.get(ChecksumType.SHA1_NO_HEADER));
-                assertEquals(NO_COMMENTS_SUPER_HASH, javascriptChecksums.get(ChecksumType.SHA1_NO_COMMENTS_SUPER_HASH));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        assertEquals(SHA1, normalSha1);
+        assertEquals(NO_HEADER_SHA1, javascriptChecksums.get(ChecksumType.SHA1_NO_HEADER));
+        assertEquals(NO_COMMENTS_SUPER_HASH, javascriptChecksums.get(ChecksumType.SHA1_NO_COMMENTS_SUPER_HASH));
     }
 
 }

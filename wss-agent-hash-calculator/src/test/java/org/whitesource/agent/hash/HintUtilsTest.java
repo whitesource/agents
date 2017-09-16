@@ -16,6 +16,7 @@
 package org.whitesource.agent.hash;
 
 import junit.framework.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.whitesource.agent.api.model.DependencyHintsInfo;
 
@@ -69,8 +70,10 @@ public class HintUtilsTest {
         Assert.assertEquals("8.0.1520.6", dependencyHintsInfo.getProductVersion());
     }
 
+    @Ignore
     @Test
     public void testGetHintsMsi() throws IOException {
+        // TODO test when implemented
         File file = getResourceFile(MSI_FILE);
         DependencyHintsInfo dependencyHintsInfo = HintUtils.getHints(file.getPath());
         Assert.assertNotNull(dependencyHintsInfo);
