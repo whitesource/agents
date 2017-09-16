@@ -17,7 +17,11 @@ package org.whitesource.agent.hash;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
+import org.whitesource.agent.api.model.ChecksumType;
+import org.whitesource.agent.parser.JavaScriptParser;
+import org.whitesource.agent.parser.ParseResult;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -28,6 +32,8 @@ import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * Utility class to calculate SHA-1 hash codes for files.
@@ -113,7 +119,7 @@ public class HashCalculator {
             logger.debug("Ignoring file with size " + FileUtils.byteCountToDisplaySize(fileSize) + ": minimum file size is 512B");
         } else if (fileSize <= FILE_PARTIAL_HASH_MIN_SIZE) {
             // Don't calculate msb and lsb hashes for files smaller than 2kb
-            String fullFileHash = calculateByteArraySHA1(bytesWithoutSpaces);
+            String fullFileHash = calculateByteArrayHash(bytesWithoutSpaces, HashAlgorithm.SHA1);
             result = new HashCalculationResult(fullFileHash);
         } else if (fileSize <= FILE_SMALL_SIZE) {
             // Handle 2kb->3kb files
@@ -194,17 +200,17 @@ public class HashCalculator {
      * Removes all JavaScript comments from the file and calculates SHA-1 checksum.
      *
      * @param file to calculate
-     * @return Calculated SHA-1 for the given file.
+     * @return Calculated SHA-1 checksums for the given file.
      * @throws IOException
      */
-    public String calculateJavaScriptHeaderlessHash(File file, HashAlgorithm hashAlgorithm) {
-        String sha1 = null;
+    public Map<ChecksumType, String> calculateJavaScriptHashes(File file) {
+        Map<ChecksumType, String> checksums = new EnumMap<>(ChecksumType.class);
         try {
-            sha1 = calculateJavaScriptHeaderlessHash(FileUtils.readFileToByteArray(file), hashAlgorithm);
+            checksums = calculateJavaScriptHashes(FileUtils.readFileToByteArray(file));
         } catch (Exception e) {
             logger.debug("Error calculating JavaScript hash: {}", e.getMessage());
         }
-        return sha1;
+        return checksums;
     }
 
     /**
@@ -214,56 +220,30 @@ public class HashCalculator {
      * @return Calculated SHA-1 for the given file.
      * @throws IOException
      */
-    public String calculateJavaScriptHeaderlessHash(byte[] byteArray, HashAlgorithm hashAlgorithm) {
-        String sha1 = null;
+    public Map<ChecksumType, String> calculateJavaScriptHashes(byte[] byteArray) {
+        Map<ChecksumType, String> checksums = new EnumMap<>(ChecksumType.class);
         try {
             String fileContent = IOUtils.toString(byteArray, UTF_8);
-            String headerlessContent = new JavaScriptParser().removeHeaderComments(fileContent);
-            if (headerlessContent != null) {
-                sha1 = calculateByteArrayHash(headerlessContent.getBytes(), hashAlgorithm);
+            ParseResult parseResult = new JavaScriptParser().parse(fileContent);
+            if (parseResult != null) {
+                // no comments
+                String contentWithoutComments = parseResult.getContentWithoutComments();
+                if (StringUtils.isNotBlank(contentWithoutComments)) {
+                    HashCalculationResult noCommentsSha1 = calculateSuperHash(contentWithoutComments.getBytes());
+                    checksums.put(ChecksumType.SHA1_NO_COMMENTS_SUPER_HASH, noCommentsSha1.getFullHash());
+                }
+
+                // no headers
+                String headerlessContent = parseResult.getContentWithoutHeaderComments();
+                if (StringUtils.isNotBlank(headerlessContent)) {
+                    String headerlessChecksum = calculateByteArrayHash(headerlessContent.getBytes(), HashAlgorithm.SHA1);
+                    checksums.put(ChecksumType.SHA1_NO_HEADER, headerlessChecksum);
+                }
             }
         } catch (Exception e) {
             logger.debug("Error calculating JavaScript hash: {}", e.getMessage());
         }
-        return sha1;
-    }
-
-    /**
-     * Removes all JavaScript header comments from the file and calculates the super hash.
-     *
-     * @param file to calculate
-     * @return Calculated Super Hash for the given file.
-     * @throws IOException
-     */
-    public HashCalculationResult calculateJavaScriptHeaderlessSuperHash(File file) {
-        HashCalculationResult result = null;
-        try {
-            result = calculateJavaScriptHeaderlessSuperHash(FileUtils.readFileToByteArray(file));
-        } catch (Exception e) {
-            logger.debug("Error calculating JavaScript no comments super hash: {}", e.getMessage());
-        }
-        return result;
-    }
-
-    /**
-     * Removes all JavaScript comments from the file and calculates the super hash.
-     *
-     * @param byteArray to calculate
-     * @return Calculated Super Hash for the given file.
-     * @throws IOException
-     */
-    public HashCalculationResult calculateJavaScriptHeaderlessSuperHash(byte[] byteArray) {
-        HashCalculationResult result = null;
-        try {
-            String fileContent = IOUtils.toString(byteArray, UTF_8);
-            String headerlessContent = new JavaScriptParser().removeHeaderComments(fileContent);
-            if (headerlessContent != null) {
-                result = calculateSuperHash(headerlessContent.getBytes());
-            }
-        } catch (Exception e) {
-            logger.debug("Error calculating JavaScript no comments super hash: {}", e.getMessage());
-        }
-        return result;
+        return checksums;
     }
 
     /* --- Private static methods --- */

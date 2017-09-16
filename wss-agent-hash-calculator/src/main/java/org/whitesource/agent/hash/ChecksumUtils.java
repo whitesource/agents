@@ -121,14 +121,14 @@ public final class ChecksumUtils {
         }
     }
 
-    public static void calculateOtherPlatformSha1(DependencyInfo dependency, File file) {
+    public static String calculateOtherPlatformSha1(File file) {
+        String otherPlatformSha1 = null;
         if (file.length() <= org.whitesource.agent.hash.FileUtils.MAX_FILE_SIZE) {
             File otherPlatformFile = null;
             try {
                 otherPlatformFile = org.whitesource.agent.hash.FileUtils.createOtherPlatformFile(file);
                 if (otherPlatformFile != null) {
-                    String otherPlatformSha1 = ChecksumUtils.calculateSHA1(otherPlatformFile);
-                    dependency.setOtherPlatformSha1(otherPlatformSha1);
+                    otherPlatformSha1 = ChecksumUtils.calculateSHA1(otherPlatformFile);
                 }
             } catch (Exception e) {
                 logger.warn("Unable to create other platform file for {}: {}", file.getPath(), e.getMessage());
@@ -138,6 +138,12 @@ public final class ChecksumUtils {
         } else {
             logger.debug("File {} size is too big for scanning other platform sha1, skipping it.", file.getName());
         }
+        return otherPlatformSha1;
+    }
+
+    public static void calculateOtherPlatformSha1(DependencyInfo dependency, File file) {
+        String otherPlatformSha1 = calculateOtherPlatformSha1(file);
+        dependency.setOtherPlatformSha1(otherPlatformSha1);
     }
 
     /* --- Private static methods --- */
