@@ -18,13 +18,13 @@ import java.util.List;
  *
  * @author eugen.horovitz
  */
-public class GsonUtils {
+public class JsonUtils {
 
     /* --- Static members --- */
 
     public static final String UTF_8 = "UTF-8";
 
-    private static final Logger logger = LoggerFactory.getLogger(GsonUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(JsonUtils.class);
 
     /* --- Static methods --- */
 
