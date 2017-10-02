@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.commons.io.FileUtils;
 import org.whitesource.agent.api.dispatch.UpdateInventoryRequest;
-import org.whitesource.agent.hash.ZipUtils;
+import org.whitesource.agent.utils.ZipUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -76,7 +76,7 @@ public class OfflineUpdateRequest {
         String json;
         if (zip) {
             json = new Gson().toJson(request);
-            json = ZipUtils.compress(json);
+            json = ZipUtils.compressString(json);
         } else if (prettyJson) {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             json = gson.toJson(request);

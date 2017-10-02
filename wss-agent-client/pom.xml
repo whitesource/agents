@@ -25,6 +25,11 @@
             <artifactId>wss-agent-hash-calculator</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.whitesource</groupId>
+            <artifactId>wss-agent-utils</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <!-- Utilities -->
         <dependency>

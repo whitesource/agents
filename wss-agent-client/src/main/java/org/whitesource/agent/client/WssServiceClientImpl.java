@@ -37,10 +37,9 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.HTTP;
 import org.whitesource.agent.api.APIConstants;
 import org.whitesource.agent.api.dispatch.*;
-import org.whitesource.agent.hash.ZipUtils;
+import org.whitesource.agent.utils.ZipUtils;
 
 import java.io.IOException;
 import java.net.*;
@@ -58,20 +57,18 @@ public class WssServiceClientImpl implements WssServiceClient {
 
 	/* --- Static members --- */
 
-    public static final String HTTP_PROXY_USER = "http.proxyUser";
-    public static final String HTTP_PROXY_PASSWORD = "http.proxyPassword";
-    public static final int TO_MILLISECONDS = 60 * 1000;
+    private static final String HTTP_PROXY_USER = "http.proxyUser";
+    private static final String HTTP_PROXY_PASSWORD = "http.proxyPassword";
+    private static final int TO_MILLISECONDS = 60 * 1000;
+	private static final String UTF_8 = "UTF-8";
 
     private static final Log logger = LogFactory.getLog(WssServiceClientImpl.class);
 
 	/* --- Members --- */
 
 	protected String serviceUrl;
-	
 	protected DefaultHttpClient httpClient;
-
     protected Gson gson;
-
 	protected int connectionTimeout;
 
 	/* --- Constructors --- */
@@ -289,10 +286,10 @@ public class WssServiceClientImpl implements WssServiceClient {
 		}
 
         // compress json before sending
-        String compressedString = ZipUtils.compress(jsonDiff);
+        String compressedString = ZipUtils.compressString(jsonDiff);
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_DIFF, compressedString));
 
-		httpRequest.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
+		httpRequest.setEntity(new UrlEncodedFormEntity(nvps, UTF_8));
 		
 		return httpRequest;
 	}
@@ -322,7 +319,6 @@ public class WssServiceClientImpl implements WssServiceClient {
 		if (ResultEnvelope.STATUS_SUCCESS != envelope.getStatus()) {
 			throw new WssServiceException(message + ": " + data);
 		}
-		
 		return data;
 	}
 
@@ -371,5 +367,4 @@ public class WssServiceClientImpl implements WssServiceClient {
 	public int getConnectionTimeout() {
 		return connectionTimeout;
 	}
-
 }
