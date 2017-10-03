@@ -53,6 +53,9 @@
     </developers>
 
     <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
         <httpclient.version>4.3.6</httpclient.version>
         <gson.version>2.2.2</gson.version>
         <junit.version>4.10</junit.version>
