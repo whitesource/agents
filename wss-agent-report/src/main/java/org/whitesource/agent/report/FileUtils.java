@@ -72,7 +72,6 @@ public final class FileUtils {
 
     /**
      * Pack a directory into a single zip file.
-     * <p/>
      * <p>
      * <b>Note:</b> The implementation is based on the packZip method in jetbrains openAPI.
      * original author is Maxim Podkolzine (maxim.podkolzine@jetbrains.com)

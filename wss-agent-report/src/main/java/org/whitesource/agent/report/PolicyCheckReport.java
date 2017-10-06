@@ -80,9 +80,9 @@ public class PolicyCheckReport {
     /**
      * Constructor
      *
-     * @param result
-     * @param buildName
-     * @param buildNumber
+     * @param result report
+     * @param buildName of the report
+     * @param buildNumber of the report
      */
     public PolicyCheckReport(BaseCheckPoliciesResult result, String buildName, String buildNumber) {
         this(result);
@@ -97,6 +97,8 @@ public class PolicyCheckReport {
      *
      * @param outputDir Directory where report files will be created.
      * @param pack      <code>True</code> to create a zip file from the resulting directory.
+     * @return  File reference to the resulting report.
+     * @throws IOException In case of errors during report generation process.
      */
     public File generate(File outputDir, boolean pack) throws IOException {
         return generate(outputDir, pack, null);
@@ -219,6 +221,7 @@ public class PolicyCheckReport {
 
     /**
      * Create the context holding all the information of the report.
+     * @return the velocity context
      */
     protected VelocityContext createTemplateContext() {
         VelocityContext context = new VelocityContext();
@@ -241,7 +244,7 @@ public class PolicyCheckReport {
      *
      * @param workDir Report work directory.
      *
-     * @throws IOException
+     * @throws IOException exception5
      */
     protected void copyReportResources(File workDir) throws IOException {
         FileUtils.copyResource(TEMPLATE_FOLDER + CSS_FILE, new File(workDir, CSS_FILE));
