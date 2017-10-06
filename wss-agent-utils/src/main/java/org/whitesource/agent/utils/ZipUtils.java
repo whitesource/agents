@@ -16,9 +16,10 @@ package org.whitesource.agent.utils;
  * limitations under the License.
  */
 
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+// import sun.misc.BASE64Decoder;
+// import sun.misc.BASE64Encoder;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -77,7 +78,8 @@ public class ZipUtils {
                 gzipos.write(text.getBytes(UTF_8));
                 gzipos.close();
                 baos.close();
-                result = (new BASE64Encoder()).encode(baos.toByteArray());
+                // result = (new BASE64Encoder()).encode(baos.toByteArray());
+                result = Base64.encodeBase64String(baos.toByteArray());
                 /* TODO
                 Replace result raw to this one : result = Base64.encodeBase64String(baos.toByteArray());
                 See :
@@ -113,7 +115,10 @@ public class ZipUtils {
             return text;
         }
 
-        byte[] bytes = new BASE64Decoder().decodeBuffer(text);
+        // byte[] bytes = new BASE64Decoder().decodeBuffer(text);
+        byte[] bytes = Base64.decodeBase64(text);
+
+
         GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(bytes));
         BufferedReader bf = new BufferedReader(new InputStreamReader(gis, UTF_8));
         String outStr = "";
@@ -138,7 +143,8 @@ public class ZipUtils {
         }
 
         try (BufferedWriter writer = Files.newBufferedWriter(tempFileOut.toPath())) {
-            byte[] bytes = new BASE64Decoder().decodeBuffer(text);
+            // byte[] bytes = new BASE64Decoder().decodeBuffer(text);
+            byte[] bytes =  Base64.decodeBase64(text);
             try (GZIPInputStream chunkZipper = new GZIPInputStream(new ByteArrayInputStream(bytes));
                  InputStream in = new BufferedInputStream(chunkZipper);) {
 
@@ -197,7 +203,8 @@ public class ZipUtils {
                 out.flush();
                 out.close();
 
-                result = new BASE64Encoder().encode(Files.readAllBytes(tempFileOut.toPath()));
+                // result = new BASE64Encoder().encode(Files.readAllBytes(tempFileOut.toPath()));
+                result = Base64.encodeBase64String(Files.readAllBytes(tempFileOut.toPath()));
             }
         } else {
             result = text;
@@ -212,7 +219,8 @@ public class ZipUtils {
     /* --- Compress Helpers --- */
 
     private static String getStringFromEncode(byte[] bytes) {
-        return new BASE64Encoder().encode(bytes);
+        // return new BASE64Encoder().encode(bytes);
+        return Base64.encodeBase64String(bytes);
     }
 
     private static void fillExportStreamCompress(String text, OutputStream exportByteArrayOutputStream) {
@@ -344,7 +352,8 @@ public class ZipUtils {
     }
 
     private static byte[] getStringFromDecode(String text) throws IOException {
-        return new BASE64Decoder().decodeBuffer(text);
+        // return new BASE64Decoder().decodeBuffer(text);
+        return  Base64.decodeBase64(text);
     }
 
     /**
