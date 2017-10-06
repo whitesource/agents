@@ -44,18 +44,18 @@ public class ZipUtils {
 
     /* --- Static members --- */
 
-    private static final Logger logger = LoggerFactory.getLogger(ZipUtils.class);
+    //private static final Logger logger = LoggerFactory.getLogger(ZipUtils.class);
 
-    public static final String JAVA_TEMP_DIR = System.getProperty("java.io.tmpdir");
-    public static final String ZIP_UTILS = System.getProperty("WSZipUtils");
-    public static final String UTF_8 = "UTF-8";
-    public static final int BYTES_BUFFER_SIZE = 32 * 1024;
-    public static final int STRING_MAX_SIZE = BYTES_BUFFER_SIZE;
-    public static final String TMP_IN_ = "tmp_in_";
-    public static final String TMP_OUT_ = "tmp_out_";
-    public static final String ZIP_UTILS_SUFFIX = ".json";
+    private static final String JAVA_TEMP_DIR = System.getProperty("java.io.tmpdir");
+    private static final String ZIP_UTILS = System.getProperty("WSZipUtils");
+    private static final String UTF_8 = "UTF-8";
+    private static final int BYTES_BUFFER_SIZE = 32 * 1024;
+    private static final int STRING_MAX_SIZE = BYTES_BUFFER_SIZE;
+    private static final String TMP_IN_ = "tmp_in_";
+    private static final String TMP_OUT_ = "tmp_out_";
+    private static final String ZIP_UTILS_SUFFIX = ".json";
 
-    public static final int N_THREADS = 2;
+    private static final int N_THREADS = 2;
 
     /* --- Static methods --- */
 
@@ -236,7 +236,7 @@ public class ZipUtils {
                 }
             }
         } catch (IOException e) {
-            logger.error("Failed to produce data :", e);
+            // logger.error("Failed to produce data :", e);
         }
     }
 
@@ -246,11 +246,11 @@ public class ZipUtils {
         try {
             threadPool.submit(consumer).get();
         } catch (InterruptedException e) {
-            logger.error("Task failed : ", e);
+            // logger.error("Task failed : ", e);
         } catch (ExecutionException e) {
-            logger.error("Task failed : ", e);
+            // logger.error("Task failed : ", e);
         } finally {
-            threadPool.shutdown();
+            //  threadPool.shutdown();
         }
     }
 
@@ -264,10 +264,10 @@ public class ZipUtils {
                 }
                 out.flush();
             } catch (IOException e) {
-                logger.error("Failed to consume data to compress:", e);
+                // logger.error("Failed to consume data to compress:", e);
             }
         } catch (IOException e) {
-            logger.error("Failed to consume data to compress:", e);
+            // logger.error("Failed to consume data to compress:", e);
         }
     }
 
@@ -282,7 +282,7 @@ public class ZipUtils {
             pipedOutputStream.close();
         }
         catch (IOException e) {
-            logger.error("Failed to produce data to compress : ", e);
+            // logger.error("Failed to produce data to compress : ", e);
         }
     }
 
@@ -312,7 +312,7 @@ public class ZipUtils {
                 }
             }
         } catch (IOException e) {
-            logger.error("Failed to decompress : ", e);
+            // logger.error("Failed to decompress : ", e);
         }
     }
 
@@ -333,7 +333,7 @@ public class ZipUtils {
             }
             pipedInputStream.close();
         } catch (IOException e) {
-            logger.error("Failed to decompress : ", e);
+            // logger.error("Failed to decompress : ", e);
         }
     }
 
@@ -359,9 +359,9 @@ public class ZipUtils {
     /**
      * Writes a string piece by piece to file
      *
-     * @param text
-     * @param tempFileIn
-     * @throws IOException
+     * @param text to input
+     * @param tempFileIn input
+     * @throws IOException exception when writing
      */
     private static void writeChunkBytes(String text, File tempFileIn) throws IOException {
         try (FileOutputStream writer = new FileOutputStream(tempFileIn)) {
