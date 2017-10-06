@@ -76,7 +76,7 @@ public class HashCalculator {
      * 
      * @param file input
      * @return HashCalculationResult with all three hashes
-     * @throws IOException exception
+     * @throws IOException exception1
      */
     public HashCalculationResult calculateSuperHash(File file) throws IOException {
         // Ignore files smaller than 0.5kb
@@ -105,7 +105,7 @@ public class HashCalculator {
      *
      * @param bytes to calculate
      * @return HashCalculationResult with all three hashes
-     * @throws IOException exception
+     * @throws IOException exception2
      */
     public HashCalculationResult calculateSuperHash(byte[] bytes) throws IOException {
         HashCalculationResult result = null;
@@ -201,7 +201,6 @@ public class HashCalculator {
      *
      * @param file to calculate
      * @return Calculated SHA-1 checksums for the given file.
-     * @throws IOException exception
      */
     public Map<ChecksumType, String> calculateJavaScriptHashes(File file) {
         Map<ChecksumType, String> checksums = new EnumMap<>(ChecksumType.class);
@@ -218,7 +217,6 @@ public class HashCalculator {
      *
      * @param byteArray to calculate
      * @return Calculated SHA-1 for the given file.
-     * @throws IOException exception
      */
     public Map<ChecksumType, String> calculateJavaScriptHashes(byte[] byteArray) {
         Map<ChecksumType, String> checksums = new EnumMap<>(ChecksumType.class);
