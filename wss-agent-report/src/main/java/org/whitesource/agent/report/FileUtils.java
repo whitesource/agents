@@ -33,7 +33,7 @@ public final class FileUtils {
      *
      * @param resource    Path to resource to copy.
      * @param destination File to copy resource to.
-     * @throws IOException
+     * @throws IOException exception2
      */
     public static void copyResource(String resource, File destination) throws IOException {
         InputStream is = null;
@@ -78,9 +78,9 @@ public final class FileUtils {
      * original author is Maxim Podkolzine (maxim.podkolzine@jetbrains.com)
      * </p>
      *
-     * @param dir
-     * @param zos
-     * @throws IOException
+     * @param dir input
+     * @param zos output stream
+     * @throws IOException exception1
      */
     public static void packDirectory(File dir, ZipOutputStream zos) throws IOException {
         byte[] buffer = new byte[64 * 1024];  // a reusable buffer

@@ -45,8 +45,8 @@ public class LicenseHistogramDataPoint {
 
     /**
      * Constructor
-     * @param name
-     * @param occurrences
+     * @param name of the license
+     * @param occurrences number
      */
     public LicenseHistogramDataPoint(String name, int occurrences) {
         this.name = name;

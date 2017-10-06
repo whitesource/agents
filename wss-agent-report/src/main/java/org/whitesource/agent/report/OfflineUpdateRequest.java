@@ -44,7 +44,7 @@ public class OfflineUpdateRequest {
     /**
      * Constructor
      *
-     * @param request
+     * @param request update inventory
      */
     public OfflineUpdateRequest(UpdateInventoryRequest request) {
         this.request = request;
