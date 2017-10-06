@@ -74,9 +74,9 @@ public class HashCalculator {
      * 2. Hash of the most significant bits of the file without new lines and whitespaces
      * 3. Hash of the least significant bits of the file without new lines and whitespaces
      * 
-     * @param file
+     * @param file input
      * @return HashCalculationResult with all three hashes
-     * @throws IOException
+     * @throws IOException exception
      */
     public HashCalculationResult calculateSuperHash(File file) throws IOException {
         // Ignore files smaller than 0.5kb
@@ -103,9 +103,9 @@ public class HashCalculator {
      * 2. Hash of the most significant bits of the file without new lines and whitespaces
      * 3. Hash of the least significant bits of the file without new lines and whitespaces
      *
-     * @param bytes
+     * @param bytes to calculate
      * @return HashCalculationResult with all three hashes
-     * @throws IOException
+     * @throws IOException exception
      */
     public HashCalculationResult calculateSuperHash(byte[] bytes) throws IOException {
         HashCalculationResult result = null;
@@ -201,7 +201,7 @@ public class HashCalculator {
      *
      * @param file to calculate
      * @return Calculated SHA-1 checksums for the given file.
-     * @throws IOException
+     * @throws IOException exception
      */
     public Map<ChecksumType, String> calculateJavaScriptHashes(File file) {
         Map<ChecksumType, String> checksums = new EnumMap<>(ChecksumType.class);
@@ -218,7 +218,7 @@ public class HashCalculator {
      *
      * @param byteArray to calculate
      * @return Calculated SHA-1 for the given file.
-     * @throws IOException
+     * @throws IOException exception
      */
     public Map<ChecksumType, String> calculateJavaScriptHashes(byte[] byteArray) {
         Map<ChecksumType, String> checksums = new EnumMap<>(ChecksumType.class);
