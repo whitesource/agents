@@ -30,8 +30,8 @@ public class JavaScriptParser {
     /**
      * Parse the file content and return variants of the file.
      *
-     * @param fileContent
-     * @return
+     * @param fileContent to parse
+     * @return the parsing result
      */
     public ParseResult parse(String fileContent) {
         ParseResult result = null;

@@ -179,7 +179,7 @@ public class HashCalculator {
      *
      * @param byteArray to calculate
      * @return Calculated SHA-1 for the given byteArray.
-     * @throws IllegalStateException when no algorithm for SHA-1 can be found.
+     * @throws IOException when no algorithm for SHA-1 can be found.
      */
     public String calculateByteArraySHA1(byte[] byteArray) throws IOException {
         return calculateByteArrayHash(byteArray, HashAlgorithm.SHA1);
