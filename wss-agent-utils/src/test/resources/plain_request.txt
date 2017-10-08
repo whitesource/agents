@@ -1,0 +1,91 @@
+{
+  "type": "UPDATE",
+  "agent": "fs-agent",
+  "agentVersion": "2.3.9",
+  "pluginVersion": "1.8.8-SNAPSHOT",
+  "orgToken": "not-known",
+  "product": "not-known",
+  "timeStamp": 1507436869743,
+  "projects": [
+    {
+      "coordinates": {
+        "artifactId": "not-known",
+        "version": ""
+      },
+      "dependencies": [
+        {
+          "artifactId": "antlr-2.7.7.jar",
+          "sha1": "83cd2cd674a217ade95a4bb83a8a14f351f48bd0",
+          "otherPlatformSha1": "5976bf31f2183886231da17c633df9d8035d517a",
+          "systemPath": "C:\\WhiteSource\\FS-Agent\\Jars1\\Jars1\\antlr-2.7.7.jar",
+          "optional": false,
+          "children": [],
+          "exclusions": [],
+          "licenses": [],
+          "copyrights": [],
+          "lastModified": "Jun 18, 2014 3:46:20 PM",
+          "checksums": {
+            "SHA1": "83cd2cd674a217ade95a4bb83a8a14f351f48bd0",
+            "SHA1_OTHER_PLATFORM": "5976bf31f2183886231da17c633df9d8035d517a",
+            "MD5": "f8f1352c52a4c6a500b597596501fc64"
+          }
+        },
+        {
+          "artifactId": "aopalliance-1.0.jar",
+          "sha1": "0235ba8b489512805ac13a8f9ea77a1ca5ebe3e8",
+          "otherPlatformSha1": "06ff7ef5e2dfd459e7b20edafe5f1376ae4a1f05",
+          "systemPath": "C:\\WhiteSource\\FS-Agent\\Jars1\\Jars1\\aopalliance-1.0.jar",
+          "optional": false,
+          "children": [],
+          "exclusions": [],
+          "licenses": [],
+          "copyrights": [],
+          "lastModified": "Jun 18, 2014 3:13:24 PM",
+          "checksums": {
+            "SHA1": "0235ba8b489512805ac13a8f9ea77a1ca5ebe3e8",
+            "SHA1_OTHER_PLATFORM": "06ff7ef5e2dfd459e7b20edafe5f1376ae4a1f05",
+            "MD5": "04177054e180d09e3998808efa0401c7"
+          }
+        },
+        {
+          "artifactId": "asciitab.h",
+          "sha1": "00017ce70ceaac0b3df0cc6036479ceac79c69e7",
+          "fullHash": "307812caadfcbe06285c2ca5c24b198cab909930",
+          "otherPlatformSha1": "67462447978f02b8a78ce7f054da82ec88e7ffa4",
+          "systemPath": "C:\\WhiteSource\\FS-Agent\\Jars1\\Jars1\\asciitab.h",
+          "optional": false,
+          "children": [],
+          "exclusions": [],
+          "licenses": [],
+          "copyrights": [],
+          "lastModified": "May 27, 2015 1:37:08 PM",
+          "checksums": {
+            "SHA1": "00017ce70ceaac0b3df0cc6036479ceac79c69e7",
+            "SHA1_SUPER_HASH": "307812caadfcbe06285c2ca5c24b198cab909930",
+            "SHA1_OTHER_PLATFORM": "67462447978f02b8a78ce7f054da82ec88e7ffa4",
+            "MD5": "b2c8239fd7aba26911c4b801000166b0"
+          }
+        },
+        {
+          "artifactId": "asciitab.h",
+          "sha1": "00017ce70ceaac0b3df0cc6036479ceac79c69e7",
+          "fullHash": "307812caadfcbe06285c2ca5c24b198cab909930",
+          "otherPlatformSha1": "67462447978f02b8a78ce7f054da82ec88e7ffa4",
+          "systemPath": "C:\\WhiteSource\\FS-Agent\\Jars1\\asciitab.h",
+          "optional": false,
+          "children": [],
+          "exclusions": [],
+          "licenses": [],
+          "copyrights": [],
+          "lastModified": "May 27, 2015 1:37:08 PM",
+          "checksums": {
+            "SHA1": "00017ce70ceaac0b3df0cc6036479ceac79c69e7",
+            "SHA1_SUPER_HASH": "307812caadfcbe06285c2ca5c24b198cab909930",
+            "SHA1_OTHER_PLATFORM": "67462447978f02b8a78ce7f054da82ec88e7ffa4",
+            "MD5": "b2c8239fd7aba26911c4b801000166b0"
+          }
+        }
+      ]
+    }
+  ]
+}

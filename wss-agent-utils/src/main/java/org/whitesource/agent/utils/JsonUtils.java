@@ -51,19 +51,13 @@ public class JsonUtils {
     }
 
     public static UpdateInventoryRequest readUpdateInventoryRequest(InputStream in) throws IOException {
-        Gson gson = new Gson();
         try (InputStreamReader inputStreamReader = new InputStreamReader(in, UTF_8);
              BufferedReader br = new BufferedReader(inputStreamReader);
              JsonReader reader = new JsonReader(br)) {
-
-            reader.beginObject();
+            Gson gson = new Gson();
             UpdateInventoryRequest message = gson.fromJson(reader, UpdateInventoryRequest.class);
-            reader.endObject();
             return message;
-        } catch (IOException ex) {
-            logger.error("Failed to read data: ", ex);
         }
-        return null;
     }
 
     public void writeUpdateInventoryRequest(OutputStream out, UpdateInventoryRequest message) throws IOException {
