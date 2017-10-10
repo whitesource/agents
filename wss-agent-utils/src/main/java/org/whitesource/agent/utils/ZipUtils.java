@@ -17,7 +17,6 @@ package org.whitesource.agent.utils;
  */
 
 import org.apache.commons.codec.binary.Base64;
-import org.slf4j.Logger;
 // import sun.misc.BASE64Decoder;
 // import sun.misc.BASE64Encoder;
 
@@ -31,8 +30,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-
-import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for various zip operations.
@@ -71,10 +68,8 @@ public class ZipUtils {
     public static String compress(String text) throws IOException {
         String result;
         if (text != null && text.length() > 0) {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream(text.length());
-            GZIPOutputStream gzipos = null;
-            try {
-                gzipos = new GZIPOutputStream(baos);
+            try (ByteArrayOutputStream baos = new ByteArrayOutputStream(text.length());
+                 GZIPOutputStream gzipos = new GZIPOutputStream(baos);) {
                 gzipos.write(text.getBytes(UTF_8));
                 gzipos.close();
                 baos.close();
@@ -88,13 +83,6 @@ public class ZipUtils {
                 http://stackoverflow.com/questions/29692146/java-lang-noclassdeffounderror-sun-misc-base64encoder
                 http://www.oracle.com/technetwork/java/faq-sun-packages-142232.html
                 */
-            } catch (IOException e) {
-                result = text;
-            } finally {
-                baos.close();
-                if (gzipos != null) {
-                    gzipos.close();
-                }
             }
         } else {
             result = text;
@@ -118,19 +106,19 @@ public class ZipUtils {
         // byte[] bytes = new BASE64Decoder().decodeBuffer(text);
         byte[] bytes = Base64.decodeBase64(text);
 
-
-        GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(bytes));
-        BufferedReader bf = new BufferedReader(new InputStreamReader(gis, UTF_8));
-        String outStr = "";
-        String line;
-        while ((line = bf.readLine()) != null) {
-            outStr += line;
+        try(GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(bytes));
+            BufferedReader bf = new BufferedReader(new InputStreamReader(gis, UTF_8));) {
+            StringBuilder outStr = new StringBuilder();
+            String line;
+            while ((line = bf.readLine()) != null) {
+                outStr.append(line);
+            }
+            return outStr.toString();
         }
-        return outStr;
     }
 
     /**
-     * The method compresses the big strings using gzip - low memory via the File system
+     * The method decompresses the big strings using gzip - low memory via the File system
      *
      * @param text The string to decompress.
      * @return The decompressed temp file path that should be deleted on a later stage.
@@ -142,10 +130,25 @@ public class ZipUtils {
             return null;
         }
 
-        try (BufferedWriter writer = Files.newBufferedWriter(tempFileOut.toPath())) {
-            // byte[] bytes = new BASE64Decoder().decodeBuffer(text);
-            byte[] bytes =  Base64.decodeBase64(text);
-            try (GZIPInputStream chunkZipper = new GZIPInputStream(new ByteArrayInputStream(bytes));
+        // todo make it in chunks
+
+        byte[] bytes =  Base64.decodeBase64(text);
+        try(InputStream inputStream = new ByteArrayInputStream(bytes)) {
+            decompressChunks(inputStream,tempFileOut.toPath());
+            return tempFileOut.toPath();
+        }
+    }
+
+    /**
+     *  The method decompresses the big strings using gzip - low memory via the File system
+     *
+     * @param inputStream
+     * @param tempFileOut
+     * @throws IOException
+     */
+    public static void decompressChunks(InputStream inputStream, Path tempFileOut) throws IOException {
+        try (BufferedWriter writer = Files.newBufferedWriter(tempFileOut)) {
+            try (GZIPInputStream chunkZipper = new GZIPInputStream(inputStream);
                  InputStream in = new BufferedInputStream(chunkZipper);) {
 
                 byte[] buffer = new byte[BYTES_BUFFER_SIZE];
@@ -156,8 +159,6 @@ public class ZipUtils {
                 }
             }
         }
-
-        return tempFileOut.toPath();
     }
 
     public static String compressString(String text) throws IOException {
@@ -167,10 +168,47 @@ public class ZipUtils {
         }
     }
 
+    /**
+     * The method compresses the big strings using gzip - low memory via Streams
+     * @param inputStream
+     * @param outputStream
+     * @throws IOException
+     */
+    public static void compressString(InputStream inputStream, OutputStream outputStream) throws IOException {
+        try(ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            fillExportStreamCompress(inputStream, byteArrayOutputStream);
+            // to do -> make it in chunks
+            String result = getStringFromEncode(byteArrayOutputStream.toByteArray());
+            try (PrintWriter printWriter = new PrintWriter(outputStream)) {
+                printWriter.write(result);
+            }
+        }
+    }
+
+
     public static String decompressString(String text) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         fillExportStreamDecompress(text, stringBuilder);
         return stringBuilder.toString();
+    }
+
+    /**
+     * The method decompresses the big strings using gzip - low memory via Streams
+     * @param inputStream
+     * @param outputStream
+     * @throws IOException
+     */
+    public static void decompressString(InputStream inputStream, OutputStream outputStream) throws IOException{
+        try (InputStream bufferedInputStream = new BufferedInputStream(inputStream);
+             PrintWriter printWriter = new PrintWriter(outputStream);) {
+            byte[] buffer = new byte[BYTES_BUFFER_SIZE];
+            int len;
+            while ((len = bufferedInputStream.read(buffer)) > 0) {
+                String val = new String(buffer, StandardCharsets.UTF_8);
+                String str = decompressString(val);
+                printWriter.write(str);
+            }
+        }
     }
 
     /**
@@ -223,6 +261,23 @@ public class ZipUtils {
         return Base64.encodeBase64String(bytes);
     }
 
+    private static void fillExportStreamCompress(InputStream inputStream, OutputStream outputStream) {
+        try {
+            try (PipedInputStream pipedInputStream = new PipedInputStream()) {
+                try (PipedOutputStream pipedOutputStream = new PipedOutputStream()) {
+                    pipedInputStream.connect(pipedOutputStream);
+
+                    Runnable producer = () -> producedDataCompressStream(inputStream, pipedOutputStream);
+                    Runnable consumer = () -> consumeDataCompress(pipedInputStream, outputStream);
+
+                    transferData(producer, consumer);
+                }
+            }
+        } catch (IOException e) {
+            // logger.error("Failed to produce data :", e);
+        }
+    }
+
     private static void fillExportStreamCompress(String text, OutputStream exportByteArrayOutputStream) {
         try {
             try (PipedInputStream pipedInputStream = new PipedInputStream()) {
@@ -271,6 +326,19 @@ public class ZipUtils {
         }
     }
 
+    private static void producedDataCompressStream(InputStream inputStream, PipedOutputStream pipedOutputStream){
+        try (BufferedInputStream in = new BufferedInputStream(inputStream)) {
+            byte[] buffer = new byte[BYTES_BUFFER_SIZE];
+            int len;
+            while ((len = in.read(buffer)) > 0) {
+                pipedOutputStream.write(buffer, 0, len);
+            }
+            pipedOutputStream.close();
+        } catch (IOException e) {
+            // logger.error("Failed to produce data to compress : ", e);
+        }
+    }
+
     private static void producedDataCompress(String text, PipedOutputStream pipedOutputStream) {
         int start_String = 0;
         int chunk = text.length();
@@ -278,24 +346,20 @@ public class ZipUtils {
             chunk = text.length() / STRING_MAX_SIZE;
         }
         try {
-            writeStringChunks(text, pipedOutputStream, start_String, chunk);
+            while (start_String < text.length()) {
+                int end = start_String + chunk;
+                if (end > text.length()) {
+                    end = text.length();
+                }
+                byte[] bytes = text.substring(start_String, end).getBytes(StandardCharsets.UTF_8);
+
+                pipedOutputStream.write(bytes);
+                start_String = end;
+            }
             pipedOutputStream.close();
         }
         catch (IOException e) {
             // logger.error("Failed to produce data to compress : ", e);
-        }
-    }
-
-    private static void writeStringChunks(String text, PipedOutputStream pipedOutputStream, int start_String, int chunk) throws IOException {
-        while (start_String < text.length()) {
-            int end = start_String + chunk;
-            if (end > text.length()) {
-                end = text.length();
-            }
-            byte[] bytes = text.substring(start_String, end).getBytes(StandardCharsets.UTF_8);
-
-            pipedOutputStream.write(bytes);
-            start_String = end;
         }
     }
 
@@ -305,12 +369,27 @@ public class ZipUtils {
                 try (PipedOutputStream pipedOutputStream = new PipedOutputStream()) {
                     pipedInputStream.connect(pipedOutputStream);
 
-                    Runnable producer = () -> producedDataDecompress(text, pipedOutputStream);
+                    Runnable producer = () -> produceDataDecompress(text, pipedOutputStream);
                     Runnable consumer = () -> consumeDataDecompress(pipedInputStream, stringBuilder);
 
                     transferData(producer, consumer);
                 }
             }
+        } catch (IOException e) {
+            // logger.error("Failed to decompress : ", e);
+        }
+    }
+
+    private static void consumeDataDecompressStream(PipedInputStream pipedInputStream, OutputStream outputStream) {
+        try (GZIPInputStream chunkZipper = new GZIPInputStream(pipedInputStream);
+             InputStream in = new BufferedInputStream(chunkZipper);) {
+
+            byte[] buffer = new byte[BYTES_BUFFER_SIZE];
+            int len;
+            while ((len = in.read(buffer)) > 0) {
+                outputStream.write(buffer,0,len );
+            }
+            pipedInputStream.close();
         } catch (IOException e) {
             // logger.error("Failed to decompress : ", e);
         }
@@ -342,7 +421,7 @@ public class ZipUtils {
         System.arraycopy(source, srcBegin, destination, dstBegin, srcEnd - srcBegin);
     }
 
-    private static void producedDataDecompress(String text, PipedOutputStream pipedOutputStream) {
+    private static void produceDataDecompress(String text, PipedOutputStream pipedOutputStream) {
         try {
             byte[] bytes = getStringFromDecode(text);
             pipedOutputStream.write(bytes);
@@ -352,7 +431,6 @@ public class ZipUtils {
     }
 
     private static byte[] getStringFromDecode(String text) throws IOException {
-        // return new BASE64Decoder().decodeBuffer(text);
         return  Base64.decodeBase64(text);
     }
 
