@@ -4,13 +4,13 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.whitesource.agent.api.dispatch.UpdateInventoryRequest;
+import org.whitesource.agent.api.model.AgentProjectInfo;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class ZipUtilsTest {
 
@@ -32,7 +32,7 @@ public class ZipUtilsTest {
 
     @Ignore
     @Test
-    public void shouldCompressAndDecompressFile () throws IOException {
+    public void shouldCompressAndDecompressFile() throws IOException {
         String currentDir = System.getProperty("user.dir").toString();
         File input = Paths.get(currentDir, "\\src\\test\\resources\\plain_request.txt").toFile();
 
@@ -53,5 +53,30 @@ public class ZipUtilsTest {
 
         String compressDecompressOutput = new String(Files.readAllBytes(input.toPath()));
         Assert.assertEquals(originalInput, compressDecompressOutput);
+    }
+
+    @Ignore
+    @Test
+    public void shouldDecompressChunks() {
+        String currentDir = System.getProperty("user.dir").toString();
+        File input = Paths.get(currentDir, "\\src\\test\\resources\\zipped_projects.txt").toFile();
+
+        List<AgentProjectInfo> projects;
+        try {
+            String zippedProjects = String.join("", Files.readAllLines(input.toPath()));
+
+            Path decompressedPath = ZipUtils.decompressChunks(zippedProjects);
+            try (FileInputStream fileInputStream = new FileInputStream(decompressedPath.toString());
+                 BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream)) {
+                projects = JsonUtils.readProjects(bufferedInputStream); //? why this works ?
+            }
+
+            String projectsUnzippedChunks = ZipUtils.decompressString(zippedProjects);
+            String projectsUnzippedChunks2 = String.join("", Files.readAllLines(decompressedPath));
+            Assert.assertEquals(projectsUnzippedChunks, projectsUnzippedChunks2);
+        } catch (IOException e) {
+            e.printStackTrace();
+            Assert.assertNull(e);
+        }
     }
 }

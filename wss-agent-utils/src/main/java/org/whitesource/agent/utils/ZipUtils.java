@@ -150,11 +150,12 @@ public class ZipUtils {
         try (BufferedWriter writer = Files.newBufferedWriter(tempFileOut)) {
             try (GZIPInputStream chunkZipper = new GZIPInputStream(inputStream);
                  InputStream in = new BufferedInputStream(chunkZipper);) {
-
                 byte[] buffer = new byte[BYTES_BUFFER_SIZE];
                 int len;
                 while ((len = in.read(buffer)) > 0) {
-                    String val = new String(buffer, StandardCharsets.UTF_8);
+                    byte[] writtenBytes = new byte[len];
+                    getBytes(buffer, 0, len, writtenBytes, 0);
+                    String val = new String(writtenBytes, StandardCharsets.UTF_8);
                     writer.write(val);
                 }
             }
