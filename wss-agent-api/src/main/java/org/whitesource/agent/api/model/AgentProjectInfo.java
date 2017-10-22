@@ -40,6 +40,10 @@ public class AgentProjectInfo implements Serializable {
 	private Collection<DependencyInfo> dependencies;
 	
 	private String projectToken;
+
+	private ProjectSetupStatus projectSetupStatus;
+
+	private String projectSetupDescription;
 	
 	/* --- Constructors --- */
 	
@@ -63,7 +67,7 @@ public class AgentProjectInfo implements Serializable {
 			.append("parentCoordinates= ").append(parentCoordinates).append(",")
 			.append("projectToken= ").append(projectToken)
 			.append(" ]");
-		
+
 		return sb.toString();
 	}
 	
@@ -99,5 +103,21 @@ public class AgentProjectInfo implements Serializable {
 
 	public void setProjectToken(String projectToken) {
 		this.projectToken = projectToken;
+	}
+
+	public String getProjectSetupDescription() {
+		return projectSetupDescription;
+	}
+
+	public void setProjectSetupDescription(String projectSetupDescription) {
+		this.projectSetupDescription = projectSetupDescription;
+	}
+
+	public ProjectSetupStatus getProjectSetupStatus() {
+		return projectSetupStatus;
+	}
+
+	public void setProjectSetupStatus(ProjectSetupStatus projectSetupStatus) {
+		this.projectSetupStatus = projectSetupStatus;
 	}
 }
