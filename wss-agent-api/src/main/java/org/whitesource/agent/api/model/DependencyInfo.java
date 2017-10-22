@@ -164,6 +164,7 @@ public class DependencyInfo implements Serializable {
         if (version != null ? !version.equals(that.version) : that.version != null) return false;
         if (filename != null ? !filename.equals(that.filename) : that.filename != null) return false;
         if (dependencyType != null ? !dependencyType.equals(that.dependencyType) : that.dependencyType != null) return false;
+        if (systemPath != null ? !systemPath.equals(that.systemPath) : that.systemPath != null) return false;
 
         return true;
     }
@@ -182,6 +183,7 @@ public class DependencyInfo implements Serializable {
         result = APIConstants.HASH_CODE_FACTOR * result + (optional ? 1 : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (filename != null ? filename.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (dependencyType != null ? dependencyType.hashCode() : 0);
+        result = APIConstants.HASH_CODE_FACTOR * result + (systemPath != null ? systemPath.hashCode() : 0);
         return result;
     }
 
