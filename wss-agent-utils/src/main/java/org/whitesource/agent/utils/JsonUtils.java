@@ -1,6 +1,7 @@
 package org.whitesource.agent.utils;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import org.slf4j.Logger;
@@ -60,7 +61,7 @@ public class JsonUtils {
         }
     }
 
-    public void writeUpdateInventoryRequest(OutputStream out, UpdateInventoryRequest message) throws IOException {
+    public static void writeUpdateInventoryRequest(OutputStream out, UpdateInventoryRequest message) throws IOException {
         Gson gson = new Gson();
         try (OutputStreamWriter outputStreamWriter = new OutputStreamWriter(out, UTF_8);
              BufferedWriter bw = new BufferedWriter(outputStreamWriter);
@@ -75,7 +76,7 @@ public class JsonUtils {
         }
     }
 
-    public void writeProjects(OutputStream out, List<AgentProjectInfo> projects) throws IOException {
+    public static void writeProjects(OutputStream out, List<AgentProjectInfo> projects) throws IOException {
         Gson gson = new Gson();
         try (OutputStreamWriter outputStreamWriter = new OutputStreamWriter(out, UTF_8);
              BufferedWriter bw = new BufferedWriter(outputStreamWriter);
@@ -89,6 +90,17 @@ public class JsonUtils {
         } catch (IOException ex) {
             logger.error("Failed to write data: {}", ex.getMessage());
         }
+    }
+
+    public static<T> String save(T object, boolean pretty){
+        Gson gson;
+        if(pretty) {
+            gson = (new GsonBuilder()).setPrettyPrinting().create();
+        }
+        else{
+            gson = (new GsonBuilder()).create();
+        }
+        return gson.toJson(object);
     }
 
     public static <T> T load(final InputStream inputStream, final Class<T> clazz) throws IOException {
