@@ -267,9 +267,12 @@ public class WssServiceClientImpl implements WssServiceClient {
 
 
 		String jsonDiff = null;
+		RequestUpdateType requestUpdateType = RequestUpdateType.REMOVE_APPEND;
 		switch (type) {
 			case UPDATE:
-				jsonDiff = gson.toJson(((UpdateInventoryRequest) request).getProjects());
+				UpdateInventoryRequest updateInventoryRequest = (UpdateInventoryRequest) request;
+				jsonDiff = gson.toJson(updateInventoryRequest.getProjects());
+				requestUpdateType = updateInventoryRequest.getRequestUpdateType();
 				break;
 			case CHECK_POLICIES:
 				jsonDiff = gson.toJson(((CheckPoliciesRequest) request).getProjects());
@@ -289,6 +292,7 @@ public class WssServiceClientImpl implements WssServiceClient {
         String compressedString = ZipUtils.compressString(jsonDiff);
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_DIFF, compressedString));
 
+		nvps.add(new BasicNameValuePair(APIConstants.PARAM_UPDATE_REQUEST_TYPE, requestUpdateType.toString()));
 		httpRequest.setEntity(new UrlEncodedFormEntity(nvps, UTF_8));
 		
 		return httpRequest;

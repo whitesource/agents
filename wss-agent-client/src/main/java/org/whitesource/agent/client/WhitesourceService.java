@@ -120,6 +120,47 @@ public class WhitesourceService {
     }
 
     /**
+     * Updates the White Source organization account with the given OSS information.
+     *
+     * @param orgToken          Organization token uniquely identifying the account at white source.
+     * @param requesterEmail    Email of the WhiteSource user that requests to update WhiteSource.
+     * @param requestUpdateType Request UpdateType
+     * @param product           The product name or token to update.
+     * @param productVersion    The product version.
+     * @param projectInfos      OSS usage information to send to white source.
+     * @return Result of updating white source.
+     * @throws WssServiceException
+     */
+    public UpdateInventoryResult update(String orgToken,
+                                        String requesterEmail,
+                                        RequestUpdateType requestUpdateType,
+                                        String product,
+                                        String productVersion,
+                                        Collection<AgentProjectInfo> projectInfos)
+            throws WssServiceException {
+        return client.updateInventory(
+                requestFactory.newUpdateInventoryRequest(orgToken, requestUpdateType, requesterEmail, product, productVersion, projectInfos));
+    }
+
+    /**
+     * Generates a file with json representation of the update request.
+     *
+     * @param orgToken          Organization token uniquely identifying the account at white source.
+     * @param product           The product name or token to update.
+     * @param removeBeforeAdd   Should remove before add
+     * @param productVersion    The product version.
+     * @param projectInfos      OSS usage information to send to white source.
+     * @return UpdateInventoryRequest.
+     */
+    public UpdateInventoryRequest offlineUpdate(String orgToken,
+                                                String product,
+                                                Boolean removeBeforeAdd,
+                                                String productVersion,
+                                                Collection<AgentProjectInfo> projectInfos) {
+        return requestFactory.newUpdateInventoryRequest(orgToken, product, productVersion, projectInfos);
+    }
+
+    /**
      * Generates a file with json representation of the update request.
      *
      * @param orgToken          Organization token uniquely identifying the account at white source.

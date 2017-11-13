@@ -31,6 +31,8 @@ public class UpdateInventoryResult extends BaseResult {
     private static final long serialVersionUID = 9074828488465436483L;
 
     /* --- Members --- */
+
+	private boolean removeIfExist = false;
 	
 	private Collection<String> updatedProjects;
 	
@@ -55,6 +57,11 @@ public class UpdateInventoryResult extends BaseResult {
 	public UpdateInventoryResult(String organization) {
 		this();
 		setOrganization(organization);
+	}
+
+	public UpdateInventoryResult(String organization,boolean removeIfExist) {
+		this(organization);
+		this.removeIfExist = removeIfExist;
 	}
 
 	/* --- Getters / Setters --- */ 

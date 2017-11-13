@@ -76,6 +76,41 @@ public class WssServiceClientTest {
     }
 
     /* --- Test methods --- */
+    @Test
+    public void testUpdateAddSentOk() {
+        final Collection<AgentProjectInfo> projects = new ArrayList<AgentProjectInfo>();
+        final AgentProjectInfo projectInfo = new AgentProjectInfo();
+        projectInfo.setProjectToken("projectToken");
+        projectInfo.setCoordinates(new Coordinates("groupId", "artifactId", "version"));
+        projectInfo.setParentCoordinates(new Coordinates("groupId", "parent-artifactId", "version"));
+        final DependencyInfo dependencyInfo = new DependencyInfo("dep-groupId", "dep-artifactId", "dep-version");
+        projectInfo.getDependencies().add(dependencyInfo);
+        projects.add(projectInfo);
+
+        final UpdateInventoryRequest updateInventoryRequest =
+                requestFactory.newUpdateInventoryRequest("orgToken", RequestUpdateType.APPEND, null, "testProduct", "testProductVersion", projects);
+
+        handleRequest(projectInfo, dependencyInfo, updateInventoryRequest);
+
+        HttpRequestHandler handler = new HttpRequestHandler() {
+            @Override
+            public void handle(HttpRequest request, HttpResponse response, HttpContext context) throws HttpException, IOException {
+                HttpEntity entity = ((HttpEntityEnclosingRequest) request).getEntity();
+                List<NameValuePair> nvps = URLEncodedUtils.parse(entity);
+                for (NameValuePair nvp : nvps) {
+                    if (nvp.getName().equals(APIConstants.PARAM_UPDATE_REQUEST_TYPE)) {
+                        assertEquals(nvp.getValue(),updateInventoryRequest.getRequestUpdateType().toString());
+                    }
+                }
+            }
+        };
+        server.register("/agent", handler);
+        try {
+            client.updateInventory(updateInventoryRequest);
+        } catch (WssServiceException e) {
+            // suppress exception
+        }
+    }
 
     @Test
     public void testUpdateRequestSentOk() {
@@ -89,6 +124,10 @@ public class WssServiceClientTest {
         projects.add(projectInfo);
         final UpdateInventoryRequest updateInventoryRequest = requestFactory.newUpdateInventoryRequest("orgToken", projects);
 
+        handleRequest(projectInfo, dependencyInfo, updateInventoryRequest);
+    }
+
+    private void handleRequest(AgentProjectInfo projectInfo, DependencyInfo dependencyInfo, UpdateInventoryRequest updateInventoryRequest) {
         HttpRequestHandler handler = new HttpRequestHandler() {
             @Override
             public void handle(HttpRequest request, HttpResponse response, HttpContext context) throws HttpException, IOException {
@@ -106,17 +145,7 @@ public class WssServiceClientTest {
                     } else if (nvp.getName().equals(APIConstants.PARAM_TIME_STAMP)) {
                         assertEquals(nvp.getValue(), Long.toString(updateInventoryRequest.timeStamp()));
                     } else if (nvp.getName().equals(APIConstants.PARAM_DIFF)) {
-                        Gson gson = new Gson();
-                        Type type = new TypeToken<Collection<AgentProjectInfo>>() {
-                        }.getType();
-                        final Collection<AgentProjectInfo> tmpProjects = gson.fromJson(nvp.getValue(), type);
-                        assertEquals(tmpProjects.size(), 1);
-                        final AgentProjectInfo info = tmpProjects.iterator().next();
-                        assertEquals(info.getProjectToken(), projectInfo.getProjectToken());
-                        assertEquals(info.getCoordinates(), projectInfo.getCoordinates());
-                        assertEquals(info.getParentCoordinates(), projectInfo.getParentCoordinates());
-                        assertEquals(info.getDependencies().size(), 1);
-                        assertEquals(info.getDependencies().iterator().next(), dependencyInfo);
+                        checkResults(nvp, projectInfo, dependencyInfo);
                     }
                 }
             }
@@ -156,17 +185,7 @@ public class WssServiceClientTest {
                     } else if (nvp.getName().equals(APIConstants.PARAM_TOKEN)) {
                         assertEquals(nvp.getValue(), checkPoliciesRequest.orgToken());
                     } else if (nvp.getName().equals(APIConstants.PARAM_DIFF)) {
-                        Gson gson = new Gson();
-                        Type type = new TypeToken<Collection<AgentProjectInfo>>() {
-                        }.getType();
-                        final Collection<AgentProjectInfo> tmpProjects = gson.fromJson(nvp.getValue(), type);
-                        assertEquals(tmpProjects.size(), 1);
-                        final AgentProjectInfo info = tmpProjects.iterator().next();
-                        assertEquals(info.getProjectToken(), projectInfo.getProjectToken());
-                        assertEquals(info.getCoordinates(), projectInfo.getCoordinates());
-                        assertEquals(info.getParentCoordinates(), projectInfo.getParentCoordinates());
-                        assertEquals(info.getDependencies().size(), 1);
-                        assertEquals(info.getDependencies().iterator().next(), dependencyInfo);
+                        checkResults(nvp, projectInfo, dependencyInfo);
                     }
                 }
             }
@@ -177,6 +196,20 @@ public class WssServiceClientTest {
         } catch (WssServiceException e) {
             // suppress exception
         }
+    }
+
+    private void checkResults(NameValuePair nvp, AgentProjectInfo projectInfo, DependencyInfo dependencyInfo) {
+        Gson gson = new Gson();
+        Type type = new TypeToken<Collection<AgentProjectInfo>>() {
+        }.getType();
+        final Collection<AgentProjectInfo> tmpProjects = gson.fromJson(nvp.getValue(), type);
+        assertEquals(tmpProjects.size(), 1);
+        final AgentProjectInfo info = tmpProjects.iterator().next();
+        assertEquals(info.getProjectToken(), projectInfo.getProjectToken());
+        assertEquals(info.getCoordinates(), projectInfo.getCoordinates());
+        assertEquals(info.getParentCoordinates(), projectInfo.getParentCoordinates());
+        assertEquals(info.getDependencies().size(), 1);
+        assertEquals(info.getDependencies().iterator().next(), dependencyInfo);
     }
 
     @Test

@@ -21,42 +21,71 @@ import java.util.Collection;
 
 /**
  * Request to update organization inventory. 
- * 
+ *
  * @author tom.shapira
  */
 public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
 
 	/* --- Static members --- */
-	
+
 	private static final long serialVersionUID = 7731258010033962980L;
-	
+
+	private RequestUpdateType requestUpdateType = RequestUpdateType.REMOVE_APPEND;
+
 	/* --- Constructors --- */
 
-    /**
-     * Default constructor
-     */
-    public UpdateInventoryRequest() {
-        super(RequestType.UPDATE);
-    }
-
-    /**
-     * Constructor
-     *
-     * @param projects Open Source usage statement to update White Source.
-     */
-    public UpdateInventoryRequest(Collection<AgentProjectInfo> projects) {
-        this();
-        this.projects = projects;
-    }
+	/**
+	 * Default constructor
+	 */
+	public UpdateInventoryRequest() {
+		super(RequestType.UPDATE);
+	}
 
 	/**
 	 * Constructor
-	 * 
+	 *
+	 * @param projects Open Source usage statement to update White Source.
+	 */
+	public UpdateInventoryRequest(Collection<AgentProjectInfo> projects) {
+		this();
+		this.projects = projects;
+	}
+
+	/**
+	 * Constructor
+	 *
 	 * @param orgToken WhiteSource organization token.
 	 * @param projects Open Source usage statement to update White Source.
 	 */
 	public UpdateInventoryRequest(String orgToken, Collection<AgentProjectInfo> projects) {
 		this(projects);
 		this.orgToken = orgToken;
+	}
+
+	/**
+	 * Constructor
+	 *
+	 * @param projects Open Source usage statement to update White Source.
+	 * @param requestUpdateType Request UpdateType
+	 */
+	public UpdateInventoryRequest(Collection<AgentProjectInfo> projects, RequestUpdateType requestUpdateType) {
+		this(projects);
+		this.requestUpdateType = requestUpdateType;
+	}
+
+	/**
+	 *
+	 * @return Request UpdateType
+	 */
+	public RequestUpdateType getRequestUpdateType() {
+		return requestUpdateType;
+	}
+
+	/**
+	 *
+	 * @param requestUpdateType Request UpdateType
+	 */
+	public void setRequestUpdateType(RequestUpdateType requestUpdateType) {
+		this.requestUpdateType = requestUpdateType;
 	}
 }
