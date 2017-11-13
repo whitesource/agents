@@ -16,8 +16,8 @@
 package org.whitesource.agent.api.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 
 /**
  * Info object describing a managed resource.
@@ -52,8 +52,8 @@ public class ResourceInfo implements Serializable {
      * Default constructor
      */
     public ResourceInfo() {
-        licenses = new ArrayList<String>();
-        vulnerabilities = new ArrayList<VulnerabilityInfo>();
+        licenses = new LinkedList<>();
+        vulnerabilities = new LinkedList<>();
     }
 
     /**
