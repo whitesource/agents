@@ -20,7 +20,8 @@ package org.whitesource.agent.api.dispatch;
  * 
  * @author Eugen.Horovitz
  */
-public enum RequestUpdateType {
-	REMOVE_APPEND,
-    APPEND
+public enum UpdateType {
+    OVERRIDE,
+    APPEND,
+    REMOVE
 }

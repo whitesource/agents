@@ -253,9 +253,9 @@ public class WssServiceClientImpl implements WssServiceClient {
 		HttpPost httpRequest = new HttpPost(serviceUrl);
 		httpRequest.setHeader("Accept", ClientConstants.APPLICATION_JSON);
 		
-		RequestType type = request.type();
-		List <NameValuePair> nvps = new ArrayList <NameValuePair>();
-		nvps.add(new BasicNameValuePair(APIConstants.PARAM_REQUEST_TYPE, type.toString()));
+		RequestType requestType = request.type();
+		List <NameValuePair> nvps = new ArrayList<>();
+		nvps.add(new BasicNameValuePair(APIConstants.PARAM_REQUEST_TYPE, requestType.toString()));
 		nvps.add(new BasicNameValuePair(APIConstants.PARAM_AGENT, request.agent()));
 		nvps.add(new BasicNameValuePair(APIConstants.PARAM_AGENT_VERSION, request.agentVersion()));
 		nvps.add(new BasicNameValuePair(APIConstants.PARAM_TOKEN, request.orgToken()));
@@ -265,22 +265,21 @@ public class WssServiceClientImpl implements WssServiceClient {
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_TIME_STAMP, String.valueOf(request.timeStamp())));
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_PLUGIN_VERSION, String.valueOf(request.pluginVersion())));
 
-
 		String jsonDiff = null;
-		RequestUpdateType requestUpdateType = RequestUpdateType.REMOVE_APPEND;
-		switch (type) {
+		switch (requestType) {
 			case UPDATE:
 				UpdateInventoryRequest updateInventoryRequest = (UpdateInventoryRequest) request;
+				nvps.add(new BasicNameValuePair(APIConstants.PARAM_UPDATE_TYPE, updateInventoryRequest.getUpdateType().toString()));
 				jsonDiff = gson.toJson(updateInventoryRequest.getProjects());
-				requestUpdateType = updateInventoryRequest.getRequestUpdateType();
 				break;
 			case CHECK_POLICIES:
 				jsonDiff = gson.toJson(((CheckPoliciesRequest) request).getProjects());
 				break;
 			case CHECK_POLICY_COMPLIANCE:
+				CheckPolicyComplianceRequest checkPolicyComplianceRequest = (CheckPolicyComplianceRequest) request;
 				nvps.add(new BasicNameValuePair(APIConstants.PARAM_FORCE_CHECK_ALL_DEPENDENCIES,
-						String.valueOf(((CheckPolicyComplianceRequest)request).isForceCheckAllDependencies())));
-				jsonDiff = gson.toJson(((CheckPolicyComplianceRequest) request).getProjects());
+						String.valueOf(checkPolicyComplianceRequest.isForceCheckAllDependencies())));
+				jsonDiff = gson.toJson(checkPolicyComplianceRequest.getProjects());
 				break;
 			case GET_DEPENDENCY_DATA:
 				jsonDiff = gson.toJson(((GetDependencyDataRequest) request).getProjects());
@@ -292,7 +291,6 @@ public class WssServiceClientImpl implements WssServiceClient {
         String compressedString = ZipUtils.compressString(jsonDiff);
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_DIFF, compressedString));
 
-		nvps.add(new BasicNameValuePair(APIConstants.PARAM_UPDATE_REQUEST_TYPE, requestUpdateType.toString()));
 		httpRequest.setEntity(new UrlEncodedFormEntity(nvps, UTF_8));
 		
 		return httpRequest;

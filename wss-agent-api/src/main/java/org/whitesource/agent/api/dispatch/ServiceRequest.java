@@ -65,6 +65,7 @@ public interface ServiceRequest<R> extends Serializable {
      * @return Email of the WhiteSource user that issues this request.
      */
     String requesterEmail();
+
 	/**
 	 * @return Plugin version.
 	 */

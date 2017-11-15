@@ -30,7 +30,7 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
 
 	private static final long serialVersionUID = 7731258010033962980L;
 
-	private RequestUpdateType requestUpdateType = RequestUpdateType.REMOVE_APPEND;
+	private UpdateType updateType = UpdateType.OVERRIDE;
 
 	/* --- Constructors --- */
 
@@ -54,6 +54,17 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
 	/**
 	 * Constructor
 	 *
+	 * @param projects Open Source usage statement to update White Source.
+	 * @param updateType Request UpdateType
+	 */
+	public UpdateInventoryRequest(Collection<AgentProjectInfo> projects, UpdateType updateType) {
+		this(projects);
+		this.updateType = updateType;
+	}
+
+	/**
+	 * Constructor
+	 *
 	 * @param orgToken WhiteSource organization token.
 	 * @param projects Open Source usage statement to update White Source.
 	 */
@@ -65,27 +76,28 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
 	/**
 	 * Constructor
 	 *
+	 * @param orgToken WhiteSource organization token.
 	 * @param projects Open Source usage statement to update White Source.
-	 * @param requestUpdateType Request UpdateType
+	 * @param updateType Request UpdateType
 	 */
-	public UpdateInventoryRequest(Collection<AgentProjectInfo> projects, RequestUpdateType requestUpdateType) {
-		this(projects);
-		this.requestUpdateType = requestUpdateType;
+	public UpdateInventoryRequest(String orgToken, Collection<AgentProjectInfo> projects, UpdateType updateType) {
+		this(orgToken, projects);
+		this.updateType = updateType;
 	}
 
 	/**
 	 *
 	 * @return Request UpdateType
 	 */
-	public RequestUpdateType getRequestUpdateType() {
-		return requestUpdateType;
+	public UpdateType getUpdateType() {
+		return updateType;
 	}
 
 	/**
 	 *
-	 * @param requestUpdateType Request UpdateType
+	 * @param updateType Request UpdateType
 	 */
-	public void setRequestUpdateType(RequestUpdateType requestUpdateType) {
-		this.requestUpdateType = requestUpdateType;
+	public void setUpdateType(UpdateType updateType) {
+		this.updateType = updateType;
 	}
 }

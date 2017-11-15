@@ -88,7 +88,7 @@ public class WssServiceClientTest {
         projects.add(projectInfo);
 
         final UpdateInventoryRequest updateInventoryRequest =
-                requestFactory.newUpdateInventoryRequest("orgToken", RequestUpdateType.APPEND, null, "testProduct", "testProductVersion", projects);
+                requestFactory.newUpdateInventoryRequest("orgToken", UpdateType.APPEND, null, "testProduct", "testProductVersion", projects);
 
         handleRequest(projectInfo, dependencyInfo, updateInventoryRequest);
 
@@ -98,8 +98,8 @@ public class WssServiceClientTest {
                 HttpEntity entity = ((HttpEntityEnclosingRequest) request).getEntity();
                 List<NameValuePair> nvps = URLEncodedUtils.parse(entity);
                 for (NameValuePair nvp : nvps) {
-                    if (nvp.getName().equals(APIConstants.PARAM_UPDATE_REQUEST_TYPE)) {
-                        assertEquals(nvp.getValue(),updateInventoryRequest.getRequestUpdateType().toString());
+                    if (nvp.getName().equals(APIConstants.PARAM_UPDATE_TYPE)) {
+                        assertEquals(nvp.getValue(),updateInventoryRequest.getUpdateType().toString());
                     }
                 }
             }

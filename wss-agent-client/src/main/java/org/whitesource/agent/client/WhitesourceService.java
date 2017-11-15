@@ -124,7 +124,7 @@ public class WhitesourceService {
      *
      * @param orgToken          Organization token uniquely identifying the account at white source.
      * @param requesterEmail    Email of the WhiteSource user that requests to update WhiteSource.
-     * @param requestUpdateType Request UpdateType
+     * @param updateType Request UpdateType
      * @param product           The product name or token to update.
      * @param productVersion    The product version.
      * @param projectInfos      OSS usage information to send to white source.
@@ -133,13 +133,13 @@ public class WhitesourceService {
      */
     public UpdateInventoryResult update(String orgToken,
                                         String requesterEmail,
-                                        RequestUpdateType requestUpdateType,
+                                        UpdateType updateType,
                                         String product,
                                         String productVersion,
                                         Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
         return client.updateInventory(
-                requestFactory.newUpdateInventoryRequest(orgToken, requestUpdateType, requesterEmail, product, productVersion, projectInfos));
+                requestFactory.newUpdateInventoryRequest(orgToken, updateType, requesterEmail, product, productVersion, projectInfos));
     }
 
     /**

@@ -140,7 +140,7 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
         return requesterEmail;
     }
 
-	/* --- Getters / Setters --- */
+    /* --- Getters / Setters --- */
 
 	public void setAgent(String agent) {
 		this.agent = agent;

@@ -83,19 +83,19 @@ public class RequestFactory {
      *
      * @param orgToken WhiteSource organization token.
      * @param requesterEmail Email of the WhiteSource user that requests to update WhiteSource.
-     * @param requestUpdateType Request UpdateType
+     * @param updateType Request UpdateType
      * @param projects Projects status statement to update.
      * @param product Name or WhiteSource service token of the product to update.
      * @param productVersion Version of the product to update.
      * @return Newly created request to update organization inventory.
      */
     public UpdateInventoryRequest newUpdateInventoryRequest(String orgToken,
-                                                            RequestUpdateType requestUpdateType,
+                                                            UpdateType updateType,
                                                             String requesterEmail,
                                                             String product,
                                                             String productVersion,
                                                             Collection<AgentProjectInfo> projects) {
-        UpdateInventoryRequest updateInventoryRequest = new UpdateInventoryRequest(projects, requestUpdateType);
+        UpdateInventoryRequest updateInventoryRequest = new UpdateInventoryRequest(projects, updateType);
         return (UpdateInventoryRequest) prepareRequest(updateInventoryRequest, orgToken, requesterEmail, product, productVersion);
     }
 
