@@ -72,7 +72,7 @@ public class WssServiceClientImpl implements WssServiceClient {
 	protected int connectionTimeout;
 
 	/* --- Constructors --- */
-	
+
 	/**
 	 * Default constructor
 	 */
@@ -82,7 +82,7 @@ public class WssServiceClientImpl implements WssServiceClient {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param serviceUrl WhiteSource service URL to use.
 	 */
 	public WssServiceClientImpl(String serviceUrl) {
@@ -156,7 +156,7 @@ public class WssServiceClientImpl implements WssServiceClient {
 
 	@Override
 	public void shutdown() {
-		httpClient.getConnectionManager().shutdown();	
+		httpClient.getConnectionManager().shutdown();
 	}
 
 	@Override
@@ -197,62 +197,62 @@ public class WssServiceClientImpl implements WssServiceClient {
 
 	/**
 	 * The method service the given request.
-	 * 
+	 *
 	 * @param request Request to serve.
-	 * 
+	 *
 	 * @return Result from WhiteSource service.
-	 * 
+	 *
 	 * @throws WssServiceException In case of errors while serving the request.
 	 */
 	@SuppressWarnings("unchecked")
 	protected <R> R service(ServiceRequest<R> request) throws WssServiceException {
 		R result;
-		
+		String response = "";
 		try {
 			HttpRequestBase httpRequest = createHttpRequest(request);
-			
-			logger.trace("Calling White Source service: " +  request);
-            String response = httpClient.execute(httpRequest, new BasicResponseHandler());
 
-            String data = extractResultData(response);
-            logger.trace("Result data is: " + data);
+			logger.trace("Calling White Source service: " + request);
+			response = httpClient.execute(httpRequest, new BasicResponseHandler());
 
-            switch (request.type()) {
-            case UPDATE:
-                result = (R) gson.fromJson(data, UpdateInventoryResult.class);
-                break;
-            case CHECK_POLICIES:
-                result = (R) gson.fromJson(data, CheckPoliciesResult.class);
-                break;
-			case CHECK_POLICY_COMPLIANCE:
-				result = (R) gson.fromJson(data, CheckPolicyComplianceResult.class);
-				break;
-			case GET_DEPENDENCY_DATA:
-				result = (R) gson.fromJson(data, GetDependencyDataResult.class);
-				break;
-            default:
-                throw new IllegalStateException("Unsupported request type.");
-            }
+			String data = extractResultData(response);
+			logger.trace("Result data is: " + data);
+
+			switch (request.type()) {
+				case UPDATE:
+					result = (R) gson.fromJson(data, UpdateInventoryResult.class);
+					break;
+				case CHECK_POLICIES:
+					result = (R) gson.fromJson(data, CheckPoliciesResult.class);
+					break;
+				case CHECK_POLICY_COMPLIANCE:
+					result = (R) gson.fromJson(data, CheckPolicyComplianceResult.class);
+					break;
+				case GET_DEPENDENCY_DATA:
+					result = (R) gson.fromJson(data, GetDependencyDataResult.class);
+					break;
+				default:
+					throw new IllegalStateException("Unsupported request type.");
+			}
 		} catch (IOException e) {
-			throw new WssServiceException(e.getMessage(), e);
+			throw new WssServiceException("Unexpected error. Response data is: " + response + e.getMessage(), e);
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * The method create the HTTP post request to be sent to the remote service.
-	 * 
+	 *
 	 * @param request Request to service.
-	 * 
-	 * @return Newly created HTTP post request. 
-	 * 
+	 *
+	 * @return Newly created HTTP post request.
+	 *
 	 * @throws IOException In case of error creating the request.
 	 */
 	protected <R> HttpRequestBase createHttpRequest(ServiceRequest<R> request)  throws IOException {
 		HttpPost httpRequest = new HttpPost(serviceUrl);
 		httpRequest.setHeader("Accept", ClientConstants.APPLICATION_JSON);
-		
+
 		RequestType requestType = request.type();
 		List <NameValuePair> nvps = new ArrayList<>();
 		nvps.add(new BasicNameValuePair(APIConstants.PARAM_REQUEST_TYPE, requestType.toString()));
@@ -292,27 +292,27 @@ public class WssServiceClientImpl implements WssServiceClient {
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_DIFF, compressedString));
 
 		httpRequest.setEntity(new UrlEncodedFormEntity(nvps, UTF_8));
-		
+
 		return httpRequest;
 	}
 
     /**
 	 * The method extract the data from the given {@link org.whitesource.agent.api.dispatch.ResultEnvelope}.
-	 * 
+	 *
 	 * @param response HTTP response as string.
-	 * 
+	 *
 	 * @return String with logical result in JSON format.
-	 * 
+	 *
 	 * @throws IOException
-	 * @throws WssServiceException 
+	 * @throws WssServiceException
 	 */
     protected String extractResultData(String response) throws IOException, WssServiceException {
         // parse response
 		ResultEnvelope envelope = gson.fromJson(response, ResultEnvelope.class);
         if (envelope == null) {
-            throw new WssServiceException("Empty response");
+            throw new WssServiceException("Empty response, response data is: " + response);
         }
-		
+
 		// extract info from envelope
 		String message = envelope.getMessage();
 		String data = envelope.getData();
@@ -357,7 +357,7 @@ public class WssServiceClientImpl implements WssServiceClient {
     }
 
 	/* --- Getters  --- */
-		
+
 	public String getServiceUrl() {
 		return serviceUrl;
 	}
