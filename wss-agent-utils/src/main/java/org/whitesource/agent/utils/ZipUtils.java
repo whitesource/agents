@@ -268,8 +268,18 @@ public class ZipUtils {
                 try (PipedOutputStream pipedOutputStream = new PipedOutputStream()) {
                     pipedInputStream.connect(pipedOutputStream);
 
-                    Runnable producer = () -> producedDataCompressStream(inputStream, pipedOutputStream);
-                    Runnable consumer = () -> consumeDataCompress(pipedInputStream, outputStream);
+                    Runnable producer = new Runnable() {
+                        @Override
+                        public void run() {
+                            produceCompressDataFromStream(inputStream, pipedOutputStream);
+                        }
+                    };
+                    Runnable consumer = new Runnable() {
+                        @Override
+                        public void run() {
+                            consumeCompressData(pipedInputStream, outputStream);
+                        }
+                    };
 
                     transferData(producer, consumer);
                 }
@@ -285,8 +295,18 @@ public class ZipUtils {
                 try (PipedOutputStream pipedOutputStream = new PipedOutputStream()) {
                     pipedInputStream.connect(pipedOutputStream);
 
-                    Runnable producer = () -> producedDataCompress(text, pipedOutputStream);
-                    Runnable consumer = () -> consumeDataCompress(pipedInputStream, exportByteArrayOutputStream);
+                    Runnable producer = new Runnable() {
+                        @Override
+                        public void run() {
+                            produceCompressDataFromText(text, pipedOutputStream);
+                        }
+                    };
+                    Runnable consumer = new Runnable() {
+                        @Override
+                        public void run() {
+                            consumeCompressData(pipedInputStream, exportByteArrayOutputStream);
+                        }
+                    };
 
                     transferData(producer, consumer);
                 }
@@ -310,7 +330,7 @@ public class ZipUtils {
         }
     }
 
-    private static void consumeDataCompress(PipedInputStream pipedInputStream, OutputStream exportByteArrayOutputStream) {
+    private static void consumeCompressData(PipedInputStream pipedInputStream, OutputStream exportByteArrayOutputStream) {
         try (OutputStream out = new GZIPOutputStream(new BufferedOutputStream(exportByteArrayOutputStream))) {
             try {
                 byte[] bytes = new byte[BYTES_BUFFER_SIZE];
@@ -327,7 +347,7 @@ public class ZipUtils {
         }
     }
 
-    private static void producedDataCompressStream(InputStream inputStream, PipedOutputStream pipedOutputStream){
+    private static void produceCompressDataFromStream(InputStream inputStream, PipedOutputStream pipedOutputStream){
         try (BufferedInputStream in = new BufferedInputStream(inputStream)) {
             byte[] buffer = new byte[BYTES_BUFFER_SIZE];
             int len;
@@ -340,7 +360,7 @@ public class ZipUtils {
         }
     }
 
-    private static void producedDataCompress(String text, PipedOutputStream pipedOutputStream) {
+    private static void produceCompressDataFromText(String text, PipedOutputStream pipedOutputStream) {
         int start_String = 0;
         int chunk = text.length();
         if (text.length() > STRING_MAX_SIZE) {
@@ -370,8 +390,18 @@ public class ZipUtils {
                 try (PipedOutputStream pipedOutputStream = new PipedOutputStream()) {
                     pipedInputStream.connect(pipedOutputStream);
 
-                    Runnable producer = () -> produceDataDecompress(text, pipedOutputStream);
-                    Runnable consumer = () -> consumeDataDecompress(pipedInputStream, stringBuilder);
+                    Runnable producer = new Runnable() {
+                        @Override
+                        public void run() {
+                            produceDecompressData(text, pipedOutputStream);
+                        }
+                    };
+                    Runnable consumer = new Runnable() {
+                        @Override
+                        public void run() {
+                            consumeDecompressData(pipedInputStream, stringBuilder);
+                        }
+                    };
 
                     transferData(producer, consumer);
                 }
@@ -396,7 +426,7 @@ public class ZipUtils {
         }
     }
 
-    private static void consumeDataDecompress(PipedInputStream pipedInputStream, StringBuilder stringBuilder) {
+    private static void consumeDecompressData(PipedInputStream pipedInputStream, StringBuilder stringBuilder) {
         try (GZIPInputStream chunkZipper = new GZIPInputStream(pipedInputStream);
              InputStream in = new BufferedInputStream(chunkZipper);) {
 
@@ -422,7 +452,7 @@ public class ZipUtils {
         System.arraycopy(source, srcBegin, destination, dstBegin, srcEnd - srcBegin);
     }
 
-    private static void produceDataDecompress(String text, PipedOutputStream pipedOutputStream) {
+    private static void produceDecompressData(String text, PipedOutputStream pipedOutputStream) {
         try {
             byte[] bytes = getStringFromDecode(text);
             pipedOutputStream.write(bytes);
