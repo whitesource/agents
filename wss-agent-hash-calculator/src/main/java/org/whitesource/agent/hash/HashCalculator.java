@@ -202,12 +202,12 @@ public class HashCalculator {
      * @param file to calculate
      * @return Calculated SHA-1 checksums for the given file.
      */
-    public Map<ChecksumType, String> calculateJavaScriptHashes(File file) {
+    public Map<ChecksumType, String> calculateJavaScriptHashes(File file) throws WssHashException {
         Map<ChecksumType, String> checksums = new EnumMap<>(ChecksumType.class);
         try {
             checksums = calculateJavaScriptHashes(FileUtils.readFileToByteArray(file));
         } catch (Exception e) {
-            logger.debug("Error calculating JavaScript hash: {}", e.getMessage());
+            throw new WssHashException("Error calculating JavaScript hash: "+ e.getMessage());
         }
         return checksums;
     }
@@ -218,7 +218,7 @@ public class HashCalculator {
      * @param byteArray to calculate
      * @return Calculated SHA-1 for the given file.
      */
-    public Map<ChecksumType, String> calculateJavaScriptHashes(byte[] byteArray) {
+    public Map<ChecksumType, String> calculateJavaScriptHashes(byte[] byteArray) throws WssHashException {
         Map<ChecksumType, String> checksums = new EnumMap<>(ChecksumType.class);
         try {
             String fileContent = IOUtils.toString(byteArray, UTF_8);
@@ -239,7 +239,7 @@ public class HashCalculator {
                 }
             }
         } catch (Exception e) {
-            logger.debug("Error calculating JavaScript hash: {}", e.getMessage());
+            throw new WssHashException("Error calculating JavaScript hash: "+ e.getMessage());
         }
         return checksums;
     }

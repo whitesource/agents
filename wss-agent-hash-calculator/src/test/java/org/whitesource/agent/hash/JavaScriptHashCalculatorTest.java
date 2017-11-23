@@ -22,6 +22,7 @@ import org.whitesource.agent.api.model.ChecksumType;
 import org.whitesource.agent.parser.JavaScriptParser;
 import org.whitesource.agent.parser.ParseResult;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -60,7 +61,7 @@ public class JavaScriptHashCalculatorTest {
 
 //    @Ignore
     @Test
-    public void testCalculateJavaScriptHash() throws IOException {
+    public void testCalculateJavaScriptHash() throws IOException, WssHashException {
         HashCalculator hashCalculator = new HashCalculator();
         byte[] fileBytes = IOUtils.toByteArray(new URL(JQUERY_JUSTIFIED_GALLERY_URL));
         String normalSha1 = hashCalculator.calculateByteArraySHA1(fileBytes);
