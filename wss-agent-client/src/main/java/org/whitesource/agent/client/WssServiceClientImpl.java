@@ -17,6 +17,7 @@ package org.whitesource.agent.client;
 
 import com.btr.proxy.search.ProxySearch;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHost;
@@ -233,6 +234,8 @@ public class WssServiceClientImpl implements WssServiceClient {
 				default:
 					throw new IllegalStateException("Unsupported request type.");
 			}
+		} catch (JsonSyntaxException e) {
+			throw new WssServiceException("JsonSyntax exception. Response data is:  " + response + e.getMessage(), e);
 		} catch (IOException e) {
 			throw new WssServiceException("Unexpected error. Response data is: " + response + e.getMessage(), e);
 		}
