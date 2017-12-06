@@ -237,6 +237,25 @@ public class WhitesourceService {
     }
 
     /**
+     * Updates the White Source organization account with the given OSS information.
+     *
+     * @param orgToken          Organization token uniquely identifying the account at white source.
+     * @param product           The product name or token to update.
+     * @param productVersion    The product version.
+     * @param projectInfos      OSS usage information to send to white source.
+     * @return Result of updating white source.
+     * @throws WssServiceException
+     */
+    public SummaryScanResult summaryScan(String orgToken,
+                                         String product,
+                                         String productVersion,
+                                         Collection<AgentProjectInfo> projectInfos)
+            throws WssServiceException {
+        return client.summaryScan(
+                requestFactory.newSummaryScanRequest(orgToken, product, productVersion, projectInfos));
+    }
+
+    /**
      * The method close the underlying client to the White Source service.
      *
      * @see org.whitesource.agent.client.WssServiceClient#shutdown()

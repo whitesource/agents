@@ -206,6 +206,23 @@ public class RequestFactory {
         return (GetDependencyDataRequest) prepareRequest(new GetDependencyDataRequest(projects), orgToken, null, product, productVersion);
     }
 
+
+    /**
+     * Create new Inventory Update request.
+     *
+     * @param orgToken WhiteSource organization token.
+     * @param projects Projects status statement to update.
+     * @param product Name or WhiteSource service token of the product to update.
+     * @param productVersion Version of the product to update.
+     * @return Newly created request to update organization inventory.
+     */
+    public SummaryScanRequest newSummaryScanRequest(String orgToken,
+                                                    String product,
+                                                    String productVersion,
+                                                    Collection<AgentProjectInfo> projects) {
+        return (SummaryScanRequest) prepareRequest(new SummaryScanRequest(projects), orgToken, null, product, productVersion);
+    }
+
     /* --- Protected methods --- */
 
     protected <R> BaseRequest<R> prepareRequest(BaseRequest<R> request, String orgToken, String requesterEmail, String product, String productVersion) {

@@ -154,6 +154,11 @@ public class WssServiceClientImpl implements WssServiceClient {
 		return service(request);
 	}
 
+	@Override
+	public SummaryScanResult summaryScan(SummaryScanRequest request) throws WssServiceException {
+		return service(request);
+	}
+
 
 	@Override
 	public void shutdown() {
@@ -231,6 +236,8 @@ public class WssServiceClientImpl implements WssServiceClient {
 				case GET_DEPENDENCY_DATA:
 					result = (R) gson.fromJson(data, GetDependencyDataResult.class);
 					break;
+				case SUMMARY_SCAN:
+					result = (R) gson.fromJson(data, SummaryScanResult.class);
 				default:
 					throw new IllegalStateException("Unsupported request type.");
 			}
@@ -287,7 +294,10 @@ public class WssServiceClientImpl implements WssServiceClient {
 			case GET_DEPENDENCY_DATA:
 				jsonDiff = gson.toJson(((GetDependencyDataRequest) request).getProjects());
 				break;
-            default: break;
+			case SUMMARY_SCAN:
+				SummaryScanRequest summaryScanRequest = (SummaryScanRequest) request;
+				jsonDiff = gson.toJson(summaryScanRequest.getProjects());
+			default: break;
 		}
 
         // compress json before sending

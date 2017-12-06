@@ -63,6 +63,17 @@ public interface WssServiceClient {
      * The method close all connections and release resources.
      * No communication can be done on this client after the method is invoked.
      */
+
+    /**
+     * The method calls the White Source service for inventory update.
+     *
+     * @param request Inventory update request.
+     * @return Inventory update result.
+     * @throws WssServiceException In case an error occurred during the call to White Source server.
+     */
+    SummaryScanResult summaryScan(SummaryScanRequest request) throws WssServiceException;
+
+
     void shutdown();
 
 
