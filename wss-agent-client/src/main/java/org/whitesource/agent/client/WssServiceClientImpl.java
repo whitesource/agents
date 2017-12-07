@@ -238,6 +238,7 @@ public class WssServiceClientImpl implements WssServiceClient {
 					break;
 				case SUMMARY_SCAN:
 					result = (R) gson.fromJson(data, SummaryScanResult.class);
+					break;
 				default:
 					throw new IllegalStateException("Unsupported request type.");
 			}
