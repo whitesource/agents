@@ -228,7 +228,9 @@ public class HashCalculator {
                 String contentWithoutComments = parseResult.getContentWithoutComments();
                 if (StringUtils.isNotBlank(contentWithoutComments)) {
                     HashCalculationResult noCommentsSha1 = calculateSuperHash(contentWithoutComments.getBytes());
-                    checksums.put(ChecksumType.SHA1_NO_COMMENTS_SUPER_HASH, noCommentsSha1.getFullHash());
+                    if (noCommentsSha1 != null) {
+                        checksums.put(ChecksumType.SHA1_NO_COMMENTS_SUPER_HASH, noCommentsSha1.getFullHash());
+                    }
                 }
 
                 // no headers
