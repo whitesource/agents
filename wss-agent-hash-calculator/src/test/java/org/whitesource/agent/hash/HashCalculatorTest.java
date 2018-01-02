@@ -44,6 +44,22 @@ public class HashCalculatorTest {
     /* --- Test methods --- */
 
     @Test
+    public void testBomFiles() throws IOException {
+        HashCalculator hashCalculator = new HashCalculator();
+
+        String filePath = getClass().getResource("/utf-bom/jquery-1.8.1-utf8.txt").getFile();
+        File file = new File(filePath);
+
+        String filePathBom = getClass().getResource("/utf-bom/jquery-1.8.1-utf8bom.txt").getFile();
+        File fileBom = new File(filePathBom);
+
+        String sha1 = hashCalculator.calculateSHA1(file);
+        String sha1Bom = hashCalculator.calculateSHA1(fileBom);
+
+        Assert.assertTrue(sha1.equals(sha1Bom));
+    }
+
+    @Test
     public void testSHA1() throws IOException {
         HashCalculator hashCalculator = new HashCalculator();
         
