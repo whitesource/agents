@@ -15,12 +15,14 @@
  */
 package org.whitesource.agent.hash;
 
+import org.apache.commons.lang.builder.CompareToBuilder;
+
 /**
  * This object holds the various hashes calculated for a single file.
  *
  * @author tom.shapira
  */
-public class HashCalculationResult {
+public class HashCalculationResult implements Comparable {
 
     /* --- Members --- */
 
@@ -38,6 +40,18 @@ public class HashCalculationResult {
         this.fullHash = fullHash;
         this.mostSigBitsHash = mostSigBitsHash;
         this.leastSigBitsHash = leastSigBitsHash;
+    }
+
+    /* --- Overridden --- */
+
+    @Override
+    public int compareTo(Object o) {
+        HashCalculationResult myClass = (HashCalculationResult) o;
+        return new CompareToBuilder()
+                .append(this.fullHash, myClass.fullHash)
+                .append(this.mostSigBitsHash, myClass.mostSigBitsHash)
+                .append(this.leastSigBitsHash, myClass.leastSigBitsHash)
+                .toComparison();
     }
 
     /* --- Getters / Setters --- */
