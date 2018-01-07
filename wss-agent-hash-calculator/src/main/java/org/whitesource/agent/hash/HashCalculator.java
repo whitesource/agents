@@ -17,16 +17,14 @@ package org.whitesource.agent.hash;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.input.BOMInputStream;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.whitesource.agent.api.model.ChecksumType;
 import org.whitesource.agent.parser.JavaScriptParser;
 import org.whitesource.agent.parser.ParseResult;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
@@ -160,16 +158,14 @@ public class HashCalculator {
             throw new IllegalStateException(e.getMessage(), e);
         }
 
-        FileInputStream fis = new FileInputStream(resourceFile);
-        byte[] buffer = new byte[BUFFER_SIZE];
-        try {
+        try(InputStream inputStream = new FileInputStream(resourceFile);
+            BOMInputStream fis = new BOMInputStream(inputStream)) {
+            byte[] buffer = new byte[BUFFER_SIZE];
             int len = fis.read(buffer, 0, BUFFER_SIZE);
             while (len >= 0) {
                 messageDigest.update(buffer, 0, len);
                 len = fis.read(buffer, 0, BUFFER_SIZE);
             }
-        } finally {
-            IOUtils.closeQuietly(fis);
         }
         return toHex(messageDigest.digest());
     }
@@ -228,7 +224,9 @@ public class HashCalculator {
                 String contentWithoutComments = parseResult.getContentWithoutComments();
                 if (StringUtils.isNotBlank(contentWithoutComments)) {
                     HashCalculationResult noCommentsSha1 = calculateSuperHash(contentWithoutComments.getBytes());
-                    checksums.put(ChecksumType.SHA1_NO_COMMENTS_SUPER_HASH, noCommentsSha1.getFullHash());
+                    if (noCommentsSha1 != null) {
+                        checksums.put(ChecksumType.SHA1_NO_COMMENTS_SUPER_HASH, noCommentsSha1.getFullHash());
+                    }
                 }
 
                 // no headers

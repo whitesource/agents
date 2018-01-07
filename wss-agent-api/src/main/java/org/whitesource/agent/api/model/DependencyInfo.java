@@ -149,9 +149,9 @@ public class DependencyInfo implements Serializable {
 
         DependencyInfo that = (DependencyInfo) o;
 
-        if (sha1 != null) {
+        if (StringUtils.isNotEmpty(sha1)) {
             return sha1.equals(that.sha1);
-        } else if (that.sha1 != null) {
+        } else if (StringUtils.isNotEmpty(that.sha1)) {
             return false;
         }
         if (optional != that.optional) return false;
