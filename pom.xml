@@ -68,6 +68,7 @@
         <module>wss-agent-hash-calculator</module>
         <module>wss-agent-client</module>
         <module>wss-agent-report</module>
+        <module>wss-agent-via</module>
     </modules>
 
     <dependencyManagement>

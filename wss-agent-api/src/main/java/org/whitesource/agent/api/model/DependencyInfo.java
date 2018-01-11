@@ -17,6 +17,7 @@ package org.whitesource.agent.api.model;
 
 import org.apache.commons.lang.StringUtils;
 import org.whitesource.agent.api.APIConstants;
+import org.whitesource.agent.via.api.VulnerabilityAnalysisResult;
 
 import java.io.Serializable;
 import java.util.*;
@@ -61,6 +62,7 @@ public class DependencyInfo implements Serializable {
     private DependencyType dependencyType;
     private DependencyHintsInfo hints;
     private Map<ChecksumType, String> checksums;
+    private VulnerabilityAnalysisResult vulnerabilityAnalysisResult;
 
     /* --- Constructors --- */
 
@@ -430,5 +432,13 @@ public class DependencyInfo implements Serializable {
 
     public void setChecksums(Map<ChecksumType, String> checksums) {
         this.checksums = checksums;
+    }
+
+    public VulnerabilityAnalysisResult getVulnerabilityAnalysisResult() {
+        return vulnerabilityAnalysisResult;
+    }
+
+    public void setVulnerabilityAnalysisResult(VulnerabilityAnalysisResult vulnerabilityAnalysisResult) {
+        this.vulnerabilityAnalysisResult = vulnerabilityAnalysisResult;
     }
 }

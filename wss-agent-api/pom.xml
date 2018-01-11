@@ -18,6 +18,13 @@
     </properties>
 
     <dependencies>
+        <!--VIA-->
+        <dependency>
+            <groupId>org.whitesource</groupId>
+            <artifactId>wss-agent-via</artifactId>
+            <version>2.5.5-SNAPSHOT</version>
+        </dependency>
+
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
