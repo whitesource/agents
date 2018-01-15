@@ -233,6 +233,9 @@ public class WssServiceClientImpl implements WssServiceClient {
 				case CHECK_POLICY_COMPLIANCE:
 					result = (R) gson.fromJson(data, CheckPolicyComplianceResult.class);
 					break;
+                case CHECK_VULNERABILITIES:
+                    result = (R) gson.fromJson(data, CheckVulnerabilitiesResult.class);
+                    break;
 				case GET_DEPENDENCY_DATA:
 					result = (R) gson.fromJson(data, GetDependencyDataResult.class);
 					break;
@@ -292,6 +295,9 @@ public class WssServiceClientImpl implements WssServiceClient {
 						String.valueOf(checkPolicyComplianceRequest.isForceCheckAllDependencies())));
 				jsonDiff = gson.toJson(checkPolicyComplianceRequest.getProjects());
 				break;
+            case CHECK_VULNERABILITIES:
+                jsonDiff = gson.toJson(((CheckVulnerabilitiesRequest) request).getDependencyInfos());
+                break;
 			case GET_DEPENDENCY_DATA:
 				jsonDiff = gson.toJson(((GetDependencyDataRequest) request).getProjects());
 				break;
