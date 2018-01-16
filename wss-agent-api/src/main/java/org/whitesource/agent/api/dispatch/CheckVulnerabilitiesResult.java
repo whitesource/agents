@@ -1,11 +1,13 @@
 package org.whitesource.agent.api.dispatch;
 
 import org.whitesource.agent.api.model.ResourceInfo;
+import org.whitesource.agent.api.model.VulnerabilityInfo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Result for {@link CheckVulnerabilitiesRequest}.
@@ -22,8 +24,7 @@ public class CheckVulnerabilitiesResult implements Serializable {
 
     /* --- Members --- */
 
-    // TODO: 1/11/2018 Use other element ?
-    private Collection<ResourceInfo> resourceInfos;
+    private Map<String, Collection<VulnerabilityInfo>> sha1ToVulnerabilitiesMap;
 
     /* --- Constructors --- */
 
@@ -31,16 +32,20 @@ public class CheckVulnerabilitiesResult implements Serializable {
      * Default constructor
      */
     public CheckVulnerabilitiesResult() {
-        resourceInfos = new ArrayList<ResourceInfo>();
+        sha1ToVulnerabilitiesMap = new HashMap<>();
+    }
+
+    public CheckVulnerabilitiesResult(Map<String, Collection<VulnerabilityInfo>> sha1ToVulnerabilitiesMap) {
+        this.sha1ToVulnerabilitiesMap = sha1ToVulnerabilitiesMap;
     }
 
     /* --- Getters / Setters --- */
 
-    public Collection<ResourceInfo> getResourceInfos() {
-        return resourceInfos;
+    public Map<String, Collection<VulnerabilityInfo>> getSha1ToVulnerabilitiesMap() {
+        return sha1ToVulnerabilitiesMap;
     }
 
-    public void setResourceInfos(Collection<ResourceInfo> resourceInfos) {
-        this.resourceInfos = resourceInfos;
+    public void setSha1ToVulnerabilitiesMap(Map<String, Collection<VulnerabilityInfo>> sha1ToVulnerabilitiesMap) {
+        this.sha1ToVulnerabilitiesMap = sha1ToVulnerabilitiesMap;
     }
 }

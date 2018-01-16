@@ -296,7 +296,7 @@ public class WssServiceClientImpl implements WssServiceClient {
 				jsonDiff = gson.toJson(checkPolicyComplianceRequest.getProjects());
 				break;
             case CHECK_VULNERABILITIES:
-                jsonDiff = gson.toJson(((CheckVulnerabilitiesRequest) request).getDependencyInfos());
+                jsonDiff = gson.toJson(((CheckVulnerabilitiesRequest) request).getProjects());
                 break;
 			case GET_DEPENDENCY_DATA:
 				jsonDiff = gson.toJson(((GetDependencyDataRequest) request).getProjects());

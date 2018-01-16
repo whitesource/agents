@@ -1,7 +1,7 @@
 package org.whitesource.agent.api.dispatch;
 
 
-import org.whitesource.agent.api.model.DependencyInfo;
+import org.whitesource.agent.api.model.AgentProjectInfo;
 
 import java.util.Collection;
 
@@ -10,16 +10,11 @@ import java.util.Collection;
  *
  * @since 2.5.5
  */
-
 public class CheckVulnerabilitiesRequest extends BaseRequest<CheckVulnerabilitiesRequest> {
 
     /* --- Static Members --- */
 
     private static final long serialVersionUID = - 945532206429866395L;
-
-    /* --- Members --- */
-
-    private Collection<DependencyInfo> dependencyInfos;
 
     /* --- Constructors --- */
 
@@ -33,18 +28,22 @@ public class CheckVulnerabilitiesRequest extends BaseRequest<CheckVulnerabilitie
     /**
      * Constructor
      *
-     * @param orgToken WhiteSource organization token.
+     * @param projects Open Source usage statement to check vulnerabilities.
      */
-    public CheckVulnerabilitiesRequest(String orgToken, Collection<DependencyInfo> dependencyInfos) {
+    public CheckVulnerabilitiesRequest(Collection<AgentProjectInfo> projects) {
+        this();
+        this.projects = projects;
+    }
+
+    /**
+     * Constructor
+     *
+     * @param orgToken WhiteSource organization token.
+     * @param projects Open Source usage statement to check vulnerabilities.
+     */
+    public CheckVulnerabilitiesRequest(String orgToken, Collection<AgentProjectInfo> projects) {
         this();
         this.orgToken = orgToken;
-    }
-
-    public Collection<DependencyInfo> getDependencyInfos() {
-        return dependencyInfos;
-    }
-
-    public void setDependencyInfos(Collection<DependencyInfo> dependencyInfos) {
-        this.dependencyInfos = dependencyInfos;
+        this.projects = projects;
     }
 }
