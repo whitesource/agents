@@ -73,6 +73,15 @@ public interface WssServiceClient {
      */
     SummaryScanResult summaryScan(SummaryScanRequest request) throws WssServiceException;
 
+    /**
+     * The method calls the White Source service for check vulnerabilities.
+     *
+     * @param request Check vulnerabilities request.
+     * @return Vulnerabilities report result.
+     * @throws WssServiceException In case an error occurred during the call to White Source server.
+     */
+    CheckVulnerabilitiesResult checkVulnerabilities(CheckVulnerabilitiesRequest request) throws WssServiceException;
+
 
     void shutdown();
 

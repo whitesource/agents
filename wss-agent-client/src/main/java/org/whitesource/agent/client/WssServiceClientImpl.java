@@ -160,6 +160,11 @@ public class WssServiceClientImpl implements WssServiceClient {
 	}
 
 
+    @Override
+    public CheckVulnerabilitiesResult checkVulnerabilities(CheckVulnerabilitiesRequest request) throws WssServiceException {
+        return service(request);
+    }
+
 	@Override
 	public void shutdown() {
 		httpClient.getConnectionManager().shutdown();

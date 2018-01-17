@@ -256,6 +256,26 @@ public class WhitesourceService {
     }
 
     /**
+     * Gets vulnerabilities data for given dependencies.
+     *
+     * @param orgToken          Organization token uniquely identifying the account at white source.
+     * @param product           The product name or token to update.
+     * @param productVersion    The product version.
+     * @param projectInfos      OSS usage information to send to white source.
+     * @return Vulnerabilities for given dependencies.
+     * @throws WssServiceException
+     */
+    public CheckVulnerabilitiesResult checkVulnerabilities(String orgToken,
+                                                           String product,
+                                                           String productVersion,
+                                                           Collection<AgentProjectInfo> projectInfos)
+            throws WssServiceException {
+        return client.checkVulnerabilities(
+                requestFactory.newCheckVulnerabilitiesRequest(orgToken, product, productVersion, projectInfos));
+    }
+
+
+    /**
      * The method close the underlying client to the White Source service.
      *
      * @see org.whitesource.agent.client.WssServiceClient#shutdown()

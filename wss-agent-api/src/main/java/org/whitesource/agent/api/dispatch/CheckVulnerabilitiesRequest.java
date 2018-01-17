@@ -10,7 +10,7 @@ import java.util.Collection;
  *
  * @since 2.5.5
  */
-public class CheckVulnerabilitiesRequest extends BaseRequest<CheckVulnerabilitiesRequest> {
+public class CheckVulnerabilitiesRequest extends BaseRequest<CheckVulnerabilitiesResult> {
 
     /* --- Static Members --- */
 
