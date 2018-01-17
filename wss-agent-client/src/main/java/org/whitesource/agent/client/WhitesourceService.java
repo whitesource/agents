@@ -274,7 +274,6 @@ public class WhitesourceService {
                 requestFactory.newCheckVulnerabilitiesRequest(orgToken, product, productVersion, projectInfos));
     }
 
-
     /**
      * The method close the underlying client to the White Source service.
      *

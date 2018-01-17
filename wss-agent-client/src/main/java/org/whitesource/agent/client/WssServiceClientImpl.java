@@ -159,7 +159,6 @@ public class WssServiceClientImpl implements WssServiceClient {
 		return service(request);
 	}
 
-
     @Override
     public CheckVulnerabilitiesResult checkVulnerabilities(CheckVulnerabilitiesRequest request) throws WssServiceException {
         return service(request);
