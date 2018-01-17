@@ -1,10 +1,8 @@
 package org.whitesource.agent.api.dispatch;
 
-import org.whitesource.agent.api.model.ResourceInfo;
 import org.whitesource.agent.api.model.VulnerabilityInfo;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
