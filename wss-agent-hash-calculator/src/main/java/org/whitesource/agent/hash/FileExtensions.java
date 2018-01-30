@@ -36,11 +36,7 @@ public class FileExtensions {
                     "gem", "gzip", "jar", "msi", "nupkg", "rpm", "swc", "swf",
                     "tar.bz2", "tar.gz", "tar", "tgz", "pkg.tar.xz", "udeb", "whl", "zip", "(u)?deb", "(a)?rpm"));
 
-    /*private static final Collection<String> JAVA_FILE_EXTENSIONS = new ArrayList<>(
-            Arrays.asList("jar", "war", "aar", "ear", "car"));
 
-    //todo merge between JAVA_FILE_EXTENSIONS and ARCHIVE_EXTENSIONS
-    public static final List<String> ARCHIVE_EXTENSIONS = Arrays.asList("war", "ear", "zip", "whl", "tar.gz", "tgz", "tar");*/
     public static final List<String> ARCHIVE_EXTENSIONS = Arrays.asList("war", "ear", "zip", "whl", "tar.gz", "tgz", "tar", "car", "aar", "jar");
     private static final Collection<String> DOT_NET_FILE_EXTENSIONS = new ArrayList<>(
             Arrays.asList("dll", "exe"));
