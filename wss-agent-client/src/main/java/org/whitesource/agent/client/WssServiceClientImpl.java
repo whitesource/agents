@@ -42,6 +42,9 @@ import org.whitesource.agent.api.APIConstants;
 import org.whitesource.agent.api.dispatch.*;
 import org.whitesource.agent.utils.ZipUtils;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
@@ -126,6 +129,11 @@ public class WssServiceClientImpl implements WssServiceClient {
 		HttpConnectionParams.setConnectionTimeout(params, this.connectionTimeout);
 		HttpConnectionParams.setSoTimeout(params, this.connectionTimeout);
 		HttpClientParams.setRedirecting(params, true);
+		HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+			public boolean verify(String s, SSLSession sslSession) {
+				return true;
+			}
+		});
 		httpClient = new DefaultHttpClient(params);
 		if (setProxy) {
 			findDefaultProxy();
