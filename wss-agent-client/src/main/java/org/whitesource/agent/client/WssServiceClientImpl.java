@@ -32,8 +32,12 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -47,6 +51,8 @@ import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLSession;
 import java.io.IOException;
 import java.net.*;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -129,12 +135,18 @@ public class WssServiceClientImpl implements WssServiceClient {
 		HttpConnectionParams.setConnectionTimeout(params, this.connectionTimeout);
 		HttpConnectionParams.setSoTimeout(params, this.connectionTimeout);
 		HttpClientParams.setRedirecting(params, true);
-		HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-			public boolean verify(String s, SSLSession sslSession) {
-				return true;
-			}
-		});
-		httpClient = new DefaultHttpClient(params);
+
+		try {
+			httpClient =  (DefaultHttpClient)HttpClients.custom().
+					setHostnameVerifier(new AllowAllHostnameVerifier()).
+					setSslcontext(new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
+						public boolean isTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+							return true;
+						}
+					}).build()).build();
+		} catch (Exception e) {
+			httpClient = new DefaultHttpClient(params);
+		}
 		if (setProxy) {
 			findDefaultProxy();
 		}
