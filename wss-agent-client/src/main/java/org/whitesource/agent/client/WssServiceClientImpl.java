@@ -26,6 +26,7 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
@@ -33,11 +34,10 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.*;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -77,7 +77,7 @@ public class WssServiceClientImpl implements WssServiceClient {
 	/* --- Members --- */
 
 	protected String serviceUrl;
-	protected DefaultHttpClient httpClient;
+	protected CloseableHttpClient httpClient;
     protected Gson gson;
 	protected int connectionTimeout;
 
@@ -137,14 +137,13 @@ public class WssServiceClientImpl implements WssServiceClient {
 		HttpClientParams.setRedirecting(params, true);
 
 		try {
-			httpClient =  (DefaultHttpClient)HttpClients.custom().
-					setHostnameVerifier(new AllowAllHostnameVerifier()).
-					setSslcontext(new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
-						public boolean isTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
-							return true;
-						}
-					}).build()).build();
+			httpClient = HttpClients
+					.custom()
+					.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
+					.build();
 		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info("Using default http client");
 			httpClient = new DefaultHttpClient(params);
 		}
 		if (setProxy) {
@@ -213,7 +212,11 @@ public class WssServiceClientImpl implements WssServiceClient {
             } else {
                 credentials = new UsernamePasswordCredentials(username, password);
             }
-            httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, credentials);
+			CredentialsProvider credsProvider = new BasicCredentialsProvider();
+			credsProvider.setCredentials(AuthScope.ANY, credentials);
+			httpClient = HttpClientBuilder.create().setProxy(proxy).setDefaultCredentialsProvider(credsProvider).build();
+
+//            httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, credentials);
         }
 	}
 
