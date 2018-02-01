@@ -33,11 +33,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.SSLContextBuilder;
-import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.*;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
@@ -46,15 +44,11 @@ import org.whitesource.agent.api.APIConstants;
 import org.whitesource.agent.api.dispatch.*;
 import org.whitesource.agent.utils.ZipUtils;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSession;
 import java.io.IOException;
 import java.net.*;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -139,6 +133,7 @@ public class WssServiceClientImpl implements WssServiceClient {
 		try {
 			httpClient = HttpClients
 					.custom()
+					.setConnectionTimeToLive(this.connectionTimeout, TimeUnit.MINUTES)
 					.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
 					.build();
 		} catch (Exception e) {
@@ -198,7 +193,9 @@ public class WssServiceClientImpl implements WssServiceClient {
         }
 
 		HttpHost proxy = new HttpHost(host, port);
-		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+//		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+		DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
+		httpClient = HttpClients.custom().setRoutePlanner(routePlanner).build();
         logger.info("Using proxy: " + proxy.toHostString());
 
         if (username != null && username.trim().length() > 0) {
@@ -214,6 +211,7 @@ public class WssServiceClientImpl implements WssServiceClient {
             }
 			CredentialsProvider credsProvider = new BasicCredentialsProvider();
 			credsProvider.setCredentials(AuthScope.ANY, credentials);
+			// TODO check
 			httpClient = HttpClientBuilder.create().setProxy(proxy).setDefaultCredentialsProvider(credsProvider).build();
 
 //            httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, credentials);
