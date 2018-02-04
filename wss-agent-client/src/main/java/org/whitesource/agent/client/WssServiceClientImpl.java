@@ -34,6 +34,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.*;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.message.BasicNameValuePair;
@@ -46,6 +47,7 @@ import org.whitesource.agent.utils.ZipUtils;
 
 import java.io.IOException;
 import java.net.*;
+import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -131,10 +133,19 @@ public class WssServiceClientImpl implements WssServiceClient {
 		HttpClientParams.setRedirecting(params, true);
 
 		try {
+			// If parameter
+			KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+			trustStore.load(null, null);
+
+			WssSslSocketFactory sf = new WssSslSocketFactory(trustStore);
+			sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+
 			httpClient = HttpClients
 					.custom()
 					.setConnectionTimeToLive(this.connectionTimeout, TimeUnit.MINUTES)
 					.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
+					.setSSLSocketFactory(sf)
 					.build();
 		} catch (Exception e) {
 			e.printStackTrace();
