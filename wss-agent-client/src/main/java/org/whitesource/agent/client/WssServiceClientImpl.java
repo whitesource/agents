@@ -45,9 +45,13 @@ import org.whitesource.agent.api.APIConstants;
 import org.whitesource.agent.api.dispatch.*;
 import org.whitesource.agent.utils.ZipUtils;
 
+import javax.net.ssl.*;
 import java.io.IOException;
 import java.net.*;
 import java.security.KeyStore;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -55,147 +59,154 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Default Implementation of the interface using Apache's HttpClient.
- * 
+ *
  * @author tom.shapira
  * @author Edo.Shor
  */
 public class WssServiceClientImpl implements WssServiceClient {
 
-	/* --- Static members --- */
+    /* --- Static members --- */
 
     private static final String HTTP_PROXY_USER = "http.proxyUser";
     private static final String HTTP_PROXY_PASSWORD = "http.proxyPassword";
     private static final int TO_MILLISECONDS = 60 * 1000;
-	private static final String UTF_8 = "UTF-8";
+    private static final String UTF_8 = "UTF-8";
 
     private static final Log logger = LogFactory.getLog(WssServiceClientImpl.class);
+    private static final String TLS = "TLS";
 
-	/* --- Members --- */
+    /* --- Members --- */
 
-	protected String serviceUrl;
-	protected CloseableHttpClient httpClient;
+    protected String serviceUrl;
+    protected CloseableHttpClient httpClient;
     protected Gson gson;
-	protected int connectionTimeout;
+    protected int connectionTimeout;
 
-	/* --- Constructors --- */
+    /* --- Constructors --- */
 
-	/**
-	 * Default constructor
-	 */
-	public WssServiceClientImpl() {
-		this(ClientConstants.DEFAULT_SERVICE_URL);
-	}
+    /**
+     * Default constructor
+     */
+    public WssServiceClientImpl() {
+        this(ClientConstants.DEFAULT_SERVICE_URL);
+    }
 
-	/**
-	 * Constructor
-	 *
-	 * @param serviceUrl WhiteSource service URL to use.
-	 */
-	public WssServiceClientImpl(String serviceUrl) {
-		this(serviceUrl, true);
-	}
+    /**
+     * Constructor
+     *
+     * @param serviceUrl WhiteSource service URL to use.
+     */
+    public WssServiceClientImpl(String serviceUrl) {
+        this(serviceUrl, true);
+    }
 
-	/**
-	 * Constructor
-	 *
-	 * @param serviceUrl WhiteSource service URL to use.
-	 * @param setProxy WhiteSource set proxy, whether the proxy settings defined or not.
-	 */
-	public WssServiceClientImpl(String serviceUrl, boolean setProxy) {
-		this(serviceUrl, setProxy, ClientConstants.DEFAULT_CONNECTION_TIMEOUT_MINUTES);
-	}
+    /**
+     * Constructor
+     *
+     * @param serviceUrl WhiteSource service URL to use.
+     * @param setProxy WhiteSource set proxy, whether the proxy settings defined or not.
+     */
+    public WssServiceClientImpl(String serviceUrl, boolean setProxy) {
+        this(serviceUrl, setProxy, ClientConstants.DEFAULT_CONNECTION_TIMEOUT_MINUTES);
+    }
 
-	/**
-	 * Constructor
-	 *
-	 * @param serviceUrl WhiteSource service URL to use.
-	 * @param setProxy WhiteSource set proxy, whether the proxy settings is defined or not.
-	 * @param connectionTimeoutMinutes WhiteSource connection timeout, whether the connection timeout is defined or not (default to 60 minutes).
-	 */
-	public WssServiceClientImpl(String serviceUrl, boolean setProxy, int connectionTimeoutMinutes) {
-		gson = new Gson();
+    /**
+     * Constructor
+     *
+     * @param serviceUrl WhiteSource service URL to use.
+     * @param setProxy WhiteSource set proxy, whether the proxy settings is defined or not.
+     * @param connectionTimeoutMinutes WhiteSource connection timeout, whether the connection timeout is defined or not (default to 60 minutes).
+     */
+    public WssServiceClientImpl(String serviceUrl, boolean setProxy, int connectionTimeoutMinutes) {
+        gson = new Gson();
 
-		if (serviceUrl == null || serviceUrl.length() == 0) {
-			this.serviceUrl = ClientConstants.DEFAULT_SERVICE_URL;
-		} else {
-			this.serviceUrl = serviceUrl;
-		}
+        if (serviceUrl == null || serviceUrl.length() == 0) {
+            this.serviceUrl = ClientConstants.DEFAULT_SERVICE_URL;
+        } else {
+            this.serviceUrl = serviceUrl;
+        }
 
-		if (connectionTimeoutMinutes <= 0) {
-			this.connectionTimeout = ClientConstants.DEFAULT_CONNECTION_TIMEOUT_MINUTES * TO_MILLISECONDS;
-		} else {
-			this.connectionTimeout = connectionTimeoutMinutes * TO_MILLISECONDS;
-		}
+        if (connectionTimeoutMinutes <= 0) {
+            this.connectionTimeout = ClientConstants.DEFAULT_CONNECTION_TIMEOUT_MINUTES * TO_MILLISECONDS;
+        } else {
+            this.connectionTimeout = connectionTimeoutMinutes * TO_MILLISECONDS;
+        }
 
-		HttpParams params = new BasicHttpParams();
-		HttpConnectionParams.setConnectionTimeout(params, this.connectionTimeout);
-		HttpConnectionParams.setSoTimeout(params, this.connectionTimeout);
-		HttpClientParams.setRedirecting(params, true);
+        HttpParams params = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(params, this.connectionTimeout);
+        HttpConnectionParams.setSoTimeout(params, this.connectionTimeout);
+        HttpClientParams.setRedirecting(params, true);
 
-		try {
-			// If parameter
-			KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-			trustStore.load(null, null);
+        try {
 
-			WssSslSocketFactory sf = new WssSslSocketFactory(trustStore);
-			sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+            HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
+            SSLContext context = SSLContext.getInstance(TLS);
+            context.init(null, new X509TrustManager[]{new X509TrustManager(){
+                public void checkClientTrusted(X509Certificate[] chain,
+                                               String authType) throws CertificateException {}
+                public void checkServerTrusted(X509Certificate[] chain,
+                                               String authType) throws CertificateException {}
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }}}, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(
+                    context.getSocketFactory());
 
 
-			httpClient = HttpClients
-					.custom()
-					.setConnectionTimeToLive(this.connectionTimeout, TimeUnit.MINUTES)
-					.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
-					.setSSLSocketFactory(sf)
-					.build();
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.info("Using default http client");
-			httpClient = new DefaultHttpClient(params);
-		}
-		if (setProxy) {
-			findDefaultProxy();
-		}
-	}
+            httpClient = HttpClients
+                    .custom()
+                    .setConnectionTimeToLive(this.connectionTimeout, TimeUnit.MINUTES)
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("Using default http client");
+            httpClient = new DefaultHttpClient(params);
+        }
 
-	/* --- Interface implementation methods --- */
+        if (setProxy) {
+            findDefaultProxy();
+        }
+    }
 
-	@Override
-	public UpdateInventoryResult updateInventory(UpdateInventoryRequest request) throws WssServiceException {
-		return service(request);
-	}
+    /* --- Interface implementation methods --- */
+
+    @Override
+    public UpdateInventoryResult updateInventory(UpdateInventoryRequest request) throws WssServiceException {
+        return service(request);
+    }
 
     @Override
     public CheckPoliciesResult checkPolicies(CheckPoliciesRequest request) throws WssServiceException {
         return service(request);
     }
 
-	@Override
-	public CheckPolicyComplianceResult checkPolicyCompliance(CheckPolicyComplianceRequest request) throws WssServiceException {
-		return service(request);
-	}
+    @Override
+    public CheckPolicyComplianceResult checkPolicyCompliance(CheckPolicyComplianceRequest request) throws WssServiceException {
+        return service(request);
+    }
 
-	@Override
-	public GetDependencyDataResult getDependencyData(GetDependencyDataRequest request) throws WssServiceException {
-		return service(request);
-	}
+    @Override
+    public GetDependencyDataResult getDependencyData(GetDependencyDataRequest request) throws WssServiceException {
+        return service(request);
+    }
 
-	@Override
-	public SummaryScanResult summaryScan(SummaryScanRequest request) throws WssServiceException {
-		return service(request);
-	}
+    @Override
+    public SummaryScanResult summaryScan(SummaryScanRequest request) throws WssServiceException {
+        return service(request);
+    }
 
     @Override
     public CheckVulnerabilitiesResult checkVulnerabilities(CheckVulnerabilitiesRequest request) throws WssServiceException {
         return service(request);
     }
 
-	@Override
-	public void shutdown() {
-		httpClient.getConnectionManager().shutdown();
-	}
+    @Override
+    public void shutdown() {
+        httpClient.getConnectionManager().shutdown();
+    }
 
-	@Override
-	public void setProxy(String host, int port, String username, String password) {
+    @Override
+    public void setProxy(String host, int port, String username, String password) {
         if (host == null || host.trim().length() == 0) {
             return;
         }
@@ -203,10 +214,10 @@ public class WssServiceClientImpl implements WssServiceClient {
             return;
         }
 
-		HttpHost proxy = new HttpHost(host, port);
+        HttpHost proxy = new HttpHost(host, port);
 //		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
-		DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
-		httpClient = HttpClients.custom().setRoutePlanner(routePlanner).build();
+        DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
+        httpClient = HttpClients.custom().setRoutePlanner(routePlanner).build();
         logger.info("Using proxy: " + proxy.toHostString());
 
         if (username != null && username.trim().length() > 0) {
@@ -220,165 +231,165 @@ public class WssServiceClientImpl implements WssServiceClient {
             } else {
                 credentials = new UsernamePasswordCredentials(username, password);
             }
-			CredentialsProvider credsProvider = new BasicCredentialsProvider();
-			credsProvider.setCredentials(AuthScope.ANY, credentials);
-			// TODO check
-			httpClient = HttpClientBuilder.create().setProxy(proxy).setDefaultCredentialsProvider(credsProvider).build();
+            CredentialsProvider credsProvider = new BasicCredentialsProvider();
+            credsProvider.setCredentials(AuthScope.ANY, credentials);
+            // TODO check
+            httpClient = HttpClientBuilder.create().setProxy(proxy).setDefaultCredentialsProvider(credsProvider).build();
 
 //            httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, credentials);
         }
-	}
+    }
 
     @Override
-	public void setConnectionTimeout(int timeout) {
-		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), timeout);
-		HttpConnectionParams.setSoTimeout(httpClient.getParams(), timeout);
-	}
-	
-	/* --- Protected methods --- */
+    public void setConnectionTimeout(int timeout) {
+        HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), timeout);
+        HttpConnectionParams.setSoTimeout(httpClient.getParams(), timeout);
+    }
 
-	/**
-	 * The method service the given request.
-	 *
-	 * @param request Request to serve.
-	 *
-	 * @return Result from WhiteSource service.
-	 *
-	 * @throws WssServiceException In case of errors while serving the request.
-	 */
-	@SuppressWarnings("unchecked")
-	protected <R> R service(ServiceRequest<R> request) throws WssServiceException {
-		R result;
-		String response = "";
-		try {
-			HttpRequestBase httpRequest = createHttpRequest(request);
+    /* --- Protected methods --- */
 
-			logger.trace("Calling White Source service: " + request);
-			response = httpClient.execute(httpRequest, new BasicResponseHandler());
+    /**
+     * The method service the given request.
+     *
+     * @param request Request to serve.
+     *
+     * @return Result from WhiteSource service.
+     *
+     * @throws WssServiceException In case of errors while serving the request.
+     */
+    @SuppressWarnings("unchecked")
+    protected <R> R service(ServiceRequest<R> request) throws WssServiceException {
+        R result;
+        String response = "";
+        try {
+            HttpRequestBase httpRequest = createHttpRequest(request);
 
-			String data = extractResultData(response);
-			logger.trace("Result data is: " + data);
+            logger.trace("Calling White Source service: " + request);
+            response = httpClient.execute(httpRequest, new BasicResponseHandler());
 
-			switch (request.type()) {
-				case UPDATE:
-					result = (R) gson.fromJson(data, UpdateInventoryResult.class);
-					break;
-				case CHECK_POLICIES:
-					result = (R) gson.fromJson(data, CheckPoliciesResult.class);
-					break;
-				case CHECK_POLICY_COMPLIANCE:
-					result = (R) gson.fromJson(data, CheckPolicyComplianceResult.class);
-					break;
+            String data = extractResultData(response);
+            logger.trace("Result data is: " + data);
+
+            switch (request.type()) {
+                case UPDATE:
+                    result = (R) gson.fromJson(data, UpdateInventoryResult.class);
+                    break;
+                case CHECK_POLICIES:
+                    result = (R) gson.fromJson(data, CheckPoliciesResult.class);
+                    break;
+                case CHECK_POLICY_COMPLIANCE:
+                    result = (R) gson.fromJson(data, CheckPolicyComplianceResult.class);
+                    break;
                 case CHECK_VULNERABILITIES:
                     result = (R) gson.fromJson(data, CheckVulnerabilitiesResult.class);
                     break;
-				case GET_DEPENDENCY_DATA:
-					result = (R) gson.fromJson(data, GetDependencyDataResult.class);
-					break;
-				case SUMMARY_SCAN:
-					result = (R) gson.fromJson(data, SummaryScanResult.class);
-					break;
-				default:
-					throw new IllegalStateException("Unsupported request type.");
-			}
-		} catch (JsonSyntaxException e) {
-			throw new WssServiceException("JsonSyntax exception. Response data is:  " + response + e.getMessage(), e);
-		} catch (IOException e) {
-			throw new WssServiceException("Unexpected error. Response data is: " + response + e.getMessage(), e);
-		}
+                case GET_DEPENDENCY_DATA:
+                    result = (R) gson.fromJson(data, GetDependencyDataResult.class);
+                    break;
+                case SUMMARY_SCAN:
+                    result = (R) gson.fromJson(data, SummaryScanResult.class);
+                    break;
+                default:
+                    throw new IllegalStateException("Unsupported request type.");
+            }
+        } catch (JsonSyntaxException e) {
+            throw new WssServiceException("JsonSyntax exception. Response data is:  " + response + e.getMessage(), e);
+        } catch (IOException e) {
+            throw new WssServiceException("Unexpected error. Response data is: " + response + e.getMessage(), e);
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	/**
-	 * The method create the HTTP post request to be sent to the remote service.
-	 *
-	 * @param request Request to service.
-	 *
-	 * @return Newly created HTTP post request.
-	 *
-	 * @throws IOException In case of error creating the request.
-	 */
-	protected <R> HttpRequestBase createHttpRequest(ServiceRequest<R> request)  throws IOException {
-		HttpPost httpRequest = new HttpPost(serviceUrl);
-		httpRequest.setHeader("Accept", ClientConstants.APPLICATION_JSON);
+    /**
+     * The method create the HTTP post request to be sent to the remote service.
+     *
+     * @param request Request to service.
+     *
+     * @return Newly created HTTP post request.
+     *
+     * @throws IOException In case of error creating the request.
+     */
+    protected <R> HttpRequestBase createHttpRequest(ServiceRequest<R> request)  throws IOException {
+        HttpPost httpRequest = new HttpPost(serviceUrl);
+        httpRequest.setHeader("Accept", ClientConstants.APPLICATION_JSON);
 
-		RequestType requestType = request.type();
-		List <NameValuePair> nvps = new ArrayList<>();
-		nvps.add(new BasicNameValuePair(APIConstants.PARAM_REQUEST_TYPE, requestType.toString()));
-		nvps.add(new BasicNameValuePair(APIConstants.PARAM_AGENT, request.agent()));
-		nvps.add(new BasicNameValuePair(APIConstants.PARAM_AGENT_VERSION, request.agentVersion()));
-		nvps.add(new BasicNameValuePair(APIConstants.PARAM_TOKEN, request.orgToken()));
+        RequestType requestType = request.type();
+        List <NameValuePair> nvps = new ArrayList<>();
+        nvps.add(new BasicNameValuePair(APIConstants.PARAM_REQUEST_TYPE, requestType.toString()));
+        nvps.add(new BasicNameValuePair(APIConstants.PARAM_AGENT, request.agent()));
+        nvps.add(new BasicNameValuePair(APIConstants.PARAM_AGENT_VERSION, request.agentVersion()));
+        nvps.add(new BasicNameValuePair(APIConstants.PARAM_TOKEN, request.orgToken()));
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_REQUESTER_EMAIL, request.requesterEmail()));
-		nvps.add(new BasicNameValuePair(APIConstants.PARAM_PRODUCT, request.product()));
-		nvps.add(new BasicNameValuePair(APIConstants.PARAM_PRODUCT_VERSION, request.productVersion()));
+        nvps.add(new BasicNameValuePair(APIConstants.PARAM_PRODUCT, request.product()));
+        nvps.add(new BasicNameValuePair(APIConstants.PARAM_PRODUCT_VERSION, request.productVersion()));
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_TIME_STAMP, String.valueOf(request.timeStamp())));
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_PLUGIN_VERSION, String.valueOf(request.pluginVersion())));
 
-		String jsonDiff = null;
-		switch (requestType) {
-			case UPDATE:
-				UpdateInventoryRequest updateInventoryRequest = (UpdateInventoryRequest) request;
-				nvps.add(new BasicNameValuePair(APIConstants.PARAM_UPDATE_TYPE, updateInventoryRequest.getUpdateType().toString()));
-				jsonDiff = gson.toJson(updateInventoryRequest.getProjects());
-				break;
-			case CHECK_POLICIES:
-				jsonDiff = gson.toJson(((CheckPoliciesRequest) request).getProjects());
-				break;
-			case CHECK_POLICY_COMPLIANCE:
-				CheckPolicyComplianceRequest checkPolicyComplianceRequest = (CheckPolicyComplianceRequest) request;
-				nvps.add(new BasicNameValuePair(APIConstants.PARAM_FORCE_CHECK_ALL_DEPENDENCIES,
-						String.valueOf(checkPolicyComplianceRequest.isForceCheckAllDependencies())));
-				jsonDiff = gson.toJson(checkPolicyComplianceRequest.getProjects());
-				break;
+        String jsonDiff = null;
+        switch (requestType) {
+            case UPDATE:
+                UpdateInventoryRequest updateInventoryRequest = (UpdateInventoryRequest) request;
+                nvps.add(new BasicNameValuePair(APIConstants.PARAM_UPDATE_TYPE, updateInventoryRequest.getUpdateType().toString()));
+                jsonDiff = gson.toJson(updateInventoryRequest.getProjects());
+                break;
+            case CHECK_POLICIES:
+                jsonDiff = gson.toJson(((CheckPoliciesRequest) request).getProjects());
+                break;
+            case CHECK_POLICY_COMPLIANCE:
+                CheckPolicyComplianceRequest checkPolicyComplianceRequest = (CheckPolicyComplianceRequest) request;
+                nvps.add(new BasicNameValuePair(APIConstants.PARAM_FORCE_CHECK_ALL_DEPENDENCIES,
+                        String.valueOf(checkPolicyComplianceRequest.isForceCheckAllDependencies())));
+                jsonDiff = gson.toJson(checkPolicyComplianceRequest.getProjects());
+                break;
             case CHECK_VULNERABILITIES:
                 jsonDiff = gson.toJson(((CheckVulnerabilitiesRequest) request).getProjects());
                 break;
-			case GET_DEPENDENCY_DATA:
-				jsonDiff = gson.toJson(((GetDependencyDataRequest) request).getProjects());
-				break;
-			case SUMMARY_SCAN:
-				SummaryScanRequest summaryScanRequest = (SummaryScanRequest) request;
-				jsonDiff = gson.toJson(summaryScanRequest.getProjects());
-			default: break;
-		}
+            case GET_DEPENDENCY_DATA:
+                jsonDiff = gson.toJson(((GetDependencyDataRequest) request).getProjects());
+                break;
+            case SUMMARY_SCAN:
+                SummaryScanRequest summaryScanRequest = (SummaryScanRequest) request;
+                jsonDiff = gson.toJson(summaryScanRequest.getProjects());
+            default: break;
+        }
 
         // compress json before sending
         String compressedString = ZipUtils.compressString(jsonDiff);
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_DIFF, compressedString));
 
-		httpRequest.setEntity(new UrlEncodedFormEntity(nvps, UTF_8));
+        httpRequest.setEntity(new UrlEncodedFormEntity(nvps, UTF_8));
 
-		return httpRequest;
-	}
+        return httpRequest;
+    }
 
     /**
-	 * The method extract the data from the given {@link org.whitesource.agent.api.dispatch.ResultEnvelope}.
-	 *
-	 * @param response HTTP response as string.
-	 *
-	 * @return String with logical result in JSON format.
-	 *
-	 * @throws IOException
-	 * @throws WssServiceException
-	 */
+     * The method extract the data from the given {@link org.whitesource.agent.api.dispatch.ResultEnvelope}.
+     *
+     * @param response HTTP response as string.
+     *
+     * @return String with logical result in JSON format.
+     *
+     * @throws IOException
+     * @throws WssServiceException
+     */
     protected String extractResultData(String response) throws IOException, WssServiceException {
         // parse response
-		ResultEnvelope envelope = gson.fromJson(response, ResultEnvelope.class);
+        ResultEnvelope envelope = gson.fromJson(response, ResultEnvelope.class);
         if (envelope == null) {
             throw new WssServiceException("Empty response, response data is: " + response);
         }
 
-		// extract info from envelope
-		String message = envelope.getMessage();
-		String data = envelope.getData();
+        // extract info from envelope
+        String message = envelope.getMessage();
+        String data = envelope.getData();
 
-		// service fault ?
-		if (ResultEnvelope.STATUS_SUCCESS != envelope.getStatus()) {
-			throw new WssServiceException(message + ": " + data);
-		}
-		return data;
-	}
+        // service fault ?
+        if (ResultEnvelope.STATUS_SUCCESS != envelope.getStatus()) {
+            throw new WssServiceException(message + ": " + data);
+        }
+        return data;
+    }
 
     /* --- Private methods --- */
 
@@ -412,17 +423,17 @@ public class WssServiceClientImpl implements WssServiceClient {
         }
     }
 
-	/* --- Getters  --- */
+    /* --- Getters  --- */
 
-	public String getServiceUrl() {
-		return serviceUrl;
-	}
+    public String getServiceUrl() {
+        return serviceUrl;
+    }
 
-	public HttpClient getHttpClient() {
-		return httpClient;
-	}
+    public HttpClient getHttpClient() {
+        return httpClient;
+    }
 
-	public int getConnectionTimeout() {
-		return connectionTimeout;
-	}
+    public int getConnectionTimeout() {
+        return connectionTimeout;
+    }
 }
