@@ -32,9 +32,6 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.params.HttpClientParams;
-import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.*;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.message.BasicNameValuePair;
@@ -45,10 +42,11 @@ import org.whitesource.agent.api.APIConstants;
 import org.whitesource.agent.api.dispatch.*;
 import org.whitesource.agent.utils.ZipUtils;
 
-import javax.net.ssl.*;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.net.*;
-import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -110,6 +108,10 @@ public class WssServiceClientImpl implements WssServiceClient {
         this(serviceUrl, setProxy, ClientConstants.DEFAULT_CONNECTION_TIMEOUT_MINUTES);
     }
 
+	public WssServiceClientImpl(String serviceUrl, boolean setProxy, int connectionTimeoutMinutes) {
+		this(serviceUrl, setProxy, connectionTimeoutMinutes, false);
+	}
+
     /**
      * Constructor
      *
@@ -117,7 +119,7 @@ public class WssServiceClientImpl implements WssServiceClient {
      * @param setProxy WhiteSource set proxy, whether the proxy settings is defined or not.
      * @param connectionTimeoutMinutes WhiteSource connection timeout, whether the connection timeout is defined or not (default to 60 minutes).
      */
-    public WssServiceClientImpl(String serviceUrl, boolean setProxy, int connectionTimeoutMinutes) {
+    public WssServiceClientImpl(String serviceUrl, boolean setProxy, int connectionTimeoutMinutes, boolean allowUnsecureSSL) {
         gson = new Gson();
 
         if (serviceUrl == null || serviceUrl.length() == 0) {
@@ -138,20 +140,25 @@ public class WssServiceClientImpl implements WssServiceClient {
         HttpClientParams.setRedirecting(params, true);
 
         try {
+			if (allowUnsecureSSL) {
+				HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
+				SSLContext context = SSLContext.getInstance(TLS);
+				context.init(null, new X509TrustManager[]{new X509TrustManager() {
+					public void checkClientTrusted(X509Certificate[] chain,
+												   String authType) throws CertificateException {
+					}
 
-            HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
-            SSLContext context = SSLContext.getInstance(TLS);
-            context.init(null, new X509TrustManager[]{new X509TrustManager(){
-                public void checkClientTrusted(X509Certificate[] chain,
-                                               String authType) throws CertificateException {}
-                public void checkServerTrusted(X509Certificate[] chain,
-                                               String authType) throws CertificateException {}
-                public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
-                }}}, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(
-                    context.getSocketFactory());
+					public void checkServerTrusted(X509Certificate[] chain,
+												   String authType) throws CertificateException {
+					}
 
+					public X509Certificate[] getAcceptedIssuers() {
+						return new X509Certificate[0];
+					}
+				}}, new SecureRandom());
+				HttpsURLConnection.setDefaultSSLSocketFactory(
+						context.getSocketFactory());
+			}
 
             httpClient = HttpClients
                     .custom()
