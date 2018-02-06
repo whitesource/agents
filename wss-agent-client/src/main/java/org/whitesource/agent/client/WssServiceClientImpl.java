@@ -153,11 +153,9 @@ public class WssServiceClientImpl implements WssServiceClient {
                 char[] password = SOME_PASSWORD.toCharArray();
                 keystore.load(null, password);
 
-
                 WssSSLSocketFactory sf = new WssSSLSocketFactory(keystore);
                 sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 
-//            HttpParams params = new BasicHttpParams();
                 HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
                 HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
 
