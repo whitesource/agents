@@ -56,9 +56,11 @@ import org.whitesource.agent.utils.ZipUtils;
 import javax.net.ssl.*;
 import java.io.File;
 import java.io.FileInputStream;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.net.*;
-import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -120,6 +122,10 @@ public class WssServiceClientImpl implements WssServiceClient {
         this(serviceUrl, setProxy, ClientConstants.DEFAULT_CONNECTION_TIMEOUT_MINUTES);
     }
 
+	public WssServiceClientImpl(String serviceUrl, boolean setProxy, int connectionTimeoutMinutes) {
+		this(serviceUrl, setProxy, connectionTimeoutMinutes, false);
+	}
+
     /**
      * Constructor
      *
@@ -127,7 +133,7 @@ public class WssServiceClientImpl implements WssServiceClient {
      * @param setProxy WhiteSource set proxy, whether the proxy settings is defined or not.
      * @param connectionTimeoutMinutes WhiteSource connection timeout, whether the connection timeout is defined or not (default to 60 minutes).
      */
-    public WssServiceClientImpl(String serviceUrl, boolean setProxy, int connectionTimeoutMinutes) {
+    public WssServiceClientImpl(String serviceUrl, boolean setProxy, int connectionTimeoutMinutes, boolean allowUnsecureSSL) {
         gson = new Gson();
 
         if (serviceUrl == null || serviceUrl.length() == 0) {

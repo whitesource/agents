@@ -52,7 +52,12 @@ public class WhitesourceService {
     }
 
     public WhitesourceService(final String agent, final String agentVersion, String pluginVersion, final String serviceUrl, boolean setProxy,
-                              int connectionTimeoutMinutes) {
+                              int connectionTimeoutMinutes){
+        this (agent, agentVersion, pluginVersion, serviceUrl, setProxy, connectionTimeoutMinutes, false);
+    }
+
+    public WhitesourceService(final String agent, final String agentVersion, String pluginVersion, final String serviceUrl, boolean setProxy,
+                              int connectionTimeoutMinutes, boolean allowUnsecureSSL) {
         requestFactory = new RequestFactory(agent, agentVersion, pluginVersion);
 
         String url = serviceUrl;
@@ -64,7 +69,7 @@ public class WhitesourceService {
             connectionTimeoutMinutes = Integer.parseInt(System.getProperty(ClientConstants.CONNECTION_TIMEOUT_KEYWORD,
                     String.valueOf(ClientConstants.DEFAULT_CONNECTION_TIMEOUT_MINUTES)));
         }
-        client = new WssServiceClientImpl(url, setProxy, connectionTimeoutMinutes);
+        client = new WssServiceClientImpl(url, setProxy, connectionTimeoutMinutes, allowUnsecureSSL);
     }
 
     // backward compatibility methods (plugin version is not a parameter)
