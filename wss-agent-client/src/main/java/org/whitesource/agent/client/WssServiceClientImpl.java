@@ -21,6 +21,7 @@ import com.google.gson.JsonSyntaxException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHost;
+import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
@@ -32,20 +33,29 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.params.HttpClientParams;
+import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.*;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.HTTP;
 import org.whitesource.agent.api.APIConstants;
 import org.whitesource.agent.api.dispatch.*;
 import org.whitesource.agent.utils.ZipUtils;
 
 import javax.net.ssl.*;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.*;
 import java.security.KeyStore;
@@ -137,30 +147,34 @@ public class WssServiceClientImpl implements WssServiceClient {
         HttpConnectionParams.setSoTimeout(params, this.connectionTimeout);
         HttpClientParams.setRedirecting(params, true);
 
-        try {
+        httpClient = new DefaultHttpClient();
 
-            HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
-            SSLContext context = SSLContext.getInstance(TLS);
-            context.init(null, new X509TrustManager[]{new X509TrustManager(){
-                public void checkClientTrusted(X509Certificate[] chain,
-                                               String authType) throws CertificateException {}
-                public void checkServerTrusted(X509Certificate[] chain,
-                                               String authType) throws CertificateException {}
-                public X509Certificate[] getAcceptedIssuers() {
-                    return new X509Certificate[0];
-                }}}, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(
-                    context.getSocketFactory());
+        if (true) {
+            try {
+                logger.warn("Security Warning - Trusting all certificates");
+
+                KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
+                char[] password = "some password".toCharArray();
+                keystore.load(null, password);
 
 
-            httpClient = HttpClients
-                    .custom()
-                    .setConnectionTimeToLive(this.connectionTimeout, TimeUnit.MINUTES)
-                    .build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.info("Using default http client");
-            httpClient = new DefaultHttpClient(params);
+                WssSSLSocketFactory sf = new WssSSLSocketFactory(keystore);
+                sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+//            HttpParams params = new BasicHttpParams();
+                HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+                HttpProtocolParams.setContentCharset(params, HTTP.UTF_8);
+
+                SchemeRegistry registry = new SchemeRegistry();
+                registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+                registry.register(new Scheme("https", sf, 443));
+
+                ClientConnectionManager ccm = new ThreadSafeClientConnManager(params, registry);
+
+                httpClient = new DefaultHttpClient(ccm, params);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+            }
         }
 
         if (setProxy) {
