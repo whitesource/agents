@@ -75,6 +75,7 @@ public class WssServiceClientImpl implements WssServiceClient {
 
     private static final Log logger = LogFactory.getLog(WssServiceClientImpl.class);
     private static final String TLS = "TLS";
+    public static final String SOME_PASSWORD = "some password";
 
     /* --- Members --- */
 
@@ -122,7 +123,7 @@ public class WssServiceClientImpl implements WssServiceClient {
      * @param setProxy WhiteSource set proxy, whether the proxy settings is defined or not.
      * @param connectionTimeoutMinutes WhiteSource connection timeout, whether the connection timeout is defined or not (default to 60 minutes).
      */
-    public WssServiceClientImpl(String serviceUrl, boolean setProxy, int connectionTimeoutMinutes, boolean allowUnsecureSSL) {
+    public WssServiceClientImpl(String serviceUrl, boolean setProxy, int connectionTimeoutMinutes, boolean ignoreCertificateCheck) {
         gson = new Gson();
 
         if (serviceUrl == null || serviceUrl.length() == 0) {
@@ -144,12 +145,12 @@ public class WssServiceClientImpl implements WssServiceClient {
 
         httpClient = new DefaultHttpClient();
 
-        if (allowUnsecureSSL) {
+        if (ignoreCertificateCheck) {
             try {
                 logger.warn("Security Warning - Trusting all certificates");
 
                 KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-                char[] password = "some password".toCharArray();
+                char[] password = SOME_PASSWORD.toCharArray();
                 keystore.load(null, password);
 
 
