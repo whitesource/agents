@@ -70,10 +70,10 @@ public class DependencyInfo implements Serializable {
      * Default constructor
      */
     public DependencyInfo() {
-        children = new ArrayList<>();
-        exclusions = new ArrayList<>();
-        licenses = new ArrayList<>();
-        copyrights = new ArrayList<>();
+        children = new LinkedList<>();
+        exclusions = new LinkedList<>();
+        licenses = new LinkedList<>();
+        copyrights = new LinkedList<>();
         checksums = new TreeMap<>();
     }
 
@@ -144,7 +144,7 @@ public class DependencyInfo implements Serializable {
         return sb.toString();
     }
 
-    @Override
+        @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof DependencyInfo)) return false;
@@ -167,6 +167,7 @@ public class DependencyInfo implements Serializable {
         if (filename != null ? !filename.equals(that.filename) : that.filename != null) return false;
         if (dependencyType != null ? !dependencyType.equals(that.dependencyType) : that.dependencyType != null) return false;
         if (systemPath != null ? !systemPath.equals(that.systemPath) : that.systemPath != null) return false;
+        if (vulnerabilityAnalysisResult != null ? !vulnerabilityAnalysisResult.equals(that.vulnerabilityAnalysisResult) : that.vulnerabilityAnalysisResult != null) return false;
 
         return true;
     }
@@ -186,6 +187,7 @@ public class DependencyInfo implements Serializable {
         result = APIConstants.HASH_CODE_FACTOR * result + (filename != null ? filename.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (dependencyType != null ? dependencyType.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (systemPath != null ? systemPath.hashCode() : 0);
+        result = APIConstants.HASH_CODE_FACTOR * result + (vulnerabilityAnalysisResult != null ? vulnerabilityAnalysisResult.hashCode() : 0);
         return result;
     }
 
