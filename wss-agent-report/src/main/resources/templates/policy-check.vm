@@ -13,20 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *#
-#macro( reject ) <span class='wssRed'>Rejections Found</span> #end
-#macro( approve ) <span class='wssGreen'>All Approved</span> #end
+#macro( reject ) <span class='wssRed'>Policy Violations Found</span> #end
+
+#macro( approve ) <span class='wssGreen'>No Policy Violations</span> #end
+
 #macro( rejectSingle $policyName ) 
 	<div style="float: right;">
-		<span class='wssRed'>REJECTED</span>
-		<span class='wssAnchor' title="Rejected by policy $policyName">info</span>
+		<div class='policy policyReject' title="Rejected by policy '$policyName'">Reject</div>
+		<span class='wssAnchor' title="Rejected by policy '$policyName'">info</span>
 	</div>
 #end
+
 #macro( approveSingle $policyName )
 <div style="float: right;">
-	<span class='wssGreen'>APPROVED</span>
-	<span class='wssAnchor' title="Approved by policy $policyName">info</span>
+	<div class='policy policyApprove' title="Approved by policy '$policyName'">Approve</div>
+	<span class='wssAnchor' title="Approved by policy '$policyName'">info</span>
 </div>
 #end
+
+#macro( reassignSingle $policyName )
+<div style="float: right;">
+    <div class='policy policyReassign' title="The request for this library will be reassigned by policy '$policyName'">Reassign</div>
+    <span class='wssAnchor' title="The request for this library will be reassigned by policy '$policyName'">info</span>
+</div>
+#end
+
+#macro( conditionSingle $policyName )
+<div style="float: right;">
+    <div class='policy policyConditions' title="Conditions will be created by policy '$policyName'">Conditions</div>
+    <span class='wssAnchor' title="Conditions will be created by policy '$policyName'">info</span>
+</div>
+#end
+
+#macro( issueSingle $policyName )
+<div style="float: right;">
+    <div class='policy policyIssue' title="An issue will be created by policy '$policyName'">Issue</div>
+    <span class='wssAnchor' title="An issue will be created by policy '$policyName'">info</span>
+</div>
+#end
+
 #macro( lineSeparator ) <div class='wssLineSeparaterContainer'><div class='wssLineSeparator'></div></div> #end
 
 #macro (projectsSummary $projects $detailsPrefix)
@@ -97,8 +122,14 @@
             #if ($node.policy)
                 #if ("Reject" == $node.policy.actionType)
                     #rejectSingle( $node.policy.displayName )
-                #else
+                #elseif("Approve" == $node.policy.actionType)
                     #approveSingle( $node.policy.displayName )
+                #elseif("Reassign" == $node.policy.actionType)
+                    #reassignSingle( $node.policy.displayName )
+                #elseif("Conditions" == $node.policy.actionType)
+                    #conditionSingle( $node.policy.displayName )
+                #elseif("Issue" == $node.policy.actionType)
+                    #issueSingle( $node.policy.displayName )
                 #end
             #end
         </div>
