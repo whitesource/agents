@@ -19,16 +19,21 @@ public class CodeInvocation implements Serializable {
     private InvocationType invocationType;
     private String methodName;
     private int order;
+    private  int lineNumber;
+    private  String fileName;
+
 
     /* --- Constructor --- */
 
     public CodeInvocation() {
     }
 
-    public CodeInvocation(InvocationType invocationType, String methodName, int order) {
+    public CodeInvocation(InvocationType invocationType, String methodName,int lineNumber,String fileName, int order) {
         this.invocationType = invocationType;
         this.methodName = methodName;
         this.order = order;
+        this.lineNumber=lineNumber;
+        this.fileName=fileName;
     }
 
     /* --- Overridden methods --- */
@@ -38,15 +43,18 @@ public class CodeInvocation implements Serializable {
         if (this == o) return true;
         if (!(o instanceof CodeInvocation)) return false;
         CodeInvocation that = (CodeInvocation) o;
-        return order == that.order &&
+        return lineNumber == that.lineNumber &&
                 invocationType == that.invocationType &&
-                Objects.equals(methodName, that.methodName);
+                Objects.equals(methodName, that.methodName) &&
+                Objects.equals(fileName, that.fileName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(invocationType, methodName, order);
+
+        return Objects.hash(invocationType, methodName, lineNumber, fileName);
     }
+
 
     /* --- Getters / Setters --- */
 
@@ -73,4 +81,20 @@ public class CodeInvocation implements Serializable {
     public void setOrder(int order) {
         this.order = order;
     }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+    public String getFileName() {
+        return fileName;
+    }
+
+    public int getLineNumber() {
+        return lineNumber;
+    }
+    public void setLineNumber(int lineNumber) {
+        this.lineNumber = lineNumber;
+    }
+
+
 }
