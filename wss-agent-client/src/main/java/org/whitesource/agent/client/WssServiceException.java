@@ -26,7 +26,11 @@ public class WssServiceException extends Exception {
 	/* --- Static members --- */
 
 	private static final long serialVersionUID = -6703395740692354154L;
-	
+
+	/* --- Members --- */
+
+	private String requestToken;
+
 	/* --- Constructors --- */
 
 	public WssServiceException(){
@@ -36,7 +40,12 @@ public class WssServiceException extends Exception {
 	public WssServiceException(String message){
 		super(message);
 	}
-	
+
+	public WssServiceException(String message, String requestToken) {
+		super(message);
+		this.requestToken = requestToken;
+	}
+
 	public WssServiceException(Throwable cause){
 		super(cause);
 	}
@@ -44,5 +53,14 @@ public class WssServiceException extends Exception {
 	public WssServiceException(String message, Throwable cause){
 		super(message, cause);
 	}
-	
+
+	/* --- Getters / Setters --- */
+
+	public String getRequestToken() {
+		return requestToken;
+	}
+
+	public void setRequestToken(String requestToken) {
+		this.requestToken = requestToken;
+	}
 }

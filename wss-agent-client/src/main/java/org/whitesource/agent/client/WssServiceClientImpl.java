@@ -391,10 +391,11 @@ public class WssServiceClientImpl implements WssServiceClient {
         // extract info from envelope
         String message = envelope.getMessage();
         String data = envelope.getData();
+        String requestToken = envelope.getRequestToken();
 
         // service fault ?
         if (ResultEnvelope.STATUS_SUCCESS != envelope.getStatus()) {
-            throw new WssServiceException(message + ": " + data);
+            throw new WssServiceException(message + ": " + data, requestToken);
         }
         return data;
     }
