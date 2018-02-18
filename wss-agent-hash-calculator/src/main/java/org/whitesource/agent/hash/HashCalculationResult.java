@@ -17,6 +17,8 @@ package org.whitesource.agent.hash;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 
+import java.util.Objects;
+
 /**
  * This object holds the various hashes calculated for a single file.
  *
@@ -52,6 +54,21 @@ public class HashCalculationResult implements Comparable {
                 .append(this.mostSigBitsHash, myClass.mostSigBitsHash)
                 .append(this.leastSigBitsHash, myClass.leastSigBitsHash)
                 .toComparison();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof HashCalculationResult)) return false;
+        HashCalculationResult that = (HashCalculationResult) o;
+        return Objects.equals(fullHash, that.fullHash) &&
+                Objects.equals(mostSigBitsHash, that.mostSigBitsHash) &&
+                Objects.equals(leastSigBitsHash, that.leastSigBitsHash);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(fullHash, mostSigBitsHash, leastSigBitsHash);
     }
 
     /* --- Getters / Setters --- */
