@@ -19,7 +19,7 @@ public class CodeInvocation implements Serializable {
     private InvocationType invocationType;
     private String methodName;
     private int order;
-    private int lineNumber;
+    private  int lineNumber;
     private String fileName;
 
 
@@ -51,7 +51,6 @@ public class CodeInvocation implements Serializable {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(invocationType, methodName, lineNumber, fileName);
     }
 
