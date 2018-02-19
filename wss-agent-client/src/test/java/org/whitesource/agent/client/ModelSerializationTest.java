@@ -43,6 +43,30 @@ public class ModelSerializationTest {
     /* --- Test methods --- */
 
     @Test
+    public void testAddingRequestTokenToResultEnvelope() {
+        ResultEnvelope resultEnvelope = new Gson().fromJson(
+                "{" +
+                "   'envelopeVersion' : '2.6.1', " +
+                "   'status' : 1," +
+                "   'message' : 'test message'," +
+                "   'message' : 'test message'," +
+                "   'data' : 'test data'," +
+                "   'requestToken' : 'test request token'" +
+                "}", ResultEnvelope.class);
+        assertNotNull(resultEnvelope);
+
+        resultEnvelope = new Gson().fromJson(
+                "{" +
+                        "   'envelopeVersion' : '2.6.1', " +
+                        "   'status' : 1," +
+                        "   'message' : 'test message'," +
+                        "   'message' : 'test message'," +
+                        "   'data' : 'test data'" +
+                        "}", ResultEnvelope.class);
+        assertNotNull(resultEnvelope);
+    }
+
+    @Test
     public void testUpdateInventoryRequest() {
         Collection<AgentProjectInfo> projectInfos = createTestProjects();
         UpdateInventoryRequest request = requestFactory.newUpdateInventoryRequest("orgToken", projectInfos);

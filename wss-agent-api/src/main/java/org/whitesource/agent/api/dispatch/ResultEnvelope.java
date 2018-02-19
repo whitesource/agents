@@ -19,7 +19,6 @@ import org.whitesource.agent.api.APIConstants;
 
 import java.io.Serializable;
 
-
 /**
  * Wrapper for any response form the White Source service. 
  * 
@@ -51,7 +50,10 @@ public class ResultEnvelope implements Serializable {
 	
 	/** Data associated with the result */
 	private String data;
-	
+
+	/** Identifier of the request for support purposes */
+	private String requestToken;
+
 	/* --- Constructors --- */
 
 	/**
@@ -73,7 +75,22 @@ public class ResultEnvelope implements Serializable {
 		this.message = message;
 		this.data = data;
 	}
-	
+
+	/**
+	 * Constructor
+	 *
+	 * @param status
+	 * @param message
+	 * @param data
+	 * @param requestToken
+	 */
+	public ResultEnvelope(int status, String message, String data, String requestToken) {
+		this.status = status;
+		this.message = message;
+		this.data = data;
+		this.requestToken = requestToken;
+	}
+
 	/* --- Overridden methods --- */
 	
 	@Override
@@ -85,6 +102,7 @@ public class ResultEnvelope implements Serializable {
 		.append("\n").append("status=").append(status).append(",")
 		.append("\n").append("message=").append(message).append(",")
 		.append("\n").append("data=").append(data)
+		.append("\n").append("requestToken=").append(requestToken)
 		.append("\n]");
 		
 		return sb.toString();
@@ -120,4 +138,11 @@ public class ResultEnvelope implements Serializable {
 		this.data = data;
 	}
 
+	public String getRequestToken() {
+		return requestToken;
+	}
+
+	public void setRequestToken(String requestToken) {
+		this.requestToken = requestToken;
+	}
 }

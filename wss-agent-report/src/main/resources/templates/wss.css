@@ -63,12 +63,51 @@
 	color: #3E68C6;
 }
 
+.policy {
+	width: 65px;
+	padding: 2px 5px 2px 5px;
+	border-radius: 1px;
+	text-align: center;
+	font-size: 12px;
+	display: inline-block;
+}
+
+.policyApprove {
+	background: #7fb611;
+	border: 1px solid #6f9f0f;
+	color: white;
+}
+
+.policyReject {
+	background: #d1260f;
+	color: white;
+	border: 1px solid darkRed;
+}
+
+.policyReassign {
+	background: #ffe438;
+	border: 1px solid #ebcb00;
+	color: #252b35;
+}
+
+.policyConditions {
+	background: #ff8138;
+	border: 1px solid #df752b;
+	color: white;
+}
+
+.policyIssue {
+	background: #243a77;
+	border: 1px solid #243a77;
+	color: white;
+}
+
 .wssRed {
 	color: #D1260F;
 }
 
 .wssGreen {
-	color:#76A321;
+	color: #76A321;
 }
 
 .wssBorder {
