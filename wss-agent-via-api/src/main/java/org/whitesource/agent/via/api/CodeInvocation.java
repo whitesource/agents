@@ -32,8 +32,8 @@ public class CodeInvocation implements Serializable {
         this.invocationType = invocationType;
         this.methodName = methodName;
         this.order = order;
-        this.lineNumber=lineNumber;
-        this.fileName=fileName;
+        this.lineNumber = lineNumber;
+        this.fileName = fileName;
     }
 
     /* --- Overridden methods --- */
@@ -94,6 +94,5 @@ public class CodeInvocation implements Serializable {
     public void setLineNumber(int lineNumber) {
         this.lineNumber = lineNumber;
     }
-
 
 }
