@@ -19,8 +19,8 @@ public class CodeInvocation implements Serializable {
     private InvocationType invocationType;
     private String methodName;
     private int order;
-    private  int lineNumber;
-    private  String fileName;
+    private int lineNumber;
+    private String fileName;
 
 
     /* --- Constructor --- */
