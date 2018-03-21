@@ -17,38 +17,42 @@ package org.whitesource.agent.api.dispatch;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 
 /**
- * Result of the update inventory operation. 
- * 
+ * Result of the update inventory operation.
+ *
  * @author Edo.Shor
  */
 public class UpdateInventoryResult extends BaseResult {
 
-    /* --- Static members --- */
+	/* --- Static members --- */
 
-    private static final long serialVersionUID = 9074828488465436483L;
+	private static final long serialVersionUID = 9074828488465436483L;
 
-    /* --- Members --- */
+	/* --- Members --- */
 
 	private boolean removeIfExist = false;
-	
+
 	private Collection<String> updatedProjects;
-	
+
 	private Collection<String> createdProjects;
-	
+
+	private HashMap<String, Integer> projectNamesToIds;
+
+
 	/* --- Constructors --- */
-	
 	/**
 	 * Default constructor (for JSON parsing)
-	 * 
+	 *
 	 */
 	public UpdateInventoryResult() {
 		updatedProjects = new ArrayList<String>();
 		createdProjects = new ArrayList<String>();
+		projectNamesToIds = new HashMap<>();
 	}
-	
+
 	/**
 	 * Constructor
 	 *
@@ -64,8 +68,8 @@ public class UpdateInventoryResult extends BaseResult {
 		this.removeIfExist = removeIfExist;
 	}
 
-	/* --- Getters / Setters --- */ 
 
+	/* --- Getters / Setters --- */
 	public Collection<String> getUpdatedProjects() {
 		return updatedProjects;
 	}
@@ -82,4 +86,11 @@ public class UpdateInventoryResult extends BaseResult {
 		this.createdProjects = createdProjects;
 	}
 
+	public HashMap<String, Integer> getProjectNamesToIds() {
+		return projectNamesToIds;
+	}
+
+	public void setProjectNamesToIds(HashMap<String, Integer> projectNamesToIds) {
+		this.projectNamesToIds = projectNamesToIds;
+	}
 }
