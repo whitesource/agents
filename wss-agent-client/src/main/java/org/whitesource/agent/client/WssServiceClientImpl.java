@@ -297,6 +297,9 @@ public class WssServiceClientImpl implements WssServiceClient {
                 case SUMMARY_SCAN:
                     result = (R) gson.fromJson(data, SummaryScanResult.class);
                     break;
+                case GET_CONFIGURATION:
+                    result = (R) gson.fromJson(data, ConfigurationResult.class);
+                    break;
                 default:
                     throw new IllegalStateException("Unsupported request type.");
             }
@@ -359,6 +362,10 @@ public class WssServiceClientImpl implements WssServiceClient {
             case SUMMARY_SCAN:
                 SummaryScanRequest summaryScanRequest = (SummaryScanRequest) request;
                 jsonDiff = gson.toJson(summaryScanRequest.getProjects());
+                break;
+            case GET_CONFIGURATION:
+                jsonDiff = gson.toJson(((ConfigurationRequest) request).getProjects());
+                break;
             default: break;
         }
 
