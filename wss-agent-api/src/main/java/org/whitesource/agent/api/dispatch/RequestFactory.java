@@ -240,6 +240,21 @@ public class RequestFactory {
     }
 
 
+    /**
+     * Create new Inventory Update request.
+     *
+     * @param orgToken WhiteSource organization token.
+     * @param product Name or WhiteSource service token of the product to update.
+     * @param productVersion Version of the product to update.
+     * @return request to get organization plugin configuration.
+     */
+    public ConfigurationRequest newConfigurationRequest(String orgToken,
+                                                        String product,
+                                                        String productVersion) {
+        return (ConfigurationRequest) prepareRequest(new ConfigurationRequest(), orgToken, null, product, productVersion);
+    }
+
+
 
     /* --- Protected methods --- */
 

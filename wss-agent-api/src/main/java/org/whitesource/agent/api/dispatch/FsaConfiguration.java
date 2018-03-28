@@ -44,6 +44,10 @@ public class FsaConfiguration implements Serializable {
     private String scmUrl;
     private String scmBranch;
 
+    /* --- Constructors --- */
+
+    public FsaConfiguration(){
+    }
 
     /* --- Getters / Setters --- */
 

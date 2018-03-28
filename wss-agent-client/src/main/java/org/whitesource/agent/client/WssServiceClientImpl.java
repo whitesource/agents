@@ -209,6 +209,11 @@ public class WssServiceClientImpl implements WssServiceClient {
     }
 
     @Override
+    public ConfigurationResult getConfiguration(ConfigurationRequest request) throws WssServiceException {
+        return service(request);
+    }
+
+    @Override
     public void shutdown() {
         httpClient.getConnectionManager().shutdown();
     }

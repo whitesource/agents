@@ -30,7 +30,7 @@ public interface WssServiceClient {
      *
      * @param request Inventory update request.
      * @return Inventory update result.
-     * @throws WssServiceException In case an error occurred during the call to White Source server.
+     * @throws WssServiceException In case an error occurred during the call to WhiteSource server.
      */
     UpdateInventoryResult updateInventory(UpdateInventoryRequest request) throws WssServiceException;
 
@@ -38,7 +38,7 @@ public interface WssServiceClient {
      * The method call the White Source service for checking policies application.
      * @param request Check Policies request.
      * @return Check Policies result.
-     * @throws WssServiceException In case an error occurred during the call to White Source server.
+     * @throws WssServiceException In case an error occurred during the call to WhiteSource server.
      * @deprecated Use {@link WssServiceClient#checkPolicyCompliance(CheckPolicyComplianceRequest)}
      */
     CheckPoliciesResult checkPolicies(CheckPoliciesRequest request) throws WssServiceException;
@@ -47,7 +47,7 @@ public interface WssServiceClient {
      * The method call the White Source service for checking policies application.
      * @param request Check Policies request.
      * @return Check Policies result.
-     * @throws WssServiceException In case an error occurred during the call to White Source server.
+     * @throws WssServiceException In case an error occurred during the call to WhiteSource server.
      */
     CheckPolicyComplianceResult checkPolicyCompliance(CheckPolicyComplianceRequest request) throws WssServiceException;
 
@@ -55,7 +55,7 @@ public interface WssServiceClient {
      * The method call the White Source service for getting additional dependency data.
      * @param request Get Dependency Data request.
      * @return Get Dependency Data result.
-     * @throws WssServiceException In case an error occurred during the call to White Source server.
+     * @throws WssServiceException In case an error occurred during the call to WhiteSource server.
      */
     GetDependencyDataResult getDependencyData(GetDependencyDataRequest request) throws WssServiceException;
 
@@ -69,7 +69,7 @@ public interface WssServiceClient {
      *
      * @param request Inventory update request.
      * @return Inventory update result.
-     * @throws WssServiceException In case an error occurred during the call to White Source server.
+     * @throws WssServiceException In case an error occurred during the call to WhiteSource server.
      */
     SummaryScanResult summaryScan(SummaryScanRequest request) throws WssServiceException;
 
@@ -78,9 +78,18 @@ public interface WssServiceClient {
      *
      * @param request Check vulnerabilities request.
      * @return Vulnerabilities report result.
-     * @throws WssServiceException In case an error occurred during the call to White Source server.
+     * @throws WssServiceException In case an error occurred during the call to WhiteSource server.
      */
     CheckVulnerabilitiesResult checkVulnerabilities(CheckVulnerabilitiesRequest request) throws WssServiceException;
+
+    /**
+     * The method calls the White Source service for check vulnerabilities.
+     *
+     * @param request plugin configuration request.
+     * @return ConfigurationResult user configuration on the server.
+     * @throws WssServiceException In case an error occurred during the call to WhiteSource server.
+     */
+    ConfigurationResult getConfiguration(ConfigurationRequest request) throws WssServiceException;
 
 
     void shutdown();

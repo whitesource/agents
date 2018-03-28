@@ -280,6 +280,23 @@ public class WhitesourceService {
     }
 
     /**
+     * Updates the White Source organization account with the given OSS information.
+     *
+     * @param orgToken          Organization token uniquely identifying the account at white source.
+     * @param product           The product name or token to update.
+     * @param productVersion    The product version.
+     * @return Result of updating white source.
+     * @throws WssServiceException
+     */
+    public ConfigurationResult getConfiguration(String orgToken,
+                                         String product,
+                                         String productVersion)
+            throws WssServiceException {
+        return client.getConfiguration(
+                requestFactory.newConfigurationRequest(orgToken, product, productVersion));
+    }
+
+    /**
      * The method close the underlying client to the White Source service.
      *
      * @see org.whitesource.agent.client.WssServiceClient#shutdown()

@@ -15,7 +15,7 @@ public class ConfigurationRequest extends BaseRequest<ConfigurationResult> {
     /**
      * Default constructor
      */
-    public ConfigurationRequest(RequestType type) {
+    public ConfigurationRequest() {
         super(RequestType.GET_CONFIGURATION);
     }
 

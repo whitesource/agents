@@ -32,6 +32,23 @@ public class ConfigurationResult extends BaseResult {
 
     private FsaConfiguration fsaConfiguration;
 
+    /* --- Constructors --- */
+
+    public ConfigurationResult(){
+        fsaConfiguration = new FsaConfiguration();
+    }
+
+    public ConfigurationResult(boolean checkPolicies, boolean forceCheckAllDependencies, boolean forceUpdate, String includes,
+                               String excludes){
+        this();
+        this.checkPolicies = checkPolicies;
+        this.forceCheckAllDependencies = forceCheckAllDependencies;
+        this.forceUpdate = forceUpdate;
+        this.includes = includes;
+        this.excludes = excludes;
+    }
+
+
     /* --- Getters / Setters --- */
 
     public String getId() {
