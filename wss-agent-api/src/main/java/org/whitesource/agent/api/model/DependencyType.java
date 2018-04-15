@@ -29,6 +29,8 @@ public enum DependencyType {
     BOWER,
     GRUNT,
 
+    GO,
+
     PYTHON,
 
     RUBY,
