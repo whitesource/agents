@@ -89,6 +89,7 @@ public class WhitesourceService {
      * Updates the White Source organization account with the given OSS information.
      *
      * @param orgToken       Organization token uniquely identifying the account at white source.
+     * @param userKey           user key uniquely identifying the account at white source.
      * @param product        The product name or token to update.
      * @param productVersion The product version.
      * @param projectInfos   OSS usage information to send to white source.
@@ -96,17 +97,19 @@ public class WhitesourceService {
      * @throws WssServiceException In case of errors while updating white source.
      */
     public UpdateInventoryResult update(String orgToken,
+                                        String userKey,
                                         String product,
                                         String productVersion,
                                         Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
-        return update(orgToken, null, product, productVersion, projectInfos);
+        return update(orgToken, userKey, null, product, productVersion, projectInfos);
     }
 
     /**
      * Updates the White Source organization account with the given OSS information.
      *
      * @param orgToken          Organization token uniquely identifying the account at white source.
+     * @param userKey           user key uniquely identifying the account at white source.
      * @param requesterEmail    Email of the WhiteSource user that requests to update WhiteSource.
      * @param product           The product name or token to update.
      * @param productVersion    The product version.
@@ -115,21 +118,23 @@ public class WhitesourceService {
      * @throws WssServiceException
      */
     public UpdateInventoryResult update(String orgToken,
+                                        String userKey,
                                         String requesterEmail,
                                         String product,
                                         String productVersion,
                                         Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
         return client.updateInventory(
-                requestFactory.newUpdateInventoryRequest(orgToken, requesterEmail, product, productVersion, projectInfos));
+                requestFactory.newUpdateInventoryRequest(orgToken, userKey, requesterEmail, product, productVersion, projectInfos));
     }
 
     /**
      * Updates the White Source organization account with the given OSS information.
      *
      * @param orgToken          Organization token uniquely identifying the account at white source.
+     * @param userKey           user key uniquely identifying the account at white source.
      * @param requesterEmail    Email of the WhiteSource user that requests to update WhiteSource.
-     * @param updateType Request UpdateType
+     * @param updateType        Request UpdateType
      * @param product           The product name or token to update.
      * @param productVersion    The product version.
      * @param projectInfos      OSS usage information to send to white source.
@@ -137,6 +142,7 @@ public class WhitesourceService {
      * @throws WssServiceException
      */
     public UpdateInventoryResult update(String orgToken,
+                                        String userKey,
                                         String requesterEmail,
                                         UpdateType updateType,
                                         String product,
@@ -144,13 +150,14 @@ public class WhitesourceService {
                                         Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
         return client.updateInventory(
-                requestFactory.newUpdateInventoryRequest(orgToken, updateType, requesterEmail, product, productVersion, projectInfos));
+                requestFactory.newUpdateInventoryRequest(orgToken,userKey, updateType, requesterEmail, product, productVersion, projectInfos));
     }
 
     /**
      * Generates a file with json representation of the update request.
      *
      * @param orgToken          Organization token uniquely identifying the account at white source.
+     * @param userKey           user key uniquely identifying the account at white source.
      * @param product           The product name or token to update.
      * @param removeBeforeAdd   Should remove before add
      * @param productVersion    The product version.
@@ -158,53 +165,59 @@ public class WhitesourceService {
      * @return UpdateInventoryRequest.
      */
     public UpdateInventoryRequest offlineUpdate(String orgToken,
+                                                String userKey,
                                                 String product,
                                                 Boolean removeBeforeAdd,
                                                 String productVersion,
                                                 Collection<AgentProjectInfo> projectInfos) {
-        return requestFactory.newUpdateInventoryRequest(orgToken, product, productVersion, projectInfos);
+        return requestFactory.newUpdateInventoryRequest(orgToken, userKey, product, productVersion, projectInfos);
     }
 
     /**
      * Generates a file with json representation of the update request.
      *
      * @param orgToken          Organization token uniquely identifying the account at white source.
+     * @param userKey           user key uniquely identifying the account at white source.
      * @param product           The product name or token to update.
      * @param productVersion    The product version.
      * @param projectInfos      OSS usage information to send to white source.
      * @return UpdateInventoryRequest.
      */
     public UpdateInventoryRequest offlineUpdate(String orgToken,
+                              String userKey,
                               String product,
                               String productVersion,
                               Collection<AgentProjectInfo> projectInfos) {
-        return requestFactory.newUpdateInventoryRequest(orgToken, product, productVersion, projectInfos);
+        return requestFactory.newUpdateInventoryRequest(orgToken, userKey, product, productVersion, projectInfos);
     }
 
     /**
      * Checks the policies application of the given OSS information.
      *
      * @param orgToken          Organization token uniquely identifying the account at white source.
+     * @param userKey           user key uniquely identifying the account at white source.
      * @param product           The product name or token to update.
      * @param productVersion    The product version.
      * @param projectInfos      OSS usage information to send to white source.
      * @return Potential result of applying the currently defined policies.
      * @throws WssServiceException In case of errors while checking the policies with white source.
-     * @deprecated Use {@link WhitesourceService#checkPolicyCompliance(String, String, String, Collection, boolean)}.
+     * @deprecated Use {@link WhitesourceService#checkPolicyCompliance(String,String, String, String, Collection, boolean)}.
      */
     public CheckPoliciesResult checkPolicies(String orgToken,
+                                             String userKey,
                                              String product,
                                              String productVersion,
                                              Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
         return client.checkPolicies(
-                requestFactory.newCheckPoliciesRequest(orgToken, product, productVersion, projectInfos));
+                requestFactory.newCheckPoliciesRequest(orgToken, userKey, product, productVersion, projectInfos));
     }
 
     /**
      * Checks the policies application of the given OSS information.
      *
      * @param orgToken          Organization token uniquely identifying the account at white source.
+     * @param userKey           user key uniquely identifying the account at white source.
      * @param product           The product name or token to update.
      * @param productVersion    The product version.
      * @param projectInfos      OSS usage information to send to white source.
@@ -213,19 +226,21 @@ public class WhitesourceService {
      * @throws WssServiceException In case of errors while checking the policies with white source.
      */
     public CheckPolicyComplianceResult checkPolicyCompliance(String orgToken,
+                                             String userKey,
                                              String product,
                                              String productVersion,
                                              Collection<AgentProjectInfo> projectInfos,
                                              boolean forceCheckAllDependencies)
             throws WssServiceException {
         return client.checkPolicyCompliance(
-                requestFactory.newCheckPolicyComplianceRequest(orgToken, product, productVersion, projectInfos, forceCheckAllDependencies));
+                requestFactory.newCheckPolicyComplianceRequest(orgToken, userKey, product, productVersion, projectInfos, forceCheckAllDependencies));
     }
 
     /**
      * Gets additional data for given dependencies.
      *
      * @param orgToken          Organization token uniquely identifying the account at white source.
+     * @param userKey           user key uniquely identifying the account at white source.
      * @param product           The product name or token to update.
      * @param productVersion    The product version.
      * @param projectInfos      OSS usage information to send to white source.
@@ -233,18 +248,20 @@ public class WhitesourceService {
      * @throws WssServiceException In case of errors while getting additional dependency data with white source.
      */
     public GetDependencyDataResult getDependencyData(String orgToken,
+                                                     String userKey,
                                                      String product,
                                                      String productVersion,
                                                      Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
         return client.getDependencyData(
-                requestFactory.newDependencyDataRequest(orgToken, product, productVersion, projectInfos));
+                requestFactory.newDependencyDataRequest(orgToken, userKey, product, productVersion, projectInfos));
     }
 
     /**
      * Updates the White Source organization account with the given OSS information.
      *
      * @param orgToken          Organization token uniquely identifying the account at white source.
+     * @param userKey           user key uniquely identifying the account at white source.
      * @param product           The product name or token to update.
      * @param productVersion    The product version.
      * @param projectInfos      OSS usage information to send to white source.
@@ -252,18 +269,20 @@ public class WhitesourceService {
      * @throws WssServiceException
      */
     public SummaryScanResult summaryScan(String orgToken,
+                                         String userKey,
                                          String product,
                                          String productVersion,
                                          Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
         return client.summaryScan(
-                requestFactory.newSummaryScanRequest(orgToken, product, productVersion, projectInfos));
+                requestFactory.newSummaryScanRequest(orgToken, userKey, product, productVersion, projectInfos));
     }
 
     /**
      * Gets vulnerabilities data for given dependencies.
      *
      * @param orgToken          Organization token uniquely identifying the account at white source.
+     * @param userKey           user key uniquely identifying the account at white source.
      * @param product           The product name or token to update.
      * @param productVersion    The product version.
      * @param projectInfos      OSS usage information to send to white source.
@@ -271,29 +290,31 @@ public class WhitesourceService {
      * @throws WssServiceException
      */
     public CheckVulnerabilitiesResult checkVulnerabilities(String orgToken,
+                                                           String userKey,
                                                            String product,
                                                            String productVersion,
                                                            Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
         return client.checkVulnerabilities(
-                requestFactory.newCheckVulnerabilitiesRequest(orgToken, product, productVersion, projectInfos));
+                requestFactory.newCheckVulnerabilitiesRequest(orgToken, userKey, product, productVersion, projectInfos));
     }
 
     /**
      * Updates the White Source organization account with the given OSS information.
      *
      * @param orgToken          Organization token uniquely identifying the account at white source.
+     * @param userKey           user key uniquely identifying the account at white source.
      * @param product           The product name or token to update.
      * @param productVersion    The product version.
      * @return Result of updating white source.
      * @throws WssServiceException
      */
     public ConfigurationResult getConfiguration(String orgToken,
-                                         String product,
-                                         String productVersion)
-            throws WssServiceException {
-        return client.getConfiguration(
-                requestFactory.newConfigurationRequest(orgToken, product, productVersion));
+                                                String userKey,
+                                                String product,
+                                                String productVersion)
+                    throws WssServiceException {
+                        return client.getConfiguration(requestFactory.newConfigurationRequest(orgToken, userKey, product, productVersion));
     }
 
     /**

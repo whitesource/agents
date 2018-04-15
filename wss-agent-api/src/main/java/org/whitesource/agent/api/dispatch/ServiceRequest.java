@@ -71,4 +71,9 @@ public interface ServiceRequest<R> extends Serializable {
 	 */
 	String pluginVersion();
 
+	/**
+	 * @return WhiteSource user key who sent the request.
+	 */
+	String userKey();
+
 }

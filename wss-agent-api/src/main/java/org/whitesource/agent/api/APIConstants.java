@@ -27,6 +27,7 @@ public final class APIConstants {
 	/* --- Parameters --- */
 	
 	public static final String PARAM_TOKEN = "token";
+	public static final String USER_KEY = "userKey";
 	public static final String PARAM_PRODUCT = "product";
 	public static final String PARAM_PRODUCT_VERSION = "productVersion";
 	public static final String PARAM_DIFF = "diff";
@@ -43,6 +44,7 @@ public final class APIConstants {
 	/* --- Messages --- */
 	
 	public static final String TOKEN_INVALID = "Invalid token";
+	public static final String USER_KEY__INVALID = "Invalid user key";
 	public static final String TIME_STAMP_INVALID = "Invalid request time";
 	public static final String DIFF_INVALID = "Invalid diff";
 	public static final String UPDATE_SUCCESS = "update success";

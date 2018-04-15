@@ -22,7 +22,7 @@ import java.util.Collection;
 
 /**
  * Base, abstract, implementation of the interface.
- * 
+ *
  * @author Edo.Shor
  *
  * @param <R> Type of expected result. 
@@ -30,21 +30,23 @@ import java.util.Collection;
 public abstract class BaseRequest<R> implements ServiceRequest<R> {
 
 	/* --- Static members --- */
-	
+
 	private static final long serialVersionUID = 4691829529579651426L;
-	
+
 	/* --- Members --- */
 
 	protected final RequestType type;
-	
+
 	protected String agent;
-	
+
 	protected String agentVersion;
 
 	protected String pluginVersion;
 
 	protected String orgToken;
-	
+
+	protected String userKey;
+
 	protected String product;
 
     protected String productVersion;
@@ -59,7 +61,7 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param type Request operation type.
 	 */
 	public BaseRequest(RequestType type) {
@@ -140,6 +142,11 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
         return requesterEmail;
     }
 
+    @Override
+    public String userKey() {
+        return userKey;
+    }
+
     /* --- Getters / Setters --- */
 
 	public void setAgent(String agent) {
@@ -181,4 +188,6 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 	public void setProjects(Collection<AgentProjectInfo> projects) {
 		this.projects = projects;
 	}
+
+	public void setUserKey(String userKey) { this.userKey = userKey; }
 }

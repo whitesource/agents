@@ -69,7 +69,7 @@ public class ModelSerializationTest {
     @Test
     public void testUpdateInventoryRequest() {
         Collection<AgentProjectInfo> projectInfos = createTestProjects();
-        UpdateInventoryRequest request = requestFactory.newUpdateInventoryRequest("orgToken", projectInfos);
+        UpdateInventoryRequest request = requestFactory.newUpdateInventoryRequest("orgToken","userKey", projectInfos);
         UpdateInventoryRequest deserializedRequest = testRequest(request, UpdateInventoryRequest.class);
         assertProjectsEquals(deserializedRequest.getProjects(), request.getProjects());
     }
@@ -77,7 +77,7 @@ public class ModelSerializationTest {
     @Test
     public void testCheckPoliciesRequest() {
         Collection<AgentProjectInfo> projectInfos = createTestProjects();
-        CheckPoliciesRequest request = requestFactory.newCheckPoliciesRequest("orgToken", projectInfos);
+        CheckPoliciesRequest request = requestFactory.newCheckPoliciesRequest("orgToken","userKey", projectInfos);
         CheckPoliciesRequest deserializedRequest = testRequest(request, CheckPoliciesRequest.class);
         assertProjectsEquals(deserializedRequest.getProjects(), request.getProjects());
     }
@@ -85,7 +85,7 @@ public class ModelSerializationTest {
     @Test
     public void testCheckPolicyComplianceRequest() {
         Collection<AgentProjectInfo> projectInfos = createTestProjects();
-        CheckPolicyComplianceRequest request = requestFactory.newCheckPolicyComplianceRequest("orgToken", projectInfos, true);
+        CheckPolicyComplianceRequest request = requestFactory.newCheckPolicyComplianceRequest("orgToken","userKey", projectInfos, true);
         CheckPolicyComplianceRequest deserializedRequest = testRequest(request, CheckPolicyComplianceRequest.class);
         assertProjectsEquals(deserializedRequest.getProjects(), request.getProjects());
     }

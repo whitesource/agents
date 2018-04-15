@@ -46,13 +46,13 @@ public class WhitesourceServiceTest {
     public void testDefaultConstructor() {
         WhitesourceService service = new WhitesourceService();
 
-        UpdateInventoryRequest updateRequest = service.getRequestFactory().newUpdateInventoryRequest("orgToken", null);
+        UpdateInventoryRequest updateRequest = service.getRequestFactory().newUpdateInventoryRequest("orgToken","userKey", null);
         assertEquals("generic", updateRequest.agent());
         assertEquals("1.0", updateRequest.agentVersion());
         assertEquals(ClientConstants.DEFAULT_SERVICE_URL, ((WssServiceClientImpl) service.getClient()).getServiceUrl());
 
         service = new WhitesourceService("agent", "agentVersion", "pluginVersion");
-        updateRequest = service.getRequestFactory().newUpdateInventoryRequest("orgToken", null);
+        updateRequest = service.getRequestFactory().newUpdateInventoryRequest("orgToken","userKey", null);
         assertEquals("agent", updateRequest.agent());
         assertEquals("agentVersion", updateRequest.agentVersion());
         assertEquals(ClientConstants.DEFAULT_SERVICE_URL, ((WssServiceClientImpl) service.getClient()).getServiceUrl());
@@ -70,7 +70,7 @@ public class WhitesourceServiceTest {
         WhitesourceService service = new WhitesourceService();
         service.setClient(client);
 
-        service.update("orgToken", "product", "productVersion", new ArrayList<AgentProjectInfo>());
+        service.update("orgToken","userKey", "product", "productVersion", new ArrayList<AgentProjectInfo>());
         ArgumentCaptor<UpdateInventoryRequest> updateCaptor = ArgumentCaptor.forClass(UpdateInventoryRequest.class);
         verify(client).updateInventory(updateCaptor.capture());
         assertEquals("orgToken", updateCaptor.getValue().orgToken());
@@ -78,7 +78,7 @@ public class WhitesourceServiceTest {
         assertEquals("productVersion", updateCaptor.getValue().productVersion());
         assertTrue(updateCaptor.getValue().getProjects().isEmpty());
 
-        service.checkPolicies("orgToken", "product", "productVersion", new ArrayList<AgentProjectInfo>());
+        service.checkPolicies("orgToken","userKey", "product", "productVersion", new ArrayList<AgentProjectInfo>());
         ArgumentCaptor<CheckPoliciesRequest> checkPoliciesCaptor = ArgumentCaptor.forClass(CheckPoliciesRequest.class);
         verify(client).checkPolicies(checkPoliciesCaptor.capture());
         assertEquals("orgToken", checkPoliciesCaptor.getValue().orgToken());
