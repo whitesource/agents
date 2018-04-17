@@ -63,6 +63,7 @@ public class DependencyInfo implements Serializable {
     private DependencyHintsInfo hints;
     private Map<ChecksumType, String> checksums;
     private VulnerabilityAnalysisResult vulnerabilityAnalysisResult;
+    private String commit;
 
     /* --- Constructors --- */
 
@@ -442,5 +443,13 @@ public class DependencyInfo implements Serializable {
 
     public void setVulnerabilityAnalysisResult(VulnerabilityAnalysisResult vulnerabilityAnalysisResult) {
         this.vulnerabilityAnalysisResult = vulnerabilityAnalysisResult;
+    }
+
+    public String getCommit() {
+        return commit;
+    }
+
+    public void setCommit(String commit) {
+        this.commit = commit;
     }
 }
