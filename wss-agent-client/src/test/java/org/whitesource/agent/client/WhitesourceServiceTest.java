@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2012 White Source Ltd.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +38,8 @@ public class WhitesourceServiceTest {
 
     /* --- Members --- */
 
-    @Mock private WssServiceClient client;
+    @Mock
+    private WssServiceClient client;
 
     /* --- Test methods --- */
 
@@ -46,13 +47,13 @@ public class WhitesourceServiceTest {
     public void testDefaultConstructor() {
         WhitesourceService service = new WhitesourceService();
 
-        UpdateInventoryRequest updateRequest = service.getRequestFactory().newUpdateInventoryRequest("orgToken","userKey", null);
+        UpdateInventoryRequest updateRequest = service.getRequestFactory().newUpdateInventoryRequest("orgToken", null, "userKey" );
         assertEquals("generic", updateRequest.agent());
         assertEquals("1.0", updateRequest.agentVersion());
         assertEquals(ClientConstants.DEFAULT_SERVICE_URL, ((WssServiceClientImpl) service.getClient()).getServiceUrl());
 
         service = new WhitesourceService("agent", "agentVersion", "pluginVersion");
-        updateRequest = service.getRequestFactory().newUpdateInventoryRequest("orgToken","userKey", null);
+        updateRequest = service.getRequestFactory().newUpdateInventoryRequest("orgToken", null, "userKey");
         assertEquals("agent", updateRequest.agent());
         assertEquals("agentVersion", updateRequest.agentVersion());
         assertEquals(ClientConstants.DEFAULT_SERVICE_URL, ((WssServiceClientImpl) service.getClient()).getServiceUrl());
@@ -70,7 +71,7 @@ public class WhitesourceServiceTest {
         WhitesourceService service = new WhitesourceService();
         service.setClient(client);
 
-        service.update("orgToken","userKey", "product", "productVersion", new ArrayList<AgentProjectInfo>());
+        service.update("orgToken", "product", "productVersion", new ArrayList<AgentProjectInfo>(), "userKey");
         ArgumentCaptor<UpdateInventoryRequest> updateCaptor = ArgumentCaptor.forClass(UpdateInventoryRequest.class);
         verify(client).updateInventory(updateCaptor.capture());
         assertEquals("orgToken", updateCaptor.getValue().orgToken());
@@ -78,7 +79,7 @@ public class WhitesourceServiceTest {
         assertEquals("productVersion", updateCaptor.getValue().productVersion());
         assertTrue(updateCaptor.getValue().getProjects().isEmpty());
 
-        service.checkPolicies("orgToken","userKey", "product", "productVersion", new ArrayList<AgentProjectInfo>());
+        service.checkPolicies("orgToken", "product", "productVersion", new ArrayList<AgentProjectInfo>(), "userKey");
         ArgumentCaptor<CheckPoliciesRequest> checkPoliciesCaptor = ArgumentCaptor.forClass(CheckPoliciesRequest.class);
         verify(client).checkPolicies(checkPoliciesCaptor.capture());
         assertEquals("orgToken", checkPoliciesCaptor.getValue().orgToken());

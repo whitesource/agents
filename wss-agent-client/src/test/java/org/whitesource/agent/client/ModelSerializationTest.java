@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2012 White Source Ltd.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -46,13 +46,13 @@ public class ModelSerializationTest {
     public void testAddingRequestTokenToResultEnvelope() {
         ResultEnvelope resultEnvelope = new Gson().fromJson(
                 "{" +
-                "   'envelopeVersion' : '2.6.1', " +
-                "   'status' : 1," +
-                "   'message' : 'test message'," +
-                "   'message' : 'test message'," +
-                "   'data' : 'test data'," +
-                "   'requestToken' : 'test request token'" +
-                "}", ResultEnvelope.class);
+                        "   'envelopeVersion' : '2.6.1', " +
+                        "   'status' : 1," +
+                        "   'message' : 'test message'," +
+                        "   'message' : 'test message'," +
+                        "   'data' : 'test data'," +
+                        "   'requestToken' : 'test request token'" +
+                        "}", ResultEnvelope.class);
         assertNotNull(resultEnvelope);
 
         resultEnvelope = new Gson().fromJson(
@@ -69,7 +69,7 @@ public class ModelSerializationTest {
     @Test
     public void testUpdateInventoryRequest() {
         Collection<AgentProjectInfo> projectInfos = createTestProjects();
-        UpdateInventoryRequest request = requestFactory.newUpdateInventoryRequest("orgToken","userKey", projectInfos);
+        UpdateInventoryRequest request = requestFactory.newUpdateInventoryRequest("orgToken", projectInfos, "userKey");
         UpdateInventoryRequest deserializedRequest = testRequest(request, UpdateInventoryRequest.class);
         assertProjectsEquals(deserializedRequest.getProjects(), request.getProjects());
     }
@@ -77,7 +77,7 @@ public class ModelSerializationTest {
     @Test
     public void testCheckPoliciesRequest() {
         Collection<AgentProjectInfo> projectInfos = createTestProjects();
-        CheckPoliciesRequest request = requestFactory.newCheckPoliciesRequest("orgToken","userKey", projectInfos);
+        CheckPoliciesRequest request = requestFactory.newCheckPoliciesRequest("orgToken", projectInfos, "userKey");
         CheckPoliciesRequest deserializedRequest = testRequest(request, CheckPoliciesRequest.class);
         assertProjectsEquals(deserializedRequest.getProjects(), request.getProjects());
     }
@@ -85,7 +85,7 @@ public class ModelSerializationTest {
     @Test
     public void testCheckPolicyComplianceRequest() {
         Collection<AgentProjectInfo> projectInfos = createTestProjects();
-        CheckPolicyComplianceRequest request = requestFactory.newCheckPolicyComplianceRequest("orgToken","userKey", projectInfos, true);
+        CheckPolicyComplianceRequest request = requestFactory.newCheckPolicyComplianceRequest("orgToken", projectInfos, true, "userKey");
         CheckPolicyComplianceRequest deserializedRequest = testRequest(request, CheckPolicyComplianceRequest.class);
         assertProjectsEquals(deserializedRequest.getProjects(), request.getProjects());
     }
