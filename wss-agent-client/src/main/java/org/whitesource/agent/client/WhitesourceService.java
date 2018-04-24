@@ -102,7 +102,7 @@ public class WhitesourceService {
                                         Collection<AgentProjectInfo> projectInfos,
                                         String userKey)
             throws WssServiceException {
-        return update(orgToken, product, productVersion, projectInfos, userKey);
+        return update(orgToken, null, product, productVersion, projectInfos, userKey);
     }
 
     public UpdateInventoryResult update(String orgToken,
@@ -110,7 +110,7 @@ public class WhitesourceService {
                                         String productVersion,
                                         Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
-        return update(orgToken, product, productVersion, projectInfos, null);
+        return update(orgToken, null, product, productVersion, projectInfos, null);
     }
 
     /**
@@ -142,8 +142,7 @@ public class WhitesourceService {
                                         String productVersion,
                                         Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
-        return client.updateInventory(
-                requestFactory.newUpdateInventoryRequest(orgToken, requesterEmail, product, productVersion, projectInfos, null));
+        return update(orgToken, requesterEmail, product, productVersion, projectInfos, null);
     }
 
     /**
@@ -178,8 +177,7 @@ public class WhitesourceService {
                                         String productVersion,
                                         Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
-        return client.updateInventory(
-                requestFactory.newUpdateInventoryRequest(orgToken, updateType, requesterEmail, product, productVersion, projectInfos, null));
+        return update(orgToken, requesterEmail, updateType, product, productVersion, projectInfos, null);
     }
 
     /**
@@ -207,7 +205,7 @@ public class WhitesourceService {
                                                 Boolean removeBeforeAdd,
                                                 String productVersion,
                                                 Collection<AgentProjectInfo> projectInfos) {
-        return requestFactory.newUpdateInventoryRequest(orgToken, product, productVersion, projectInfos, null);
+        return offlineUpdate(orgToken, product, removeBeforeAdd, productVersion, projectInfos, null);
     }
 
     /**
@@ -232,7 +230,7 @@ public class WhitesourceService {
                                                 String product,
                                                 String productVersion,
                                                 Collection<AgentProjectInfo> projectInfos) {
-        return requestFactory.newUpdateInventoryRequest(orgToken, product, productVersion, projectInfos, null);
+        return offlineUpdate(orgToken, product, productVersion, projectInfos, null);
     }
 
     /**
@@ -262,8 +260,7 @@ public class WhitesourceService {
                                              String productVersion,
                                              Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
-        return client.checkPolicies(
-                requestFactory.newCheckPoliciesRequest(orgToken, product, productVersion, projectInfos, null));
+        return checkPolicies(orgToken, product, productVersion, projectInfos, null);
     }
 
     /**
@@ -295,8 +292,7 @@ public class WhitesourceService {
                                                              Collection<AgentProjectInfo> projectInfos,
                                                              boolean forceCheckAllDependencies)
             throws WssServiceException {
-        return client.checkPolicyCompliance(
-                requestFactory.newCheckPolicyComplianceRequest(orgToken, product, productVersion, projectInfos, forceCheckAllDependencies, null));
+        return checkPolicyCompliance(orgToken, product, productVersion, projectInfos, forceCheckAllDependencies, null);
     }
 
     /**
@@ -325,8 +321,7 @@ public class WhitesourceService {
                                                      String productVersion,
                                                      Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
-        return client.getDependencyData(
-                requestFactory.newDependencyDataRequest(orgToken, product, productVersion, projectInfos, null));
+        return getDependencyData(orgToken, product, productVersion, projectInfos, null);
     }
 
     /**
@@ -355,8 +350,7 @@ public class WhitesourceService {
                                          String productVersion,
                                          Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
-        return client.summaryScan(
-                requestFactory.newSummaryScanRequest(orgToken, product, productVersion, projectInfos, null));
+        return summaryScan(orgToken, product, productVersion, projectInfos, null);
     }
 
     /**
@@ -385,8 +379,7 @@ public class WhitesourceService {
                                                            String productVersion,
                                                            Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
-        return client.checkVulnerabilities(
-                requestFactory.newCheckVulnerabilitiesRequest(orgToken, product, productVersion, projectInfos, null));
+        return checkVulnerabilities(orgToken, product, productVersion, projectInfos, null);
     }
 
     /**
@@ -411,7 +404,7 @@ public class WhitesourceService {
                                                 String product,
                                                 String productVersion)
             throws WssServiceException {
-        return client.getConfiguration(requestFactory.newConfigurationRequest(orgToken, product, productVersion, null));
+        return getConfiguration(orgToken, product, productVersion, null);
     }
 
     /**
