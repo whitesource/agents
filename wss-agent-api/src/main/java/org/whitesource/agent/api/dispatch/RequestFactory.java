@@ -134,7 +134,7 @@ public class RequestFactory {
      */
 
     public CheckPoliciesRequest newCheckPoliciesRequest(String orgToken, Collection<AgentProjectInfo> projects, String userKey) {
-        return newCheckPoliciesRequest(orgToken, null, null, projects, userKey);
+        return newCheckPoliciesRequest(orgToken, null, null, projects, userKey, null);
     }
 
     /**
@@ -145,15 +145,26 @@ public class RequestFactory {
      * @param projects       Projects status statement to check.
      * @param product        Name or WhiteSource service token of the product whose policies to check.
      * @param productVersion Version of the product whose policies to check.
+     * @param requesterEmail Email of the WhiteSource user that requests to update WhiteSource.
      * @return Newly created request to check policies application.
      * @deprecated Use {@link RequestFactory#newCheckPolicyComplianceRequest(String, String, String, Collection, boolean, String)}
      */
+
+    public CheckPoliciesRequest newCheckPoliciesRequest(String orgToken,
+                                                        String product,
+                                                        String productVersion,
+                                                        Collection<AgentProjectInfo> projects,
+                                                        String userKey,
+                                                        String requesterEmail) {
+        return (CheckPoliciesRequest) prepareRequest(new CheckPoliciesRequest(projects), orgToken, requesterEmail, product, productVersion, userKey);
+    }
+
     public CheckPoliciesRequest newCheckPoliciesRequest(String orgToken,
                                                         String product,
                                                         String productVersion,
                                                         Collection<AgentProjectInfo> projects,
                                                         String userKey) {
-        return (CheckPoliciesRequest) prepareRequest(new CheckPoliciesRequest(projects), orgToken, null, product, productVersion, userKey);
+        return newCheckPoliciesRequest(orgToken, product, productVersion, projects, userKey, null);
     }
 
     /**
@@ -179,17 +190,28 @@ public class RequestFactory {
      * @param productVersion            Version of the product whose policies to check.
      * @param forceCheckAllDependencies boolean check that all/added dependencies sent to WhiteSource
      * @param userKey                   user key uniquely identifying the account at white source.
+     * @param requesterEmail Email of the WhiteSource user that requests to update WhiteSource.
      * @return Newly created request to check policies application.
      */
+
+    public CheckPolicyComplianceRequest newCheckPolicyComplianceRequest(String orgToken,
+                                                                        String product,
+                                                                        String productVersion,
+                                                                        Collection<AgentProjectInfo> projects,
+                                                                        boolean forceCheckAllDependencies,
+                                                                        String userKey,
+                                                                        String requesterEmail) {
+        return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, forceCheckAllDependencies), orgToken, requesterEmail, product, productVersion, userKey);
+    }
+
     public CheckPolicyComplianceRequest newCheckPolicyComplianceRequest(String orgToken,
                                                                         String product,
                                                                         String productVersion,
                                                                         Collection<AgentProjectInfo> projects,
                                                                         boolean forceCheckAllDependencies,
                                                                         String userKey) {
-        return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, forceCheckAllDependencies), orgToken, null, product, productVersion, userKey);
+        return newCheckPolicyComplianceRequest(orgToken, product, productVersion, projects, forceCheckAllDependencies, userKey, null);
     }
-
 
     /**
      * Create new Dependency Data request.
@@ -212,16 +234,26 @@ public class RequestFactory {
      * @param product        Name or WhiteSource service token of the product whose policies to check.
      * @param productVersion Version of the product whose policies to check.
      * @param userKey        user key uniquely identifying the account at white source.
+     * @param requesterEmail Email of the WhiteSource user that requests to update WhiteSource.
      * @return Newly created request to get Dependency Additional Data (Licenses, Description, homepageUrl and Vulnerabilities).
      */
+
+    public GetDependencyDataRequest newDependencyDataRequest(String orgToken,
+                                                             String product,
+                                                             String productVersion,
+                                                             Collection<AgentProjectInfo> projects,
+                                                             String userKey,
+                                                             String requesterEmail) {
+        return (GetDependencyDataRequest) prepareRequest(new GetDependencyDataRequest(projects), orgToken, requesterEmail, product, productVersion, userKey);
+    }
+
     public GetDependencyDataRequest newDependencyDataRequest(String orgToken,
                                                              String product,
                                                              String productVersion,
                                                              Collection<AgentProjectInfo> projects,
                                                              String userKey) {
-        return (GetDependencyDataRequest) prepareRequest(new GetDependencyDataRequest(projects), orgToken, null, product, productVersion, userKey);
+        return newDependencyDataRequest(orgToken, product, productVersion, projects, userKey, null);
     }
-
 
     /**
      * Create new Inventory Update request.
@@ -231,14 +263,25 @@ public class RequestFactory {
      * @param product        Name or WhiteSource service token of the product to update.
      * @param productVersion Version of the product to update.
      * @param userKey        user key uniquely identifying the account at white source.
+     * @param requesterEmail Email of the WhiteSource user that requests to update WhiteSource.
      * @return Newly created request to update organization inventory.
      */
+
+    public SummaryScanRequest newSummaryScanRequest(String orgToken,
+                                                    String product,
+                                                    String productVersion,
+                                                    Collection<AgentProjectInfo> projects,
+                                                    String userKey,
+                                                    String requesterEmail) {
+        return (SummaryScanRequest) prepareRequest(new SummaryScanRequest(projects), orgToken, requesterEmail, product, productVersion, userKey);
+    }
+
     public SummaryScanRequest newSummaryScanRequest(String orgToken,
                                                     String product,
                                                     String productVersion,
                                                     Collection<AgentProjectInfo> projects,
                                                     String userKey) {
-        return (SummaryScanRequest) prepareRequest(new SummaryScanRequest(projects), orgToken, null, product, productVersion, userKey);
+        return newSummaryScanRequest(orgToken, product, productVersion, projects, userKey, null);
     }
 
     /**
@@ -249,16 +292,26 @@ public class RequestFactory {
      * @param product        Name or WhiteSource service token of the product to update.
      * @param productVersion Version of the product to update.
      * @param userKey        user key uniquely identifying the account at white source.
+     * @param requesterEmail Email of the WhiteSource user that requests to update WhiteSource.
      * @return Newly created request to update organization inventory.
      */
+
+    public CheckVulnerabilitiesRequest newCheckVulnerabilitiesRequest(String orgToken,
+                                                                      String product,
+                                                                      String productVersion,
+                                                                      Collection<AgentProjectInfo> projects,
+                                                                      String userKey,
+                                                                      String requesterEmail) {
+        return (CheckVulnerabilitiesRequest) prepareRequest(new CheckVulnerabilitiesRequest(projects), orgToken, requesterEmail, product, productVersion, userKey);
+    }
+
     public CheckVulnerabilitiesRequest newCheckVulnerabilitiesRequest(String orgToken,
                                                                       String product,
                                                                       String productVersion,
                                                                       Collection<AgentProjectInfo> projects,
                                                                       String userKey) {
-        return (CheckVulnerabilitiesRequest) prepareRequest(new CheckVulnerabilitiesRequest(projects), orgToken, null, product, productVersion, userKey);
+        return newCheckVulnerabilitiesRequest(orgToken, product, productVersion, projects, userKey, null);
     }
-
 
     /**
      * Create new Inventory Update request.
@@ -267,16 +320,24 @@ public class RequestFactory {
      * @param product        Name or WhiteSource service token of the product to update.
      * @param productVersion Version of the product to update.
      * @param userKey        user key uniquely identifying the account at white source.
+     * @param requesterEmail Email of the WhiteSource user that requests to update WhiteSource.
      * @return request to get organization plugin configuration.
      */
+
+    public ConfigurationRequest newConfigurationRequest(String orgToken,
+                                                        String product,
+                                                        String productVersion,
+                                                        String userKey,
+                                                        String requesterEmail) {
+        return (ConfigurationRequest) prepareRequest(new ConfigurationRequest(), orgToken, requesterEmail, product, productVersion, userKey);
+    }
+
     public ConfigurationRequest newConfigurationRequest(String orgToken,
                                                         String product,
                                                         String productVersion,
                                                         String userKey) {
-        return (ConfigurationRequest) prepareRequest(new ConfigurationRequest(), orgToken, null, product, productVersion, userKey);
+        return newConfigurationRequest(orgToken, product, productVersion, userKey, null);
     }
-
-
 
     /* --- Protected methods --- */
 
