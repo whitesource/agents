@@ -29,6 +29,8 @@ import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -276,6 +278,8 @@ public class WssServiceClientImpl implements WssServiceClient {
         String response = "";
         try {
             HttpRequestBase httpRequest = createHttpRequest(request);
+            RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
+            httpRequest.setConfig(requestConfig);
 
             logger.trace("Calling White Source service: " + request);
             response = httpClient.execute(httpRequest, new BasicResponseHandler());
