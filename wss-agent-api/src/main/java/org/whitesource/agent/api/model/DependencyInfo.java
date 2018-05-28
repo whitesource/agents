@@ -452,14 +452,4 @@ public class DependencyInfo implements Serializable {
     public void setCommit(String commit) {
         this.commit = commit;
     }
-
-    public void addChild(DependencyInfo dependencyInfo){
-        children.add(dependencyInfo);
-    }
-
-    public void removeChild(DependencyInfo dependencyInfo){
-        if (children.contains(dependencyInfo)) {
-            children.remove(dependencyInfo);
-        }
-    }
 }
