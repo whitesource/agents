@@ -64,7 +64,7 @@ public class DependencyInfo implements Serializable {
     private Map<ChecksumType, String> checksums;
     private VulnerabilityAnalysisResult vulnerabilityAnalysisResult;
     private String commit;
-    private boolean virtualComponent;
+    private boolean virtualDependency;
 
     /* --- Constructors --- */
 
@@ -77,7 +77,7 @@ public class DependencyInfo implements Serializable {
         licenses = new LinkedList<>();
         copyrights = new LinkedList<>();
         checksums = new TreeMap<>();
-        virtualComponent = false;
+        virtualDependency = false;
     }
 
     /**
@@ -160,7 +160,7 @@ public class DependencyInfo implements Serializable {
             return false;
         }
         if (optional != that.optional) return false;
-        if (virtualComponent != that.virtualComponent) return false;
+        if (virtualDependency != that.virtualDependency) return false;
         if (artifactId != null ? !artifactId.equals(that.artifactId) : that.artifactId != null) return false;
         if (classifier != null ? !classifier.equals(that.classifier) : that.classifier != null) return false;
         if (exclusions != null ? !exclusions.equals(that.exclusions) : that.exclusions != null) return false;
@@ -190,7 +190,7 @@ public class DependencyInfo implements Serializable {
         result = APIConstants.HASH_CODE_FACTOR * result + (sha1 != null ? sha1.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (exclusions != null ? exclusions.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (optional ? 1 : 0);
-        result = APIConstants.HASH_CODE_FACTOR * result + (virtualComponent ? 1 : 0);
+        result = APIConstants.HASH_CODE_FACTOR * result + (virtualDependency ? 1 : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (filename != null ? filename.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (dependencyType != null ? dependencyType.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (systemPath != null ? systemPath.hashCode() : 0);
@@ -459,7 +459,7 @@ public class DependencyInfo implements Serializable {
         this.commit = commit;
     }
 
-    public boolean isVirtualComponent() { return virtualComponent; }
+    public boolean isVirtualDependency() { return virtualDependency; }
 
-    public void setVirtualComponent(boolean virtualComponent) { this.virtualComponent = virtualComponent; }
+    public void setVirtualDependency(boolean virtualDependency) { this.virtualDependency = virtualDependency; }
 }
