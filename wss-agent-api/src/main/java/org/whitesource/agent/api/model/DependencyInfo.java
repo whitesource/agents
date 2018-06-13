@@ -64,6 +64,7 @@ public class DependencyInfo implements Serializable {
     private Map<ChecksumType, String> checksums;
     private VulnerabilityAnalysisResult vulnerabilityAnalysisResult;
     private String commit;
+    private boolean virtualDependency;
 
     /* --- Constructors --- */
 
@@ -76,6 +77,7 @@ public class DependencyInfo implements Serializable {
         licenses = new LinkedList<>();
         copyrights = new LinkedList<>();
         checksums = new TreeMap<>();
+        virtualDependency = false;
     }
 
     /**
@@ -127,7 +129,7 @@ public class DependencyInfo implements Serializable {
         setLeastSigBitsHash(leastSigBitsHash);
     }
 
-   /* --- Overridden methods --- */
+    /* --- Overridden methods --- */
 
     @Override
     public String toString() {
@@ -138,14 +140,14 @@ public class DependencyInfo implements Serializable {
                 .append("groupId= ").append(groupId).append(",")
                 .append("artifactId= ").append(artifactId).append(",")
                 .append("version= ").append(version).append(",")
-			    .append("filename= ").append(filename).append(",")
-			    .append("dependencyType= ").append(dependencyType)
+                .append("filename= ").append(filename).append(",")
+                .append("dependencyType= ").append(dependencyType)
                 .append(" ]");
 
         return sb.toString();
     }
 
-        @Override
+    @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof DependencyInfo)) return false;
@@ -158,6 +160,7 @@ public class DependencyInfo implements Serializable {
             return false;
         }
         if (optional != that.optional) return false;
+        if (virtualDependency != that.virtualDependency) return false;
         if (artifactId != null ? !artifactId.equals(that.artifactId) : that.artifactId != null) return false;
         if (classifier != null ? !classifier.equals(that.classifier) : that.classifier != null) return false;
         if (exclusions != null ? !exclusions.equals(that.exclusions) : that.exclusions != null) return false;
@@ -166,9 +169,11 @@ public class DependencyInfo implements Serializable {
         if (type != null ? !type.equals(that.type) : that.type != null) return false;
         if (version != null ? !version.equals(that.version) : that.version != null) return false;
         if (filename != null ? !filename.equals(that.filename) : that.filename != null) return false;
-        if (dependencyType != null ? !dependencyType.equals(that.dependencyType) : that.dependencyType != null) return false;
+        if (dependencyType != null ? !dependencyType.equals(that.dependencyType) : that.dependencyType != null)
+            return false;
         if (systemPath != null ? !systemPath.equals(that.systemPath) : that.systemPath != null) return false;
-        if (vulnerabilityAnalysisResult != null ? !vulnerabilityAnalysisResult.equals(that.vulnerabilityAnalysisResult) : that.vulnerabilityAnalysisResult != null) return false;
+        if (vulnerabilityAnalysisResult != null ? !vulnerabilityAnalysisResult.equals(that.vulnerabilityAnalysisResult) : that.vulnerabilityAnalysisResult != null)
+            return false;
 
         return true;
     }
@@ -185,6 +190,7 @@ public class DependencyInfo implements Serializable {
         result = APIConstants.HASH_CODE_FACTOR * result + (sha1 != null ? sha1.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (exclusions != null ? exclusions.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (optional ? 1 : 0);
+        result = APIConstants.HASH_CODE_FACTOR * result + (virtualDependency ? 1 : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (filename != null ? filename.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (dependencyType != null ? dependencyType.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (systemPath != null ? systemPath.hashCode() : 0);
@@ -208,7 +214,7 @@ public class DependencyInfo implements Serializable {
         }
     }
 
-   /* --- Getters / Setters --- */
+    /* --- Getters / Setters --- */
 
     public String getGroupId() {
         return groupId;
@@ -452,4 +458,8 @@ public class DependencyInfo implements Serializable {
     public void setCommit(String commit) {
         this.commit = commit;
     }
+
+    public boolean isVirtualDependency() { return virtualDependency; }
+
+    public void setVirtualDependency(boolean virtualDependency) { this.virtualDependency = virtualDependency; }
 }

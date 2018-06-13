@@ -36,7 +36,7 @@ public enum DependencyType {
     RUBY,
 
     NUGET,
-
+    PHP,
     RPM,
     DEBIAN
 }
