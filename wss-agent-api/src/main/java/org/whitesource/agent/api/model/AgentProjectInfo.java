@@ -15,12 +15,9 @@
  */
 package org.whitesource.agent.api.model;
 
-import org.whitesource.agent.api.model.tree.BaseNode;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -42,12 +39,6 @@ public class AgentProjectInfo implements Serializable {
 
     private Collection<DependencyInfo> dependencies;
 
-    /**
-     * In case the hierarchy of the dependencies collection is flattened,
-     * this collection will hold the original dependency tree structure.
-     */
-    private Collection<BaseNode> dependencyTree;
-
     private String projectToken;
 
     private ProjectSetupStatus projectSetupStatus;
@@ -62,7 +53,6 @@ public class AgentProjectInfo implements Serializable {
      */
     public AgentProjectInfo() {
         dependencies = new ArrayList<>();
-        dependencyTree = new LinkedList<>();
     }
 
     /* --- Overridden methods --- */
@@ -129,13 +119,5 @@ public class AgentProjectInfo implements Serializable {
 
     public void setProjectSetupStatus(ProjectSetupStatus projectSetupStatus) {
         this.projectSetupStatus = projectSetupStatus;
-    }
-
-    public Collection<BaseNode> getDependencyTree() {
-        return dependencyTree;
-    }
-
-    public void setDependencyTree(Collection<BaseNode> dependencyTree) {
-        this.dependencyTree = dependencyTree;
     }
 }

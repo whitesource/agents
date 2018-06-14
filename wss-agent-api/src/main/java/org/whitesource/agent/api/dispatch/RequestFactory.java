@@ -101,7 +101,7 @@ public class RequestFactory {
                                                             Collection<AgentProjectInfo> projects,
                                                             String userKey) {
         UpdateInventoryRequest updateInventoryRequest = new UpdateInventoryRequest(projects, updateType);
-        return (UpdateInventoryRequest) prepareRequest(updateInventoryRequest, orgToken, requesterEmail, product, productVersion, userKey);
+        return (UpdateInventoryRequest) prepareRequest(updateInventoryRequest, orgToken, requesterEmail, product, productVersion, userKey, null, null, null, null);
     }
 
     /**
@@ -121,7 +121,36 @@ public class RequestFactory {
                                                             String productVersion,
                                                             Collection<AgentProjectInfo> projects,
                                                             String userKey) {
-        return (UpdateInventoryRequest) prepareRequest(new UpdateInventoryRequest(projects), orgToken, requesterEmail, product, productVersion, userKey);
+        return (UpdateInventoryRequest) prepareRequest(new UpdateInventoryRequest(projects), orgToken, requesterEmail, product, productVersion, userKey, null, null, null, null);
+    }
+
+    /**
+     * Create new Inventory Update request.
+     *
+     * @param orgToken                WhiteSource organization token.
+     * @param requesterEmail          Email of the WhiteSource user that requests to update WhiteSource.
+     * @param product                 Name or WhiteSource service token of the product to update.
+     * @param productVersion          Version of the product to update.
+     * @param projects                Projects status statement to update.
+     * @param userKey                 user key uniquely identifying the account at white source.
+     * @param aggregateModules        to combine all pom modules into a single WhiteSource project with an aggregated dependency flat list (no hierarchy).
+     * @param preserveModuleStructure combine all pom modules to be dependencies of single project, each module will be represented as a parent of its dependencies.
+     * @param aggregateProjectName    aggregate project name identifier.
+     * @param aggregateProjectToken   aggregate project token identifier.
+     * @return Newly created request to update organization inventory.
+     */
+    public UpdateInventoryRequest newUpdateInventoryRequest(String orgToken,
+                                                            String requesterEmail,
+                                                            String product,
+                                                            String productVersion,
+                                                            Collection<AgentProjectInfo> projects,
+                                                            String userKey,
+                                                            Boolean aggregateModules,
+                                                            Boolean preserveModuleStructure,
+                                                            String aggregateProjectName,
+                                                            String aggregateProjectToken) {
+        return (UpdateInventoryRequest) prepareRequest(new UpdateInventoryRequest(projects), orgToken, requesterEmail, product, productVersion, userKey,
+                aggregateModules, preserveModuleStructure, aggregateProjectName, aggregateProjectToken);
     }
 
     /**
@@ -156,7 +185,7 @@ public class RequestFactory {
                                                         Collection<AgentProjectInfo> projects,
                                                         String userKey,
                                                         String requesterEmail) {
-        return (CheckPoliciesRequest) prepareRequest(new CheckPoliciesRequest(projects), orgToken, requesterEmail, product, productVersion, userKey);
+        return (CheckPoliciesRequest) prepareRequest(new CheckPoliciesRequest(projects), orgToken, requesterEmail, product, productVersion, userKey, null, null, null, null);
     }
 
     public CheckPoliciesRequest newCheckPoliciesRequest(String orgToken,
@@ -190,7 +219,7 @@ public class RequestFactory {
      * @param productVersion            Version of the product whose policies to check.
      * @param forceCheckAllDependencies boolean check that all/added dependencies sent to WhiteSource
      * @param userKey                   user key uniquely identifying the account at white source.
-     * @param requesterEmail Email of the WhiteSource user that requests to update WhiteSource.
+     * @param requesterEmail            Email of the WhiteSource user that requests to update WhiteSource.
      * @return Newly created request to check policies application.
      */
 
@@ -201,7 +230,7 @@ public class RequestFactory {
                                                                         boolean forceCheckAllDependencies,
                                                                         String userKey,
                                                                         String requesterEmail) {
-        return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, forceCheckAllDependencies), orgToken, requesterEmail, product, productVersion, userKey);
+        return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, forceCheckAllDependencies), orgToken, requesterEmail, product, productVersion, userKey, null, null, null, null);
     }
 
     public CheckPolicyComplianceRequest newCheckPolicyComplianceRequest(String orgToken,
@@ -211,6 +240,38 @@ public class RequestFactory {
                                                                         boolean forceCheckAllDependencies,
                                                                         String userKey) {
         return newCheckPolicyComplianceRequest(orgToken, product, productVersion, projects, forceCheckAllDependencies, userKey, null);
+    }
+
+    /**
+     * Create new Check policies request.
+     *
+     * @param orgToken                  WhiteSource organization token.
+     * @param projects                  Projects status statement to check.
+     * @param product                   Name or WhiteSource service token of the product whose policies to check.
+     * @param productVersion            Version of the product whose policies to check.
+     * @param forceCheckAllDependencies boolean check that all/added dependencies sent to WhiteSource
+     * @param userKey                   user key uniquely identifying the account at white source.
+     * @param requesterEmail            Email of the WhiteSource user that requests to update WhiteSource.
+     * @param aggregateModules          to combine all pom modules into a single WhiteSource project with an aggregated dependency flat list (no hierarchy).
+     * @param preserveModuleStructure   combine all pom modules to be dependencies of single project, each module will be represented as a parent of its dependencies.
+     * @param aggregateProjectName      aggregate project name identifier.
+     * @param aggregateProjectToken     aggregate project token identifier.
+     * @return Newly created request to check policies application.
+     */
+
+    public CheckPolicyComplianceRequest newCheckPolicyComplianceRequest(String orgToken,
+                                                                        String product,
+                                                                        String productVersion,
+                                                                        Collection<AgentProjectInfo> projects,
+                                                                        boolean forceCheckAllDependencies,
+                                                                        String userKey,
+                                                                        String requesterEmail,
+                                                                        Boolean aggregateModules,
+                                                                        Boolean preserveModuleStructure,
+                                                                        String aggregateProjectName,
+                                                                        String aggregateProjectToken) {
+        return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, forceCheckAllDependencies), orgToken, product, productVersion, userKey, requesterEmail,
+                aggregateModules, preserveModuleStructure, aggregateProjectName, aggregateProjectToken);
     }
 
     /**
@@ -244,7 +305,7 @@ public class RequestFactory {
                                                              Collection<AgentProjectInfo> projects,
                                                              String userKey,
                                                              String requesterEmail) {
-        return (GetDependencyDataRequest) prepareRequest(new GetDependencyDataRequest(projects), orgToken, requesterEmail, product, productVersion, userKey);
+        return (GetDependencyDataRequest) prepareRequest(new GetDependencyDataRequest(projects), orgToken, requesterEmail, product, productVersion, userKey, null, null, null, null);
     }
 
     public GetDependencyDataRequest newDependencyDataRequest(String orgToken,
@@ -273,7 +334,7 @@ public class RequestFactory {
                                                     Collection<AgentProjectInfo> projects,
                                                     String userKey,
                                                     String requesterEmail) {
-        return (SummaryScanRequest) prepareRequest(new SummaryScanRequest(projects), orgToken, requesterEmail, product, productVersion, userKey);
+        return (SummaryScanRequest) prepareRequest(new SummaryScanRequest(projects), orgToken, requesterEmail, product, productVersion, userKey, null, null, null, null);
     }
 
     public SummaryScanRequest newSummaryScanRequest(String orgToken,
@@ -302,7 +363,7 @@ public class RequestFactory {
                                                                       Collection<AgentProjectInfo> projects,
                                                                       String userKey,
                                                                       String requesterEmail) {
-        return (CheckVulnerabilitiesRequest) prepareRequest(new CheckVulnerabilitiesRequest(projects), orgToken, requesterEmail, product, productVersion, userKey);
+        return (CheckVulnerabilitiesRequest) prepareRequest(new CheckVulnerabilitiesRequest(projects), orgToken, requesterEmail, product, productVersion, userKey, null, null, null, null);
     }
 
     public CheckVulnerabilitiesRequest newCheckVulnerabilitiesRequest(String orgToken,
@@ -329,7 +390,7 @@ public class RequestFactory {
                                                         String productVersion,
                                                         String userKey,
                                                         String requesterEmail) {
-        return (ConfigurationRequest) prepareRequest(new ConfigurationRequest(), orgToken, requesterEmail, product, productVersion, userKey);
+        return (ConfigurationRequest) prepareRequest(new ConfigurationRequest(), orgToken, requesterEmail, product, productVersion, userKey, null, null, null, null);
     }
 
     public ConfigurationRequest newConfigurationRequest(String orgToken,
@@ -341,7 +402,8 @@ public class RequestFactory {
 
     /* --- Protected methods --- */
 
-    protected <R> BaseRequest<R> prepareRequest(BaseRequest<R> request, String orgToken, String requesterEmail, String product, String productVersion, String userKey) {
+    protected <R> BaseRequest<R> prepareRequest(BaseRequest<R> request, String orgToken, String requesterEmail, String product, String productVersion, String userKey,
+                                                Boolean aggregateModules, Boolean preserveModuleStructure, String aggregateProjectName, String aggregateProjectToken) {
         request.setAgent(agent);
         request.setAgentVersion(agentVersion);
         request.setPluginVersion(pluginVersion);
@@ -350,6 +412,10 @@ public class RequestFactory {
         request.setProductVersion(productVersion);
         request.setRequesterEmail(requesterEmail);
         request.setUserKey(userKey);
+        request.setAggregateModules(aggregateModules);
+        request.setPreserveModuleStructure(preserveModuleStructure);
+        request.setAggregateProjectName(aggregateProjectName);
+        request.setAggregateProjectToken(aggregateProjectToken);
         return request;
     }
 

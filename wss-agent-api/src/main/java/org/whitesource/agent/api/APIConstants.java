@@ -40,6 +40,10 @@ public final class APIConstants {
     public static final String PARAM_TIME_STAMP = "timeStamp";
     public static final String PARAM_REQUESTER_EMAIL = "requesterEmail";
 	public static final String PARAM_FORCE_CHECK_ALL_DEPENDENCIES = "forceCheckAllDependencies";
+	public static final String AGGREGATE_MODULES = "aggregateModules";
+	public static final String PRESERVE_MODULE_STRUCTURE = "preserveModuleStructure";
+	public static final String AGGREGATE_PROJECT_NAME = "aggregateProjectName";
+	public static final String AGGREGATE_PROJECT_TOKEN = "aggregateProjectToken";
 
 	/* --- Messages --- */
 	

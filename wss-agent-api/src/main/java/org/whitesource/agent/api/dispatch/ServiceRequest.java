@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2012 White Source Ltd.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,32 +19,32 @@ import java.io.Serializable;
 
 /**
  * The interface describe the functionality to be exposed by any request to the WhiteSource service.
- * 
+ *
  * @author Edo.Shor
  *
  * @param <R> Result type
  */
 public interface ServiceRequest<R> extends Serializable {
 
-	/**
-	 * @return Request type.
-	 */
-	RequestType type();
-	
-	/**
-	 * @return Agent type identifier.
-	 */
-	String agent();
-	
-	/**
-	 * @return Agent API version.
-	 */
-	String agentVersion();
+    /**
+     * @return Request type.
+     */
+    RequestType type();
 
-	/**
-	 * @return WhiteSource service token of the organization to update.
-	 */
-	String orgToken();
+    /**
+     * @return Agent type identifier.
+     */
+    String agent();
+
+    /**
+     * @return Agent API version.
+     */
+    String agentVersion();
+
+    /**
+     * @return WhiteSource service token of the organization to update.
+     */
+    String orgToken();
 
     /**
      * @return Name or WhiteSource service token of the product to update.
@@ -66,14 +66,34 @@ public interface ServiceRequest<R> extends Serializable {
      */
     String requesterEmail();
 
-	/**
-	 * @return Plugin version.
-	 */
-	String pluginVersion();
+    /**
+     * @return Plugin version.
+     */
+    String pluginVersion();
 
-	/**
-	 * @return WhiteSource user key who sent the request.
-	 */
-	String userKey();
+    /**
+     * @return WhiteSource user key who sent the request.
+     */
+    String userKey();
+
+    /**
+     * @return aggregate modules boolean property.
+     */
+    Boolean aggregateModules();
+
+    /**
+     * @return preserve module structure boolean property.
+     */
+    Boolean preserveModuleStructure();
+
+    /**
+     * @return aggregate project name (name identifier).
+     */
+    String aggregateProjectName();
+
+    /**
+     * @return aggregate project token (token identifier).
+     */
+    String aggregateProjectToken();
 
 }

@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2012 White Source Ltd.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -114,9 +114,9 @@ public class WssServiceClientImpl implements WssServiceClient {
         this(serviceUrl, setProxy, ClientConstants.DEFAULT_CONNECTION_TIMEOUT_MINUTES);
     }
 
-	public WssServiceClientImpl(String serviceUrl, boolean setProxy, int connectionTimeoutMinutes) {
-		this(serviceUrl, setProxy, connectionTimeoutMinutes, false);
-	}
+    public WssServiceClientImpl(String serviceUrl, boolean setProxy, int connectionTimeoutMinutes) {
+        this(serviceUrl, setProxy, connectionTimeoutMinutes, false);
+    }
 
     /**
      * Constructor
@@ -230,7 +230,7 @@ public class WssServiceClientImpl implements WssServiceClient {
         }
 
         HttpHost proxy = new HttpHost(host, port);
-//		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+        //		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
         DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
         httpClient = HttpClients.custom().setRoutePlanner(routePlanner).build();
         logger.info("Using proxy: " + proxy.toHostString());
@@ -241,7 +241,7 @@ public class WssServiceClientImpl implements WssServiceClient {
             if (username.indexOf('/') >= 0) {
                 credentials = new NTCredentials(username + ":" + password);
             } else if (username.indexOf('\\') >= 0) {
-                username = username.replace('\\','/');
+                username = username.replace('\\', '/');
                 credentials = new NTCredentials(username + ":" + password);
             } else {
                 credentials = new UsernamePasswordCredentials(username, password);
@@ -251,7 +251,7 @@ public class WssServiceClientImpl implements WssServiceClient {
             // TODO check
             httpClient = HttpClientBuilder.create().setProxy(proxy).setDefaultCredentialsProvider(credsProvider).build();
 
-//            httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, credentials);
+            //            httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, credentials);
         }
     }
 
@@ -330,12 +330,12 @@ public class WssServiceClientImpl implements WssServiceClient {
      *
      * @throws IOException In case of error creating the request.
      */
-    protected <R> HttpRequestBase createHttpRequest(ServiceRequest<R> request)  throws IOException {
+    protected <R> HttpRequestBase createHttpRequest(ServiceRequest<R> request) throws IOException {
         HttpPost httpRequest = new HttpPost(serviceUrl);
         httpRequest.setHeader("Accept", ClientConstants.APPLICATION_JSON);
 
         RequestType requestType = request.type();
-        List <NameValuePair> nvps = new ArrayList<>();
+        List<NameValuePair> nvps = new ArrayList<>();
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_REQUEST_TYPE, requestType.toString()));
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_AGENT, request.agent()));
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_AGENT_VERSION, request.agentVersion()));
@@ -346,6 +346,10 @@ public class WssServiceClientImpl implements WssServiceClient {
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_PRODUCT_VERSION, request.productVersion()));
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_TIME_STAMP, String.valueOf(request.timeStamp())));
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_PLUGIN_VERSION, String.valueOf(request.pluginVersion())));
+        nvps.add(new BasicNameValuePair(APIConstants.AGGREGATE_MODULES, String.valueOf(request.aggregateModules())));
+        nvps.add(new BasicNameValuePair(APIConstants.PRESERVE_MODULE_STRUCTURE, String.valueOf(request.preserveModuleStructure())));
+        nvps.add(new BasicNameValuePair(APIConstants.AGGREGATE_PROJECT_NAME, String.valueOf(request.aggregateProjectName())));
+        nvps.add(new BasicNameValuePair(APIConstants.AGGREGATE_PROJECT_TOKEN, String.valueOf(request.aggregateProjectToken())));
 
         String jsonDiff = null;
         switch (requestType) {
@@ -376,7 +380,8 @@ public class WssServiceClientImpl implements WssServiceClient {
             case GET_CONFIGURATION:
                 jsonDiff = gson.toJson(((ConfigurationRequest) request).getProjects());
                 break;
-            default: break;
+            default:
+                break;
         }
 
         // compress json before sending
