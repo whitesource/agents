@@ -16,6 +16,7 @@
 package org.whitesource.agent.api.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * WhiteSource model for exclusion of transitive dependencies. 
@@ -68,7 +69,21 @@ public class ExclusionInfo implements Serializable {
 		
 		return sb.toString();
 	}
-	
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof ExclusionInfo)) return false;
+		ExclusionInfo that = (ExclusionInfo) o;
+		return Objects.equals(artifactId, that.artifactId) &&
+				Objects.equals(groupId, that.groupId);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(artifactId, groupId);
+	}
+
 	/* --- Getters / Setters --- */
 	
 	public String getArtifactId() {
