@@ -79,12 +79,12 @@ public interface ServiceRequest<R> extends Serializable {
     /**
      * @return aggregate modules boolean property.
      */
-    Boolean aggregateModules();
+    boolean aggregateModules();
 
     /**
      * @return preserve module structure boolean property.
      */
-    Boolean preserveModuleStructure();
+    boolean preserveModuleStructure();
 
     /**
      * @return aggregate project name (name identifier).

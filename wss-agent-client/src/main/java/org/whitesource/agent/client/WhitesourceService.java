@@ -202,8 +202,8 @@ public class WhitesourceService {
                                         String productVersion,
                                         Collection<AgentProjectInfo> projectInfos,
                                         String userKey,
-                                        Boolean aggregateModules,
-                                        Boolean preserveModuleStructure,
+                                        boolean aggregateModules,
+                                        boolean preserveModuleStructure,
                                         String aggregateProjectName,
                                         String aggregateProjectToken)
             throws WssServiceException {

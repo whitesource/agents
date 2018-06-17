@@ -57,9 +57,9 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 
     protected Collection<AgentProjectInfo> projects;
 
-    protected Boolean aggregateModules;
+    protected boolean aggregateModules;
 
-    protected Boolean preserveModuleStructure;
+    protected boolean preserveModuleStructure;
 
     protected String aggregateProjectName;
 
@@ -156,23 +156,23 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
     }
 
     @Override
-    public Boolean aggregateModules() {
-        return null;
+    public boolean aggregateModules() {
+        return aggregateModules;
     }
 
     @Override
-    public Boolean preserveModuleStructure() {
-        return null;
+    public boolean preserveModuleStructure() {
+        return preserveModuleStructure;
     }
 
     @Override
     public String aggregateProjectName() {
-        return null;
+        return aggregateProjectName;
     }
 
     @Override
     public String aggregateProjectToken() {
-        return null;
+        return aggregateProjectToken;
     }
 
     /* --- Getters / Setters --- */
@@ -219,9 +219,9 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 
     public void setUserKey(String userKey) { this.userKey = userKey; }
 
-    public void setAggregateModules(Boolean aggregateModules) { this.aggregateModules = aggregateModules; }
+    public void setAggregateModules(boolean aggregateModules) { this.aggregateModules = aggregateModules; }
 
-    public void setPreserveModuleStructure(Boolean preserveModuleStructure) { this.preserveModuleStructure = preserveModuleStructure; }
+    public void setPreserveModuleStructure(boolean preserveModuleStructure) { this.preserveModuleStructure = preserveModuleStructure; }
 
     public void setAggregateProjectName(String aggregateProjectName) { this.aggregateProjectName = aggregateProjectName; }
 
