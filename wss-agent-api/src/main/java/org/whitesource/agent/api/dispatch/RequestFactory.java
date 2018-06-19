@@ -274,7 +274,7 @@ public class RequestFactory {
                                                                         boolean preserveModuleStructure,
                                                                         String aggregateProjectName,
                                                                         String aggregateProjectToken) {
-        return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, forceCheckAllDependencies), orgToken, product, productVersion, userKey, requesterEmail,
+        return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, forceCheckAllDependencies), orgToken, requesterEmail, product, productVersion, userKey,
                 aggregateModules, preserveModuleStructure, aggregateProjectName, aggregateProjectToken);
     }
 
