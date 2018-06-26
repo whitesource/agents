@@ -22,7 +22,7 @@ package org.whitesource.agent.api;
  */
 public final class APIConstants {
 	
-	public static final String API_VERSION = "2.6.1";
+	public static final String API_VERSION = "2.7.5";
 	
 	/* --- Parameters --- */
 	
