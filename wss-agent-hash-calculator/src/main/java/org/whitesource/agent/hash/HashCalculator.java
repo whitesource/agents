@@ -50,6 +50,7 @@ public class HashCalculator {
     private static final int FILE_MIN_SIZE_THRESHOLD = 512;
     private static final int FILE_PARTIAL_HASH_MIN_SIZE = 1024 * 2;
     private static final int FILE_SMALL_SIZE = 1024 * 3;
+    private static final int FILE_MAX_SIZE_THRESHOLD = Integer.MAX_VALUE;
 
     private static final double FILE_SMALL_BUCKET_SIZE = 1024 * 1.25;
     
@@ -81,6 +82,10 @@ public class HashCalculator {
         long fileSize = file.length();
         if (fileSize <= FILE_MIN_SIZE_THRESHOLD) {
             logger.debug("Ignored file " + file.getName() + " (" + FileUtils.byteCountToDisplaySize(fileSize) + "): minimum file size is 512B");
+            return null;
+        }
+        if (fileSize >= FILE_MAX_SIZE_THRESHOLD){
+            logger.debug("Ignore file {}, ({}): maximum file is is 2261186450B", file.getName(), FileUtils.byteCountToDisplaySize(fileSize));
             return null;
         }
 
