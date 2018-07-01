@@ -181,6 +181,38 @@ public class WhitesourceService {
     }
 
     /**
+     * Updates the White Source organization account with the given OSS information.
+     *
+     * @param orgToken                Organization token uniquely identifying the account at white source.
+     * @param requesterEmail          Email of the WhiteSource user that requests to update WhiteSource.
+     * @param product                 The product name or token to update.
+     * @param productVersion          The product version.
+     * @param projectInfos            OSS usage information to send to white source.
+     * @param userKey                 user key uniquely identifying the account at white source.
+     * @param aggregateModules        to combine all pom modules into a single WhiteSource project with an aggregated dependency flat list (no hierarchy).
+     * @param preserveModuleStructure combine all pom modules to be dependencies of single project, each module will be represented as a parent of its dependencies.
+     * @param aggregateProjectName    aggregate project name identifier.
+     * @param aggregateProjectToken   aggregate project token identifier.
+     * @return Result of updating white source.
+     * @throws WssServiceException
+     */
+    public UpdateInventoryResult update(String orgToken,
+                                        String requesterEmail,
+                                        String product,
+                                        String productVersion,
+                                        Collection<AgentProjectInfo> projectInfos,
+                                        String userKey,
+                                        boolean aggregateModules,
+                                        boolean preserveModuleStructure,
+                                        String aggregateProjectName,
+                                        String aggregateProjectToken)
+            throws WssServiceException {
+        return client.updateInventory(
+                requestFactory.newUpdateInventoryRequest(orgToken, requesterEmail, product, productVersion, projectInfos, userKey,
+                        aggregateModules, preserveModuleStructure, aggregateProjectName, aggregateProjectToken));
+    }
+
+    /**
      * Generates a file with json representation of the update request.
      *
      * @param orgToken        Organization token uniquely identifying the account at white source.
@@ -189,7 +221,7 @@ public class WhitesourceService {
      * @param productVersion  The product version.
      * @param projectInfos    OSS usage information to send to white source.
      * @param userKey         user key uniquely identifying the account at white source.
-     * @param requesterEmail Email of the WhiteSource user that requests to update WhiteSource.
+     * @param requesterEmail  Email of the WhiteSource user that requests to update WhiteSource.
      * @return UpdateInventoryRequest.
      */
     public UpdateInventoryRequest offlineUpdate(String orgToken,
@@ -258,7 +290,6 @@ public class WhitesourceService {
      * @throws WssServiceException In case of errors while checking the policies with white source.
      * @deprecated Use {@link WhitesourceService#checkPolicyCompliance(String, String, String, Collection, boolean, String)}.
      */
-
     public CheckPoliciesResult checkPolicies(String orgToken,
                                              String product,
                                              String productVersion,
@@ -279,14 +310,6 @@ public class WhitesourceService {
         return checkPolicies(orgToken, product, productVersion, projectInfos, userKey, null);
     }
 
-    public CheckPoliciesResult checkPolicies(String orgToken,
-                                             String product,
-                                             String productVersion,
-                                             Collection<AgentProjectInfo> projectInfos)
-            throws WssServiceException {
-        return checkPolicies(orgToken, product, productVersion, projectInfos, null);
-    }
-
     /**
      * Checks the policies application of the given OSS information.
      *
@@ -296,11 +319,10 @@ public class WhitesourceService {
      * @param projectInfos              OSS usage information to send to white source.
      * @param forceCheckAllDependencies Boolean to check new data only or not.
      * @param userKey                   user key uniquely identifying the account at white source.
-     * @param requesterEmail Email of the WhiteSource user that requests to update WhiteSource.
+     * @param requesterEmail            Email of the WhiteSource user that requests to update WhiteSource.
      * @return Potential result of applying the currently defined policies.
      * @throws WssServiceException In case of errors while checking the policies with white source.
      */
-
     public CheckPolicyComplianceResult checkPolicyCompliance(String orgToken,
                                                              String product,
                                                              String productVersion,
@@ -331,6 +353,39 @@ public class WhitesourceService {
                                                              boolean forceCheckAllDependencies)
             throws WssServiceException {
         return checkPolicyCompliance(orgToken, product, productVersion, projectInfos, forceCheckAllDependencies, null);
+    }
+
+    /**
+     * Checks the policies application of the given OSS information.
+     *
+     * @param orgToken                  Organization token uniquely identifying the account at white source.
+     * @param product                   The product name or token to update.
+     * @param productVersion            The product version.
+     * @param projectInfos              OSS usage information to send to white source.
+     * @param forceCheckAllDependencies Boolean to check new data only or not.
+     * @param userKey                   user key uniquely identifying the account at white source.
+     * @param aggregateModules          to combine all pom modules into a single WhiteSource project with an aggregated dependency flat list (no hierarchy).
+     * @param preserveModuleStructure   combine all pom modules to be dependencies of single project, each module will be represented as a parent of its dependencies.
+     * @param aggregateProjectName      aggregate project name identifier.
+     * @param aggregateProjectToken     aggregate project token identifier.
+     * @return Potential result of applying the currently defined policies.
+     * @throws WssServiceException In case of errors while checking the policies with white source.
+     */
+    public CheckPolicyComplianceResult checkPolicyCompliance(String orgToken,
+                                                             String product,
+                                                             String productVersion,
+                                                             Collection<AgentProjectInfo> projectInfos,
+                                                             boolean forceCheckAllDependencies,
+                                                             String userKey,
+                                                             String requesterEmail,
+                                                             Boolean aggregateModules,
+                                                             Boolean preserveModuleStructure,
+                                                             String aggregateProjectName,
+                                                             String aggregateProjectToken)
+            throws WssServiceException {
+        return client.checkPolicyCompliance(
+                requestFactory.newCheckPolicyComplianceRequest(orgToken, product, productVersion, projectInfos, forceCheckAllDependencies,
+                        userKey, requesterEmail, aggregateModules, preserveModuleStructure, aggregateProjectName, aggregateProjectToken));
     }
 
     /**
