@@ -85,7 +85,7 @@ public class HashCalculator {
             return null;
         }
         if (fileSize >= FILE_MAX_SIZE_THRESHOLD){
-            logger.debug("Ignore file {}, ({}): maximum file is is 2261186450B", file.getName(), FileUtils.byteCountToDisplaySize(fileSize));
+            logger.debug("Ignore file {}, ({}): maximum file size is 2GB", file.getName(), FileUtils.byteCountToDisplaySize(fileSize));
             return null;
         }
 
@@ -206,6 +206,11 @@ public class HashCalculator {
     public Map<ChecksumType, String> calculateJavaScriptHashes(File file) throws WssHashException {
         Map<ChecksumType, String> checksums = new EnumMap<>(ChecksumType.class);
         try {
+            long fileLength = file.length();
+            if (fileLength >= FILE_MAX_SIZE_THRESHOLD){
+                logger.debug("Ignore file {}, ({}): maximum file size  is 2GB", file.getName(), FileUtils.byteCountToDisplaySize(fileLength));
+                return checksums;
+            }
             checksums = calculateJavaScriptHashes(FileUtils.readFileToByteArray(file));
         } catch (Exception e) {
             throw new WssHashException("Error calculating JavaScript hash: "+ e.getMessage());
