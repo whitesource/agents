@@ -36,22 +36,26 @@ public final class FileUtils {
 
     /* --- Public methods --- */
 
-    public static File createOtherPlatformFile(File originalPlatform) throws IOException {
+    public static File createOtherPlatformFile(File originalPlatform) {
         // calculate other platform sha1 for files larger than MAX_FILE_SIZE
         long length = originalPlatform.length();
         if (length < MAX_FILE_SIZE && length < Runtime.getRuntime().freeMemory()) {
-            byte[] byteArray = org.apache.commons.io.FileUtils.readFileToByteArray(originalPlatform);
+            try {
+                byte[] byteArray = org.apache.commons.io.FileUtils.readFileToByteArray(originalPlatform);
 
-            String fileText = new String(byteArray);
-            File otherPlatformFile = new File(PLATFORM_DEPENDENT_TMP_DIRECTORY, originalPlatform.getName());
-            if (fileText.contains(CRLF)) {
-                org.apache.commons.io.FileUtils.write(otherPlatformFile, fileText.replaceAll(CRLF, NEW_LINE));
-            } else if (fileText.contains(NEW_LINE)) {
-                org.apache.commons.io.FileUtils.write(otherPlatformFile, fileText.replaceAll(NEW_LINE, CRLF));
-            }
+                String fileText = new String(byteArray);
+                File otherPlatformFile = new File(PLATFORM_DEPENDENT_TMP_DIRECTORY, originalPlatform.getName());
+                if (fileText.contains(CRLF)) {
+                    org.apache.commons.io.FileUtils.write(otherPlatformFile, fileText.replaceAll(CRLF, NEW_LINE));
+                } else if (fileText.contains(NEW_LINE)) {
+                    org.apache.commons.io.FileUtils.write(otherPlatformFile, fileText.replaceAll(NEW_LINE, CRLF));
+                }
 
-            if (otherPlatformFile.exists()) {
-                return otherPlatformFile;
+                if (otherPlatformFile.exists()) {
+                    return otherPlatformFile;
+                }
+            } catch (IOException e) {
+                return null;
             }
         }
         return null;

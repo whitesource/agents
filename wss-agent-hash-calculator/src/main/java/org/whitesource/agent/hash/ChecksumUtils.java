@@ -37,6 +37,7 @@ public final class ChecksumUtils {
     private static final Logger logger = LoggerFactory.getLogger(ChecksumUtils.class);
 
     private static final int PARTIAL_SHA1_LINES = 100;
+    private static final String EMPTY_FILE_SHA1 = "da39a3ee5e6b4b0d3255bfef95601890afd80709";
 
     /* --- Constructors --- */
 
@@ -129,6 +130,9 @@ public final class ChecksumUtils {
                 otherPlatformFile = org.whitesource.agent.hash.FileUtils.createOtherPlatformFile(file);
                 if (otherPlatformFile != null) {
                     otherPlatformSha1 = ChecksumUtils.calculateSHA1(otherPlatformFile);
+                    if (EMPTY_FILE_SHA1.equals(otherPlatformSha1)) {
+                        otherPlatformSha1 = null;
+                    }
                 }
             } catch (Exception e) {
                 logger.warn("Unable to create other platform file for {}: {}", file.getPath(), e.getMessage());
