@@ -44,6 +44,7 @@ public final class APIConstants {
 	public static final String PRESERVE_MODULE_STRUCTURE = "preserveModuleStructure";
 	public static final String AGGREGATE_PROJECT_NAME = "aggregateProjectName";
 	public static final String AGGREGATE_PROJECT_TOKEN = "aggregateProjectToken";
+	public static final String LOG_DATA = "logData";
 
 	/* --- Messages --- */
 	

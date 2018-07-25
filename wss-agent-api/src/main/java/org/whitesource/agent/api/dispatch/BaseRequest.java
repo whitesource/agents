@@ -65,6 +65,8 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 
     protected String aggregateProjectToken;
 
+    protected String logData;
+
     /* --- Constructors --- */
 
     /**
@@ -175,6 +177,9 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
         return aggregateProjectToken;
     }
 
+    @Override
+    public String logData() { return logData; }
+
     /* --- Getters / Setters --- */
 
     public void setAgent(String agent) {
@@ -226,4 +231,6 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
     public void setAggregateProjectName(String aggregateProjectName) { this.aggregateProjectName = aggregateProjectName; }
 
     public void setAggregateProjectToken(String aggregateProjectToken) { this.aggregateProjectToken = aggregateProjectToken; }
+
+    public void setLogData(String logData) { this.logData = logData; }
 }

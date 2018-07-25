@@ -167,7 +167,34 @@ public class WhitesourceService {
                                         String userKey)
             throws WssServiceException {
         return client.updateInventory(
-                requestFactory.newUpdateInventoryRequest(orgToken, updateType, requesterEmail, product, productVersion, projectInfos, userKey));
+                requestFactory.newUpdateInventoryRequest(orgToken, updateType, requesterEmail, product, productVersion, projectInfos, userKey, null));
+    }
+
+    /**
+     * Updates the White Source organization account with the given OSS information.
+     *
+     * @param orgToken       Organization token uniquely identifying the account at white source.
+     * @param requesterEmail Email of the WhiteSource user that requests to update WhiteSource.
+     * @param updateType     Request UpdateType
+     * @param product        The product name or token to update.
+     * @param productVersion The product version.
+     * @param projectInfos   OSS usage information to send to white source.
+     * @param userKey        user key uniquely identifying the account at white source.
+     * @param logData        list of FSA's log data events
+     * @return Result of updating white source.
+     * @throws WssServiceException
+     */
+    public UpdateInventoryResult update(String orgToken,
+                                         String requesterEmail,
+                                         UpdateType updateType,
+                                         String product,
+                                         String productVersion,
+                                         Collection<AgentProjectInfo> projectInfos,
+                                         String userKey,
+                                         String logData)
+            throws WssServiceException {
+        return client.updateInventory(
+                requestFactory.newUpdateInventoryRequest(orgToken, updateType, requesterEmail, product, productVersion, projectInfos, userKey, logData));
     }
 
     public UpdateInventoryResult update(String orgToken,
@@ -333,6 +360,33 @@ public class WhitesourceService {
             throws WssServiceException {
         return client.checkPolicyCompliance(
                 requestFactory.newCheckPolicyComplianceRequest(orgToken, product, productVersion, projectInfos, forceCheckAllDependencies, userKey, requesterEmail));
+    }
+
+    /**
+     * Checks the policies application of the given OSS information.
+     *
+     * @param orgToken                  Organization token uniquely identifying the account at white source.
+     * @param product                   The product name or token to update.
+     * @param productVersion            The product version.
+     * @param projectInfos              OSS usage information to send to white source.
+     * @param forceCheckAllDependencies Boolean to check new data only or not.
+     * @param userKey                   user key uniquely identifying the account at white source.
+     * @param requesterEmail            Email of the WhiteSource user that requests to update WhiteSource.
+     * @param logData                   list of FSA's log data events
+     * @return Potential result of applying the currently defined policies.
+     * @throws WssServiceException In case of errors while checking the policies with white source.
+     */
+    public CheckPolicyComplianceResult checkPolicyCompliance(String orgToken,
+                                                             String product,
+                                                             String productVersion,
+                                                             Collection<AgentProjectInfo> projectInfos,
+                                                             boolean forceCheckAllDependencies,
+                                                             String userKey,
+                                                             String requesterEmail,
+                                                             String logData)
+            throws WssServiceException {
+        return client.checkPolicyCompliance(
+                requestFactory.newCheckPolicyComplianceRequest(orgToken, product, productVersion, projectInfos, forceCheckAllDependencies, userKey, requesterEmail, logData));
     }
 
     public CheckPolicyComplianceResult checkPolicyCompliance(String orgToken,

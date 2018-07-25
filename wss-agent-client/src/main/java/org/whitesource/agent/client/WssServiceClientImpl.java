@@ -350,6 +350,7 @@ public class WssServiceClientImpl implements WssServiceClient {
         nvps.add(new BasicNameValuePair(APIConstants.PRESERVE_MODULE_STRUCTURE, String.valueOf(request.preserveModuleStructure())));
         nvps.add(new BasicNameValuePair(APIConstants.AGGREGATE_PROJECT_NAME, request.aggregateProjectName()));
         nvps.add(new BasicNameValuePair(APIConstants.AGGREGATE_PROJECT_TOKEN, request.aggregateProjectToken()));
+        nvps.add(new BasicNameValuePair(APIConstants.LOG_DATA, request.logData()));
 
         String jsonDiff = null;
         switch (requestType) {
