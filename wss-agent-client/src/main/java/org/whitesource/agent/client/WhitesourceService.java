@@ -202,6 +202,20 @@ public class WhitesourceService {
                                         UpdateType updateType,
                                         String product,
                                         String productVersion,
+                                        Collection<AgentProjectInfo> projectInfos,
+                                        String userKey,
+                                        String logData,
+                                        String scanComment)
+            throws WssServiceException {
+        return client.updateInventory(
+                requestFactory.newUpdateInventoryRequest(orgToken, updateType, requesterEmail, product, productVersion, projectInfos, userKey,logData ,scanComment));
+    }
+
+    public UpdateInventoryResult update(String orgToken,
+                                        String requesterEmail,
+                                        UpdateType updateType,
+                                        String product,
+                                        String productVersion,
                                         Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
         return update(orgToken, requesterEmail, updateType, product, productVersion, projectInfos, null);

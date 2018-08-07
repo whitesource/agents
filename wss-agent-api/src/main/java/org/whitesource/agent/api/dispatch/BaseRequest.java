@@ -65,7 +65,10 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 
     protected String aggregateProjectToken;
 
+    protected String scanComment;
+
     protected String logData;
+
 
     /* --- Constructors --- */
 
@@ -178,6 +181,9 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
     }
 
     @Override
+    public String scanComment() { return scanComment; }
+
+    @Override
     public String logData() { return logData; }
 
     /* --- Getters / Setters --- */
@@ -231,6 +237,8 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
     public void setAggregateProjectName(String aggregateProjectName) { this.aggregateProjectName = aggregateProjectName; }
 
     public void setAggregateProjectToken(String aggregateProjectToken) { this.aggregateProjectToken = aggregateProjectToken; }
+
+    public void setScanComment(String scanComment) { this.scanComment = scanComment; }
 
     public void setLogData(String logData) { this.logData = logData; }
 }
