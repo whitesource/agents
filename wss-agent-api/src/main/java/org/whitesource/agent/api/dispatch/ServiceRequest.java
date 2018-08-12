@@ -96,7 +96,13 @@ public interface ServiceRequest<R> extends Serializable {
      */
     String aggregateProjectToken();
 
+    /**
+     * @return log data.
+     */
     String logData();
-    String scanComment();
 
+    /**
+     * @return scan comment.
+     */
+    String scanComment();
 }

@@ -65,9 +65,9 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 
     protected String aggregateProjectToken;
 
-    protected String scanComment;
-
     protected String logData;
+
+    protected String scanComment;
 
 
     /* --- Constructors --- */
