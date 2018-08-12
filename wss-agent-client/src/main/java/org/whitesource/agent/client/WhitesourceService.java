@@ -197,6 +197,21 @@ public class WhitesourceService {
                 requestFactory.newUpdateInventoryRequest(orgToken, updateType, requesterEmail, product, productVersion, projectInfos, userKey, logData));
     }
 
+    /**
+     * Updates the White Source organization account with the given OSS information.
+     *
+     * @param orgToken       Organization token uniquely identifying the account at white source.
+     * @param requesterEmail Email of the WhiteSource user that requests to update WhiteSource.
+     * @param updateType     Request UpdateType
+     * @param product        The product name or token to update.
+     * @param productVersion The product version.
+     * @param projectInfos   OSS usage information to send to white source.
+     * @param userKey        user key uniquely identifying the account at white source.
+     * @param logData        list of FSA's log data events
+     * @param scanComment    scan description
+     * @return Result of updating white source.
+     * @throws WssServiceException
+     */
     public UpdateInventoryResult update(String orgToken,
                                         String requesterEmail,
                                         UpdateType updateType,
@@ -208,7 +223,7 @@ public class WhitesourceService {
                                         String scanComment)
             throws WssServiceException {
         return client.updateInventory(
-                requestFactory.newUpdateInventoryRequest(orgToken, updateType, requesterEmail, product, productVersion, projectInfos, userKey,logData ,scanComment));
+                requestFactory.newUpdateInventoryRequest(orgToken, updateType, requesterEmail, product, productVersion, projectInfos, userKey, logData, scanComment));
     }
 
     public UpdateInventoryResult update(String orgToken,

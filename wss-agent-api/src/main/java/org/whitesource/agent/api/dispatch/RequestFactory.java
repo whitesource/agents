@@ -95,16 +95,16 @@ public class RequestFactory {
      * @return Newly created request to update organization inventory.
      */
     public UpdateInventoryRequest newUpdateInventoryRequest(String orgToken,
-                                                            UpdateType updateType,
-                                                            String requesterEmail,
-                                                            String product,
-                                                            String productVersion,
-                                                            Collection<AgentProjectInfo> projects,
-                                                            String userKey,
-                                                            String logData) {
+                                                               UpdateType updateType,
+                                                               String requesterEmail,
+                                                               String product,
+                                                               String productVersion,
+                                                               Collection<AgentProjectInfo> projects,
+                                                               String userKey,
+                                                               String logData) {
         UpdateInventoryRequest updateInventoryRequest = new UpdateInventoryRequest(projects, updateType);
         return (UpdateInventoryRequest) prepareRequest(updateInventoryRequest, orgToken, requesterEmail, product, productVersion, userKey,
-                false, false, null, null, logData,null  );
+                false, false, null, null, logData,null);
     }
 
     /**
@@ -181,7 +181,7 @@ public class RequestFactory {
                                                             String aggregateProjectName,
                                                             String aggregateProjectToken) {
         return (UpdateInventoryRequest) prepareRequest(new UpdateInventoryRequest(projects), orgToken, requesterEmail, product, productVersion, userKey,
-                aggregateModules, preserveModuleStructure, aggregateProjectName, aggregateProjectToken, null,null   );
+                aggregateModules, preserveModuleStructure, aggregateProjectName, aggregateProjectToken, null,null);
     }
 
     /**
