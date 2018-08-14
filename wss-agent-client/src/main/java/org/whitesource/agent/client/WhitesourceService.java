@@ -286,9 +286,11 @@ public class WhitesourceService {
                                                 String productVersion,
                                                 Collection<AgentProjectInfo> projectInfos,
                                                 String userKey,
-                                                String requesterEmail) {
-        return requestFactory.newUpdateInventoryRequest(orgToken, requesterEmail, product, productVersion, projectInfos, userKey);
+                                                String requesterEmail,
+                                                String scanComment) {
+        return requestFactory.newUpdateInventoryRequest(orgToken, requesterEmail, product, productVersion, projectInfos, userKey, scanComment);
     }
+
 
     public UpdateInventoryRequest offlineUpdate(String orgToken,
                                                 String product,
@@ -296,7 +298,7 @@ public class WhitesourceService {
                                                 String productVersion,
                                                 Collection<AgentProjectInfo> projectInfos,
                                                 String userKey) {
-        return offlineUpdate(orgToken, product, removeBeforeAdd, productVersion, projectInfos, userKey, null);
+        return offlineUpdate(orgToken, product, removeBeforeAdd, productVersion, projectInfos, userKey, null, null);
     }
 
     public UpdateInventoryRequest offlineUpdate(String orgToken,
@@ -304,7 +306,7 @@ public class WhitesourceService {
                                                 Boolean removeBeforeAdd,
                                                 String productVersion,
                                                 Collection<AgentProjectInfo> projectInfos) {
-        return offlineUpdate(orgToken, product, removeBeforeAdd, productVersion, projectInfos, null, null);
+        return offlineUpdate(orgToken, product, removeBeforeAdd, productVersion, projectInfos, null, null,null);
     }
 
     /**
@@ -323,7 +325,17 @@ public class WhitesourceService {
                                                 Collection<AgentProjectInfo> projectInfos,
                                                 String userKey) {
         // init remove beforeBeforeAdd to false - dummy init
-        return offlineUpdate(orgToken, product, false, productVersion, projectInfos, null, null);
+        return offlineUpdate(orgToken, product, false, productVersion, projectInfos, null, null,null);
+    }
+
+    public UpdateInventoryRequest offlineUpdate(String orgToken,
+                                                String product,
+                                                String productVersion,
+                                                Collection<AgentProjectInfo> projectInfos,
+                                                String userKey,
+                                                String scanComment) {
+        // init remove beforeBeforeAdd to false - dummy init
+        return offlineUpdate(orgToken, product, false, productVersion, projectInfos, null, null, scanComment);
     }
 
     public UpdateInventoryRequest offlineUpdate(String orgToken,

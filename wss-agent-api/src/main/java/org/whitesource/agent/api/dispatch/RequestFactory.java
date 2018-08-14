@@ -134,6 +134,18 @@ public class RequestFactory {
         return (UpdateInventoryRequest) prepareRequest(updateInventoryRequest, orgToken, requesterEmail, product, productVersion, userKey,
                 false, false, null, null, logData, scanComment);
     }
+// scan comment for offline
+    public UpdateInventoryRequest newUpdateInventoryRequest(String orgToken,
+                                                            String requesterEmail,
+                                                            String product,
+                                                            String productVersion,
+                                                            Collection<AgentProjectInfo> projects,
+                                                            String userKey,
+                                                            String scanComment) {
+        return (UpdateInventoryRequest) prepareRequest(new UpdateInventoryRequest(projects), orgToken, requesterEmail, product, productVersion, userKey,
+                false, false, null, null, null, scanComment);
+    }
+
     /**
      * Create new Inventory Update request.
      *
@@ -154,6 +166,7 @@ public class RequestFactory {
         return (UpdateInventoryRequest) prepareRequest(new UpdateInventoryRequest(projects), orgToken, requesterEmail, product, productVersion, userKey,
                 false, false, null, null, null,null);
     }
+
 
     /**
      * Create new Inventory Update request.
