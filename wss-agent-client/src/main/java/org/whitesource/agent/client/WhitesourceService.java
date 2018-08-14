@@ -298,7 +298,7 @@ public class WhitesourceService {
                                                 String productVersion,
                                                 Collection<AgentProjectInfo> projectInfos,
                                                 String userKey) {
-        return offlineUpdate(orgToken, product, removeBeforeAdd, productVersion, projectInfos, userKey, null,null);
+        return offlineUpdate(orgToken, product, removeBeforeAdd, productVersion, projectInfos, userKey, null, null);
     }
 
     public UpdateInventoryRequest offlineUpdate(String orgToken,
