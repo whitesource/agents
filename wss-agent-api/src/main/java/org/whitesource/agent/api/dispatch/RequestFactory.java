@@ -91,7 +91,7 @@ public class RequestFactory {
      * @param productVersion Version of the product to update.
      * @param projects       Projects status statement to update.
      * @param userKey        user key uniquely identifying the account at white source.
-     * @param logData
+     * @param logData        scan log data
      * @return Newly created request to update organization inventory.
      */
     public UpdateInventoryRequest newUpdateInventoryRequest(String orgToken,
@@ -117,7 +117,7 @@ public class RequestFactory {
      * @param productVersion Version of the product to update.
      * @param projects       Projects status statement to update.
      * @param userKey        user key uniquely identifying the account at white source.
-     * @param logData
+     * @param logData        scan log data
      * @param scanComment    scan description
      * @return Newly created request to update organization inventory.
      */
@@ -275,8 +275,8 @@ public class RequestFactory {
                                                                         boolean forceCheckAllDependencies,
                                                                         String userKey,
                                                                         String requesterEmail) {
-        return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, forceCheckAllDependencies), orgToken, requesterEmail, product, productVersion, userKey,
-                false, false, null, null, null,null);
+        return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, forceCheckAllDependencies), orgToken, requesterEmail,
+                product, productVersion, userKey,false,false,null,null, null,null);
     }
 
     /**
@@ -301,8 +301,8 @@ public class RequestFactory {
                                                                         String userKey,
                                                                         String requesterEmail,
                                                                         String logData) {
-        return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, forceCheckAllDependencies), orgToken, requesterEmail, product, productVersion, userKey,
-                false, false, null, null, logData,null);
+        return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, forceCheckAllDependencies), orgToken, requesterEmail,
+                product, productVersion, userKey, false, false, null, null, logData,null);
     }
 
     public CheckPolicyComplianceRequest newCheckPolicyComplianceRequest(String orgToken,
@@ -342,8 +342,8 @@ public class RequestFactory {
                                                                         boolean preserveModuleStructure,
                                                                         String aggregateProjectName,
                                                                         String aggregateProjectToken) {
-        return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, forceCheckAllDependencies), orgToken, requesterEmail, product, productVersion, userKey,
-                aggregateModules, preserveModuleStructure, aggregateProjectName, aggregateProjectToken, null,null);
+        return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, forceCheckAllDependencies), orgToken, requesterEmail, product,
+                productVersion, userKey, aggregateModules, preserveModuleStructure, aggregateProjectName, aggregateProjectToken, null,null);
     }
 
     /**
@@ -466,7 +466,7 @@ public class RequestFactory {
                                                         String userKey,
                                                         String requesterEmail) {
         return (ConfigurationRequest) prepareRequest(new ConfigurationRequest(), orgToken, requesterEmail, product, productVersion, userKey,
-                false, false, null, null, null,null );
+                false, false, null, null, null,null);
     }
 
     public ConfigurationRequest newConfigurationRequest(String orgToken,
