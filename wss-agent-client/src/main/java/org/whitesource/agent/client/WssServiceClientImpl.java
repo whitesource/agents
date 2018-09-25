@@ -330,7 +330,7 @@ public class WssServiceClientImpl implements WssServiceClient {
      *
      * @throws IOException In case of error creating the request.
      */
-    protected <R> HttpRequestBase createHttpRequest(ServiceRequest<R> request) throws IOException {
+    protected <R> HttpRequestBase  createHttpRequest(ServiceRequest<R> request) throws IOException, WssServiceException {
         HttpPost httpRequest = new HttpPost(serviceUrl);
         httpRequest.setHeader("Accept", ClientConstants.APPLICATION_JSON);
 
@@ -391,6 +391,13 @@ public class WssServiceClientImpl implements WssServiceClient {
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_DIFF, compressedString));
 
         httpRequest.setEntity(new UrlEncodedFormEntity(nvps, UTF_8));
+
+        // whitesource service http request size should be below 200 MB
+        String httpRequestJson = gson.toJson(httpRequest);
+        if(httpRequestJson.getBytes().length > APIConstants.MAX_POST_SIZE) {
+            logger.error("WhiteSource service http request size have exceeded max limit " + APIConstants.MAX_POST_SIZE + " bytes");
+            throw new WssServiceException("WhiteSource service http request size have exceeded max limit " + APIConstants.MAX_POST_SIZE + " bytes");
+        }
 
         return httpRequest;
     }
