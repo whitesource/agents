@@ -7,17 +7,25 @@ import java.io.Serializable;
  */
 public class VulnerableEntity implements Serializable {
 
+    /* --- Static members --- */
+
     private static final long serialVersionUID = 6521642112001095631L;
+
+    /* --- Private Members --- */
 
     private String element;
     private int startLine;
     private int endLine;
+
+    /* --- Constructors --- */
 
     public VulnerableEntity(String element, int startLine, int endLine) {
         this.element = element;
         this.startLine = startLine;
         this.endLine = endLine;
     }
+
+    /* --- Getters / Setters --- */
 
     public String getElement() {
         return element;
