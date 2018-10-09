@@ -46,7 +46,7 @@ public final class APIConstants {
 	public static final String AGGREGATE_PROJECT_TOKEN = "aggregateProjectToken";
 	public static final String LOG_DATA = "logData";
 	public static final String SCAN_COMMENT = "scanComment";
-	public static final int	MAX_POST_SIZE = 1000000 * 200;	 //= 200 MegaByte;
+	public static final int	MAX_POST_SIZE = 209715200;	 //= 200 MegaByte;
 
 	/* --- Messages --- */
 	
