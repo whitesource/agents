@@ -38,5 +38,6 @@ public enum DependencyType {
     NUGET,
     PHP,
     RPM,
-    DEBIAN
+    DEBIAN,
+    COCOAPODS
 }
