@@ -37,7 +37,17 @@ public enum DependencyType {
 
     NUGET,
     PHP,
+
     RPM,
     DEBIAN,
-    COCOAPODS
+
+    COCOAPODS;
+
+    @Override
+    public String toString() {
+        switch(this) {
+            case COCOAPODS: return "CocoaPods";
+            default: return super.toString();
+        }
+    }
 }

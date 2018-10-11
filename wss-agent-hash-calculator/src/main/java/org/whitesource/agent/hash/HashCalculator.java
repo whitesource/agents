@@ -21,10 +21,12 @@ import org.apache.commons.io.input.BOMInputStream;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.whitesource.agent.api.model.ChecksumType;
+import org.whitesource.agent.api.model.DependencyType;
 import org.whitesource.agent.parser.JavaScriptParser;
 import org.whitesource.agent.parser.ParseResult;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
@@ -40,7 +42,7 @@ import java.util.Map;
  * @author tom.shapira
  */
 public class HashCalculator {
-    
+
     /* --- Static members --- */
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(HashCalculator.class);
@@ -63,6 +65,8 @@ public class HashCalculator {
 
     private static final Collection<Byte> WHITESPACES = Arrays.asList(CARRIAGE_RETURN, NEW_LINE, HORIZONTAL_TAB, SPACE);
     private static final String UTF_8 = "utf-8";
+
+    private static final String UNDERSCORE = "_";
 
     /* --- Static methods --- */
 
@@ -250,6 +254,32 @@ public class HashCalculator {
             throw new WssHashException("Error calculating JavaScript hash: "+ e.getMessage());
         }
         return checksums;
+    }
+
+    /**
+     * Calculates SHA-1 for library by name, version and dependencyType
+     *
+     * @param name of library
+     * @param version of library
+     * @param dependencyType of library
+     * @return Calculated SHA-1 for library by name, version and dependencyType
+     * @throws IOException when failed to calculate sha-1
+     */
+    public String calculateSha1ByNameVersionAndType(String name, String version, DependencyType dependencyType) throws IOException {
+        String sha1ToCalc = name + UNDERSCORE + version + UNDERSCORE + dependencyType.toString();
+        return calculateByteArraySHA1(sha1ToCalc.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Calculates SHA-1 for CocoaPods library
+     *
+     * @param name of library
+     * @param version of library          
+     * @return Calculated SHA-1 for library of CocoaPods.
+     * @throws IOException when failed to calculate sha-1
+     */
+    public String calculateCocoapodsSha1(String name, String version) throws IOException {
+        return calculateSha1ByNameVersionAndType(name, version, DependencyType.COCOAPODS);
     }
 
     /* --- Private static methods --- */
