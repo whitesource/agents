@@ -270,18 +270,6 @@ public class HashCalculator {
         return calculateByteArraySHA1(sha1ToCalc.getBytes(StandardCharsets.UTF_8));
     }
 
-    /**
-     * Calculates SHA-1 for CocoaPods library
-     *
-     * @param name of library
-     * @param version of library          
-     * @return Calculated SHA-1 for library of CocoaPods.
-     * @throws IOException when failed to calculate sha-1
-     */
-    public String calculateCocoapodsSha1(String name, String version) throws IOException {
-        return calculateSha1ByNameVersionAndType(name, version, DependencyType.COCOAPODS);
-    }
-
     /* --- Private static methods --- */
 
     private HashCalculationResult hashBuckets(byte[] fileWithoutSpaces, double bucketSize) throws IOException {
