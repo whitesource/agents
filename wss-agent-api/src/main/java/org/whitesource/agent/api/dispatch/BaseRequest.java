@@ -69,6 +69,8 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 
     protected String scanComment;
 
+    protected String productToken;
+
 
     /* --- Constructors --- */
 
@@ -186,6 +188,10 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
     @Override
     public String scanComment() { return scanComment; }
 
+
+    @Override
+    public String productToken() { return productToken; }
+
     /* --- Getters / Setters --- */
 
     public void setAgent(String agent) {
@@ -241,4 +247,8 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
     public void setLogData(String logData) { this.logData = logData; }
 
     public void setScanComment(String scanComment) { this.scanComment = scanComment; }
+
+    public void setProductToken(String productToken) {
+        this.productToken = productToken;
+    }
 }

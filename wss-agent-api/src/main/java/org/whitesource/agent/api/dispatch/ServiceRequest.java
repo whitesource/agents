@@ -105,4 +105,9 @@ public interface ServiceRequest<R> extends Serializable {
      * @return scan comment.
      */
     String scanComment();
+
+    /**
+     * @return product token.
+     */
+    String productToken();
 }

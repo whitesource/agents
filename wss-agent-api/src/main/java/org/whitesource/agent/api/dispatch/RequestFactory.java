@@ -104,8 +104,9 @@ public class RequestFactory {
                                                                String logData) {
         UpdateInventoryRequest updateInventoryRequest = new UpdateInventoryRequest(projects, updateType);
         return (UpdateInventoryRequest) prepareRequest(updateInventoryRequest, orgToken, requesterEmail, product, productVersion, userKey,
-                false, false, null, null, logData,null);
+                false, false, null, null, logData,null, null);
     }
+
 
     /**
      * Create new Inventory Update request.
@@ -132,7 +133,51 @@ public class RequestFactory {
                                                             String scanComment) {
         UpdateInventoryRequest updateInventoryRequest = new UpdateInventoryRequest(projects, updateType);
         return (UpdateInventoryRequest) prepareRequest(updateInventoryRequest, orgToken, requesterEmail, product, productVersion, userKey,
-                false, false, null, null, logData, scanComment);
+                false, false, null, null, logData, scanComment, null);
+    }
+
+
+    /**
+     * Create new Inventory Update request.
+     *
+     * @param orgToken       WhiteSource organization token.
+     * @param updateType     Request UpdateType
+     * @param requesterEmail Email of the WhiteSource user that requests to update WhiteSource.
+     * @param product        Name or WhiteSource service token of the product to update.
+     * @param productVersion Version of the product to update.
+     * @param projects       Projects status statement to update.
+     * @param userKey        user key uniquely identifying the account at white source.
+     * @param logData        scan log data
+     * @param scanComment    scan description
+     * @param productToken   product token
+     * @return Newly created request to update organization inventory.
+     */
+
+    public UpdateInventoryRequest newUpdateInventoryRequest(String orgToken,
+                                                            UpdateType updateType,
+                                                            String requesterEmail,
+                                                            String product,
+                                                            String productVersion,
+                                                            Collection<AgentProjectInfo> projects,
+                                                            String userKey,
+                                                            String logData,
+                                                            String scanComment,
+                                                            String productToken) {
+        UpdateInventoryRequest updateInventoryRequest = new UpdateInventoryRequest(projects, updateType);
+        return (UpdateInventoryRequest) prepareRequest(updateInventoryRequest, orgToken, requesterEmail, product, productVersion, userKey,
+                false, false, null, null, logData, scanComment, productToken);
+    }
+
+    public UpdateInventoryRequest newUpdateInventoryRequest(String orgToken,
+                                                            String requesterEmail,
+                                                            String product,
+                                                            String productVersion,
+                                                            Collection<AgentProjectInfo> projects,
+                                                            String userKey,
+                                                            String scanComment,
+                                                            String productToken) {
+        return (UpdateInventoryRequest) prepareRequest(new UpdateInventoryRequest(projects), orgToken, requesterEmail, product, productVersion, userKey,
+                false, false, null, null, null, scanComment, productToken);
     }
 
     public UpdateInventoryRequest newUpdateInventoryRequest(String orgToken,
@@ -143,7 +188,7 @@ public class RequestFactory {
                                                             String userKey,
                                                             String scanComment) {
         return (UpdateInventoryRequest) prepareRequest(new UpdateInventoryRequest(projects), orgToken, requesterEmail, product, productVersion, userKey,
-                false, false, null, null, null, scanComment);
+                false, false, null, null, null, scanComment, null);
     }
 
     /**
@@ -164,7 +209,8 @@ public class RequestFactory {
                                                             Collection<AgentProjectInfo> projects,
                                                             String userKey) {
         return (UpdateInventoryRequest) prepareRequest(new UpdateInventoryRequest(projects), orgToken, requesterEmail, product, productVersion, userKey,
-                false, false, null, null, null,null);
+                false, false, null, null,
+                null,null, null);
     }
 
     /**
@@ -193,7 +239,8 @@ public class RequestFactory {
                                                             String aggregateProjectName,
                                                             String aggregateProjectToken) {
         return (UpdateInventoryRequest) prepareRequest(new UpdateInventoryRequest(projects), orgToken, requesterEmail, product, productVersion, userKey,
-                aggregateModules, preserveModuleStructure, aggregateProjectName, aggregateProjectToken, null,null);
+                aggregateModules, preserveModuleStructure, aggregateProjectName, aggregateProjectToken,
+                null,null, null);
     }
 
     /**
@@ -229,7 +276,8 @@ public class RequestFactory {
                                                         String userKey,
                                                         String requesterEmail) {
         return (CheckPoliciesRequest) prepareRequest(new CheckPoliciesRequest(projects), orgToken, requesterEmail, product, productVersion, userKey,
-                false, false, null, null, null,null);
+                false, false, null, null,
+                null,null, null);
     }
 
     public CheckPoliciesRequest newCheckPoliciesRequest(String orgToken,
@@ -275,7 +323,8 @@ public class RequestFactory {
                                                                         String userKey,
                                                                         String requesterEmail) {
         return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, forceCheckAllDependencies), orgToken, requesterEmail,
-                product, productVersion, userKey,false,false,null,null, null,null);
+                product, productVersion, userKey,false,false,null,
+                null, null,null, null);
     }
 
     /**
@@ -289,8 +338,24 @@ public class RequestFactory {
      * @param userKey                   user key uniquely identifying the account at white source.
      * @param requesterEmail            Email of the WhiteSource user that requests to update WhiteSource.
      * @param logData                   list of FSA's log data events
+     * @param productToken              Token of the product whose policies to check.
      * @return Newly created request to check policies application.
      */
+
+
+    public CheckPolicyComplianceRequest newCheckPolicyComplianceRequest(String orgToken,
+                                                                        String product,
+                                                                        String productVersion,
+                                                                        Collection<AgentProjectInfo> projects,
+                                                                        boolean forceCheckAllDependencies,
+                                                                        String userKey,
+                                                                        String requesterEmail,
+                                                                        String logData,
+                                                                        String productToken) {
+        return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, forceCheckAllDependencies), orgToken, requesterEmail,
+                product, productVersion, userKey, false, false, null,
+                null, logData,null, productToken);
+    }
 
     public CheckPolicyComplianceRequest newCheckPolicyComplianceRequest(String orgToken,
                                                                         String product,
@@ -301,7 +366,8 @@ public class RequestFactory {
                                                                         String requesterEmail,
                                                                         String logData) {
         return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, forceCheckAllDependencies), orgToken, requesterEmail,
-                product, productVersion, userKey, false, false, null, null, logData,null);
+                product, productVersion, userKey, false, false, null,
+                null, logData,null, null);
     }
 
     public CheckPolicyComplianceRequest newCheckPolicyComplianceRequest(String orgToken,
@@ -342,7 +408,8 @@ public class RequestFactory {
                                                                         String aggregateProjectName,
                                                                         String aggregateProjectToken) {
         return (CheckPolicyComplianceRequest) prepareRequest(new CheckPolicyComplianceRequest(projects, forceCheckAllDependencies), orgToken, requesterEmail, product,
-                productVersion, userKey, aggregateModules, preserveModuleStructure, aggregateProjectName, aggregateProjectToken, null,null);
+                productVersion, userKey, aggregateModules, preserveModuleStructure, aggregateProjectName, aggregateProjectToken, null,
+                null, null);
     }
 
     /**
@@ -375,9 +442,19 @@ public class RequestFactory {
                                                              String productVersion,
                                                              Collection<AgentProjectInfo> projects,
                                                              String userKey,
-                                                             String requesterEmail) {
+                                                             String requesterEmail,
+                                                             String productToken) {
         return (GetDependencyDataRequest) prepareRequest(new GetDependencyDataRequest(projects), orgToken, requesterEmail, product, productVersion, userKey,
-                false, false, null, null, null,null);
+                false, false, null, null, null,null, productToken);
+    }
+
+    public GetDependencyDataRequest newDependencyDataRequest(String orgToken,
+                                                             String product,
+                                                             String productVersion,
+                                                             Collection<AgentProjectInfo> projects,
+                                                             String userKey,
+                                                             String requesterEmail) {
+        return newDependencyDataRequest(orgToken, product, productVersion, projects, userKey, requesterEmail, null);
     }
 
     public GetDependencyDataRequest newDependencyDataRequest(String orgToken,
@@ -400,14 +477,24 @@ public class RequestFactory {
      * @return Newly created request to update organization inventory.
      */
 
-    public SummaryScanRequest newSummaryScanRequest(String orgToken,
+    public SummaryScanRequest  newSummaryScanRequest(String orgToken,
+                                                     String product,
+                                                     String productVersion,
+                                                     Collection<AgentProjectInfo> projects,
+                                                     String userKey,
+                                                     String requesterEmail,
+                                                     String productToken) {
+        return (SummaryScanRequest) prepareRequest(new SummaryScanRequest(projects), orgToken, requesterEmail, product, productVersion, userKey,
+                false, false, null, null, null,null, productToken);
+    }
+
+    public SummaryScanRequest  newSummaryScanRequest(String orgToken,
                                                     String product,
                                                     String productVersion,
                                                     Collection<AgentProjectInfo> projects,
                                                     String userKey,
                                                     String requesterEmail) {
-        return (SummaryScanRequest) prepareRequest(new SummaryScanRequest(projects), orgToken, requesterEmail, product, productVersion, userKey,
-                false, false, null, null, null,null);
+        return newSummaryScanRequest(orgToken, product, productVersion, projects, userKey, requesterEmail, null);
     }
 
     public SummaryScanRequest newSummaryScanRequest(String orgToken,
@@ -435,9 +522,20 @@ public class RequestFactory {
                                                                       String productVersion,
                                                                       Collection<AgentProjectInfo> projects,
                                                                       String userKey,
+                                                                      String requesterEmail,
+                                                                      String productToken) {
+        return (CheckVulnerabilitiesRequest) prepareRequest(new CheckVulnerabilitiesRequest(projects), orgToken, requesterEmail, product, productVersion, userKey,
+                false, false, null, null, null,null, productToken);
+    }
+
+    public CheckVulnerabilitiesRequest newCheckVulnerabilitiesRequest(String orgToken,
+                                                                      String product,
+                                                                      String productVersion,
+                                                                      Collection<AgentProjectInfo> projects,
+                                                                      String userKey,
                                                                       String requesterEmail) {
         return (CheckVulnerabilitiesRequest) prepareRequest(new CheckVulnerabilitiesRequest(projects), orgToken, requesterEmail, product, productVersion, userKey,
-                false, false, null, null, null,null);
+                false, false, null, null, null,null, null);
     }
 
     public CheckVulnerabilitiesRequest newCheckVulnerabilitiesRequest(String orgToken,
@@ -463,9 +561,18 @@ public class RequestFactory {
                                                         String product,
                                                         String productVersion,
                                                         String userKey,
-                                                        String requesterEmail) {
+                                                        String requesterEmail,
+                                                        String productToken) {
         return (ConfigurationRequest) prepareRequest(new ConfigurationRequest(), orgToken, requesterEmail, product, productVersion, userKey,
-                false, false, null, null, null,null);
+                false, false, null, null, null,null, productToken);
+    }
+
+    public ConfigurationRequest newConfigurationRequest(String orgToken,
+                                                        String product,
+                                                        String productVersion,
+                                                        String userKey,
+                                                        String requesterEmail) {
+        return newConfigurationRequest(orgToken, product, productVersion, userKey, requesterEmail, null);
     }
 
     public ConfigurationRequest newConfigurationRequest(String orgToken,
@@ -479,7 +586,7 @@ public class RequestFactory {
 
     protected <R> BaseRequest<R> prepareRequest(BaseRequest<R> request, String orgToken, String requesterEmail, String product, String productVersion, String userKey,
                                                 boolean aggregateModules, boolean preserveModuleStructure, String aggregateProjectName,
-                                                String aggregateProjectToken, String logData, String scanComment) {
+                                                String aggregateProjectToken, String logData, String scanComment, String productToken) {
         request.setAgent(agent);
         request.setAgentVersion(agentVersion);
         request.setPluginVersion(pluginVersion);
@@ -494,6 +601,7 @@ public class RequestFactory {
         request.setAggregateProjectToken(aggregateProjectToken);
         request.setScanComment(scanComment);
         request.setLogData(logData);
+        request.setProductToken(productToken);
         return request;
     }
 

@@ -226,6 +226,38 @@ public class WhitesourceService {
                 requestFactory.newUpdateInventoryRequest(orgToken, updateType, requesterEmail, product, productVersion, projectInfos, userKey, logData, scanComment));
     }
 
+    /**
+     * Updates the White Source organization account with the given OSS information.
+     *
+     * @param orgToken       Organization token uniquely identifying the account at white source.
+     * @param requesterEmail Email of the WhiteSource user that requests to update WhiteSource.
+     * @param updateType     Request UpdateType
+     * @param product        The product name or token to update.
+     * @param productVersion The product version.
+     * @param projectInfos   OSS usage information to send to white source.
+     * @param userKey        user key uniquely identifying the account at white source.
+     * @param logData        list of FSA's log data events
+     * @param scanComment    scan description
+     * @return Result of updating white source.
+     * @throws WssServiceException
+     */
+    public UpdateInventoryResult update(String orgToken,
+                                        String requesterEmail,
+                                        UpdateType updateType,
+                                        String product,
+                                        String productVersion,
+                                        Collection<AgentProjectInfo> projectInfos,
+                                        String userKey,
+                                        String logData,
+                                        String scanComment,
+                                        String productToken)
+            throws WssServiceException {
+        return client.updateInventory(
+                requestFactory.newUpdateInventoryRequest(orgToken, updateType, requesterEmail, product, productVersion,
+                        projectInfos, userKey, logData, scanComment, productToken));
+    }
+
+
     public UpdateInventoryResult update(String orgToken,
                                         String requesterEmail,
                                         UpdateType updateType,
@@ -268,6 +300,7 @@ public class WhitesourceService {
                         aggregateModules, preserveModuleStructure, aggregateProjectName, aggregateProjectToken));
     }
 
+
     /**
      * Generates a file with json representation of the update request.
      *
@@ -278,8 +311,23 @@ public class WhitesourceService {
      * @param projectInfos    OSS usage information to send to white source.
      * @param userKey         user key uniquely identifying the account at white source.
      * @param requesterEmail  Email of the WhiteSource user that requests to update WhiteSource.
+     * @param scanComment     User comment.
      * @return UpdateInventoryRequest.
      */
+
+    public UpdateInventoryRequest offlineUpdate(String orgToken,
+                                                String product,
+                                                Boolean removeBeforeAdd,
+                                                String productVersion,
+                                                Collection<AgentProjectInfo> projectInfos,
+                                                String userKey,
+                                                String requesterEmail,
+                                                String scanComment,
+                                                String productToken) {
+        return requestFactory.newUpdateInventoryRequest(orgToken, requesterEmail, product, productVersion, projectInfos, userKey, scanComment, productToken);
+    }
+
+
     public UpdateInventoryRequest offlineUpdate(String orgToken,
                                                 String product,
                                                 Boolean removeBeforeAdd,
@@ -288,7 +336,7 @@ public class WhitesourceService {
                                                 String userKey,
                                                 String requesterEmail,
                                                 String scanComment) {
-        return requestFactory.newUpdateInventoryRequest(orgToken, requesterEmail, product, productVersion, projectInfos, userKey, scanComment);
+        return offlineUpdate(orgToken, product, removeBeforeAdd, productVersion, projectInfos, userKey, requesterEmail, scanComment, null);
     }
 
 
@@ -306,7 +354,7 @@ public class WhitesourceService {
                                                 Boolean removeBeforeAdd,
                                                 String productVersion,
                                                 Collection<AgentProjectInfo> projectInfos) {
-        return offlineUpdate(orgToken, product, removeBeforeAdd, productVersion, projectInfos, null, null,null);
+        return offlineUpdate(orgToken, product, removeBeforeAdd, productVersion, projectInfos, null);
     }
 
     /**
@@ -388,9 +436,40 @@ public class WhitesourceService {
      * @param forceCheckAllDependencies Boolean to check new data only or not.
      * @param userKey                   user key uniquely identifying the account at white source.
      * @param requesterEmail            Email of the WhiteSource user that requests to update WhiteSource.
+     * @param logData                   list of FSA's log data events
+     * @param productToken               The product token
      * @return Potential result of applying the currently defined policies.
      * @throws WssServiceException In case of errors while checking the policies with white source.
+     *
      */
+
+    public CheckPolicyComplianceResult checkPolicyCompliance(String orgToken,
+                                                             String product,
+                                                             String productVersion,
+                                                             Collection<AgentProjectInfo> projectInfos,
+                                                             boolean forceCheckAllDependencies,
+                                                             String userKey,
+                                                             String requesterEmail,
+                                                             String logData,
+                                                             String productToken)
+            throws WssServiceException {
+        return client.checkPolicyCompliance(
+                requestFactory.newCheckPolicyComplianceRequest(orgToken, product, productVersion, projectInfos, forceCheckAllDependencies,
+                        userKey, requesterEmail, logData, productToken));
+    }
+
+    public CheckPolicyComplianceResult checkPolicyCompliance(String orgToken,
+                                                             String product,
+                                                             String productVersion,
+                                                             Collection<AgentProjectInfo> projectInfos,
+                                                             boolean forceCheckAllDependencies,
+                                                             String userKey,
+                                                             String requesterEmail,
+                                                             String logData) throws WssServiceException {
+        return checkPolicyCompliance(orgToken, product, productVersion, projectInfos, forceCheckAllDependencies, userKey, requesterEmail, logData, null);
+    }
+
+
     public CheckPolicyComplianceResult checkPolicyCompliance(String orgToken,
                                                              String product,
                                                              String productVersion,
@@ -399,35 +478,8 @@ public class WhitesourceService {
                                                              String userKey,
                                                              String requesterEmail)
             throws WssServiceException {
-        return client.checkPolicyCompliance(
-                requestFactory.newCheckPolicyComplianceRequest(orgToken, product, productVersion, projectInfos, forceCheckAllDependencies, userKey, requesterEmail));
-    }
+        return checkPolicyCompliance(orgToken, product, productVersion, projectInfos, forceCheckAllDependencies, userKey, requesterEmail, null);
 
-    /**
-     * Checks the policies application of the given OSS information.
-     *
-     * @param orgToken                  Organization token uniquely identifying the account at white source.
-     * @param product                   The product name or token to update.
-     * @param productVersion            The product version.
-     * @param projectInfos              OSS usage information to send to white source.
-     * @param forceCheckAllDependencies Boolean to check new data only or not.
-     * @param userKey                   user key uniquely identifying the account at white source.
-     * @param requesterEmail            Email of the WhiteSource user that requests to update WhiteSource.
-     * @param logData                   list of FSA's log data events
-     * @return Potential result of applying the currently defined policies.
-     * @throws WssServiceException In case of errors while checking the policies with white source.
-     */
-    public CheckPolicyComplianceResult checkPolicyCompliance(String orgToken,
-                                                             String product,
-                                                             String productVersion,
-                                                             Collection<AgentProjectInfo> projectInfos,
-                                                             boolean forceCheckAllDependencies,
-                                                             String userKey,
-                                                             String requesterEmail,
-                                                             String logData)
-            throws WssServiceException {
-        return client.checkPolicyCompliance(
-                requestFactory.newCheckPolicyComplianceRequest(orgToken, product, productVersion, projectInfos, forceCheckAllDependencies, userKey, requesterEmail, logData));
     }
 
     public CheckPolicyComplianceResult checkPolicyCompliance(String orgToken,
@@ -435,18 +487,16 @@ public class WhitesourceService {
                                                              String productVersion,
                                                              Collection<AgentProjectInfo> projectInfos,
                                                              boolean forceCheckAllDependencies,
-                                                             String userKey)
-            throws WssServiceException {
-        return client.checkPolicyCompliance(
-                requestFactory.newCheckPolicyComplianceRequest(orgToken, product, productVersion, projectInfos, forceCheckAllDependencies, userKey));
-    }
+                                                             String userKey)   throws WssServiceException {
+    return checkPolicyCompliance(orgToken, product, productVersion, projectInfos, forceCheckAllDependencies, userKey, null);
+
+}
 
     public CheckPolicyComplianceResult checkPolicyCompliance(String orgToken,
                                                              String product,
                                                              String productVersion,
                                                              Collection<AgentProjectInfo> projectInfos,
-                                                             boolean forceCheckAllDependencies)
-            throws WssServiceException {
+                                                             boolean forceCheckAllDependencies) throws WssServiceException {
         return checkPolicyCompliance(orgToken, product, productVersion, projectInfos, forceCheckAllDependencies, null);
     }
 
@@ -501,10 +551,22 @@ public class WhitesourceService {
                                                      String productVersion,
                                                      Collection<AgentProjectInfo> projectInfos,
                                                      String userKey,
-                                                     String requesterEmail)
+                                                     String requesterEmail,
+                                                     String productToken)
             throws WssServiceException {
         return client.getDependencyData(
-                requestFactory.newDependencyDataRequest(orgToken, product, productVersion, projectInfos, userKey, requesterEmail));
+                requestFactory.newDependencyDataRequest(orgToken, product, productVersion, projectInfos, userKey, requesterEmail, productToken));
+    }
+
+
+    public GetDependencyDataResult getDependencyData(String orgToken,
+                                                     String product,
+                                                     String productVersion,
+                                                     Collection<AgentProjectInfo> projectInfos,
+                                                     String userKey,
+                                                     String requesterEmail)
+            throws WssServiceException {
+        return getDependencyData(orgToken, product, productVersion, projectInfos, userKey, requesterEmail, null);
     }
 
     public GetDependencyDataResult getDependencyData(String orgToken,
@@ -513,8 +575,7 @@ public class WhitesourceService {
                                                      Collection<AgentProjectInfo> projectInfos,
                                                      String userKey)
             throws WssServiceException {
-        return client.getDependencyData(
-                requestFactory.newDependencyDataRequest(orgToken, product, productVersion, projectInfos, userKey));
+        return getDependencyData(orgToken, product, productVersion, projectInfos, userKey, null);
     }
 
     public GetDependencyDataResult getDependencyData(String orgToken,
@@ -543,10 +604,21 @@ public class WhitesourceService {
                                          String productVersion,
                                          Collection<AgentProjectInfo> projectInfos,
                                          String userKey,
-                                         String requesterEmail)
+                                         String requesterEmail,
+                                         String productToken)
             throws WssServiceException {
         return client.summaryScan(
-                requestFactory.newSummaryScanRequest(orgToken, product, productVersion, projectInfos, userKey, requesterEmail));
+                requestFactory.newSummaryScanRequest(orgToken, product, productVersion, projectInfos, userKey, requesterEmail, productToken));
+    }
+
+    public SummaryScanResult summaryScan(String orgToken,
+                                         String product,
+                                         String productVersion,
+                                         Collection<AgentProjectInfo> projectInfos,
+                                         String userKey,
+                                         String requesterEmail)
+            throws WssServiceException {
+        return summaryScan(orgToken, product, productVersion, projectInfos, userKey, requesterEmail, null);
     }
 
     public SummaryScanResult summaryScan(String orgToken,
@@ -555,8 +627,7 @@ public class WhitesourceService {
                                          Collection<AgentProjectInfo> projectInfos,
                                          String userKey)
             throws WssServiceException {
-        return client.summaryScan(
-                requestFactory.newSummaryScanRequest(orgToken, product, productVersion, projectInfos, userKey));
+        return summaryScan(orgToken, product, productVersion, projectInfos, userKey, null);
     }
 
     public SummaryScanResult summaryScan(String orgToken,
@@ -585,10 +656,21 @@ public class WhitesourceService {
                                                            String productVersion,
                                                            Collection<AgentProjectInfo> projectInfos,
                                                            String userKey,
-                                                           String requesterEmail)
+                                                           String requesterEmail,
+                                                           String productToken)
             throws WssServiceException {
         return client.checkVulnerabilities(
-                requestFactory.newCheckVulnerabilitiesRequest(orgToken, product, productVersion, projectInfos, userKey, requesterEmail));
+                requestFactory.newCheckVulnerabilitiesRequest(orgToken, product, productVersion, projectInfos, userKey, requesterEmail, productToken));
+    }
+
+    public CheckVulnerabilitiesResult checkVulnerabilities(String orgToken,
+                                                           String product,
+                                                           String productVersion,
+                                                           Collection<AgentProjectInfo> projectInfos,
+                                                           String userKey,
+                                                           String requesterEmail)
+            throws WssServiceException {
+        return checkVulnerabilities(orgToken, product, productVersion, projectInfos, userKey, requesterEmail, null);
     }
 
     public CheckVulnerabilitiesResult checkVulnerabilities(String orgToken,
@@ -597,8 +679,7 @@ public class WhitesourceService {
                                                            Collection<AgentProjectInfo> projectInfos,
                                                            String userKey)
             throws WssServiceException {
-        return client.checkVulnerabilities(
-                requestFactory.newCheckVulnerabilitiesRequest(orgToken, product, productVersion, projectInfos, userKey));
+        return checkVulnerabilities(orgToken, product, productVersion, projectInfos, userKey, null);
     }
 
     public CheckVulnerabilitiesResult checkVulnerabilities(String orgToken,
@@ -625,9 +706,19 @@ public class WhitesourceService {
                                                 String product,
                                                 String productVersion,
                                                 String userKey,
+                                                String requesterEmail,
+                                                String productToken)
+            throws WssServiceException {
+        return client.getConfiguration(requestFactory.newConfigurationRequest(orgToken, product, productVersion, userKey, requesterEmail, productToken));
+    }
+
+    public ConfigurationResult getConfiguration(String orgToken,
+                                                String product,
+                                                String productVersion,
+                                                String userKey,
                                                 String requesterEmail)
             throws WssServiceException {
-        return client.getConfiguration(requestFactory.newConfigurationRequest(orgToken, product, productVersion, userKey, requesterEmail));
+        return getConfiguration(orgToken, product, productVersion, userKey, requesterEmail, null);
     }
 
     public ConfigurationResult getConfiguration(String orgToken,
