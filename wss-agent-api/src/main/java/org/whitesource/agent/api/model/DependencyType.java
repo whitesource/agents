@@ -41,7 +41,8 @@ public enum DependencyType {
     RPM,
     DEBIAN,
 
-    COCOAPODS;
+    COCOAPODS,
+    HEX;
 
     @Override
     public String toString() {
