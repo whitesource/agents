@@ -17,8 +17,7 @@ package org.whitesource.agent.api.dispatch;
 
 import org.whitesource.agent.api.model.AgentProjectInfo;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
 /**
  * Base, abstract, implementation of the interface.
@@ -71,6 +70,8 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 
     protected String productToken;
 
+    protected Map<String, String> extraProperties;
+
 
     /* --- Constructors --- */
 
@@ -108,6 +109,7 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
         this.pluginVersion = pluginVersion;
         this.timeStamp = System.currentTimeMillis();
         projects = new ArrayList<AgentProjectInfo>();
+        this.extraProperties = new HashMap<>();
     }
 
     /* --- Interface implementation methods --- */
@@ -192,6 +194,9 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
     @Override
     public String productToken() { return productToken; }
 
+    @Override
+    public Map<String, String> extraProperties() { return extraProperties; }
+
     /* --- Getters / Setters --- */
 
     public void setAgent(String agent) {
@@ -250,5 +255,13 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 
     public void setProductToken(String productToken) {
         this.productToken = productToken;
+    }
+
+    public Map<String, String> getExtraProperties() {
+        return extraProperties;
+    }
+
+    public void setExtraProperties(Map<String, String> extraProperties) {
+        this.extraProperties = extraProperties;
     }
 }

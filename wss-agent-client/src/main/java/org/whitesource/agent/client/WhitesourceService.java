@@ -19,6 +19,7 @@ import org.whitesource.agent.api.dispatch.*;
 import org.whitesource.agent.api.model.AgentProjectInfo;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * A facade to the communication layer with the White Source service.
@@ -134,6 +135,18 @@ public class WhitesourceService {
             throws WssServiceException {
         return client.updateInventory(
                 requestFactory.newUpdateInventoryRequest(orgToken, requesterEmail, product, productVersion, projectInfos, userKey));
+    }
+
+    public UpdateInventoryResult update(String orgToken,
+                                        String requesterEmail,
+                                        String product,
+                                        String productVersion,
+                                        Collection<AgentProjectInfo> projectInfos,
+                                        String userKey,
+                                        Map<String, String> extraProperties)
+            throws WssServiceException {
+        return client.updateInventory(
+                requestFactory.newUpdateInventoryRequest(orgToken, requesterEmail, product, productVersion, projectInfos, userKey, extraProperties));
     }
 
     public UpdateInventoryResult update(String orgToken,

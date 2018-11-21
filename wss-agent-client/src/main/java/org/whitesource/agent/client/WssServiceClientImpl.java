@@ -354,6 +354,13 @@ public class WssServiceClientImpl implements WssServiceClient {
         nvps.add(new BasicNameValuePair(APIConstants.SCAN_COMMENT, request.scanComment()));
         nvps.add(new BasicNameValuePair(APIConstants.PRODUCT_TOKEN, request.productToken()));
 
+        if (request.extraProperties() != null) {
+            String strExtraProperties = gson.toJson(request.extraProperties());
+            nvps.add(new BasicNameValuePair(APIConstants.EXTRA_PROPERTIES, strExtraProperties));
+        } else {
+            nvps.add(new BasicNameValuePair(APIConstants.EXTRA_PROPERTIES, "{}"));
+        }
+
         String jsonDiff = null;
         switch (requestType) {
             case UPDATE:

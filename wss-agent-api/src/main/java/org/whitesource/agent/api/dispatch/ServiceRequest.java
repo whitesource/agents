@@ -16,6 +16,7 @@
 package org.whitesource.agent.api.dispatch;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * The interface describe the functionality to be exposed by any request to the WhiteSource service.
@@ -110,4 +111,9 @@ public interface ServiceRequest<R> extends Serializable {
      * @return product token.
      */
     String productToken();
+
+    /**
+     * @return extra Properties.
+     */
+    Map<String, String> extraProperties();
 }
