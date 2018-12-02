@@ -21,6 +21,7 @@ public class VulnerableElement implements Serializable {
     // class or method
     private String element;
     private Collection<VulnerabilityTrace> vulnerabilityTraces;
+    private VulnerableElementInfo vulnerableElementInfo;
 
     /* --- Constructor --- */
 
@@ -31,6 +32,11 @@ public class VulnerableElement implements Serializable {
     public VulnerableElement(String element, Collection<VulnerabilityTrace> vulnerabilityTraces) {
         this.element = element;
         this.vulnerabilityTraces = vulnerabilityTraces;
+    }
+
+    public VulnerableElement(String element, Collection<VulnerabilityTrace> vulnerabilityTraces, VulnerableElementInfo vulnerableElementInfo) {
+        this(element, vulnerabilityTraces);
+        this.vulnerableElementInfo = vulnerableElementInfo;
     }
 
     /* --- Overridden methods --- */
@@ -65,5 +71,13 @@ public class VulnerableElement implements Serializable {
 
     public void setVulnerabilityTraces(Collection<VulnerabilityTrace> vulnerabilityTraces) {
         this.vulnerabilityTraces = vulnerabilityTraces;
+    }
+
+    public VulnerableElementInfo getVulnerableElementInfo() {
+        return vulnerableElementInfo;
+    }
+
+    public void setVulnerableElementInfo(VulnerableElementInfo vulnerableElementInfo) {
+        this.vulnerableElementInfo = vulnerableElementInfo;
     }
 }
