@@ -141,18 +141,35 @@ public class RequestFactory {
     /**
      * Create new Inventory Update request.
      *
-     * @param orgToken       WhiteSource organization token.
-     * @param updateType     Request UpdateType
-     * @param requesterEmail Email of the WhiteSource user that requests to update WhiteSource.
-     * @param product        Name or WhiteSource service token of the product to update.
-     * @param productVersion Version of the product to update.
-     * @param projects       Projects status statement to update.
-     * @param userKey        user key uniquely identifying the account at white source.
-     * @param logData        scan log data
-     * @param scanComment    scan description
-     * @param productToken   product token
+     * @param orgToken         WhiteSource organization token.
+     * @param updateType       Request UpdateType
+     * @param requesterEmail   Email of the WhiteSource user that requests to update WhiteSource.
+     * @param product          Name or WhiteSource service token of the product to update.
+     * @param productVersion   Version of the product to update.
+     * @param projects         Projects status statement to update.
+     * @param userKey          User key uniquely identifying the account at white source.
+     * @param logData          Scan log data
+     * @param scanComment      Scan description
+     * @param productToken     Product token
+     * @param extraProperties  Additional relevant request params
      * @return Newly created request to update organization inventory.
      */
+
+    public UpdateInventoryRequest newUpdateInventoryRequest(String orgToken,
+                                                            UpdateType updateType,
+                                                            String requesterEmail,
+                                                            String product,
+                                                            String productVersion,
+                                                            Collection<AgentProjectInfo> projects,
+                                                            String userKey,
+                                                            String logData,
+                                                            String scanComment,
+                                                            String productToken,
+                                                            Map<String, String> extraProperties) {
+        UpdateInventoryRequest updateInventoryRequest = new UpdateInventoryRequest(projects, updateType);
+        return (UpdateInventoryRequest) prepareRequest(updateInventoryRequest, orgToken, requesterEmail, product, productVersion, userKey,
+                false, false, null, null, logData, scanComment, productToken, extraProperties);
+    }
 
     public UpdateInventoryRequest newUpdateInventoryRequest(String orgToken,
                                                             UpdateType updateType,

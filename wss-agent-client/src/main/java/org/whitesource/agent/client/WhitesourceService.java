@@ -247,13 +247,35 @@ public class WhitesourceService {
      * @param updateType     Request UpdateType
      * @param product        The product name or token to update.
      * @param productVersion The product version.
+     * @param productToken   The product token.
      * @param projectInfos   OSS usage information to send to white source.
      * @param userKey        user key uniquely identifying the account at white source.
      * @param logData        list of FSA's log data events
      * @param scanComment    scan description
+     * @param extraProperties additional request properties
      * @return Result of updating white source.
      * @throws WssServiceException
+     *
      */
+
+    public UpdateInventoryResult update(String orgToken,
+                                        String requesterEmail,
+                                        UpdateType updateType,
+                                        String product,
+                                        String productVersion,
+                                        Collection<AgentProjectInfo> projectInfos,
+                                        String userKey,
+                                        String logData,
+                                        String scanComment,
+                                        String productToken,
+                                        Map<String, String> extraProperties
+    )
+            throws WssServiceException {
+        return client.updateInventory(
+                requestFactory.newUpdateInventoryRequest(orgToken, updateType, requesterEmail, product, productVersion,
+                        projectInfos, userKey, logData, scanComment, productToken, extraProperties));
+    }
+
     public UpdateInventoryResult update(String orgToken,
                                         String requesterEmail,
                                         UpdateType updateType,
@@ -265,11 +287,9 @@ public class WhitesourceService {
                                         String scanComment,
                                         String productToken)
             throws WssServiceException {
-        return client.updateInventory(
-                requestFactory.newUpdateInventoryRequest(orgToken, updateType, requesterEmail, product, productVersion,
-                        projectInfos, userKey, logData, scanComment, productToken));
+        return update(orgToken,  requesterEmail, updateType, product, productVersion, projectInfos, userKey, logData,
+                scanComment, productToken, null);
     }
-
 
     public UpdateInventoryResult update(String orgToken,
                                         String requesterEmail,
