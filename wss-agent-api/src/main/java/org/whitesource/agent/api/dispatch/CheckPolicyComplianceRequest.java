@@ -7,7 +7,7 @@ import java.util.Collection;
 /**
  * Request to check policies application results before actual inventory update inventory.
  * The decision if check the policies for all the inventory or just the new data is made by the user.
- *
+ * <p>
  * Created by anna.rozin
  */
 public class CheckPolicyComplianceRequest extends BaseRequest<CheckPolicyComplianceResult> {
@@ -24,7 +24,7 @@ public class CheckPolicyComplianceRequest extends BaseRequest<CheckPolicyComplia
      */
     protected boolean forceCheckAllDependencies;
 
-     /* --- Constructors --- */
+    /* --- Constructors --- */
 
     /**
      * Default constructor
@@ -37,7 +37,7 @@ public class CheckPolicyComplianceRequest extends BaseRequest<CheckPolicyComplia
     /**
      * Constructor
      *
-     * @param projects Open Source usage statement to check against policies.
+     * @param projects                  Open Source usage statement to check against policies.
      * @param forceCheckAllDependencies Check policies for the all the Inventory or just for the new one.
      */
     public CheckPolicyComplianceRequest(Collection<AgentProjectInfo> projects, boolean forceCheckAllDependencies) {
@@ -49,13 +49,24 @@ public class CheckPolicyComplianceRequest extends BaseRequest<CheckPolicyComplia
     /**
      * Constructor
      *
-     * @param orgToken WhiteSource organization token.
-     * @param projects Open Source usage statement to check against policies.
+     * @param orgToken                  WhiteSource organization token.
+     * @param projects                  Open Source usage statement to check against policies.
      * @param forceCheckAllDependencies Check policies for the all the Inventory or just for the new one.
      */
     public CheckPolicyComplianceRequest(String orgToken, Collection<AgentProjectInfo> projects, boolean forceCheckAllDependencies) {
         this(projects, forceCheckAllDependencies);
         this.orgToken = orgToken;
+    }
+
+    public CheckPolicyComplianceRequest(String orgToken, String product, String productVersion, Collection<AgentProjectInfo> projects, boolean forceCheckAllDependencies,
+                                        String userKey, String requesterEmail, String logData, String productToken) {
+        this(orgToken, projects, forceCheckAllDependencies);
+        this.product = product;
+        this.productVersion = productVersion;
+        this.userKey = userKey;
+        this.requesterEmail = requesterEmail;
+        this.logData = logData;
+        this.productToken = productToken;
     }
 
     /* --- Getters / Setters --- */

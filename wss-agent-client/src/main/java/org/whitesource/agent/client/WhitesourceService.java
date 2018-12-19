@@ -97,6 +97,7 @@ public class WhitesourceService {
      * @return Result of updating white source.
      * @throws WssServiceException In case of errors while updating white source.
      */
+    @Deprecated
     public UpdateInventoryResult update(String orgToken,
                                         String product,
                                         String productVersion,
@@ -106,6 +107,7 @@ public class WhitesourceService {
         return update(orgToken, null, product, productVersion, projectInfos, userKey);
     }
 
+    @Deprecated
     public UpdateInventoryResult update(String orgToken,
                                         String product,
                                         String productVersion,
@@ -113,6 +115,14 @@ public class WhitesourceService {
             throws WssServiceException {
         return update(orgToken, null, product, productVersion, projectInfos, null);
     }
+    //
+    //    public UpdateInventoryResult update(BaseRequest<?> baseRequest)
+    //            throws WssServiceException {
+    //        if (baseRequest instanceof CheckPolicyComplianceRequest) {
+    //            ((CheckPolicyComplianceRequest)baseRequest).isForceCheckAllDependencies()
+    //        }
+    //        return update(baseRequest.orgToken(), null, product, productVersion, projectInfos, null);
+    //    }
 
     /**
      * Updates the White Source organization account with the given OSS information.
@@ -126,6 +136,7 @@ public class WhitesourceService {
      * @return Result of updating white source.
      * @throws WssServiceException
      */
+    @Deprecated
     public UpdateInventoryResult update(String orgToken,
                                         String requesterEmail,
                                         String product,
@@ -137,6 +148,7 @@ public class WhitesourceService {
                 requestFactory.newUpdateInventoryRequest(orgToken, requesterEmail, product, productVersion, projectInfos, userKey));
     }
 
+    @Deprecated
     public UpdateInventoryResult update(String orgToken,
                                         String requesterEmail,
                                         String product,
@@ -149,6 +161,7 @@ public class WhitesourceService {
                 requestFactory.newUpdateInventoryRequest(orgToken, requesterEmail, product, productVersion, projectInfos, userKey, extraProperties));
     }
 
+    @Deprecated
     public UpdateInventoryResult update(String orgToken,
                                         String requesterEmail,
                                         String product,
@@ -171,6 +184,7 @@ public class WhitesourceService {
      * @return Result of updating white source.
      * @throws WssServiceException
      */
+    @Deprecated
     public UpdateInventoryResult update(String orgToken,
                                         String requesterEmail,
                                         UpdateType updateType,
@@ -197,14 +211,15 @@ public class WhitesourceService {
      * @return Result of updating white source.
      * @throws WssServiceException
      */
+    @Deprecated
     public UpdateInventoryResult update(String orgToken,
-                                         String requesterEmail,
-                                         UpdateType updateType,
-                                         String product,
-                                         String productVersion,
-                                         Collection<AgentProjectInfo> projectInfos,
-                                         String userKey,
-                                         String logData)
+                                        String requesterEmail,
+                                        UpdateType updateType,
+                                        String product,
+                                        String productVersion,
+                                        Collection<AgentProjectInfo> projectInfos,
+                                        String userKey,
+                                        String logData)
             throws WssServiceException {
         return client.updateInventory(
                 requestFactory.newUpdateInventoryRequest(orgToken, updateType, requesterEmail, product, productVersion, projectInfos, userKey, logData));
@@ -225,6 +240,7 @@ public class WhitesourceService {
      * @return Result of updating white source.
      * @throws WssServiceException
      */
+    @Deprecated
     public UpdateInventoryResult update(String orgToken,
                                         String requesterEmail,
                                         UpdateType updateType,
@@ -242,22 +258,21 @@ public class WhitesourceService {
     /**
      * Updates the White Source organization account with the given OSS information.
      *
-     * @param orgToken       Organization token uniquely identifying the account at white source.
-     * @param requesterEmail Email of the WhiteSource user that requests to update WhiteSource.
-     * @param updateType     Request UpdateType
-     * @param product        The product name or token to update.
-     * @param productVersion The product version.
-     * @param productToken   The product token.
-     * @param projectInfos   OSS usage information to send to white source.
-     * @param userKey        user key uniquely identifying the account at white source.
-     * @param logData        list of FSA's log data events
-     * @param scanComment    scan description
+     * @param orgToken        Organization token uniquely identifying the account at white source.
+     * @param requesterEmail  Email of the WhiteSource user that requests to update WhiteSource.
+     * @param updateType      Request UpdateType
+     * @param product         The product name or token to update.
+     * @param productVersion  The product version.
+     * @param productToken    The product token.
+     * @param projectInfos    OSS usage information to send to white source.
+     * @param userKey         user key uniquely identifying the account at white source.
+     * @param logData         list of FSA's log data events
+     * @param scanComment     scan description
      * @param extraProperties additional request properties
      * @return Result of updating white source.
      * @throws WssServiceException
-     *
      */
-
+    @Deprecated
     public UpdateInventoryResult update(String orgToken,
                                         String requesterEmail,
                                         UpdateType updateType,
@@ -276,6 +291,7 @@ public class WhitesourceService {
                         projectInfos, userKey, logData, scanComment, productToken, extraProperties));
     }
 
+    @Deprecated
     public UpdateInventoryResult update(String orgToken,
                                         String requesterEmail,
                                         UpdateType updateType,
@@ -287,10 +303,11 @@ public class WhitesourceService {
                                         String scanComment,
                                         String productToken)
             throws WssServiceException {
-        return update(orgToken,  requesterEmail, updateType, product, productVersion, projectInfos, userKey, logData,
+        return update(orgToken, requesterEmail, updateType, product, productVersion, projectInfos, userKey, logData,
                 scanComment, productToken, null);
     }
 
+    @Deprecated
     public UpdateInventoryResult update(String orgToken,
                                         String requesterEmail,
                                         UpdateType updateType,
@@ -317,6 +334,7 @@ public class WhitesourceService {
      * @return Result of updating white source.
      * @throws WssServiceException
      */
+    @Deprecated
     public UpdateInventoryResult update(String orgToken,
                                         String requesterEmail,
                                         String product,
@@ -333,6 +351,12 @@ public class WhitesourceService {
                         aggregateModules, preserveModuleStructure, aggregateProjectName, aggregateProjectToken));
     }
 
+    public UpdateInventoryResult update(UpdateInventoryRequest request)
+            throws WssServiceException {
+        return client.updateInventory(
+                requestFactory.newUpdateInventoryRequest(request));
+    }
+
 
     /**
      * Generates a file with json representation of the update request.
@@ -347,7 +371,7 @@ public class WhitesourceService {
      * @param scanComment     User comment.
      * @return UpdateInventoryRequest.
      */
-
+    @Deprecated
     public UpdateInventoryRequest offlineUpdate(String orgToken,
                                                 String product,
                                                 Boolean removeBeforeAdd,
@@ -360,7 +384,7 @@ public class WhitesourceService {
         return requestFactory.newUpdateInventoryRequest(orgToken, requesterEmail, product, productVersion, projectInfos, userKey, scanComment, productToken);
     }
 
-
+    @Deprecated
     public UpdateInventoryRequest offlineUpdate(String orgToken,
                                                 String product,
                                                 Boolean removeBeforeAdd,
@@ -372,7 +396,7 @@ public class WhitesourceService {
         return offlineUpdate(orgToken, product, removeBeforeAdd, productVersion, projectInfos, userKey, requesterEmail, scanComment, null);
     }
 
-
+    @Deprecated
     public UpdateInventoryRequest offlineUpdate(String orgToken,
                                                 String product,
                                                 Boolean removeBeforeAdd,
@@ -382,6 +406,7 @@ public class WhitesourceService {
         return offlineUpdate(orgToken, product, removeBeforeAdd, productVersion, projectInfos, userKey, null, null);
     }
 
+    @Deprecated
     public UpdateInventoryRequest offlineUpdate(String orgToken,
                                                 String product,
                                                 Boolean removeBeforeAdd,
@@ -400,15 +425,17 @@ public class WhitesourceService {
      * @param userKey        user key uniquely identifying the account at white source.
      * @return UpdateInventoryRequest.
      */
+    @Deprecated
     public UpdateInventoryRequest offlineUpdate(String orgToken,
                                                 String product,
                                                 String productVersion,
                                                 Collection<AgentProjectInfo> projectInfos,
                                                 String userKey) {
         // init remove beforeBeforeAdd to false - dummy init
-        return offlineUpdate(orgToken, product, false, productVersion, projectInfos, null, null,null);
+        return offlineUpdate(orgToken, product, false, productVersion, projectInfos, null, null, null);
     }
 
+    @Deprecated
     public UpdateInventoryRequest offlineUpdate(String orgToken,
                                                 String product,
                                                 String productVersion,
@@ -419,12 +446,18 @@ public class WhitesourceService {
         return offlineUpdate(orgToken, product, false, productVersion, projectInfos, null, null, scanComment);
     }
 
+    @Deprecated
     public UpdateInventoryRequest offlineUpdate(String orgToken,
                                                 String product,
                                                 String productVersion,
                                                 Collection<AgentProjectInfo> projectInfos) {
         return offlineUpdate(orgToken, product, productVersion, projectInfos, null);
     }
+
+    public UpdateInventoryRequest offlineUpdate(UpdateInventoryRequest request) {
+        return requestFactory.newUpdateInventoryRequest(request);
+    }
+
 
     /**
      * Checks the policies application of the given OSS information.
@@ -439,6 +472,7 @@ public class WhitesourceService {
      * @throws WssServiceException In case of errors while checking the policies with white source.
      * @deprecated Use {@link WhitesourceService#checkPolicyCompliance(String, String, String, Collection, boolean, String)}.
      */
+    @Deprecated
     public CheckPoliciesResult checkPolicies(String orgToken,
                                              String product,
                                              String productVersion,
@@ -450,6 +484,7 @@ public class WhitesourceService {
                 requestFactory.newCheckPoliciesRequest(orgToken, product, productVersion, projectInfos, userKey, requesterEmail));
     }
 
+    @Deprecated
     public CheckPoliciesResult checkPolicies(String orgToken,
                                              String product,
                                              String productVersion,
@@ -470,12 +505,11 @@ public class WhitesourceService {
      * @param userKey                   user key uniquely identifying the account at white source.
      * @param requesterEmail            Email of the WhiteSource user that requests to update WhiteSource.
      * @param logData                   list of FSA's log data events
-     * @param productToken               The product token
+     * @param productToken              The product token
      * @return Potential result of applying the currently defined policies.
      * @throws WssServiceException In case of errors while checking the policies with white source.
-     *
      */
-
+    @Deprecated
     public CheckPolicyComplianceResult checkPolicyCompliance(String orgToken,
                                                              String product,
                                                              String productVersion,
@@ -491,6 +525,7 @@ public class WhitesourceService {
                         userKey, requesterEmail, logData, productToken));
     }
 
+    @Deprecated
     public CheckPolicyComplianceResult checkPolicyCompliance(String orgToken,
                                                              String product,
                                                              String productVersion,
@@ -502,7 +537,7 @@ public class WhitesourceService {
         return checkPolicyCompliance(orgToken, product, productVersion, projectInfos, forceCheckAllDependencies, userKey, requesterEmail, logData, null);
     }
 
-
+    @Deprecated
     public CheckPolicyComplianceResult checkPolicyCompliance(String orgToken,
                                                              String product,
                                                              String productVersion,
@@ -515,16 +550,18 @@ public class WhitesourceService {
 
     }
 
+    @Deprecated
     public CheckPolicyComplianceResult checkPolicyCompliance(String orgToken,
                                                              String product,
                                                              String productVersion,
                                                              Collection<AgentProjectInfo> projectInfos,
                                                              boolean forceCheckAllDependencies,
-                                                             String userKey)   throws WssServiceException {
-    return checkPolicyCompliance(orgToken, product, productVersion, projectInfos, forceCheckAllDependencies, userKey, null);
+                                                             String userKey) throws WssServiceException {
+        return checkPolicyCompliance(orgToken, product, productVersion, projectInfos, forceCheckAllDependencies, userKey, null);
 
-}
+    }
 
+    @Deprecated
     public CheckPolicyComplianceResult checkPolicyCompliance(String orgToken,
                                                              String product,
                                                              String productVersion,
@@ -549,6 +586,7 @@ public class WhitesourceService {
      * @return Potential result of applying the currently defined policies.
      * @throws WssServiceException In case of errors while checking the policies with white source.
      */
+    @Deprecated
     public CheckPolicyComplianceResult checkPolicyCompliance(String orgToken,
                                                              String product,
                                                              String productVersion,
@@ -566,6 +604,11 @@ public class WhitesourceService {
                         userKey, requesterEmail, aggregateModules, preserveModuleStructure, aggregateProjectName, aggregateProjectToken));
     }
 
+    public CheckPolicyComplianceResult checkPolicyCompliance(CheckPolicyComplianceRequest request) throws WssServiceException {
+        return client.checkPolicyCompliance(
+                requestFactory.newCheckPolicyComplianceRequest(request));
+    }
+
     /**
      * Gets additional data for given dependencies.
      *
@@ -578,7 +621,7 @@ public class WhitesourceService {
      * @return Potential result of the dependencies additional data(license, description, homePageUrl, vulnerabilities, sha1 and displayName).
      * @throws WssServiceException In case of errors while getting additional dependency data with white source.
      */
-
+    @Deprecated
     public GetDependencyDataResult getDependencyData(String orgToken,
                                                      String product,
                                                      String productVersion,
@@ -591,7 +634,7 @@ public class WhitesourceService {
                 requestFactory.newDependencyDataRequest(orgToken, product, productVersion, projectInfos, userKey, requesterEmail, productToken));
     }
 
-
+    @Deprecated
     public GetDependencyDataResult getDependencyData(String orgToken,
                                                      String product,
                                                      String productVersion,
@@ -602,6 +645,7 @@ public class WhitesourceService {
         return getDependencyData(orgToken, product, productVersion, projectInfos, userKey, requesterEmail, null);
     }
 
+    @Deprecated
     public GetDependencyDataResult getDependencyData(String orgToken,
                                                      String product,
                                                      String productVersion,
@@ -611,12 +655,19 @@ public class WhitesourceService {
         return getDependencyData(orgToken, product, productVersion, projectInfos, userKey, null);
     }
 
+    @Deprecated
     public GetDependencyDataResult getDependencyData(String orgToken,
                                                      String product,
                                                      String productVersion,
                                                      Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
         return getDependencyData(orgToken, product, productVersion, projectInfos, null);
+    }
+
+    public GetDependencyDataResult getDependencyData(GetDependencyDataRequest request)
+            throws WssServiceException {
+        return client.getDependencyData(
+                requestFactory.newDependencyDataRequest(request));
     }
 
     /**
@@ -631,7 +682,7 @@ public class WhitesourceService {
      * @return Result of updating white source.
      * @throws WssServiceException
      */
-
+    @Deprecated
     public SummaryScanResult summaryScan(String orgToken,
                                          String product,
                                          String productVersion,
@@ -644,6 +695,7 @@ public class WhitesourceService {
                 requestFactory.newSummaryScanRequest(orgToken, product, productVersion, projectInfos, userKey, requesterEmail, productToken));
     }
 
+    @Deprecated
     public SummaryScanResult summaryScan(String orgToken,
                                          String product,
                                          String productVersion,
@@ -654,6 +706,7 @@ public class WhitesourceService {
         return summaryScan(orgToken, product, productVersion, projectInfos, userKey, requesterEmail, null);
     }
 
+    @Deprecated
     public SummaryScanResult summaryScan(String orgToken,
                                          String product,
                                          String productVersion,
@@ -663,12 +716,19 @@ public class WhitesourceService {
         return summaryScan(orgToken, product, productVersion, projectInfos, userKey, null);
     }
 
+    @Deprecated
     public SummaryScanResult summaryScan(String orgToken,
                                          String product,
                                          String productVersion,
                                          Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
         return summaryScan(orgToken, product, productVersion, projectInfos, null);
+    }
+
+    public SummaryScanResult summaryScan(SummaryScanRequest request)
+            throws WssServiceException {
+        return client.summaryScan(
+                requestFactory.newSummaryScanRequest(request));
     }
 
     /**
@@ -683,7 +743,7 @@ public class WhitesourceService {
      * @return Vulnerabilities for given dependencies.
      * @throws WssServiceException
      */
-
+    @Deprecated
     public CheckVulnerabilitiesResult checkVulnerabilities(String orgToken,
                                                            String product,
                                                            String productVersion,
@@ -696,6 +756,7 @@ public class WhitesourceService {
                 requestFactory.newCheckVulnerabilitiesRequest(orgToken, product, productVersion, projectInfos, userKey, requesterEmail, productToken));
     }
 
+    @Deprecated
     public CheckVulnerabilitiesResult checkVulnerabilities(String orgToken,
                                                            String product,
                                                            String productVersion,
@@ -706,6 +767,7 @@ public class WhitesourceService {
         return checkVulnerabilities(orgToken, product, productVersion, projectInfos, userKey, requesterEmail, null);
     }
 
+    @Deprecated
     public CheckVulnerabilitiesResult checkVulnerabilities(String orgToken,
                                                            String product,
                                                            String productVersion,
@@ -715,12 +777,19 @@ public class WhitesourceService {
         return checkVulnerabilities(orgToken, product, productVersion, projectInfos, userKey, null);
     }
 
+    @Deprecated
     public CheckVulnerabilitiesResult checkVulnerabilities(String orgToken,
                                                            String product,
                                                            String productVersion,
                                                            Collection<AgentProjectInfo> projectInfos)
             throws WssServiceException {
         return checkVulnerabilities(orgToken, product, productVersion, projectInfos, null);
+    }
+
+    public CheckVulnerabilitiesResult checkVulnerabilities(CheckVulnerabilitiesRequest request)
+            throws WssServiceException {
+        return client.checkVulnerabilities(
+                requestFactory.newCheckVulnerabilitiesRequest(request));
     }
 
     /**
@@ -734,7 +803,7 @@ public class WhitesourceService {
      * @return Result of updating white source.
      * @throws WssServiceException
      */
-
+    @Deprecated
     public ConfigurationResult getConfiguration(String orgToken,
                                                 String product,
                                                 String productVersion,
@@ -745,6 +814,7 @@ public class WhitesourceService {
         return client.getConfiguration(requestFactory.newConfigurationRequest(orgToken, product, productVersion, userKey, requesterEmail, productToken));
     }
 
+    @Deprecated
     public ConfigurationResult getConfiguration(String orgToken,
                                                 String product,
                                                 String productVersion,
@@ -754,6 +824,7 @@ public class WhitesourceService {
         return getConfiguration(orgToken, product, productVersion, userKey, requesterEmail, null);
     }
 
+    @Deprecated
     public ConfigurationResult getConfiguration(String orgToken,
                                                 String product,
                                                 String productVersion,
@@ -762,11 +833,17 @@ public class WhitesourceService {
         return client.getConfiguration(requestFactory.newConfigurationRequest(orgToken, product, productVersion, userKey));
     }
 
+    @Deprecated
     public ConfigurationResult getConfiguration(String orgToken,
                                                 String product,
                                                 String productVersion)
             throws WssServiceException {
         return getConfiguration(orgToken, product, productVersion, null);
+    }
+
+    public ConfigurationResult getConfiguration(ConfigurationRequest request)
+            throws WssServiceException {
+        return client.getConfiguration(requestFactory.newConfigurationRequest(request));
     }
 
     /**

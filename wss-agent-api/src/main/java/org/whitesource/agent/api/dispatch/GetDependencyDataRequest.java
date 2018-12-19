@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2016 White Source Ltd.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,7 +21,6 @@ import java.util.Collection;
 
 /**
  * @author anna.rozin
- *
  * @since 2.2.8
  */
 public class GetDependencyDataRequest extends BaseRequest<GetDependencyDataResult> {
@@ -47,5 +46,12 @@ public class GetDependencyDataRequest extends BaseRequest<GetDependencyDataResul
     public GetDependencyDataRequest(Collection<AgentProjectInfo> projects) {
         this();
         this.projects = projects;
+    }
+
+    public GetDependencyDataRequest(String orgToken, String product, String productVersion, Collection<AgentProjectInfo> projectInfos) {
+        this(projectInfos);
+        this.orgToken = orgToken;
+        this.product = product;
+        this.productVersion = productVersion;
     }
 }

@@ -264,4 +264,6 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
     public void setExtraProperties(Map<String, String> extraProperties) {
         this.extraProperties = extraProperties;
     }
+
+
 }

@@ -7,14 +7,13 @@ import java.util.Collection;
 
 /**
  * @author ruslan.gogerman
- *
  * @since 2.5.5
  */
 public class CheckVulnerabilitiesRequest extends BaseRequest<CheckVulnerabilitiesResult> {
 
     /* --- Static Members --- */
 
-    private static final long serialVersionUID = - 945532206429866395L;
+    private static final long serialVersionUID = -945532206429866395L;
 
     /* --- Constructors --- */
 
@@ -45,5 +44,12 @@ public class CheckVulnerabilitiesRequest extends BaseRequest<CheckVulnerabilitie
         this();
         this.orgToken = orgToken;
         this.projects = projects;
+    }
+
+    public CheckVulnerabilitiesRequest(String orgToken, String product, String productVersion, Collection<AgentProjectInfo> projectInfos) {
+        this();
+        this.userKey = null;
+        this.requesterEmail = null;
+        this.productToken = null;
     }
 }

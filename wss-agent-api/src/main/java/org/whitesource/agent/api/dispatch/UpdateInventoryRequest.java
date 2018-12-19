@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2012 White Source Ltd.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,84 +20,94 @@ import org.whitesource.agent.api.model.AgentProjectInfo;
 import java.util.Collection;
 
 /**
- * Request to update organization inventory. 
+ * Request to update organization inventory.
  *
  * @author tom.shapira
  */
 public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
 
-	/* --- Static members --- */
+    /* --- Static members --- */
 
-	private static final long serialVersionUID = 7731258010033962980L;
+    private static final long serialVersionUID = 7731258010033962980L;
 
-	private UpdateType updateType = UpdateType.OVERRIDE;
+    private UpdateType updateType = UpdateType.OVERRIDE;
 
-	/* --- Constructors --- */
+    /* --- Constructors --- */
 
-	/**
-	 * Default constructor
-	 */
-	public UpdateInventoryRequest() {
-		super(RequestType.UPDATE);
-	}
+    /**
+     * Default constructor
+     */
+    public UpdateInventoryRequest() {
+        super(RequestType.UPDATE);
+    }
 
-	/**
-	 * Constructor
-	 *
-	 * @param projects Open Source usage statement to update White Source.
-	 */
-	public UpdateInventoryRequest(Collection<AgentProjectInfo> projects) {
-		this();
-		this.projects = projects;
-	}
+    /**
+     * Constructor
+     *
+     * @param projects Open Source usage statement to update White Source.
+     */
+    public UpdateInventoryRequest(Collection<AgentProjectInfo> projects) {
+        this();
+        this.projects = projects;
+    }
 
-	/**
-	 * Constructor
-	 *
-	 * @param projects Open Source usage statement to update White Source.
-	 * @param updateType Request UpdateType
-	 */
-	public UpdateInventoryRequest(Collection<AgentProjectInfo> projects, UpdateType updateType) {
-		this(projects);
-		this.updateType = updateType;
-	}
+    /**
+     * Constructor
+     *
+     * @param projects   Open Source usage statement to update White Source.
+     * @param updateType Request UpdateType
+     */
+    public UpdateInventoryRequest(Collection<AgentProjectInfo> projects, UpdateType updateType) {
+        this(projects);
+        this.updateType = updateType;
+    }
 
-	/**
-	 * Constructor
-	 *
-	 * @param orgToken WhiteSource organization token.
-	 * @param projects Open Source usage statement to update White Source.
-	 */
-	public UpdateInventoryRequest(String orgToken, Collection<AgentProjectInfo> projects) {
-		this(projects);
-		this.orgToken = orgToken;
-	}
+    /**
+     * Constructor
+     *
+     * @param orgToken WhiteSource organization token.
+     * @param projects Open Source usage statement to update White Source.
+     */
+    public UpdateInventoryRequest(String orgToken, Collection<AgentProjectInfo> projects) {
+        this(projects);
+        this.orgToken = orgToken;
+    }
 
-	/**
-	 * Constructor
-	 *
-	 * @param orgToken WhiteSource organization token.
-	 * @param projects Open Source usage statement to update White Source.
-	 * @param updateType Request UpdateType
-	 */
-	public UpdateInventoryRequest(String orgToken, Collection<AgentProjectInfo> projects, UpdateType updateType) {
-		this(orgToken, projects);
-		this.updateType = updateType;
-	}
+    /**
+     * Constructor
+     *
+     * @param orgToken   WhiteSource organization token.
+     * @param projects   Open Source usage statement to update White Source.
+     * @param updateType Request UpdateType
+     */
+    public UpdateInventoryRequest(String orgToken, Collection<AgentProjectInfo> projects, UpdateType updateType) {
+        this(orgToken, projects);
+        this.updateType = updateType;
+    }
 
-	/**
-	 *
-	 * @return Request UpdateType
-	 */
-	public UpdateType getUpdateType() {
-		return updateType;
-	}
+    public UpdateInventoryRequest(String orgToken, String requesterEmail, UpdateType updateType, String product, String productVersion, Collection<AgentProjectInfo> projects,
+                                  String userKey, String logData, String scanComment, String productToken) {
+        this(orgToken, projects, updateType);
+        this.requesterEmail = requesterEmail;
+        this.product = product;
+        this.productVersion = productVersion;
+        this.userKey = userKey;
+        this.logData = logData;
+        this.scanComment = scanComment;
+        this.productToken = productToken;
+    }
 
-	/**
-	 *
-	 * @param updateType Request UpdateType
-	 */
-	public void setUpdateType(UpdateType updateType) {
-		this.updateType = updateType;
-	}
+    /**
+     * @return Request UpdateType
+     */
+    public UpdateType getUpdateType() {
+        return updateType;
+    }
+
+    /**
+     * @param updateType Request UpdateType
+     */
+    public void setUpdateType(UpdateType updateType) {
+        this.updateType = updateType;
+    }
 }

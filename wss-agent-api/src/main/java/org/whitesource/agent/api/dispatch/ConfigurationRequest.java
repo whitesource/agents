@@ -19,4 +19,13 @@ public class ConfigurationRequest extends BaseRequest<ConfigurationResult> {
         super(RequestType.GET_CONFIGURATION);
     }
 
+    public ConfigurationRequest(String orgToken, String product, String productVersion, String userKey, String requesterEmail, String productToken) {
+        this();
+        this.orgToken = orgToken;
+        this.product = product;
+        this.productVersion = productVersion;
+        this.userKey = userKey;
+        this.requesterEmail = requesterEmail;
+        this.productToken = productToken;
+    }
 }
