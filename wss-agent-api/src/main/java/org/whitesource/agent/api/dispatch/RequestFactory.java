@@ -673,9 +673,6 @@ public class RequestFactory {
     protected <R> BaseRequest<R> prepareRequest(BaseRequest<R> request, String orgToken, String requesterEmail, String product, String productVersion, String userKey,
                                                 boolean aggregateModules, boolean preserveModuleStructure, String aggregateProjectName,
                                                 String aggregateProjectToken, String logData, String scanComment, String productToken, Map<String, String> extraProperties) {
-        request.setAgent(agent);
-        request.setAgentVersion(agentVersion);
-        request.setPluginVersion(pluginVersion);
         request.setOrgToken(orgToken);
         request.setProduct(product);
         request.setProductVersion(productVersion);
@@ -689,26 +686,13 @@ public class RequestFactory {
         request.setLogData(logData);
         request.setProductToken(productToken);
         request.setExtraProperties(extraProperties);
-        return request;
+        return prepareRequest(request);
     }
 
     protected <R> BaseRequest<R> prepareRequest(BaseRequest<R> request) {
         request.setAgent(agent);
         request.setAgentVersion(agentVersion);
         request.setPluginVersion(pluginVersion);
-        request.setOrgToken(request.orgToken);
-        request.setProduct(request.product);
-        request.setProductVersion(request.productVersion);
-        request.setRequesterEmail(request.requesterEmail);
-        request.setUserKey(request.userKey);
-        request.setAggregateModules(request.aggregateModules);
-        request.setPreserveModuleStructure(request.preserveModuleStructure);
-        request.setAggregateProjectName(request.aggregateProjectName);
-        request.setAggregateProjectToken(request.aggregateProjectToken);
-        request.setScanComment(request.scanComment);
-        request.setLogData(request.logData);
-        request.setProductToken(request.productToken);
-        request.setExtraProperties(request.extraProperties);
         return request;
     }
 
