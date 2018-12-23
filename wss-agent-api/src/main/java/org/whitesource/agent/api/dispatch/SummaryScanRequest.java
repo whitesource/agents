@@ -60,8 +60,16 @@ public class SummaryScanRequest extends BaseRequest<SummaryScanResult> {
         this.orgToken = orgToken;
     }
 
-    public SummaryScanRequest(String orgToken, String product, String productVersion, Collection<AgentProjectInfo> projectInfos) {
-        this(orgToken, projectInfos);
+    /**
+     * Constructor
+     *
+     * @param orgToken       Organization token uniquely identifying the account at white source.
+     * @param product        The product name or token to update.
+     * @param productVersion The product version.
+     * @param projects       Open Source usage statement to check against policies.
+     */
+    public SummaryScanRequest(String orgToken, String product, String productVersion, Collection<AgentProjectInfo> projects) {
+        this(orgToken, projects);
         this.product = product;
         this.productVersion = productVersion;
     }

@@ -85,6 +85,21 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
         this.updateType = updateType;
     }
 
+
+    /**
+     * Constructor
+     *
+     * @param orgToken        Organization token uniquely identifying the account at white source.
+     * @param requesterEmail  Email of the WhiteSource user that requests to update WhiteSource.
+     * @param updateType      Request UpdateType
+     * @param product         The product name or token to update.
+     * @param productVersion  The product version.
+     * @param productToken    The product token.
+     * @param projects        OSS usage information to send to white source.
+     * @param userKey         user key uniquely identifying the account at white source.
+     * @param logData         list of FSA's log data events
+     * @param scanComment     scan description
+     */
     public UpdateInventoryRequest(String orgToken, String requesterEmail, UpdateType updateType, String product, String productVersion, Collection<AgentProjectInfo> projects,
                                   String userKey, String logData, String scanComment, String productToken) {
         this(orgToken, projects, updateType);
@@ -96,6 +111,25 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
         this.scanComment = scanComment;
         this.productToken = productToken;
     }
+
+    /**
+     * Constructor to create offline request
+     *
+     * @param orgToken        Organization token uniquely identifying the account at white source.
+     * @param product         The product name or token to update.
+     * @param productVersion  The product version.
+     * @param projects        OSS usage information to send to white source.
+     * @param userKey         user key uniquely identifying the account at white source.
+     * @param scanComment     scan description
+     */
+    public UpdateInventoryRequest(String orgToken, String product, String productVersion, Collection<AgentProjectInfo> projects, String userKey, String scanComment) {
+        this(orgToken, projects);
+        this.product = product;
+        this.productVersion = productVersion;
+        this.userKey = userKey;
+        this.scanComment = scanComment;
+    }
+
 
     /**
      * @return Request UpdateType

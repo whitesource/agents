@@ -58,6 +58,19 @@ public class CheckPolicyComplianceRequest extends BaseRequest<CheckPolicyComplia
         this.orgToken = orgToken;
     }
 
+    /**
+     * Constructor
+     *
+     * @param orgToken                  Organization token uniquely identifying the account at white source.
+     * @param product                   The product name or token to update.
+     * @param productVersion            The product version.
+     * @param projects                  Open Source usage statement to check against policies.
+     * @param forceCheckAllDependencies Boolean to check new data only or not.
+     * @param userKey                   user key uniquely identifying the account at white source.
+     * @param requesterEmail            Email of the WhiteSource user that requests to update WhiteSource.
+     * @param logData                   list of FSA's log data events
+     * @param productToken              The product token
+     */
     public CheckPolicyComplianceRequest(String orgToken, String product, String productVersion, Collection<AgentProjectInfo> projects, boolean forceCheckAllDependencies,
                                         String userKey, String requesterEmail, String logData, String productToken) {
         this(orgToken, projects, forceCheckAllDependencies);

@@ -48,8 +48,17 @@ public class GetDependencyDataRequest extends BaseRequest<GetDependencyDataResul
         this.projects = projects;
     }
 
-    public GetDependencyDataRequest(String orgToken, String product, String productVersion, Collection<AgentProjectInfo> projectInfos) {
-        this(projectInfos);
+
+    /**
+     * Constructor
+     *
+     * @param orgToken                  Organization token uniquely identifying the account at white source.
+     * @param product                   The product name or token to update.
+     * @param productVersion            The product version.
+     * @param projects                  Open Source usage statement to check against policies.
+     */
+    public GetDependencyDataRequest(String orgToken, String product, String productVersion, Collection<AgentProjectInfo> projects) {
+        this(projects);
         this.orgToken = orgToken;
         this.product = product;
         this.productVersion = productVersion;

@@ -46,10 +46,18 @@ public class CheckVulnerabilitiesRequest extends BaseRequest<CheckVulnerabilitie
         this.projects = projects;
     }
 
-    public CheckVulnerabilitiesRequest(String orgToken, String product, String productVersion, Collection<AgentProjectInfo> projectInfos) {
-        this();
-        this.userKey = null;
-        this.requesterEmail = null;
-        this.productToken = null;
+    /**
+     * Constructor
+     *
+     * @param orgToken       WhiteSource organization token.
+     * @param product        The product name or token to update.
+     * @param productVersion The product version.
+     * @param projects       Open Source usage statement to check vulnerabilities.
+     */
+    public CheckVulnerabilitiesRequest(String orgToken, String product, String productVersion, Collection<AgentProjectInfo> projects) {
+        this(orgToken, projects);
+        this.product = product;
+        this.productVersion = productVersion;
+
     }
 }
