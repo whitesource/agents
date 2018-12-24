@@ -137,7 +137,7 @@ public final class ChecksumUtils {
             } catch (Exception e) {
                 logger.warn("Unable to create other platform file for {}: {}", file.getPath(), e.getMessage());
             } finally {
-                deleteFile(otherPlatformFile);
+                FileHandler.deleteTempFoldersHelper(FileHandler.PATH_TO_PLATFORM_DEPENDENT_TMP_DIR);
             }
         } else {
             logger.debug("File {} size is too big for scanning other platform sha1, skipping it.", file.getName());

@@ -17,13 +17,15 @@ public final class FileUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(FileUtils.class);
 
-    private static final String PLATFORM_DEPENDENT_TMP_DIRECTORY = System.getProperty("java.io.tmpdir") + File.separator + "WhiteSource-PlatformDependentFiles";
+//    private static final String PLATFORM_DEPENDENT_TMP_DIRECTORY = System.getProperty("java.io.tmpdir") + File.separator + "WhiteSource-PlatformDependentFiles";
+
+    private static final String EMPTY_STRING = "";
 
     public static final int MAX_FILE_SIZE = 10 * 1024 * 1024; // 10mb
 
     private static final String CRLF = "\r\n";
     private static final String NEW_LINE = "\n";
-    private static final String EMPTY_STRING = "";
+
 
     /* --- Constructors --- */
 
@@ -44,7 +46,7 @@ public final class FileUtils {
                 byte[] byteArray = org.apache.commons.io.FileUtils.readFileToByteArray(originalPlatform);
 
                 String fileText = new String(byteArray);
-                File otherPlatformFile = new File(PLATFORM_DEPENDENT_TMP_DIRECTORY, originalPlatform.getName());
+                File otherPlatformFile = new File(FileHandler.PATH_TO_PLATFORM_DEPENDENT_TMP_DIR, originalPlatform.getName());
                 if (fileText.contains(CRLF)) {
                     org.apache.commons.io.FileUtils.write(otherPlatformFile, fileText.replaceAll(CRLF, NEW_LINE));
                 } else if (fileText.contains(NEW_LINE)) {
