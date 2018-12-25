@@ -40,9 +40,9 @@ public class JavaScriptHashCalculatorTest {
 
     /* --- Static members --- */
 
-    private static final String SHA1 = "3ac87eac2231436c81aaf3b2a7f03efcedcd8f54";
-    private static final String NO_HEADER_SHA1 = "1bcc423f0dcc0c8af51f0c6aa2d825d72148292b";
-    private static final String NO_COMMENTS_SUPER_HASH = "8a2c586e09f02890f7dbacb945a55b1ae1f03d91";
+    private static final String SHA1 = "34b52cd823327013a78bd9c9f10d08e908d4d76d";
+    private static final String NO_HEADER_SHA1 = "05a11a55eef5239b3ebb983f6234365014d937c0";
+    private static final String NO_COMMENTS_SUPER_HASH = "a8d1acba4fe94512f71d8dd4666653a231abf6e1";
 
     private static final String JQUERY_JUSTIFIED_GALLERY_URL = "https://cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.7.0/js/jquery.justifiedGallery.js";
 
