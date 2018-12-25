@@ -44,7 +44,7 @@ public class JavaScriptHashCalculatorTest {
     private static final String NO_HEADER_SHA1 = "1bcc423f0dcc0c8af51f0c6aa2d825d72148292b";
     private static final String NO_COMMENTS_SUPER_HASH = "8a2c586e09f02890f7dbacb945a55b1ae1f03d91";
 
-    private static final String JQUERY_JUSTIFIED_GALLERY_URL = "https://cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.3/js/jquery.justifiedGallery.js";
+    private static final String JQUERY_JUSTIFIED_GALLERY_URL = "https://cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.7.0/js/jquery.justifiedGallery.js";
 
     /* --- Test methods --- */
 
@@ -54,9 +54,9 @@ public class JavaScriptHashCalculatorTest {
         String fileContent = IOUtils.toString(new URL(JQUERY_JUSTIFIED_GALLERY_URL), StandardCharsets.UTF_8);
         ParseResult parseResult = new JavaScriptParser().parse(fileContent);
         String headerlessContent = parseResult.getContentWithoutHeaderComments();
-        assertTrue(headerlessContent.startsWith("(function($) {"));
+        assertTrue(headerlessContent.startsWith("(function (factory) {"));
         String commentlessContent = parseResult.getContentWithoutComments();
-        assertTrue(commentlessContent.startsWith("(function($) {"));
+        assertTrue(commentlessContent.startsWith("(function(factory) {"));
     }
 
 //    @Ignore
