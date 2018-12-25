@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * @author raz.nitzan
+ * @author philip.abed
  */
 public class FileHandler {
     private static String EMPTY_STRING = "";
