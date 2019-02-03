@@ -167,10 +167,12 @@ public class DependencyInfo implements Serializable {
         if (type != null ? !type.equals(that.type) : that.type != null) return false;
         if (version != null ? !version.equals(that.version) : that.version != null) return false;
         if (filename != null ? !filename.equals(that.filename) : that.filename != null) return false;
+        if (commit != null ? !commit.equals(that.commit) : that.commit != null) return false;
         if (dependencyType != null ? !dependencyType.equals(that.dependencyType) : that.dependencyType != null)
             return false;
         if (systemPath != null ? !systemPath.equals(that.systemPath) : that.systemPath != null) return false;
-        if (dependencyFile != null ? !dependencyFile.equals(that.dependencyFile) : that.dependencyFile != null) return false;
+        if (dependencyFile != null ? !dependencyFile.equals(that.dependencyFile) : that.dependencyFile != null)
+            return false;
         if (vulnerabilityAnalysisResult != null ? !vulnerabilityAnalysisResult.equals(that.vulnerabilityAnalysisResult) : that.vulnerabilityAnalysisResult != null)
             return false;
 
@@ -194,6 +196,7 @@ public class DependencyInfo implements Serializable {
         result = APIConstants.HASH_CODE_FACTOR * result + (systemPath != null ? systemPath.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (dependencyFile != null ? dependencyFile.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (vulnerabilityAnalysisResult != null ? vulnerabilityAnalysisResult.hashCode() : 0);
+        result = APIConstants.HASH_CODE_FACTOR * result + (commit != null ? commit.hashCode() : 0);
         return result;
     }
 
