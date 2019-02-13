@@ -9,5 +9,6 @@ public enum InvocationType {
 
     APPLICATION,
     EXTENSION,
+    FRAMEWORK,
     NATIVE
 }
