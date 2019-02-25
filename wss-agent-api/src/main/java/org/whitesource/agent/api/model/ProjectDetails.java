@@ -1,8 +1,13 @@
 package org.whitesource.agent.api.model;
 
+import com.google.gson.annotations.Since;
+import org.whitesource.agent.api.AgentApiVersion;
+
 /**
  * @author eRez Huberman
+ * @since 2.9.8
  **/
+@Since(AgentApiVersion.AGENT_API_VERSION_2_9_8)
 public class ProjectDetails {
 
     /* --- Members --- */

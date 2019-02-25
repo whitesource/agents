@@ -15,6 +15,9 @@
  */
 package org.whitesource.agent.api.model;
 
+import com.google.gson.annotations.Since;
+import org.whitesource.agent.api.AgentApiVersion;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -45,6 +48,10 @@ public class ResourceInfo implements Serializable {
     private Collection<VulnerabilityInfo> vulnerabilities;
     private String homepageUrl;
     private String description;
+    /*
+    * @since 2.9.8
+    */
+    @Since(AgentApiVersion.AGENT_API_VERSION_2_9_8)
     private String keyUuid;
 
     /* --- Constructors --- */

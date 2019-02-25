@@ -15,6 +15,9 @@
  */
 package org.whitesource.agent.api.model;
 
+import com.google.gson.annotations.Since;
+import org.whitesource.agent.api.AgentApiVersion;
+
 import java.io.Serializable;
 
 /**
@@ -44,6 +47,9 @@ public class RequestPolicyInfo implements Serializable {
     private boolean projectLevel;
 
     private boolean inclusive;
+
+    @Since(AgentApiVersion.AGENT_API_VERSION_2_9_8)
+    private String policyLevel;
 
     /* --- Constructors --- */
 
@@ -78,6 +84,7 @@ public class RequestPolicyInfo implements Serializable {
         if (filterType != null ? !filterType.equals(that.filterType) : that.filterType != null) return false;
         if (filterLogic != null ? !filterLogic.equals(that.filterLogic) : that.filterLogic != null) return false;
         if (actionType != null ? !actionType.equals(that.actionType) : that.actionType != null) return false;
+        if (policyLevel != null ? !policyLevel.equals(that.policyLevel) : that.policyLevel != null) return false;
         return actionLogic != null ? actionLogic.equals(that.actionLogic) : that.actionLogic == null;
 
     }
@@ -89,12 +96,21 @@ public class RequestPolicyInfo implements Serializable {
         result = 31 * result + (filterLogic != null ? filterLogic.hashCode() : 0);
         result = 31 * result + (actionType != null ? actionType.hashCode() : 0);
         result = 31 * result + (actionLogic != null ? actionLogic.hashCode() : 0);
+        result = 31 * result + (policyLevel != null ? policyLevel.hashCode() : 0);
         result = 31 * result + (projectLevel ? 1 : 0);
         result = 31 * result + (inclusive ? 1 : 0);
         return result;
     }
 
     /* --- Getters / Setters --- */
+
+    public String getPolicyLevel() {
+        return policyLevel;
+    }
+
+    public void setPolicyLevel(String policyLevel) {
+        this.policyLevel = policyLevel;
+    }
 
     public String getDisplayName() {
         return displayName;

@@ -15,6 +15,8 @@
  */
 package org.whitesource.agent.api.dispatch;
 
+import com.google.gson.annotations.Since;
+import org.whitesource.agent.api.AgentApiVersion;
 import org.whitesource.agent.api.model.ProjectDetails;
 
 import java.util.ArrayList;
@@ -43,6 +45,10 @@ public class UpdateInventoryResult extends BaseResult {
 
 	private HashMap<String, Integer> projectNamesToIds;
 
+	/*
+	 * @since 2.9.8
+	 */
+	@Since(AgentApiVersion.AGENT_API_VERSION_2_9_8)
 	private HashMap<String, ProjectDetails> projectNamesToDetails;
 
 
