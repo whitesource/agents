@@ -15,4 +15,5 @@ public enum ChecksumType {
     SHA1_OTHER_PLATFORM,
     SHA1_UTF8,
     MD5,
+    ADDITIONAL_SHA1
 }
