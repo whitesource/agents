@@ -15,6 +15,8 @@
  */
 package org.whitesource.agent.api.dispatch;
 
+import org.whitesource.agent.api.model.ProjectDetails;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -41,6 +43,8 @@ public class UpdateInventoryResult extends BaseResult {
 
 	private HashMap<String, Integer> projectNamesToIds;
 
+	private HashMap<String, ProjectDetails> projectNamesToDetails;
+
 
 	/* --- Constructors --- */
 	/**
@@ -51,6 +55,7 @@ public class UpdateInventoryResult extends BaseResult {
 		updatedProjects = new ArrayList<String>();
 		createdProjects = new ArrayList<String>();
 		projectNamesToIds = new HashMap<>();
+		projectNamesToDetails = new HashMap<>();
 	}
 
 	/**
@@ -92,5 +97,13 @@ public class UpdateInventoryResult extends BaseResult {
 
 	public void setProjectNamesToIds(HashMap<String, Integer> projectNamesToIds) {
 		this.projectNamesToIds = projectNamesToIds;
+	}
+
+	public HashMap<String, ProjectDetails> getProjectNamesToDetails(){
+		return projectNamesToDetails;
+	}
+
+	public void setProjectNamesToDetails(HashMap<String, ProjectDetails> value){
+		this.projectNamesToDetails = value;
 	}
 }

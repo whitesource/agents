@@ -45,6 +45,7 @@ public class ResourceInfo implements Serializable {
     private Collection<VulnerabilityInfo> vulnerabilities;
     private String homepageUrl;
     private String description;
+    private String keyUuid;
 
     /* --- Constructors --- */
 
@@ -76,6 +77,7 @@ public class ResourceInfo implements Serializable {
         ResourceInfo that = (ResourceInfo) o;
 
         if (displayName != null ? !displayName.equals(that.displayName) : that.displayName != null) return false;
+        if (keyUuid != null ? keyUuid.equals(this.keyUuid) : that.keyUuid != null) return false;
         return sha1 != null ? sha1.equals(that.sha1) : that.sha1 == null;
 
     }
@@ -83,6 +85,7 @@ public class ResourceInfo implements Serializable {
     @Override
     public int hashCode() {
         int result = displayName != null ? displayName.hashCode() : 0;
+        result = 31 * result + (keyUuid != null ? keyUuid.hashCode() : 0);
         result = 31 * result + (sha1 != null ? sha1.hashCode() : 0);
         return result;
     }
@@ -116,6 +119,14 @@ public class ResourceInfo implements Serializable {
 
     public void setLicenses(Collection<String> licenses) {
         this.licenses = licenses;
+    }
+
+    public String getKeyUuid(){
+        return keyUuid;
+    }
+
+    public void  setKeyUuid(String value){
+        keyUuid = value;
     }
 
     public String getSha1() {
