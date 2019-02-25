@@ -65,6 +65,7 @@ public class DependencyInfo implements Serializable {
     private VulnerabilityAnalysisResult vulnerabilityAnalysisResult;
     private String commit;
     private String dependencyFile;
+    private String additionalSha1;
 
     /* --- Constructors --- */
 
@@ -171,8 +172,7 @@ public class DependencyInfo implements Serializable {
         if (dependencyType != null ? !dependencyType.equals(that.dependencyType) : that.dependencyType != null)
             return false;
         if (systemPath != null ? !systemPath.equals(that.systemPath) : that.systemPath != null) return false;
-        if (dependencyFile != null ? !dependencyFile.equals(that.dependencyFile) : that.dependencyFile != null)
-            return false;
+        if (dependencyFile != null ? !dependencyFile.equals(that.dependencyFile) : that.dependencyFile != null) return false;
         if (vulnerabilityAnalysisResult != null ? !vulnerabilityAnalysisResult.equals(that.vulnerabilityAnalysisResult) : that.vulnerabilityAnalysisResult != null)
             return false;
 
@@ -197,6 +197,7 @@ public class DependencyInfo implements Serializable {
         result = APIConstants.HASH_CODE_FACTOR * result + (dependencyFile != null ? dependencyFile.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (vulnerabilityAnalysisResult != null ? vulnerabilityAnalysisResult.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (commit != null ? commit.hashCode() : 0);
+        result = APIConstants.HASH_CODE_FACTOR * result + (additionalSha1 != null ? additionalSha1.hashCode() : 0);
         return result;
     }
 
@@ -467,5 +468,13 @@ public class DependencyInfo implements Serializable {
 
     public void setDependencyFile(String dependencyFile) {
         this.dependencyFile = dependencyFile;
+    }
+
+    public String getAdditionalSha1() {
+        return additionalSha1;
+    }
+
+    public void setAdditionalSha1(String additionalSha1) {
+        this.additionalSha1 = additionalSha1;
     }
 }
