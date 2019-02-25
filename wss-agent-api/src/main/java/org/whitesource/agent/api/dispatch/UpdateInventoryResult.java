@@ -42,6 +42,7 @@ public class UpdateInventoryResult extends BaseResult {
 	private Collection<String> createdProjects;
 
 	private HashMap<String, Integer> projectNamesToIds;
+
 	private HashMap<String, ProjectDetails> projectNamesToDetails;
 
 

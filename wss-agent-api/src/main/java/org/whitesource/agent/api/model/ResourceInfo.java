@@ -37,7 +37,6 @@ public class ResourceInfo implements Serializable {
     private String displayName;
     private String link;
     private Collection<String> licenses;
-    private String keyUuid;
 
     /**
      * @since 2.2.8
@@ -46,6 +45,7 @@ public class ResourceInfo implements Serializable {
     private Collection<VulnerabilityInfo> vulnerabilities;
     private String homepageUrl;
     private String description;
+    private String keyUuid;
 
     /* --- Constructors --- */
 

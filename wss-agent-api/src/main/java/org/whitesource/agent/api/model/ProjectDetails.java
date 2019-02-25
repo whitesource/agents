@@ -4,10 +4,20 @@ package org.whitesource.agent.api.model;
  * @author eRez Huberman
  **/
 public class ProjectDetails {
+
+    /* --- Members --- */
     private String projectName;
     private Integer projectId;
     private String projectToken;
 
+    /* --- Constructors --- */
+    public ProjectDetails(String name, Integer id, String token){
+        this.projectName = name;
+        this.projectId = id;
+        this.projectToken = token;
+    }
+
+    /* --- Getters / Setters --- */
     public String getProjectName() {
         return projectName;
     }
