@@ -48,7 +48,7 @@ public class ResourceInfo implements Serializable {
     private Collection<VulnerabilityInfo> vulnerabilities;
     private String homepageUrl;
     private String description;
-    /*
+    /**
     * @since 2.9.8
     */
     @Since(AgentApiVersion.AGENT_API_VERSION_2_9_8)
