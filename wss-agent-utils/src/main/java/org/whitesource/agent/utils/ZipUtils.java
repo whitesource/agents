@@ -318,15 +318,15 @@ public class ZipUtils {
 
     private static void transferData(Runnable producer, Runnable consumer) {
         ExecutorService threadPool = Executors.newFixedThreadPool(N_THREADS);
-        threadPool.submit(producer);
         try {
+            threadPool.submit(producer);
             threadPool.submit(consumer).get();
         } catch (InterruptedException e) {
             // logger.error("Task failed : ", e);
         } catch (ExecutionException e) {
             // logger.error("Task failed : ", e);
         } finally {
-            //  threadPool.shutdown();
+            threadPool.shutdown();
         }
     }
 
