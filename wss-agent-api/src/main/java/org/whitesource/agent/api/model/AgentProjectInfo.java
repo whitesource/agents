@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class to hold all information about a project to update. 
@@ -45,6 +46,8 @@ public class AgentProjectInfo implements Serializable {
 
     private String projectSetupDescription;
 
+    private Collection<ProjectTag> projectTags;
+
     /* --- Constructors --- */
 
     /**
@@ -53,6 +56,7 @@ public class AgentProjectInfo implements Serializable {
      */
     public AgentProjectInfo() {
         dependencies = new ArrayList<>();
+        projectTags = new ArrayList<>();
     }
 
     /* --- Overridden methods --- */
@@ -120,4 +124,13 @@ public class AgentProjectInfo implements Serializable {
     public void setProjectSetupStatus(ProjectSetupStatus projectSetupStatus) {
         this.projectSetupStatus = projectSetupStatus;
     }
+
+    public Collection<ProjectTag> getProjectTags() {
+        return projectTags;
+    }
+
+    public void setProjectTags(Set<ProjectTag> projectTags) {
+        this.projectTags = projectTags;
+    }
+
 }
