@@ -42,7 +42,9 @@ public enum DependencyType {
     DEBIAN,
 
     COCOAPODS,
-    HEX;
+    HEX,
+
+    R;
 
     @Override
     public String toString() {
