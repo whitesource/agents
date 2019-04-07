@@ -2,13 +2,13 @@ package org.whitesource.agent.utils;
 
 /**
  * Copyright (C) 2014 WhiteSource Ltd.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,8 +17,6 @@ package org.whitesource.agent.utils;
  */
 
 import org.apache.commons.codec.binary.Base64;
-// import sun.misc.BASE64Decoder;
-// import sun.misc.BASE64Encoder;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -30,6 +28,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
+// import sun.misc.BASE64Decoder;
+// import sun.misc.BASE64Encoder;
 
 /**
  * Utility class for various zip operations.
@@ -106,8 +107,8 @@ public class ZipUtils {
         // byte[] bytes = new BASE64Decoder().decodeBuffer(text);
         byte[] bytes = Base64.decodeBase64(text);
 
-        try(GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(bytes));
-            BufferedReader bf = new BufferedReader(new InputStreamReader(gis, UTF_8));) {
+        try (GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(bytes));
+             BufferedReader bf = new BufferedReader(new InputStreamReader(gis, UTF_8));) {
             StringBuilder outStr = new StringBuilder();
             String line;
             while ((line = bf.readLine()) != null) {
@@ -132,15 +133,15 @@ public class ZipUtils {
 
         // todo make it in chunks
 
-        byte[] bytes =  Base64.decodeBase64(text);
-        try(InputStream inputStream = new ByteArrayInputStream(bytes)) {
-            decompressChunks(inputStream,tempFileOut.toPath());
+        byte[] bytes = Base64.decodeBase64(text);
+        try (InputStream inputStream = new ByteArrayInputStream(bytes)) {
+            decompressChunks(inputStream, tempFileOut.toPath());
             return tempFileOut.toPath();
         }
     }
 
     /**
-     *  The method decompresses the big strings using gzip - low memory via the File system
+     * The method decompresses the big strings using gzip - low memory via the File system
      *
      * @param inputStream
      * @param tempFileOut
@@ -171,12 +172,13 @@ public class ZipUtils {
 
     /**
      * The method compresses the big strings using gzip - low memory via Streams
+     *
      * @param inputStream
      * @param outputStream
      * @throws IOException
      */
     public static void compressString(InputStream inputStream, OutputStream outputStream) throws IOException {
-        try(ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             fillExportStreamCompress(inputStream, byteArrayOutputStream);
             // to do -> make it in chunks
             String result = getStringFromEncode(byteArrayOutputStream.toByteArray());
@@ -195,11 +197,12 @@ public class ZipUtils {
 
     /**
      * The method decompresses the big strings using gzip - low memory via Streams
+     *
      * @param inputStream
      * @param outputStream
      * @throws IOException
      */
-    public static void decompressString(InputStream inputStream, OutputStream outputStream) throws IOException{
+    public static void decompressString(InputStream inputStream, OutputStream outputStream) throws IOException {
         try (InputStream bufferedInputStream = new BufferedInputStream(inputStream);
              PrintWriter printWriter = new PrintWriter(outputStream);) {
             byte[] buffer = new byte[BYTES_BUFFER_SIZE];
@@ -318,15 +321,15 @@ public class ZipUtils {
 
     private static void transferData(Runnable producer, Runnable consumer) {
         ExecutorService threadPool = Executors.newFixedThreadPool(N_THREADS);
-        threadPool.submit(producer);
         try {
+            threadPool.submit(producer);
             threadPool.submit(consumer).get();
         } catch (InterruptedException e) {
             // logger.error("Task failed : ", e);
         } catch (ExecutionException e) {
             // logger.error("Task failed : ", e);
         } finally {
-            //  threadPool.shutdown();
+            threadPool.shutdown();
         }
     }
 
@@ -347,7 +350,7 @@ public class ZipUtils {
         }
     }
 
-    private static void produceCompressDataFromStream(InputStream inputStream, PipedOutputStream pipedOutputStream){
+    private static void produceCompressDataFromStream(InputStream inputStream, PipedOutputStream pipedOutputStream) {
         try (BufferedInputStream in = new BufferedInputStream(inputStream)) {
             byte[] buffer = new byte[BYTES_BUFFER_SIZE];
             int len;
@@ -378,8 +381,7 @@ public class ZipUtils {
                 start_String = end;
             }
             pipedOutputStream.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             // logger.error("Failed to produce data to compress : ", e);
         }
     }
@@ -418,7 +420,7 @@ public class ZipUtils {
             byte[] buffer = new byte[BYTES_BUFFER_SIZE];
             int len;
             while ((len = in.read(buffer)) > 0) {
-                outputStream.write(buffer,0,len );
+                outputStream.write(buffer, 0, len);
             }
             pipedInputStream.close();
         } catch (IOException e) {
@@ -462,13 +464,13 @@ public class ZipUtils {
     }
 
     private static byte[] getStringFromDecode(String text) throws IOException {
-        return  Base64.decodeBase64(text);
+        return Base64.decodeBase64(text);
     }
 
     /**
      * Writes a string piece by piece to file
      *
-     * @param text to input
+     * @param text       to input
      * @param tempFileIn input
      * @throws IOException exception when writing
      */
