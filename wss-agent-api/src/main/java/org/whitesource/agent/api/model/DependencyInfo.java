@@ -66,6 +66,8 @@ public class DependencyInfo implements Serializable {
     private String commit;
     private String dependencyFile;
     private String additionalSha1;
+    private String architecture;
+    private String languageVersion;
 
     /* --- Constructors --- */
 
@@ -477,4 +479,12 @@ public class DependencyInfo implements Serializable {
     public void setAdditionalSha1(String additionalSha1) {
         this.additionalSha1 = additionalSha1;
     }
+
+    public String getArchitecture() { return architecture; }
+
+    public void setArchitecture(String architecture) { this.architecture = architecture; }
+
+    public String getLanguageVersion() { return languageVersion; }
+
+    public void setLanguageVersion(String languageVersion) { this.languageVersion = languageVersion; }
 }
