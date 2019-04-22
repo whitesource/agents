@@ -16,6 +16,7 @@
 package org.whitesource.agent.api.dispatch;
 
 import org.whitesource.agent.api.model.AgentProjectInfo;
+import org.whitesource.agent.api.model.ScanSummaryInfo;
 
 import java.util.*;
 
@@ -71,6 +72,8 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
     protected String productToken;
 
     protected Map<String, String> extraProperties;
+
+    protected ScanSummaryInfo scanSummaryInfo;
 
 
     /* --- Constructors --- */
@@ -265,5 +268,11 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
         this.extraProperties = extraProperties;
     }
 
+    public ScanSummaryInfo getScanSummaryInfo() {
+        return scanSummaryInfo;
+    }
 
+    public void setScanSummaryInfo(ScanSummaryInfo scanSummaryInfo) {
+        this.scanSummaryInfo = scanSummaryInfo;
+    }
 }

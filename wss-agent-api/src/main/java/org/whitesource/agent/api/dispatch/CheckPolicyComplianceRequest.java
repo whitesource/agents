@@ -1,6 +1,7 @@
 package org.whitesource.agent.api.dispatch;
 
 import org.whitesource.agent.api.model.AgentProjectInfo;
+import org.whitesource.agent.api.model.ScanSummaryInfo;
 
 import java.util.Collection;
 
@@ -80,6 +81,32 @@ public class CheckPolicyComplianceRequest extends BaseRequest<CheckPolicyComplia
         this.requesterEmail = requesterEmail;
         this.logData = logData;
         this.productToken = productToken;
+    }
+
+    /**
+     * Constructor
+     *
+     * @param orgToken                  Organization token uniquely identifying the account at white source.
+     * @param product                   The product name or token to update.
+     * @param productVersion            The product version.
+     * @param projects                  Open Source usage statement to check against policies.
+     * @param forceCheckAllDependencies Boolean to check new data only or not.
+     * @param userKey                   user key uniquely identifying the account at white source.
+     * @param requesterEmail            Email of the WhiteSource user that requests to update WhiteSource.
+     * @param logData                   list of FSA's log data events
+     * @param productToken              The product token
+     * @param scanSummaryInfo           Summary statistics for each step in Unified Agent
+     */
+    public CheckPolicyComplianceRequest(String orgToken, String product, String productVersion, Collection<AgentProjectInfo> projects, boolean forceCheckAllDependencies,
+                                        String userKey, String requesterEmail, String logData, String productToken, ScanSummaryInfo scanSummaryInfo) {
+        this(orgToken, projects, forceCheckAllDependencies);
+        this.product = product;
+        this.productVersion = productVersion;
+        this.userKey = userKey;
+        this.requesterEmail = requesterEmail;
+        this.logData = logData;
+        this.productToken = productToken;
+        this.scanSummaryInfo = scanSummaryInfo;
     }
 
     /* --- Getters / Setters --- */
