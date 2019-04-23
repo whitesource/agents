@@ -48,6 +48,7 @@ public final class APIConstants {
 	public static final String SCAN_COMMENT = "scanComment";
 	public static final String PRODUCT_TOKEN = "productToken";
 	public static final String EXTRA_PROPERTIES = "extraProperties";
+	public static final String SCAN_SUMMARY_INFO = "scanSummaryInfo";
 	public static final int	MAX_POST_SIZE = 209715200;	 //= 200 MegaByte;
 
 	/* --- Messages --- */

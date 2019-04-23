@@ -108,7 +108,7 @@ public class WssServiceClientImpl implements WssServiceClient {
      * Constructor
      *
      * @param serviceUrl WhiteSource service URL to use.
-     * @param setProxy WhiteSource set proxy, whether the proxy settings defined or not.
+     * @param setProxy   WhiteSource set proxy, whether the proxy settings defined or not.
      */
     public WssServiceClientImpl(String serviceUrl, boolean setProxy) {
         this(serviceUrl, setProxy, ClientConstants.DEFAULT_CONNECTION_TIMEOUT_MINUTES);
@@ -121,8 +121,8 @@ public class WssServiceClientImpl implements WssServiceClient {
     /**
      * Constructor
      *
-     * @param serviceUrl WhiteSource service URL to use.
-     * @param setProxy WhiteSource set proxy, whether the proxy settings is defined or not.
+     * @param serviceUrl               WhiteSource service URL to use.
+     * @param setProxy                 WhiteSource set proxy, whether the proxy settings is defined or not.
      * @param connectionTimeoutMinutes WhiteSource connection timeout, whether the connection timeout is defined or not (default to 60 minutes).
      */
     public WssServiceClientImpl(String serviceUrl, boolean setProxy, int connectionTimeoutMinutes, boolean ignoreCertificateCheck) {
@@ -267,9 +267,7 @@ public class WssServiceClientImpl implements WssServiceClient {
      * The method service the given request.
      *
      * @param request Request to serve.
-     *
      * @return Result from WhiteSource service.
-     *
      * @throws WssServiceException In case of errors while serving the request.
      */
     @SuppressWarnings("unchecked")
@@ -325,12 +323,10 @@ public class WssServiceClientImpl implements WssServiceClient {
      * The method create the HTTP post request to be sent to the remote service.
      *
      * @param request Request to service.
-     *
      * @return Newly created HTTP post request.
-     *
      * @throws IOException In case of error creating the request.
      */
-    protected <R> HttpRequestBase  createHttpRequest(ServiceRequest<R> request) throws IOException, WssServiceException {
+    protected <R> HttpRequestBase createHttpRequest(ServiceRequest<R> request) throws IOException, WssServiceException {
         HttpPost httpRequest = new HttpPost(serviceUrl);
         httpRequest.setHeader("Accept", ClientConstants.APPLICATION_JSON);
 
@@ -365,14 +361,17 @@ public class WssServiceClientImpl implements WssServiceClient {
         switch (requestType) {
             case UPDATE:
                 UpdateInventoryRequest updateInventoryRequest = (UpdateInventoryRequest) request;
+                nvps.add(new BasicNameValuePair(APIConstants.SCAN_SUMMARY_INFO, gson.toJson(updateInventoryRequest.getScanSummaryInfo())));
                 nvps.add(new BasicNameValuePair(APIConstants.PARAM_UPDATE_TYPE, updateInventoryRequest.getUpdateType().toString()));
                 jsonDiff = gson.toJson(updateInventoryRequest.getProjects());
                 break;
             case CHECK_POLICIES:
+                nvps.add(new BasicNameValuePair("scanSummaryInfo", this.gson.toJson(((CheckPoliciesRequest) request).getScanSummaryInfo())));
                 jsonDiff = gson.toJson(((CheckPoliciesRequest) request).getProjects());
                 break;
             case CHECK_POLICY_COMPLIANCE:
                 CheckPolicyComplianceRequest checkPolicyComplianceRequest = (CheckPolicyComplianceRequest) request;
+                nvps.add(new BasicNameValuePair(APIConstants.SCAN_SUMMARY_INFO, this.gson.toJson(checkPolicyComplianceRequest.getScanSummaryInfo().toString())));
                 nvps.add(new BasicNameValuePair(APIConstants.PARAM_FORCE_CHECK_ALL_DEPENDENCIES,
                         String.valueOf(checkPolicyComplianceRequest.isForceCheckAllDependencies())));
                 jsonDiff = gson.toJson(checkPolicyComplianceRequest.getProjects());
@@ -402,10 +401,10 @@ public class WssServiceClientImpl implements WssServiceClient {
 
         // whitesource service http request size should be below 200 MB
         String httpRequestJson = gson.toJson(httpRequest);
-//        if(httpRequestJson.getBytes().length > APIConstants.MAX_POST_SIZE) {
-//            logger.error("WhiteSource service http request size have exceeded max limit " + APIConstants.MAX_POST_SIZE + " bytes");
-//            throw new WssServiceException("WhiteSource service http request size have exceeded max limit " + APIConstants.MAX_POST_SIZE + " bytes");
-//        }
+        //        if(httpRequestJson.getBytes().length > APIConstants.MAX_POST_SIZE) {
+        //            logger.error("WhiteSource service http request size have exceeded max limit " + APIConstants.MAX_POST_SIZE + " bytes");
+        //            throw new WssServiceException("WhiteSource service http request size have exceeded max limit " + APIConstants.MAX_POST_SIZE + " bytes");
+        //        }
 
         return httpRequest;
     }
@@ -414,9 +413,7 @@ public class WssServiceClientImpl implements WssServiceClient {
      * The method extract the data from the given {@link org.whitesource.agent.api.dispatch.ResultEnvelope}.
      *
      * @param response HTTP response as string.
-     *
      * @return String with logical result in JSON format.
-     *
      * @throws IOException
      * @throws WssServiceException
      */
