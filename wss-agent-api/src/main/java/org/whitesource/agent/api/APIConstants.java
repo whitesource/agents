@@ -21,7 +21,8 @@ package org.whitesource.agent.api;
  * @author tom.shapira
  */
 public final class APIConstants {
-	
+
+	// TODO: 4/23/2019 check if update is needed
 	public static final String API_VERSION = "2.7.5";
 	
 	/* --- Parameters --- */

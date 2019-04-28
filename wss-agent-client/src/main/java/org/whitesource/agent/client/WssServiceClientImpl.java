@@ -366,12 +366,11 @@ public class WssServiceClientImpl implements WssServiceClient {
                 jsonDiff = gson.toJson(updateInventoryRequest.getProjects());
                 break;
             case CHECK_POLICIES:
-                nvps.add(new BasicNameValuePair("scanSummaryInfo", this.gson.toJson(((CheckPoliciesRequest) request).getScanSummaryInfo())));
                 jsonDiff = gson.toJson(((CheckPoliciesRequest) request).getProjects());
                 break;
             case CHECK_POLICY_COMPLIANCE:
                 CheckPolicyComplianceRequest checkPolicyComplianceRequest = (CheckPolicyComplianceRequest) request;
-                nvps.add(new BasicNameValuePair(APIConstants.SCAN_SUMMARY_INFO, this.gson.toJson(checkPolicyComplianceRequest.getScanSummaryInfo().toString())));
+                nvps.add(new BasicNameValuePair(APIConstants.SCAN_SUMMARY_INFO, this.gson.toJson(checkPolicyComplianceRequest.getScanSummaryInfo())));
                 nvps.add(new BasicNameValuePair(APIConstants.PARAM_FORCE_CHECK_ALL_DEPENDENCIES,
                         String.valueOf(checkPolicyComplianceRequest.isForceCheckAllDependencies())));
                 jsonDiff = gson.toJson(checkPolicyComplianceRequest.getProjects());

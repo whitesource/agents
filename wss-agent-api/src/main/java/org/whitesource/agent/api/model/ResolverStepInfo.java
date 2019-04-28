@@ -20,8 +20,8 @@ public class ResolverStepInfo extends StepInfo {
         this.totalDuplicateDependenciesFound = totalDuplicateDependenciesFound;
     }
 
-    public ResolverStepInfo(String comments, String stepName, long totalElapsedTime, boolean isSubStep, StepCompletionStatus stepCompletionStatus, Collection<StepInfo> subStepsInfo, int totalUniqueDependenciesFound, int totalDuplicateDependenciesFound) {
-        super(comments, stepName, totalElapsedTime, isSubStep, stepCompletionStatus, subStepsInfo);
+    public ResolverStepInfo(String stepName, long totalElapsedTime, boolean isSubStep, StepCompletionStatus stepCompletionStatus, Collection<StepInfo> subStepsInfo, int totalUniqueDependenciesFound, int totalDuplicateDependenciesFound) {
+        super(stepName, totalElapsedTime, isSubStep, stepCompletionStatus, subStepsInfo);
         this.totalUniqueDependenciesFound = totalUniqueDependenciesFound;
         this.totalDuplicateDependenciesFound = totalDuplicateDependenciesFound;
     }

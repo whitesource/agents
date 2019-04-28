@@ -10,13 +10,12 @@ import java.util.Objects;
  */
 public class StepInfo implements Serializable {
 
-    /* --- Static members --- */
+    /* --- Static Members --- */
 
     private static final long serialVersionUID = 7972930644057281908L;
 
     /* --- Private Members --- */
 
-    private String comments;
     private String stepName;
     private long totalElapsedTime;
     private boolean isSubStep;
@@ -29,9 +28,8 @@ public class StepInfo implements Serializable {
         subStepsInfo = new LinkedList<>();
     }
 
-    public StepInfo(String comments, String stepName, long totalElapsedTime, boolean isSubStep, StepCompletionStatus stepCompletionStatus, Collection<StepInfo> subStepsInfo) {
+    public StepInfo(String stepName, long totalElapsedTime, boolean isSubStep, StepCompletionStatus stepCompletionStatus, Collection<StepInfo> subStepsInfo) {
         this();
-        this.comments = comments;
         this.stepName = stepName;
         this.totalElapsedTime = totalElapsedTime;
         this.isSubStep = isSubStep;
@@ -39,7 +37,7 @@ public class StepInfo implements Serializable {
         this.subStepsInfo = subStepsInfo;
     }
 
-    /* --- Overridden methods --- */
+    /* --- Overridden Methods --- */
 
     @Override
     public boolean equals(Object o) {
@@ -48,7 +46,6 @@ public class StepInfo implements Serializable {
         StepInfo stepInfo = (StepInfo) o;
         return totalElapsedTime == stepInfo.totalElapsedTime &&
                 isSubStep == stepInfo.isSubStep &&
-                Objects.equals(comments, stepInfo.comments) &&
                 Objects.equals(stepName, stepInfo.stepName) &&
                 stepCompletionStatus == stepInfo.stepCompletionStatus &&
                 Objects.equals(subStepsInfo, stepInfo.subStepsInfo);
@@ -56,18 +53,10 @@ public class StepInfo implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(comments, stepName, totalElapsedTime, isSubStep, stepCompletionStatus, subStepsInfo);
+        return Objects.hash(stepName, totalElapsedTime, isSubStep, stepCompletionStatus, subStepsInfo);
     }
 
     /* --- Getters / Setters --- */
-
-    public String getComments() {
-        return comments;
-    }
-
-    public void setComments(String comments) {
-        this.comments = comments;
-    }
 
     public String getStepName() {
         return stepName;
