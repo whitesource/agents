@@ -68,6 +68,7 @@ public class DependencyInfo implements Serializable {
     private String additionalSha1;
     private String architecture;
     private String languageVersion;
+    private boolean deduped;
 
     /* --- Constructors --- */
 
@@ -487,4 +488,12 @@ public class DependencyInfo implements Serializable {
     public String getLanguageVersion() { return languageVersion; }
 
     public void setLanguageVersion(String languageVersion) { this.languageVersion = languageVersion; }
+
+    public boolean isDeduped() {
+        return deduped;
+    }
+
+    public void setDeduped(boolean deduped) {
+        this.deduped = deduped;
+    }
 }
