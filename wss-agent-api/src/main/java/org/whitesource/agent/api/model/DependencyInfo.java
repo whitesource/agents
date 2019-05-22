@@ -27,7 +27,7 @@ import java.util.*;
  *
  * @author tom.shapira
  */
-public class DependencyInfo implements Serializable {
+public class DependencyInfo implements Serializable, Cloneable {
 
     /* --- Static members --- */
 
