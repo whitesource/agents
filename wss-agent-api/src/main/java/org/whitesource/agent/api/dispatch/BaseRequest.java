@@ -16,6 +16,7 @@
 package org.whitesource.agent.api.dispatch;
 
 import org.whitesource.agent.api.model.AgentProjectInfo;
+import org.whitesource.agent.api.model.ScanSummaryInfo;
 
 import java.util.*;
 
@@ -23,7 +24,6 @@ import java.util.*;
  * Base, abstract, implementation of the interface.
  *
  * @param <R> Type of expected result.
- *
  * @author Edo.Shor
  */
 public abstract class BaseRequest<R> implements ServiceRequest<R> {
@@ -71,6 +71,8 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
     protected String productToken;
 
     protected Map<String, String> extraProperties;
+
+    protected ScanSummaryInfo scanSummaryInfo;
 
 
     /* --- Constructors --- */
@@ -185,17 +187,25 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
     }
 
     @Override
-    public String logData() { return logData; }
+    public String logData() {
+        return logData;
+    }
 
     @Override
-    public String scanComment() { return scanComment; }
+    public String scanComment() {
+        return scanComment;
+    }
 
 
     @Override
-    public String productToken() { return productToken; }
+    public String productToken() {
+        return productToken;
+    }
 
     @Override
-    public Map<String, String> extraProperties() { return extraProperties; }
+    public Map<String, String> extraProperties() {
+        return extraProperties;
+    }
 
     /* --- Getters / Setters --- */
 
@@ -239,19 +249,33 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
         this.projects = projects;
     }
 
-    public void setUserKey(String userKey) { this.userKey = userKey; }
+    public void setUserKey(String userKey) {
+        this.userKey = userKey;
+    }
 
-    public void setAggregateModules(boolean aggregateModules) { this.aggregateModules = aggregateModules; }
+    public void setAggregateModules(boolean aggregateModules) {
+        this.aggregateModules = aggregateModules;
+    }
 
-    public void setPreserveModuleStructure(boolean preserveModuleStructure) { this.preserveModuleStructure = preserveModuleStructure; }
+    public void setPreserveModuleStructure(boolean preserveModuleStructure) {
+        this.preserveModuleStructure = preserveModuleStructure;
+    }
 
-    public void setAggregateProjectName(String aggregateProjectName) { this.aggregateProjectName = aggregateProjectName; }
+    public void setAggregateProjectName(String aggregateProjectName) {
+        this.aggregateProjectName = aggregateProjectName;
+    }
 
-    public void setAggregateProjectToken(String aggregateProjectToken) { this.aggregateProjectToken = aggregateProjectToken; }
+    public void setAggregateProjectToken(String aggregateProjectToken) {
+        this.aggregateProjectToken = aggregateProjectToken;
+    }
 
-    public void setLogData(String logData) { this.logData = logData; }
+    public void setLogData(String logData) {
+        this.logData = logData;
+    }
 
-    public void setScanComment(String scanComment) { this.scanComment = scanComment; }
+    public void setScanComment(String scanComment) {
+        this.scanComment = scanComment;
+    }
 
     public void setProductToken(String productToken) {
         this.productToken = productToken;
@@ -265,5 +289,11 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
         this.extraProperties = extraProperties;
     }
 
+    public ScanSummaryInfo getScanSummaryInfo() {
+        return scanSummaryInfo;
+    }
 
+    public void setScanSummaryInfo(ScanSummaryInfo scanSummaryInfo) {
+        this.scanSummaryInfo = scanSummaryInfo;
+    }
 }
