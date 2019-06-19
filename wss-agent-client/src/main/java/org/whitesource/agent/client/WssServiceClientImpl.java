@@ -18,6 +18,7 @@ package org.whitesource.agent.client;
 import com.btr.proxy.search.ProxySearch;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.stream.JsonWriter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHost;
@@ -51,9 +52,12 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.whitesource.agent.api.APIConstants;
 import org.whitesource.agent.api.dispatch.*;
+import org.whitesource.agent.api.model.AgentProjectInfo;
 import org.whitesource.agent.utils.ZipUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.*;
 import java.security.KeyStore;
 import java.util.ArrayList;
@@ -373,7 +377,19 @@ public class WssServiceClientImpl implements WssServiceClient {
                 nvps.add(new BasicNameValuePair(APIConstants.SCAN_SUMMARY_INFO, this.gson.toJson(checkPolicyComplianceRequest.getScanSummaryInfo())));
                 nvps.add(new BasicNameValuePair(APIConstants.PARAM_FORCE_CHECK_ALL_DEPENDENCIES,
                         String.valueOf(checkPolicyComplianceRequest.isForceCheckAllDependencies())));
-                jsonDiff = gson.toJson(checkPolicyComplianceRequest.getProjects());
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
+                writer.setIndent("  ");
+                writer.beginArray();
+                for (AgentProjectInfo agentProjectInfo : checkPolicyComplianceRequest.getProjects()){
+                    gson.toJson(agentProjectInfo, AgentProjectInfo.class, writer);
+                }
+                writer.endArray();
+                writer.close();
+                logger.debug("----BEFORE-----");
+                jsonDiff = out.toString("UTF-8");
+                logger.debug("---- AFTER-----");
+                //jsonDiff = gson.toJson(checkPolicyComplianceRequest.getProjects());
                 break;
             case CHECK_VULNERABILITIES:
                 jsonDiff = gson.toJson(((CheckVulnerabilitiesRequest) request).getProjects());

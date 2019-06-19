@@ -17,12 +17,20 @@ package org.whitesource.agent.report;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonWriter;
+import com.sun.org.apache.xpath.internal.axes.UnionPathIterator;
 import org.apache.commons.io.FileUtils;
 import org.whitesource.agent.api.dispatch.UpdateInventoryRequest;
+import org.whitesource.agent.api.dispatch.UpdateType;
+import org.whitesource.agent.api.model.*;
 import org.whitesource.agent.utils.ZipUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * A generator for offline update requests.
@@ -79,7 +87,7 @@ public class OfflineUpdateRequest {
             json = ZipUtils.compressString(json);
         } else if (prettyJson) {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            json = gson.toJson(request);
+            json = turnRequestToJson(gson);//gson.toJson(request);
         } else {
             json = new Gson().toJson(request);
         }
@@ -88,5 +96,38 @@ public class OfflineUpdateRequest {
         File requestFile = new File(workDir, "update-request.txt");
         FileUtils.writeStringToFile(requestFile, json, UTF_8);
         return requestFile;
+    }
+
+    private String turnRequestToJson(Gson gson) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
+        writer.setIndent("  ");
+        writer.beginArray();
+        UpdateType updateType = this.request.getUpdateType();
+        gson.toJson(updateType, UpdateType.class, writer);
+        Map<String, String> extraProperties = this.request.getExtraProperties();
+        gson.toJson(extraProperties, Map.class, writer);
+        ScanSummaryInfo scanSummaryInfo = this.request.getScanSummaryInfo();
+        gson.toJson(scanSummaryInfo, ScanSummaryInfo.class, writer);
+        for (AgentProjectInfo agentProjectInfo : this.request.getProjects()){
+            Coordinates coordinates = agentProjectInfo.getCoordinates();
+            gson.toJson(coordinates, Coordinates.class, writer);
+            Coordinates parentCoordinates = agentProjectInfo.getParentCoordinates();
+            gson.toJson(parentCoordinates, Coordinates.class, writer);
+            String projectSetupDescription = agentProjectInfo.getProjectSetupDescription();
+            gson.toJson(projectSetupDescription, String.class, writer);
+            ProjectSetupStatus projectSetupStatus = agentProjectInfo.getProjectSetupStatus();
+            gson.toJson(projectSetupStatus, ProjectSetupStatus.class, writer);
+            Collection<ProjectTag> projectTags = agentProjectInfo.getProjectTags();
+            gson.toJson(projectTags, Collection.class, writer);
+            String projectToken = agentProjectInfo.getProjectToken();
+            gson.toJson(projectToken, String.class, writer);
+            for (DependencyInfo dependencyInfo : agentProjectInfo.getDependencies()){
+                gson.toJson(dependencyInfo, DependencyInfo.class, writer);
+            }
+        }
+        writer.endArray();
+        writer.close();
+        return out.toString("UTF-8");
     }
 }
