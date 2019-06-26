@@ -16,9 +16,7 @@
 package org.whitesource.agent.client;
 
 import com.btr.proxy.search.ProxySearch;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.stream.JsonWriter;
+import com.google.gson.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHost;
@@ -52,15 +50,14 @@ import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
 import org.whitesource.agent.api.APIConstants;
 import org.whitesource.agent.api.dispatch.*;
-import org.whitesource.agent.api.model.AgentProjectInfo;
 import org.whitesource.agent.utils.ZipUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.net.*;
 import java.security.KeyStore;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -377,19 +374,11 @@ public class WssServiceClientImpl implements WssServiceClient {
                 nvps.add(new BasicNameValuePair(APIConstants.SCAN_SUMMARY_INFO, this.gson.toJson(checkPolicyComplianceRequest.getScanSummaryInfo())));
                 nvps.add(new BasicNameValuePair(APIConstants.PARAM_FORCE_CHECK_ALL_DEPENDENCIES,
                         String.valueOf(checkPolicyComplianceRequest.isForceCheckAllDependencies())));
-                ByteArrayOutputStream out = new ByteArrayOutputStream();
-                JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
-                writer.setIndent("  ");
-                writer.beginArray();
-                for (AgentProjectInfo agentProjectInfo : checkPolicyComplianceRequest.getProjects()){
-                    gson.toJson(agentProjectInfo, AgentProjectInfo.class, writer);
-                }
-                writer.endArray();
-                writer.close();
-                logger.debug("----BEFORE-----");
-                jsonDiff = out.toString("UTF-8");
-                logger.debug("---- AFTER-----");
-                //jsonDiff = gson.toJson(checkPolicyComplianceRequest.getProjects());
+                /*Gson checkPoliciesGson = new GsonBuilder().setPrettyPrinting()
+                        .addSerializationExclusionStrategy(getExclusionStrategy())
+                        .registerTypeHierarchyAdapter(Collection.class, new CollectionAdapter()).create();
+                jsonDiff = checkPoliciesGson.toJson(checkPolicyComplianceRequest.getProjects());*/
+                jsonDiff = gson.toJson(checkPolicyComplianceRequest.getProjects());
                 break;
             case CHECK_VULNERABILITIES:
                 jsonDiff = gson.toJson(((CheckVulnerabilitiesRequest) request).getProjects());
@@ -480,6 +469,39 @@ public class WssServiceClientImpl implements WssServiceClient {
             } catch (URISyntaxException e) {
                 logger.error("Bad service url: " + serviceUrl, e);
             }
+        }
+    }
+
+    private ExclusionStrategy getExclusionStrategy(){
+        return new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes fieldAttributes) {
+                String name = fieldAttributes.getName();
+                if (name.equals("optional") || name.equals("checksums") || name.equals("deduped")) {
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> aClass) {
+                return false;
+            }
+        };
+    }
+
+    static class CollectionAdapter implements JsonSerializer<Collection<?>> {
+        @Override
+        public JsonElement serialize(Collection<?> src, Type typeOfSrc,
+                                     JsonSerializationContext context) {
+            if (src == null || src.isEmpty())
+                return null;
+            JsonArray array = new JsonArray();
+            for (Object child : src) {
+                JsonElement element = context.serialize(child);
+                array.add(element);
+            }
+            return array;
         }
     }
 
