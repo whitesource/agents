@@ -32,6 +32,7 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
     private static final long serialVersionUID = 7731258010033962980L;
 
     private UpdateType updateType = UpdateType.OVERRIDE;
+    private String agent;
 
     /* --- Constructors --- */
 
@@ -139,6 +140,28 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
         this.scanComment = scanComment;
         this.productToken = productToken;
         this.scanSummaryInfo = scanSummaryInfo;
+    }
+
+    /**
+     * Constructor
+     *
+     * @param orgToken        Organization token uniquely identifying the account at white source.
+     * @param requesterEmail  Email of the WhiteSource user that requests to update WhiteSource.
+     * @param updateType      Request UpdateType
+     * @param product         The product name or token to update.
+     * @param productVersion  The product version.
+     * @param productToken    The product token.
+     * @param projects        OSS usage information to send to white source.
+     * @param userKey         user key uniquely identifying the account at white source.
+     * @param logData         list of FSA's log data events
+     * @param scanComment     scan description
+     * @param scanSummaryInfo Summary statistics for each step in Unified Agent
+     * @param agent           type of agent making the request
+     */
+    public UpdateInventoryRequest(String orgToken, String requesterEmail, UpdateType updateType, String product, String productVersion, Collection<AgentProjectInfo> projects,
+                                  String userKey, String logData, String scanComment, String productToken, ScanSummaryInfo scanSummaryInfo, String agent) {
+        this(orgToken,requesterEmail, updateType, product, productVersion, projects, userKey, logData, scanComment,productToken, scanSummaryInfo);
+        this.agent = agent;
     }
 
     /**
