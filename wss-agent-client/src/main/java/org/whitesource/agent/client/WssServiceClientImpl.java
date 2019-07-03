@@ -403,13 +403,6 @@ public class WssServiceClientImpl implements WssServiceClient {
 
         httpRequest.setEntity(new UrlEncodedFormEntity(nvps, UTF_8));
 
-        // whitesource service http request size should be below 200 MB
-        String httpRequestJson = gson.toJson(httpRequest);
-        //        if(httpRequestJson.getBytes().length > APIConstants.MAX_POST_SIZE) {
-        //            logger.error("WhiteSource service http request size have exceeded max limit " + APIConstants.MAX_POST_SIZE + " bytes");
-        //            throw new WssServiceException("WhiteSource service http request size have exceeded max limit " + APIConstants.MAX_POST_SIZE + " bytes");
-        //        }
-
         return httpRequest;
     }
 
