@@ -32,7 +32,6 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
     private static final long serialVersionUID = 7731258010033962980L;
 
     private UpdateType updateType = UpdateType.OVERRIDE;
-    private String agent;
 
     /* --- Constructors --- */
 
