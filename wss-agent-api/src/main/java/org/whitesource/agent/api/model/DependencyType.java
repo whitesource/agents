@@ -45,13 +45,17 @@ public enum DependencyType {
     HEX,
 
     R,
-    CRATE;
+    CRATE,
+    CABAL,
+    OPAM;
 
     @Override
     public String toString() {
         switch(this) {
             case COCOAPODS: return "CocoaPods";
             case CRATE: return "Crate";
+            case CABAL: return "Cabal";
+            case OPAM: return "Opam";
             default: return super.toString();
         }
     }
