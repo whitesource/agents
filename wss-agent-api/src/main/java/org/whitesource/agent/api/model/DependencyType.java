@@ -44,12 +44,14 @@ public enum DependencyType {
     COCOAPODS,
     HEX,
 
-    R;
+    R,
+    CRATE;
 
     @Override
     public String toString() {
         switch(this) {
             case COCOAPODS: return "CocoaPods";
+            case CRATE: return "Crate";
             default: return super.toString();
         }
     }
