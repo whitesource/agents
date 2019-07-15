@@ -144,8 +144,6 @@ public class WssServiceClientImpl implements WssServiceClient {
         }
 
         HttpParams params = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(params, this.connectionTimeout);
-        HttpConnectionParams.setSoTimeout(params, this.connectionTimeout);
         HttpClientParams.setRedirecting(params, true);
 
         httpClient = new DefaultHttpClient();
@@ -175,6 +173,8 @@ public class WssServiceClientImpl implements WssServiceClient {
                 logger.error(e.getMessage());
             }
         }
+
+        setConnectionTimeout(this.connectionTimeout);
 
         if (setProxy) {
             findDefaultProxy();
