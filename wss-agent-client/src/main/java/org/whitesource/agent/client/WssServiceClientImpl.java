@@ -56,9 +56,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.*;
 import java.security.KeyStore;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -73,6 +71,10 @@ public class WssServiceClientImpl implements WssServiceClient {
 
     private static final String HTTP_PROXY_USER = "http.proxyUser";
     private static final String HTTP_PROXY_PASSWORD = "http.proxyPassword";
+    public static final String PROXY_HOST = "proxy.host";
+    public static final String PROXY_PORT = "proxy.port";
+    public static final String PROXY_USER = "proxy.user";
+    public static final String PROXY_PASS = "proxy.pass";
     private static final int TO_MILLISECONDS = 60 * 1000;
     private static final String UTF_8 = "UTF-8";
 
@@ -142,8 +144,6 @@ public class WssServiceClientImpl implements WssServiceClient {
         }
 
         HttpParams params = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(params, this.connectionTimeout);
-        HttpConnectionParams.setSoTimeout(params, this.connectionTimeout);
         HttpClientParams.setRedirecting(params, true);
 
         httpClient = new DefaultHttpClient();
@@ -173,6 +173,8 @@ public class WssServiceClientImpl implements WssServiceClient {
                 logger.error(e.getMessage());
             }
         }
+
+        setConnectionTimeout(this.connectionTimeout);
 
         if (setProxy) {
             findDefaultProxy();
@@ -260,6 +262,41 @@ public class WssServiceClientImpl implements WssServiceClient {
     public void setConnectionTimeout(int timeout) {
         HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), timeout);
         HttpConnectionParams.setSoTimeout(httpClient.getParams(), timeout);
+    }
+
+    public Map<String, String> findDefaultProxyDetails(String url) {
+        Map<String, String> proxyDetails = new HashMap<>();
+        ProxySearch proxySearch = new ProxySearch();
+        proxySearch.addStrategy(ProxySearch.Strategy.JAVA);
+        proxySearch.addStrategy(ProxySearch.Strategy.ENV_VAR);
+        proxySearch.addStrategy(ProxySearch.Strategy.OS_DEFAULT);
+        proxySearch.addStrategy(ProxySearch.Strategy.BROWSER);
+        ProxySelector proxySelector = proxySearch.getProxySelector();
+
+        if (proxySelector != null) {
+            ProxySelector.setDefault(proxySelector);
+            try {
+                List<Proxy> proxyList = proxySelector.select(new URI(url));
+                if (proxyList != null && !proxyList.isEmpty()) {
+                    for (Proxy proxy : proxyList) {
+                        InetSocketAddress address = (InetSocketAddress) proxy.address();
+                        if (address != null) {
+                            String host = address.getHostName();
+                            int port = address.getPort();
+                            String username = System.getProperty(HTTP_PROXY_USER);
+                            String password = System.getProperty(HTTP_PROXY_PASSWORD);
+                            proxyDetails.put(PROXY_HOST, host);
+                            proxyDetails.put(PROXY_PORT, String.valueOf(port));
+                            proxyDetails.put(PROXY_USER, username);
+                            proxyDetails.put(PROXY_PASS, password);
+                        }
+                    }
+                }
+            } catch (URISyntaxException e) {
+                logger.error("Bad service url: " + serviceUrl, e);
+            }
+        }
+        return proxyDetails;
     }
 
     /* --- Protected methods --- */
@@ -436,32 +473,9 @@ public class WssServiceClientImpl implements WssServiceClient {
     /* --- Private methods --- */
 
     private void findDefaultProxy() {
-        ProxySearch proxySearch = new ProxySearch();
-        proxySearch.addStrategy(ProxySearch.Strategy.JAVA);
-        proxySearch.addStrategy(ProxySearch.Strategy.ENV_VAR);
-        proxySearch.addStrategy(ProxySearch.Strategy.OS_DEFAULT);
-        proxySearch.addStrategy(ProxySearch.Strategy.BROWSER);
-        ProxySelector proxySelector = proxySearch.getProxySelector();
-
-        if (proxySelector != null) {
-            ProxySelector.setDefault(proxySelector);
-            try {
-                List<Proxy> proxyList = proxySelector.select(new URI(serviceUrl));
-                if (proxyList != null && !proxyList.isEmpty()) {
-                    for (Proxy proxy : proxyList) {
-                        InetSocketAddress address = (InetSocketAddress) proxy.address();
-                        if (address != null) {
-                            String host = address.getHostName();
-                            int port = address.getPort();
-                            String username = System.getProperty(HTTP_PROXY_USER);
-                            String password = System.getProperty(HTTP_PROXY_PASSWORD);
-                            setProxy(host, port, username, password);
-                        }
-                    }
-                }
-            } catch (URISyntaxException e) {
-                logger.error("Bad service url: " + serviceUrl, e);
-            }
+        Map<String, String> proxyDetails = findDefaultProxyDetails(serviceUrl);
+        if (proxyDetails.size() > 0) {
+            setProxy(proxyDetails.get(PROXY_HOST), Integer.valueOf(proxyDetails.get(PROXY_PORT)), proxyDetails.get(PROXY_USER), proxyDetails.get(PROXY_PASS));
         }
     }
 
