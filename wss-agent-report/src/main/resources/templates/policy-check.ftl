@@ -86,7 +86,7 @@
     <#foreach license in node.resource.licenses>                ${license} &nbsp;
 </#foreach>			</div>
 
-    <#if node.policy ??>                <#if "Reject" == node.policy.actionType>                    <@rejectSingle node.policy.displayName/>                <#elseif "Approve" == node.policy.actionType>                    <@approveSingle node.policy.displayName/>                <#elseif "Reassign" == node.policy.actionType>                    <@eassignSingle node.policy.displayName/>                <#elseif "Conditions" == node.policy.actionType>                    <@conditionSingle node.policy.displayName/>                <#elseif "Issue" == node.policy.actionType>                    <@issueSingle node.policy.displayName/>                </#if>            </#if>        </div>
+    <#if node.policy ??>                <#if "Reject" == node.policy.actionType>                    <@rejectSingle node.policy.displayName/>                <#elseif "Approve" == node.policy.actionType>                    <@approveSingle node.policy.displayName/>                <#elseif "Reassign" == node.policy.actionType>                    <@reassignSingle node.policy.displayName/>                <#elseif "Conditions" == node.policy.actionType>                    <@conditionSingle node.policy.displayName/>                <#elseif "Issue" == node.policy.actionType>                    <@issueSingle node.policy.displayName/>                </#if>            </#if>        </div>
 
 <#if node.children ??>            <ul>
     <#foreach child in node.children>                <@dependencyNode child/>
