@@ -696,4 +696,18 @@ public class RequestFactory {
         return request;
     }
 
+    /* --- Getters --- */
+
+    public String getAgent() {
+        return agent;
+    }
+
+    public String getAgentVersion() {
+        return agentVersion;
+    }
+
+    public String getPluginVersion() {
+        return pluginVersion;
+    }
+
 }

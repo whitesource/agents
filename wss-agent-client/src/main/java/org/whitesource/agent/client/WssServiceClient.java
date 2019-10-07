@@ -15,6 +15,7 @@
  */
 package org.whitesource.agent.client;
 
+import org.apache.http.client.HttpClient;
 import org.whitesource.agent.api.dispatch.*;
 
 /**
@@ -91,6 +92,59 @@ public interface WssServiceClient {
      */
     ConfigurationResult getConfiguration(ConfigurationRequest request) throws WssServiceException;
 
+  /**
+   *
+   * @return serviceUrl
+   */
+    public String getServiceUrl();
+
+  /**
+   *
+   * @return HttpClient
+   */
+    public HttpClient getHttpClient();
+
+  /**
+   *
+   * @return ConnectionTimeout
+   */
+    public int getConnectionTimeout();
+
+  /**
+   *
+   * @return isProxy
+   */
+    public boolean isProxy();
+
+  /**
+   *
+   * @return ProxyHost
+   */
+    public String getProxyHost() ;
+
+  /**
+   *
+   * @return ProxyPort
+   */
+    public int getProxyPort() ;
+
+  /**
+   *
+   * @return ProxyUsername
+   */
+    public String getProxyUsername() ;
+
+  /**
+   *
+   * @return ProxyPassword
+   */
+    public String getProxyPassword() ;
+
+  /**
+   *
+   * @return IgnoreCertificateCheck
+   */
+    boolean getIgnoreCertificateCheck();
 
     void shutdown();
 

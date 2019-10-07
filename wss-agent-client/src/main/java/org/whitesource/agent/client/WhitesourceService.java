@@ -86,7 +86,22 @@ public class WhitesourceService {
 
     /* --- Public methods --- */
 
-    /**
+    public WhitesourceService cloneWhitesourceService() {
+      WssServiceClient client = this.getClient();
+      WhitesourceService whitesourceService = new WhitesourceService(requestFactory.getAgent(),
+          requestFactory.getAgentVersion(), requestFactory.getPluginVersion(),
+          client.getServiceUrl(), client.isProxy(), client.getConnectionTimeout(),
+          client.getIgnoreCertificateCheck());
+
+      whitesourceService.getClient()
+          .setProxy(client.getProxyHost(), client.getProxyPort(), client.getProxyUsername(),
+              client.getProxyPassword());
+
+      return whitesourceService;
+    }
+
+
+  /**
      * Updates the White Source organization account with the given OSS information.
      *
      * @param orgToken       Organization token uniquely identifying the account at white source.

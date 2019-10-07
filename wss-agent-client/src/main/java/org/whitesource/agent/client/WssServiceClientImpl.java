@@ -89,6 +89,14 @@ public class WssServiceClientImpl implements WssServiceClient {
     protected Gson gson;
     protected int connectionTimeout;
 
+    boolean ignoreCertificateCheck;
+    private String proxyHost;
+    private int proxyPort;
+    private String proxyUsername;
+    private String proxyPassword;
+
+    private final boolean proxyEnabled;
+
     /* --- Constructors --- */
 
     /**
@@ -129,6 +137,7 @@ public class WssServiceClientImpl implements WssServiceClient {
      * @param connectionTimeoutMinutes WhiteSource connection timeout, whether the connection timeout is defined or not (default to 60 minutes).
      */
     public WssServiceClientImpl(String serviceUrl, boolean setProxy, int connectionTimeoutMinutes, boolean ignoreCertificateCheck) {
+        this.proxyEnabled = setProxy;
         gson = new Gson();
 
         if (serviceUrl == null || serviceUrl.length() == 0) {
@@ -176,7 +185,7 @@ public class WssServiceClientImpl implements WssServiceClient {
 
         setConnectionTimeout(this.connectionTimeout);
 
-        if (setProxy) {
+        if (this.proxyEnabled) {
             findDefaultProxy();
         }
     }
@@ -225,37 +234,42 @@ public class WssServiceClientImpl implements WssServiceClient {
 
     @Override
     public void setProxy(String host, int port, String username, String password) {
-        if (host == null || host.trim().length() == 0) {
-            return;
-        }
-        if (port < 0 || port > 65535) {
-            return;
-        }
+      this.proxyHost = host;
+      this.proxyPort = port;
+      this.proxyUsername = username;
+      this.proxyPassword = password;
+      if (host == null || host.trim().length() == 0) {
+        return;
+      }
+      if (port < 0 || port > 65535) {
+        return;
+      }
 
-        HttpHost proxy = new HttpHost(host, port);
-        //		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
-        DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
-        httpClient = HttpClients.custom().setRoutePlanner(routePlanner).build();
-        logger.info("Using proxy: " + proxy.toHostString());
+      HttpHost proxy = new HttpHost(proxyHost, proxyPort);
+      //		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+      DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
+      httpClient = HttpClients.custom().setRoutePlanner(routePlanner).build();
+      logger.info("Using proxy: " + proxy.toHostString());
 
-        if (username != null && username.trim().length() > 0) {
-            logger.info("Proxy username: " + username);
-            Credentials credentials;
-            if (username.indexOf('/') >= 0) {
-                credentials = new NTCredentials(username + ":" + password);
-            } else if (username.indexOf('\\') >= 0) {
-                username = username.replace('\\', '/');
-                credentials = new NTCredentials(username + ":" + password);
-            } else {
-                credentials = new UsernamePasswordCredentials(username, password);
-            }
-            CredentialsProvider credsProvider = new BasicCredentialsProvider();
-            credsProvider.setCredentials(AuthScope.ANY, credentials);
-            // TODO check
-            httpClient = HttpClientBuilder.create().setProxy(proxy).setDefaultCredentialsProvider(credsProvider).build();
-
-            //            httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, credentials);
+      if (proxyUsername != null && proxyUsername.trim().length() > 0) {
+        logger.info("Proxy username: " + proxyUsername);
+        Credentials credentials;
+        if (proxyUsername.indexOf('/') >= 0) {
+          credentials = new NTCredentials(proxyUsername + ":" + proxyPassword);
+        } else if (proxyUsername.indexOf('\\') >= 0) {
+          proxyUsername = proxyUsername.replace('\\', '/');
+          credentials = new NTCredentials(proxyUsername + ":" + proxyPassword);
+        } else {
+          credentials = new UsernamePasswordCredentials(proxyUsername, proxyPassword);
         }
+        CredentialsProvider credsProvider = new BasicCredentialsProvider();
+        credsProvider.setCredentials(AuthScope.ANY, credentials);
+        // TODO check
+        httpClient = HttpClientBuilder.create().setProxy(proxy)
+            .setDefaultCredentialsProvider(credsProvider).build();
+
+        //            httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, credentials);
+      }
     }
 
     @Override
@@ -522,7 +536,34 @@ public class WssServiceClientImpl implements WssServiceClient {
         return httpClient;
     }
 
+  /* --- Getters  --- */
+
     public int getConnectionTimeout() {
-        return connectionTimeout;
+      return connectionTimeout;
+    }
+
+    public String getProxyHost() {
+      return proxyHost;
+    }
+
+    public int getProxyPort() {
+      return proxyPort;
+    }
+
+    public String getProxyUsername() {
+      return proxyUsername;
+    }
+
+    public String getProxyPassword() {
+      return proxyPassword;
+    }
+
+    public boolean isProxy() {
+      return proxyEnabled;
+    }
+
+    @Override
+    public boolean getIgnoreCertificateCheck() {
+      return this.ignoreCertificateCheck;
     }
 }
