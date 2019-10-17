@@ -82,6 +82,7 @@ public class DependencyInfo implements Serializable {
         licenses = new LinkedList<>();
         copyrights = new LinkedList<>();
         checksums = new TreeMap<>();
+        dependencyModulesToPaths = new HashMap<>();
     }
 
     /**
