@@ -15,14 +15,24 @@
  */
 package org.whitesource.agent.report;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.*;
+import com.google.gson.stream.JsonWriter;
+import com.sun.org.apache.xpath.internal.axes.UnionPathIterator;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.SerializationUtils;
 import org.whitesource.agent.api.dispatch.UpdateInventoryRequest;
+import org.whitesource.agent.api.dispatch.UpdateType;
+import org.whitesource.agent.api.model.*;
 import org.whitesource.agent.utils.ZipUtils;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * A generator for offline update requests.
@@ -58,17 +68,33 @@ public class OfflineUpdateRequest {
      * @param outputDir Directory where request file will be created.
      * @param zip Whether or not to zip the request.
      * @param prettyJson Whether or not to parse the json before writing to file (only if zip is false).
+     * @param filePath path to the output file; null by default
      *
      * @return File reference to the resulting request.
      * @throws java.io.IOException In case of errors during file generation process.
      */
-    public File generate(File outputDir, boolean zip, boolean prettyJson) throws IOException {
+    public File generate(File outputDir, boolean zip, boolean prettyJson, String filePath) throws IOException {
         if (request == null) {
             throw new IllegalStateException("Update inventory request is null");
         }
 
         // prepare working directory
-        File workDir = new File(outputDir, "whitesource");
+        File workDir;
+        File requestFile;
+        if (filePath != null){
+            String fileSeparator = System.getProperty("file.separator");
+            if (filePath.contains(fileSeparator)){
+                requestFile = new File(filePath);
+                String folderName = filePath.substring(0, filePath.lastIndexOf(fileSeparator));
+                workDir = new File(folderName);
+            } else {
+                requestFile = new File(outputDir, filePath);
+                workDir = outputDir;
+            }
+        } else {
+            workDir = new File(outputDir, "whitesource");
+            requestFile = new File(workDir, "update-request.txt");
+        }
         if (!workDir.exists() && !workDir.mkdir()) {
             throw new IOException("Unable to make output directory: " + workDir);
         }
@@ -79,14 +105,96 @@ public class OfflineUpdateRequest {
             json = ZipUtils.compressString(json);
         } else if (prettyJson) {
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            /*Gson gson = new GsonBuilder().setPrettyPrinting()
+                    .addSerializationExclusionStrategy(getExclusionStrategy())
+                    .registerTypeHierarchyAdapter(Collection.class, new CollectionAdapter()).create();*/
             json = gson.toJson(request);
+            //json = turnRequestToJson(gson);
         } else {
             json = new Gson().toJson(request);
         }
 
-        // write to file
-        File requestFile = new File(workDir, "update-request.txt");
+
+        /*ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(request);*/
+
+        /*byte[] serialize = SerializationUtils.serialize(request);
+        FileUtils.writeByteArrayToFile(requestFile, serialize);*/
+
+        /*FileOutputStream fileOut = new FileOutputStream(requestFile.getPath());
+        ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
+        objectOut.writeObject(request);
+        objectOut.close();*/
+
         FileUtils.writeStringToFile(requestFile, json, UTF_8);
         return requestFile;
+    }
+
+    // excluding attributes 'optional', 'checksums' & 'deduped' from the json
+    private ExclusionStrategy getExclusionStrategy(){
+        return new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes fieldAttributes) {
+                String name = fieldAttributes.getName();
+                if (name.equals("optional") || name.equals("checksums") || name.equals("deduped")) {
+                    return true;
+                }
+                return false;
+            }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> aClass) {
+                return false;
+            }
+        };
+    }
+
+    // excluding empty collections from the json
+    static class CollectionAdapter implements JsonSerializer<Collection<?>> {
+        @Override
+        public JsonElement serialize(Collection<?> src, Type typeOfSrc,
+                                     JsonSerializationContext context) {
+            if (src == null || src.isEmpty())
+                return null;
+            JsonArray array = new JsonArray();
+            for (Object child : src) {
+                JsonElement element = context.serialize(child);
+                array.add(element);
+            }
+            return array;
+        }
+    }
+
+    private String turnRequestToJson(Gson gson) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
+        writer.setIndent("  ");
+        writer.beginArray();
+        UpdateType updateType = this.request.getUpdateType();
+        gson.toJson(updateType, UpdateType.class, writer);
+        Map<String, String> extraProperties = this.request.getExtraProperties();
+        gson.toJson(extraProperties, Map.class, writer);
+        ScanSummaryInfo scanSummaryInfo = this.request.getScanSummaryInfo();
+        gson.toJson(scanSummaryInfo, ScanSummaryInfo.class, writer);
+        for (AgentProjectInfo agentProjectInfo : this.request.getProjects()){
+            Coordinates coordinates = agentProjectInfo.getCoordinates();
+            gson.toJson(coordinates, Coordinates.class, writer);
+            Coordinates parentCoordinates = agentProjectInfo.getParentCoordinates();
+            gson.toJson(parentCoordinates, Coordinates.class, writer);
+            String projectSetupDescription = agentProjectInfo.getProjectSetupDescription();
+            gson.toJson(projectSetupDescription, String.class, writer);
+            ProjectSetupStatus projectSetupStatus = agentProjectInfo.getProjectSetupStatus();
+            gson.toJson(projectSetupStatus, ProjectSetupStatus.class, writer);
+            Collection<ProjectTag> projectTags = agentProjectInfo.getProjectTags();
+            gson.toJson(projectTags, Collection.class, writer);
+            String projectToken = agentProjectInfo.getProjectToken();
+            gson.toJson(projectToken, String.class, writer);
+            for (DependencyInfo dependencyInfo : agentProjectInfo.getDependencies()){
+                gson.toJson(dependencyInfo, DependencyInfo.class, writer);
+            }
+        }
+        writer.endArray();
+        writer.close();
+        return out.toString("UTF-8");
     }
 }

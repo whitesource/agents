@@ -16,8 +16,7 @@
 package org.whitesource.agent.client;
 
 import com.btr.proxy.search.ProxySearch;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHost;
@@ -54,10 +53,10 @@ import org.whitesource.agent.api.dispatch.*;
 import org.whitesource.agent.utils.ZipUtils;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.*;
 import java.security.KeyStore;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -72,6 +71,10 @@ public class WssServiceClientImpl implements WssServiceClient {
 
     private static final String HTTP_PROXY_USER = "http.proxyUser";
     private static final String HTTP_PROXY_PASSWORD = "http.proxyPassword";
+    public static final String PROXY_HOST = "proxy.host";
+    public static final String PROXY_PORT = "proxy.port";
+    public static final String PROXY_USER = "proxy.user";
+    public static final String PROXY_PASS = "proxy.pass";
     private static final int TO_MILLISECONDS = 60 * 1000;
     private static final String UTF_8 = "UTF-8";
 
@@ -85,6 +88,14 @@ public class WssServiceClientImpl implements WssServiceClient {
     protected CloseableHttpClient httpClient;
     protected Gson gson;
     protected int connectionTimeout;
+
+    boolean ignoreCertificateCheck;
+    private String proxyHost;
+    private int proxyPort;
+    private String proxyUsername;
+    private String proxyPassword;
+
+    private final boolean proxyEnabled;
 
     /* --- Constructors --- */
 
@@ -126,6 +137,7 @@ public class WssServiceClientImpl implements WssServiceClient {
      * @param connectionTimeoutMinutes WhiteSource connection timeout, whether the connection timeout is defined or not (default to 60 minutes).
      */
     public WssServiceClientImpl(String serviceUrl, boolean setProxy, int connectionTimeoutMinutes, boolean ignoreCertificateCheck) {
+        this.proxyEnabled = setProxy;
         gson = new Gson();
 
         if (serviceUrl == null || serviceUrl.length() == 0) {
@@ -141,8 +153,6 @@ public class WssServiceClientImpl implements WssServiceClient {
         }
 
         HttpParams params = new BasicHttpParams();
-        HttpConnectionParams.setConnectionTimeout(params, this.connectionTimeout);
-        HttpConnectionParams.setSoTimeout(params, this.connectionTimeout);
         HttpClientParams.setRedirecting(params, true);
 
         httpClient = new DefaultHttpClient();
@@ -173,7 +183,9 @@ public class WssServiceClientImpl implements WssServiceClient {
             }
         }
 
-        if (setProxy) {
+        setConnectionTimeout(this.connectionTimeout);
+
+        if (this.proxyEnabled) {
             findDefaultProxy();
         }
     }
@@ -222,43 +234,83 @@ public class WssServiceClientImpl implements WssServiceClient {
 
     @Override
     public void setProxy(String host, int port, String username, String password) {
-        if (host == null || host.trim().length() == 0) {
-            return;
-        }
-        if (port < 0 || port > 65535) {
-            return;
-        }
+      this.proxyHost = host;
+      this.proxyPort = port;
+      this.proxyUsername = username;
+      this.proxyPassword = password;
+      if (host == null || host.trim().length() == 0) {
+        return;
+      }
+      if (port < 0 || port > 65535) {
+        return;
+      }
 
-        HttpHost proxy = new HttpHost(host, port);
-        //		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
-        DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
-        httpClient = HttpClients.custom().setRoutePlanner(routePlanner).build();
-        logger.info("Using proxy: " + proxy.toHostString());
+      HttpHost proxy = new HttpHost(proxyHost, proxyPort);
+      //		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+      DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
+      httpClient = HttpClients.custom().setRoutePlanner(routePlanner).build();
+      logger.info("Using proxy: " + proxy.toHostString());
 
-        if (username != null && username.trim().length() > 0) {
-            logger.info("Proxy username: " + username);
-            Credentials credentials;
-            if (username.indexOf('/') >= 0) {
-                credentials = new NTCredentials(username + ":" + password);
-            } else if (username.indexOf('\\') >= 0) {
-                username = username.replace('\\', '/');
-                credentials = new NTCredentials(username + ":" + password);
-            } else {
-                credentials = new UsernamePasswordCredentials(username, password);
-            }
-            CredentialsProvider credsProvider = new BasicCredentialsProvider();
-            credsProvider.setCredentials(AuthScope.ANY, credentials);
-            // TODO check
-            httpClient = HttpClientBuilder.create().setProxy(proxy).setDefaultCredentialsProvider(credsProvider).build();
-
-            //            httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, credentials);
+      if (proxyUsername != null && proxyUsername.trim().length() > 0) {
+        logger.info("Proxy username: " + proxyUsername);
+        Credentials credentials;
+        if (proxyUsername.indexOf('/') >= 0) {
+          credentials = new NTCredentials(proxyUsername + ":" + proxyPassword);
+        } else if (proxyUsername.indexOf('\\') >= 0) {
+          proxyUsername = proxyUsername.replace('\\', '/');
+          credentials = new NTCredentials(proxyUsername + ":" + proxyPassword);
+        } else {
+          credentials = new UsernamePasswordCredentials(proxyUsername, proxyPassword);
         }
+        CredentialsProvider credsProvider = new BasicCredentialsProvider();
+        credsProvider.setCredentials(AuthScope.ANY, credentials);
+        // TODO check
+        httpClient = HttpClientBuilder.create().setProxy(proxy)
+            .setDefaultCredentialsProvider(credsProvider).build();
+
+        //            httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, credentials);
+      }
     }
 
     @Override
     public void setConnectionTimeout(int timeout) {
         HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), timeout);
         HttpConnectionParams.setSoTimeout(httpClient.getParams(), timeout);
+    }
+
+    public Map<String, String> findDefaultProxyDetails(String url) {
+        Map<String, String> proxyDetails = new HashMap<>();
+        ProxySearch proxySearch = new ProxySearch();
+        proxySearch.addStrategy(ProxySearch.Strategy.JAVA);
+        proxySearch.addStrategy(ProxySearch.Strategy.ENV_VAR);
+        proxySearch.addStrategy(ProxySearch.Strategy.OS_DEFAULT);
+        proxySearch.addStrategy(ProxySearch.Strategy.BROWSER);
+        ProxySelector proxySelector = proxySearch.getProxySelector();
+
+        if (proxySelector != null) {
+            ProxySelector.setDefault(proxySelector);
+            try {
+                List<Proxy> proxyList = proxySelector.select(new URI(url));
+                if (proxyList != null && !proxyList.isEmpty()) {
+                    for (Proxy proxy : proxyList) {
+                        InetSocketAddress address = (InetSocketAddress) proxy.address();
+                        if (address != null) {
+                            String host = address.getHostName();
+                            int port = address.getPort();
+                            String username = System.getProperty(HTTP_PROXY_USER);
+                            String password = System.getProperty(HTTP_PROXY_PASSWORD);
+                            proxyDetails.put(PROXY_HOST, host);
+                            proxyDetails.put(PROXY_PORT, String.valueOf(port));
+                            proxyDetails.put(PROXY_USER, username);
+                            proxyDetails.put(PROXY_PASS, password);
+                        }
+                    }
+                }
+            } catch (URISyntaxException e) {
+                logger.error("Bad service url: " + serviceUrl, e);
+            }
+        }
+        return proxyDetails;
     }
 
     /* --- Protected methods --- */
@@ -373,6 +425,10 @@ public class WssServiceClientImpl implements WssServiceClient {
                 nvps.add(new BasicNameValuePair(APIConstants.SCAN_SUMMARY_INFO, this.gson.toJson(checkPolicyComplianceRequest.getScanSummaryInfo())));
                 nvps.add(new BasicNameValuePair(APIConstants.PARAM_FORCE_CHECK_ALL_DEPENDENCIES,
                         String.valueOf(checkPolicyComplianceRequest.isForceCheckAllDependencies())));
+                /*Gson checkPoliciesGson = new GsonBuilder().setPrettyPrinting()
+                        .addSerializationExclusionStrategy(getExclusionStrategy())
+                        .registerTypeHierarchyAdapter(Collection.class, new CollectionAdapter()).create();
+                jsonDiff = checkPoliciesGson.toJson(checkPolicyComplianceRequest.getProjects());*/
                 jsonDiff = gson.toJson(checkPolicyComplianceRequest.getProjects());
                 break;
             case CHECK_VULNERABILITIES:
@@ -397,13 +453,6 @@ public class WssServiceClientImpl implements WssServiceClient {
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_DIFF, compressedString));
 
         httpRequest.setEntity(new UrlEncodedFormEntity(nvps, UTF_8));
-
-        // whitesource service http request size should be below 200 MB
-        String httpRequestJson = gson.toJson(httpRequest);
-        //        if(httpRequestJson.getBytes().length > APIConstants.MAX_POST_SIZE) {
-        //            logger.error("WhiteSource service http request size have exceeded max limit " + APIConstants.MAX_POST_SIZE + " bytes");
-        //            throw new WssServiceException("WhiteSource service http request size have exceeded max limit " + APIConstants.MAX_POST_SIZE + " bytes");
-        //        }
 
         return httpRequest;
     }
@@ -438,32 +487,42 @@ public class WssServiceClientImpl implements WssServiceClient {
     /* --- Private methods --- */
 
     private void findDefaultProxy() {
-        ProxySearch proxySearch = new ProxySearch();
-        proxySearch.addStrategy(ProxySearch.Strategy.JAVA);
-        proxySearch.addStrategy(ProxySearch.Strategy.ENV_VAR);
-        proxySearch.addStrategy(ProxySearch.Strategy.OS_DEFAULT);
-        proxySearch.addStrategy(ProxySearch.Strategy.BROWSER);
-        ProxySelector proxySelector = proxySearch.getProxySelector();
+        Map<String, String> proxyDetails = findDefaultProxyDetails(serviceUrl);
+        if (proxyDetails.size() > 0) {
+            setProxy(proxyDetails.get(PROXY_HOST), Integer.valueOf(proxyDetails.get(PROXY_PORT)), proxyDetails.get(PROXY_USER), proxyDetails.get(PROXY_PASS));
+        }
+    }
 
-        if (proxySelector != null) {
-            ProxySelector.setDefault(proxySelector);
-            try {
-                List<Proxy> proxyList = proxySelector.select(new URI(serviceUrl));
-                if (proxyList != null && !proxyList.isEmpty()) {
-                    for (Proxy proxy : proxyList) {
-                        InetSocketAddress address = (InetSocketAddress) proxy.address();
-                        if (address != null) {
-                            String host = address.getHostName();
-                            int port = address.getPort();
-                            String username = System.getProperty(HTTP_PROXY_USER);
-                            String password = System.getProperty(HTTP_PROXY_PASSWORD);
-                            setProxy(host, port, username, password);
-                        }
-                    }
+    private ExclusionStrategy getExclusionStrategy(){
+        return new ExclusionStrategy() {
+            @Override
+            public boolean shouldSkipField(FieldAttributes fieldAttributes) {
+                String name = fieldAttributes.getName();
+                if (name.equals("optional") || name.equals("checksums") || name.equals("deduped")) {
+                    return true;
                 }
-            } catch (URISyntaxException e) {
-                logger.error("Bad service url: " + serviceUrl, e);
+                return false;
             }
+
+            @Override
+            public boolean shouldSkipClass(Class<?> aClass) {
+                return false;
+            }
+        };
+    }
+
+    static class CollectionAdapter implements JsonSerializer<Collection<?>> {
+        @Override
+        public JsonElement serialize(Collection<?> src, Type typeOfSrc,
+                                     JsonSerializationContext context) {
+            if (src == null || src.isEmpty())
+                return null;
+            JsonArray array = new JsonArray();
+            for (Object child : src) {
+                JsonElement element = context.serialize(child);
+                array.add(element);
+            }
+            return array;
         }
     }
 
@@ -477,7 +536,34 @@ public class WssServiceClientImpl implements WssServiceClient {
         return httpClient;
     }
 
+  /* --- Getters  --- */
+
     public int getConnectionTimeout() {
-        return connectionTimeout;
+      return connectionTimeout;
+    }
+
+    public String getProxyHost() {
+      return proxyHost;
+    }
+
+    public int getProxyPort() {
+      return proxyPort;
+    }
+
+    public String getProxyUsername() {
+      return proxyUsername;
+    }
+
+    public String getProxyPassword() {
+      return proxyPassword;
+    }
+
+    public boolean isProxy() {
+      return proxyEnabled;
+    }
+
+    @Override
+    public boolean getIgnoreCertificateCheck() {
+      return this.ignoreCertificateCheck;
     }
 }

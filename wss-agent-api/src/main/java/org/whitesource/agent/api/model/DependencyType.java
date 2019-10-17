@@ -30,7 +30,6 @@ public enum DependencyType {
     GRUNT,
 
     GO,
-
     PYTHON,
 
     RUBY,
@@ -40,16 +39,27 @@ public enum DependencyType {
 
     RPM,
     DEBIAN,
+    ALPINE,
+    ARCH_LINUX,
 
     COCOAPODS,
     HEX,
 
-    R;
+    R,
+    CRATE,
+    CABAL,
+    OPAM;
 
     @Override
     public String toString() {
         switch(this) {
             case COCOAPODS: return "CocoaPods";
+            case CRATE: return "Crate";
+            case CABAL: return "Cabal";
+            case OPAM: return "Opam";
+            case DEBIAN: return "Debian";
+            case ALPINE: return "Alpine";
+            case ARCH_LINUX: return "Arch Linux";
             default: return super.toString();
         }
     }

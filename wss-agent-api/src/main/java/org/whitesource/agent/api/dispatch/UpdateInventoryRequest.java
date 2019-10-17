@@ -141,6 +141,7 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
         this.scanSummaryInfo = scanSummaryInfo;
     }
 
+
     /**
      * Constructor to create offline request
      *

@@ -15,6 +15,7 @@
  */
 package org.whitesource.agent.report;
 
+import freemarker.template.TemplateException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -40,19 +41,19 @@ public class PolicyCheckReportTest {
     /* --- Test methods --- */
 
     @Test(expected = IllegalStateException.class)
-    public void testNullResult() throws IOException {
+    public void testNullResult() throws IOException, TemplateException {
         PolicyCheckReport report = new PolicyCheckReport(null);
         report.generate(null, false);
     }
 
     @Test(expected = IOException.class)
-    public void testNonExistingOutoutDirectory() throws IOException {
+    public void testNonExistingOutoutDirectory() throws IOException, TemplateException {
         PolicyCheckReport report = new PolicyCheckReport(new CheckPoliciesResult());
         report.generate(new File("/non/existing/dir"), false);
     }
 
     @Test
-    public void testEmptyResult() throws IOException {
+    public void testEmptyResult() throws IOException, TemplateException {
         CheckPoliciesResult result = new CheckPoliciesResult();
         PolicyCheckReport report = new PolicyCheckReport(result);
         report.generate(temporaryFolder.getRoot(), false);
@@ -60,7 +61,7 @@ public class PolicyCheckReportTest {
     }
 
     @Test
-    public void testResultWEmptyProjects() throws IOException {
+    public void testResultWEmptyProjects() throws IOException, TemplateException {
         PolicyCheckResourceNode root = new PolicyCheckResourceNode();
         CheckPoliciesResult result = new CheckPoliciesResult();
         result.setOrganization("Report test org");
@@ -77,7 +78,7 @@ public class PolicyCheckReportTest {
     }
 
     @Test
-    public void testCreateReport() throws IOException {
+    public void testCreateReport() throws IOException, TemplateException {
         CheckPoliciesResult result = createResult();
         PolicyCheckReport report = new PolicyCheckReport(result);
 
@@ -94,7 +95,7 @@ public class PolicyCheckReportTest {
     }
 
     @Test
-    public void testCreateJsonReport() throws IOException {
+    public void testCreateJsonReport() throws IOException, TemplateException {
         CheckPoliciesResult result = createResult();
         PolicyCheckReport report = new PolicyCheckReport(result);
 

@@ -140,7 +140,8 @@ public final class ChecksumUtils {
                 FileHandler.deleteTempFoldersHelper(FileHandler.PATH_TO_PLATFORM_DEPENDENT_TMP_DIR);
             }
         } else {
-            logger.debug("File {} size is too big for scanning other platform sha1, skipping it.", file.getName());
+            // too big for calculating other platform sha1
+            logger.debug("File {} is skipped, size is too large.", file.getName());
         }
         return otherPlatformSha1;
     }

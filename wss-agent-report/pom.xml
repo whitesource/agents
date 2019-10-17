@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.whitesource</groupId>
         <artifactId>wss-agent-parent</artifactId>
-        <version>2.9.9.05-SNAPSHOT</version>
+        <version>2.9.9.22-SNAPSHOT</version>
     </parent>
 
     <artifactId>wss-agent-report</artifactId>
@@ -35,9 +35,9 @@
 
         <!-- Utilities -->
         <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity</artifactId>
-            <version>1.7</version>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.2</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -50,6 +50,16 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.9.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>2.3.28</version>
         </dependency>
     </dependencies>
 

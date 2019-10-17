@@ -17,20 +17,21 @@ package org.whitesource.agent.report;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import freemarker.log.Logger;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.whitesource.agent.api.dispatch.BaseCheckPoliciesResult;
 import org.whitesource.agent.api.model.PolicyCheckResourceNode;
 import org.whitesource.agent.api.model.RequestPolicyInfo;
 import org.whitesource.agent.api.model.ResourceInfo;
-import org.whitesource.agent.report.summary.PolicyRejectionReport;
-import org.whitesource.agent.report.summary.RejectingPolicy;
-import org.whitesource.agent.report.summary.RejectedLibrary;
 import org.whitesource.agent.report.model.LicenseHistogramDataPoint;
+import org.whitesource.agent.report.summary.PolicyRejectionReport;
+import org.whitesource.agent.report.summary.RejectedLibrary;
+import org.whitesource.agent.report.summary.RejectingPolicy;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -47,7 +48,7 @@ public class PolicyCheckReport {
     /* --- Static members --- */
 
     private static final String TEMPLATE_FOLDER = "templates/";
-    private static final String TEMPLATE_FILE = "policy-check.vm";
+    private static final String TEMPLATE_FILE = "policy-check.ftl";
     private static final String CSS_FILE = "wss.css";
 
     private static final float MAX_BAR_HEIGHT = 50;
@@ -99,8 +100,9 @@ public class PolicyCheckReport {
      * @param pack      <code>True</code> to create a zip file from the resulting directory.
      * @return  File reference to the resulting report.
      * @throws IOException In case of errors during report generation process.
+     * @throws TemplateException In case of errors during creation of template
      */
-    public File generate(File outputDir, boolean pack) throws IOException {
+    public File generate(File outputDir, boolean pack) throws IOException, TemplateException {
         return generate(outputDir, pack, null);
     }
 
@@ -115,7 +117,7 @@ public class PolicyCheckReport {
      *
      * @throws IOException In case of errors during report generation process.
      */
-    public File generate(File outputDir, boolean pack, Properties properties) throws IOException {
+    public File generate(File outputDir, boolean pack, Properties properties) throws IOException, TemplateException {
         if (result == null) {
             throw new IllegalStateException("Check policies result is null");
         }
@@ -127,15 +129,14 @@ public class PolicyCheckReport {
             throw new IOException("Unable to make output directory: " + workDir);
         }
 
-        // create actual report
-        VelocityEngine engine = createTemplateEngine(properties);
-        VelocityContext context = createTemplateContext();
+        Configuration configuration = createFreemarkerConfig();
         FileWriter fw = new FileWriter(new File(workDir, "index.html"));
+
         try {
-            engine.mergeTemplate(TEMPLATE_FOLDER + TEMPLATE_FILE, "UTF-8", context, fw);
-            fw.flush();
+            Template template = configuration.getTemplate(TEMPLATE_FILE);
+            template.process(createRootDataModel(properties), fw);
         } finally {
-            FileUtils.close(fw);
+            fw.flush();
         }
 
         // copy resources
@@ -189,54 +190,42 @@ public class PolicyCheckReport {
     /* --- Protected methods --- */
 
     /**
-     * Create and initialize a template engine to use for generating reports.
+     * Create and initialize a template configuration to use for generating reports.
      *
-     * @param properties properties to use for engine initialization. May be null.
-     *
-     * @return A new instance of th template engine to use.
+     * @return A new instance of the template configuration to use.
      */
-    protected VelocityEngine createTemplateEngine(Properties properties) {
-        Properties actualProperties = properties;
-        if (actualProperties == null) {
-            actualProperties = new Properties();
+    protected Configuration createFreemarkerConfig() {
+        // disable freemarker logging
+        try {
+            Logger.selectLoggerLibrary(Logger.LIBRARY_NONE);
+        } catch (ClassNotFoundException e) {
+            // do nothing
         }
-
-        String resourceLoader = actualProperties.getProperty(VelocityEngine.RESOURCE_LOADER);
-        if (StringUtils.isBlank(resourceLoader)) {
-            actualProperties.setProperty(VelocityEngine.RESOURCE_LOADER, "classpath");
-            actualProperties.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
-        }
-
-        String loggerClass = actualProperties.getProperty(VelocityEngine.RUNTIME_LOG_LOGSYSTEM_CLASS);
-        if (StringUtils.isBlank(loggerClass)) {
-            actualProperties.setProperty(VelocityEngine.RUNTIME_LOG_LOGSYSTEM_CLASS,
-                    "org.apache.velocity.runtime.log.NullLogChute");
-        }
-
-        VelocityEngine velocity = new VelocityEngine(actualProperties);
-        velocity.init();
-
-        return velocity;
+        Configuration freemarkerConfiguration = new Configuration();
+        freemarkerConfiguration.setClassForTemplateLoading(this.getClass(), "/templates/");
+        freemarkerConfiguration.setDefaultEncoding("UTF-8");
+        freemarkerConfiguration.setLocale(Locale.US);
+        return freemarkerConfiguration;
     }
 
-    /**
-     * Create the context holding all the information of the report.
-     * @return the velocity context
-     */
-    protected VelocityContext createTemplateContext() {
-        VelocityContext context = new VelocityContext();
-        context.put("result", result);
-        context.put("hasRejections", result.hasRejections());
-        context.put("licenses", createLicenseHistogram(result));
-        context.put("creationTime", new SimpleDateFormat(DATE_FORMAT).format(new Date()));
+    protected Map<Object, Object> createRootDataModel(Properties properties) {
+        Map<Object, Object> dataModel = properties;
+        if (dataModel == null) {
+            dataModel = new HashMap<>();
+        }
+
+        dataModel.put("result", result);
+        dataModel.put("hasRejections", result.hasRejections());
+        dataModel.put("licenses", createLicenseHistogram(result));
+        dataModel.put("creationTime", new SimpleDateFormat(DATE_FORMAT).format(new Date()));
 
         if (StringUtils.isNotBlank(buildName)) {
-            context.put("buildName", buildName);
+            dataModel.put("buildName", buildName);
         }
         if (StringUtils.isNotBlank(buildNumber)) {
-            context.put("buildNumber", buildNumber);
+            dataModel.put("buildNumber", buildNumber);
         }
-        return context;
+        return dataModel;
     }
 
     /**
