@@ -69,6 +69,7 @@ public class DependencyInfo implements Serializable {
     private String architecture;
     private String languageVersion;
     private boolean deduped;
+    private Map<String, String> dependencyModulesToPaths;
 
     /* --- Constructors --- */
 
@@ -175,7 +176,8 @@ public class DependencyInfo implements Serializable {
         if (dependencyType != null ? !dependencyType.equals(that.dependencyType) : that.dependencyType != null)
             return false;
         if (systemPath != null ? !systemPath.equals(that.systemPath) : that.systemPath != null) return false;
-        if (dependencyFile != null ? !dependencyFile.equals(that.dependencyFile) : that.dependencyFile != null) return false;
+        if (dependencyFile != null ? !dependencyFile.equals(that.dependencyFile) : that.dependencyFile != null)
+            return false;
         if (vulnerabilityAnalysisResult != null ? !vulnerabilityAnalysisResult.equals(that.vulnerabilityAnalysisResult) : that.vulnerabilityAnalysisResult != null)
             return false;
 
@@ -481,13 +483,21 @@ public class DependencyInfo implements Serializable {
         this.additionalSha1 = additionalSha1;
     }
 
-    public String getArchitecture() { return architecture; }
+    public String getArchitecture() {
+        return architecture;
+    }
 
-    public void setArchitecture(String architecture) { this.architecture = architecture; }
+    public void setArchitecture(String architecture) {
+        this.architecture = architecture;
+    }
 
-    public String getLanguageVersion() { return languageVersion; }
+    public String getLanguageVersion() {
+        return languageVersion;
+    }
 
-    public void setLanguageVersion(String languageVersion) { this.languageVersion = languageVersion; }
+    public void setLanguageVersion(String languageVersion) {
+        this.languageVersion = languageVersion;
+    }
 
     public boolean isDeduped() {
         return deduped;
@@ -496,4 +506,14 @@ public class DependencyInfo implements Serializable {
     public void setDeduped(boolean deduped) {
         this.deduped = deduped;
     }
+
+
+    public Map<String, String> getDependencyModulesToPaths() {
+        return dependencyModulesToPaths;
+    }
+
+    public void setDependencyModulesToPaths(Map<String, String> dependencyModulesToPaths) {
+        this.dependencyModulesToPaths = dependencyModulesToPaths;
+    }
+
 }
