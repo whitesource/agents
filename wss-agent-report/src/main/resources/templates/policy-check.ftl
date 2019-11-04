@@ -120,7 +120,7 @@
 <div align="center" style="width: 100%;">
 <div class='wssContainer'>
     <a class='wssAnchor' href="https://whitesourcesoftware.com" target="_blank">
-        <img align="center" src="https://saas.whitesourcesoftware.com/Wss/background/whitesource_logo_dark_small.png" style="padding-top: 10px;"/>
+        <img align="center" src="https://saas.whitesourcesoftware.com/Wss/background/whitesource_logo_new_dark_large.png" style="padding-top: 10px;"/>
     </a>
 
 <div align="center">
