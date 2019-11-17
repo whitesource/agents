@@ -67,7 +67,7 @@ public class FileExtensions {
             "xpy", "xq", "xql", "xqm", "xquery", "xqy", "xrl", "xs", "xsjs", "xsjslib", "xsl", "xslt", "xsp-config",
             "xsp.metadata", "xtend", "y", "yacc", "yap", "yrl", "yy", "zep", "zimpl", "zmpl", "zpl", "zsh");
 
-    private static final Collection<String> GENERIC_RESOURCE_FILE_EXTENSIONS = new ArrayList<>(
+    public static final Collection<String> GENERIC_RESOURCE_FILE_EXTENSIONS = new ArrayList<>(
             Arrays.asList("a", "aar", "air", "apk", "ar", "bz2", "car", "crate", "deb", "dll", "dmg", "drpm", "ear", "egg", "exe",
                     "gem", "gzip", "jar", "js", "ko", "min.js", "msi", "nupkg", "pkg.tar.xz", "rpm", "sit", "so", "swc", "swf", "tar",
                     "tar.bz2", "tar.gz", "tbz", "tgz", "udeb", "war", "whl", "zip"));
