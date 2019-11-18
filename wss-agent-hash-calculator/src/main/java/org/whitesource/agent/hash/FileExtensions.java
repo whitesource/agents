@@ -68,13 +68,12 @@ public class FileExtensions {
             "xsp.metadata", "xtend", "y", "yacc", "yap", "yrl", "yy", "zep", "zimpl", "zmpl", "zpl", "zsh");
 
     private static final Collection<String> GENERIC_RESOURCE_FILE_EXTENSIONS = new ArrayList<>(
-            Arrays.asList("air", "apk", "bz2", "deb", "drpm", "dmg", "egg", "exe",
-                    "gem", "gzip", "jar", "msi", "nupkg", "rpm", "swc", "swf",
-                    "tar.bz2", "tar.gz", "tar", "tgz", "pkg.tar.xz", "udeb", "whl", "zip", "(u)?deb", "(a)?rpm"));
+            Arrays.asList("a", "aar", "air", "apk", "ar", "bz2", "car", "crate", "deb", "dll", "dmg", "drpm", "ear", "egg", "exe",
+                    "gem", "gzip", "jar", "js", "ko", "min.js", "msi", "nupkg", "pkg.tar.xz", "rpm", "sit", "so", "swc", "swf", "tar",
+                    "tar.bz2", "tar.gz", "tbz", "tgz", "udeb", "war", "whl", "zip"));
 
-    public static final List<String> ARCHIVE_EXTENSIONS = Arrays.asList("a", "aar", "air", "apk", "ar", "bz2", "car", "crate", "deb", "dll", "dmg", "drpm", "ear", "egg", "exe",
-            "gem", "gzip", "jar", "js", "ko", "min.js", "msi", "nupkg", "pkg.tar.xz", "rpm", "sit", "so", "swc", "swf", "tar",
-            "tar.bz2", "tar.gz", "tbz", "tgz", "udeb", "war", "whl", "zip");
+
+    public static final List<String> ARCHIVE_EXTENSIONS = Arrays.asList("war", "ear", "zip", "whl", "tar.gz", "tgz", "tar", "car", "aar", "jar");
     private static final Collection<String> DOT_NET_FILE_EXTENSIONS = new ArrayList<>(
             Arrays.asList("dll", "exe"));
     public static final String SOURCE_FILE_PATTERN;
