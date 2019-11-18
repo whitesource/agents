@@ -49,7 +49,6 @@ public class PolicyCheckReport {
 
     private static final String TEMPLATE_FOLDER = "templates/";
     private static final String TEMPLATE_FILE = "policy-check.ftl";
-    private static final String CSS_FILE = "wss.css";
 
     private static final float MAX_BAR_HEIGHT = 50;
     private static final int LICENSE_LIMIT = 6;
@@ -139,9 +138,6 @@ public class PolicyCheckReport {
             fw.flush();
         }
 
-        // copy resources
-        copyReportResources(workDir);
-
         // package report into a zip archive
         if (pack) {
             reportFile = new File(outputDir, "whitesource.zip");
@@ -226,17 +222,6 @@ public class PolicyCheckReport {
             dataModel.put("buildNumber", buildNumber);
         }
         return dataModel;
-    }
-
-    /**
-     * Copy required resources for the report.
-     *
-     * @param workDir Report work directory.
-     *
-     * @throws IOException exception5
-     */
-    protected void copyReportResources(File workDir) throws IOException {
-        FileUtils.copyResource(TEMPLATE_FOLDER + CSS_FILE, new File(workDir, CSS_FILE));
     }
 
     protected void writeToFile(File file, String json) throws IOException {
