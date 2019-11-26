@@ -48,7 +48,8 @@ public enum DependencyType {
     R,
     CRATE,
     CABAL,
-    OPAM;
+    OPAM,
+    PUB;
 
     @Override
     public String toString() {
@@ -60,6 +61,7 @@ public enum DependencyType {
             case DEBIAN: return "Debian";
             case ALPINE: return "Alpine";
             case ARCH_LINUX: return "Arch Linux";
+            case PUB: return "Pub";
             default: return super.toString();
         }
     }
