@@ -140,7 +140,7 @@ public class PolicyCheckReport {
         }
 
         // copy resources
-        copyReportResources(workDir);
+        //copyReportResources(workDir);
 
         // package report into a zip archive
         if (pack) {
