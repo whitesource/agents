@@ -113,7 +113,6 @@
         }
     </script>
 
-    <!--link rel="stylesheet" href="wss.css"-->
     <style>
         .wssBody {
             font-family: verdana;
