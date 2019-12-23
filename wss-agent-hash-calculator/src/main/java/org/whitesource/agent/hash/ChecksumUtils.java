@@ -107,7 +107,7 @@ public final class ChecksumUtils {
     public static void calculateSuperHash(DependencyInfo dependencyInfo, File dependencyFile) {
         StringBuilder superHash = new StringBuilder("");
         HashCalculator superHashCalculator = new HashCalculator();
-        if (dependencyFile.getName().toLowerCase().matches(FileExtensions.SOURCE_FILE_PATTERN)) {
+        if (dependencyFile.getName().toLowerCase().matches(FileExtensions.SOURCE_FILE_PATTERN) || dependencyFile.getName().toLowerCase().endsWith("c++")) {
             try {
                 HashCalculationResult superHashResult = superHashCalculator.calculateSuperHash(dependencyFile);
                 if (superHashResult != null) {
