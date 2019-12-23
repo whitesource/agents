@@ -31,7 +31,7 @@ import java.io.IOException;
  * @author Edo.Shor
  */
 public final class ChecksumUtils {
-    
+
     /* --- Static members --- */
 
     private static final Logger logger = LoggerFactory.getLogger(ChecksumUtils.class);
@@ -107,7 +107,7 @@ public final class ChecksumUtils {
     public static void calculateSuperHash(DependencyInfo dependencyInfo, File dependencyFile) {
         StringBuilder superHash = new StringBuilder("");
         HashCalculator superHashCalculator = new HashCalculator();
-        if (!dependencyFile.getName().toLowerCase().matches(FileExtensions.BINARY_FILE_EXTENSION_REGEX)) {
+        if (dependencyFile.getName().toLowerCase().matches(FileExtensions.SOURCE_FILE_PATTERN)) {
             try {
                 HashCalculationResult superHashResult = superHashCalculator.calculateSuperHash(dependencyFile);
                 if (superHashResult != null) {
