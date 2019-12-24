@@ -70,6 +70,7 @@ public class DependencyInfo implements Serializable {
     private String languageVersion;
     private boolean deduped;
     private Map<String, String> dependencyModulesToPaths;
+    private String euaArtifactId;
 
     /* --- Constructors --- */
 
@@ -95,8 +96,8 @@ public class DependencyInfo implements Serializable {
     public DependencyInfo(String groupId, String artifactId, String version) {
         this();
         this.groupId = groupId;
-        this.artifactId = artifactId;
         this.version = version;
+        this.setArtifactId(artifactId);
     }
 
     /**
@@ -239,6 +240,7 @@ public class DependencyInfo implements Serializable {
 
     public void setArtifactId(String artifactId) {
         this.artifactId = artifactId;
+        this.euaArtifactId = artifactId;
     }
 
     public String getVersion() {
@@ -517,4 +519,11 @@ public class DependencyInfo implements Serializable {
         this.dependencyModulesToPaths = dependencyModulesToPaths;
     }
 
+    public String getEuaArtifactId() {
+        return euaArtifactId;
+    }
+
+    public void setEuaArtifactId(String euaArtifactId) {
+        this.euaArtifactId = euaArtifactId;
+    }
 }
