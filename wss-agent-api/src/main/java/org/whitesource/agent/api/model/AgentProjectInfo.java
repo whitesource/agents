@@ -48,6 +48,7 @@ public class AgentProjectInfo implements Serializable {
 
     private Collection<ProjectTag> projectTags;
 
+    private String viaLanguageName;
     /* --- Constructors --- */
 
     /**
@@ -133,4 +134,11 @@ public class AgentProjectInfo implements Serializable {
         this.projectTags = projectTags;
     }
 
+    public String getViaLanguageName() {
+        return viaLanguageName;
+    }
+
+    public void setViaLanguageName(String viaLanguageName) {
+        this.viaLanguageName = viaLanguageName;
+    }
 }
