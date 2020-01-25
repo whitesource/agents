@@ -74,7 +74,7 @@ public class FileExtensions {
 
     public static final List<String> ARCHIVE_EXTENSIONS = Arrays.asList("a", "aar", "air", "apk", "ar", "bz2", "car", "crate", "deb", "dll", "dmg", "drpm", "ear", "egg", "exe",
             "gem", "gzip", "jar", "js", "ko", "min.js", "msi", "nupkg", "pkg.tar.xz", "rpm", "sit", "so", "swc", "swf", "tar",
-            "tar.bz2", "tar.gz", "tbz", "tgz", "udeb", "war", "whl", "zip");
+            "tar.bz2", "tar.gz", "tbz", "tgz", "udeb", "war", "whl", "zip", ".docker");
 
     private static final Collection<String> DOT_NET_FILE_EXTENSIONS = new ArrayList<>(
             Arrays.asList("dll", "exe"));

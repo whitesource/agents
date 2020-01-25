@@ -49,7 +49,9 @@ public enum DependencyType {
     CRATE,
     CABAL,
     OPAM,
-    PUB;
+    PUB,
+
+    DOCKER;
 
     @Override
     public String toString() {
@@ -62,6 +64,7 @@ public enum DependencyType {
             case ALPINE: return "Alpine";
             case ARCH_LINUX: return "Arch Linux";
             case PUB: return "Pub";
+            case DOCKER: return "Docker";
             default: return super.toString();
         }
     }
