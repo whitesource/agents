@@ -71,7 +71,7 @@ public class DependencyInfo implements Serializable {
     private boolean deduped;
     private Map<String, String> dependencyModulesToPaths;
     private String euaArtifactId;
-    private Collection<DependencyInfo> aggregatedDependency;
+    private Collection<DependencyInfo> aggregatedDependencies;
 
     /* --- Constructors --- */
 
@@ -85,7 +85,7 @@ public class DependencyInfo implements Serializable {
         copyrights = new LinkedList<>();
         checksums = new TreeMap<>();
         dependencyModulesToPaths = new HashMap<>();
-        aggregatedDependency = new LinkedList<>();
+        aggregatedDependencies = new LinkedList<>();
     }
 
     /**
@@ -529,11 +529,11 @@ public class DependencyInfo implements Serializable {
         this.euaArtifactId = euaArtifactId;
     }
 
-    public Collection<DependencyInfo> getAggregatedDependency() {
-        return aggregatedDependency;
+    public Collection<DependencyInfo> getAggregatedDependencies() {
+        return aggregatedDependencies;
     }
 
-    public void setAggregatedDependency(Collection<DependencyInfo> aggregatedDependency) {
-        this.aggregatedDependency = aggregatedDependency;
+    public void setAggregatedDependencies(Collection<DependencyInfo> aggregatedDependencies) {
+        this.aggregatedDependencies = aggregatedDependencies;
     }
 }
