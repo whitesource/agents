@@ -30,6 +30,7 @@ public class WssServiceException extends Exception {
 	/* --- Members --- */
 
 	private String requestToken;
+	private int statusCode;
 
 	/* --- Constructors --- */
 
@@ -54,6 +55,11 @@ public class WssServiceException extends Exception {
 		super(message, cause);
 	}
 
+	public WssServiceException(String message, Throwable cause, int statusCode) {
+		super(message, cause);
+		this.statusCode = statusCode;
+	}
+
 	/* --- Getters / Setters --- */
 
 	public String getRequestToken() {
@@ -62,5 +68,13 @@ public class WssServiceException extends Exception {
 
 	public void setRequestToken(String requestToken) {
 		this.requestToken = requestToken;
+	}
+
+	public int getStatusCode() {
+		return statusCode;
+	}
+
+	public void setStatusCode(int statusCode) {
+		this.statusCode = statusCode;
 	}
 }
