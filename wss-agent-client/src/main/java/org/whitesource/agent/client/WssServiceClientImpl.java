@@ -28,6 +28,7 @@ import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -364,7 +365,9 @@ public class WssServiceClientImpl implements WssServiceClient {
             }
         } catch (JsonSyntaxException e) {
             throw new WssServiceException("JsonSyntax exception. Response data is:  " + response + e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (HttpResponseException e) {
+            throw new WssServiceException("Unexpected error. Response data is: " + response + e.getMessage() + " Error code is " + e.getStatusCode(), e.getCause(),e.getStatusCode());
+        } catch (IOException e){
             throw new WssServiceException("Unexpected error. Response data is: " + response + e.getMessage(), e);
         }
 

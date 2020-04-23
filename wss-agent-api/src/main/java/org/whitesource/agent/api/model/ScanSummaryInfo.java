@@ -1,9 +1,7 @@
 package org.whitesource.agent.api.model;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author chen.luigi
@@ -18,11 +16,20 @@ public class ScanSummaryInfo implements Serializable {
 
     private long totalElapsedTime;
     private Collection<StepInfo> stepsSummaryInfo;
+    private List<DependencyType> packageManagers;
+    private List<ScmTypes> sourceControlManagers;
+    private List<ContainerRegistryTypes> containerRegistries;
+    private List<OtherIntegrationsTypes> otherIntegrationTypes;
+
 
     /* --- Constructors --- */
 
     public ScanSummaryInfo() {
         stepsSummaryInfo = new LinkedList<>();
+        packageManagers = new LinkedList<>();
+        containerRegistries = new LinkedList<>();
+        sourceControlManagers = new LinkedList<>();
+        otherIntegrationTypes = new LinkedList<>();
     }
 
     public ScanSummaryInfo(long totalElapsedTime, Collection<StepInfo> stepsSummaryInfo) {
@@ -63,5 +70,37 @@ public class ScanSummaryInfo implements Serializable {
 
     public void setStepsSummaryInfo(Collection<StepInfo> stepsSummaryInfo) {
         this.stepsSummaryInfo = stepsSummaryInfo;
+    }
+
+    public List<DependencyType> getPackageManagers() {
+        return packageManagers;
+    }
+
+    public void setPackageManagers(List<DependencyType> packageManagers) {
+        this.packageManagers = packageManagers;
+    }
+
+    public List<ContainerRegistryTypes> getContainerRegistries() {
+        return containerRegistries;
+    }
+
+    public void setContainerRegistries(List<ContainerRegistryTypes> containerRegistries) {
+        this.containerRegistries = containerRegistries;
+    }
+
+    public List<ScmTypes> getSourceControlManagers() {
+        return sourceControlManagers;
+    }
+
+    public void setSourceControlManagers(List<ScmTypes> sourceControlManagers) {
+        this.sourceControlManagers = sourceControlManagers;
+    }
+
+    public List<OtherIntegrationsTypes> getOtherIntegrationTypes() {
+        return otherIntegrationTypes;
+    }
+
+    public void setOtherIntegrationTypes(List<OtherIntegrationsTypes> otherIntegrationTypes) {
+        this.otherIntegrationTypes = otherIntegrationTypes;
     }
 }
