@@ -136,7 +136,7 @@ public final class ChecksumUtils {
                     }
                 }
             } catch (Exception e) {
-                logger.warn("Unable to create other platform file for {}: {}", file.getPath(), e.getMessage());
+                logger.debug("Unable to create other platform file for {}: {}", file.getPath(), e.getMessage());
             } finally {
                 FileHandler.deleteTempFoldersHelper(FileHandler.PATH_TO_PLATFORM_DEPENDENT_TMP_DIR);
             }
