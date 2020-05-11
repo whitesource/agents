@@ -259,6 +259,24 @@ public class HashCalculator {
     /**
      * Calculates SHA-1 for library by name, version and dependencyType
      *
+     * @param groupId of library
+     * @param artifactId of library
+     * @param version of library
+     * @param dependencyType of library
+     * @return Calculated SHA-1 for library by name, version and dependencyType
+     * @throws IOException when failed to calculate sha-1
+     */
+    public String calculateSha1ByGAVCoordinatesAndType(String groupId, String artifactId, String version,
+                                                                DependencyType dependencyType) throws IOException {
+        String sha1ToCalc = groupId.toLowerCase() + UNDERSCORE + artifactId.toLowerCase() + UNDERSCORE + version.toLowerCase()
+                + UNDERSCORE + dependencyType.toString();
+
+        return calculateByteArraySHA1(sha1ToCalc.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Calculates SHA-1 for library by name, version and dependencyType
+     *
      * @param name of library
      * @param version of library
      * @param dependencyType of library
