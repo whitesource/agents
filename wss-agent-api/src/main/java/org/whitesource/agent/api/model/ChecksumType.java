@@ -5,6 +5,7 @@ package org.whitesource.agent.api.model;
  */
 public enum ChecksumType {
     SHA1,
+    SHA256,
     SHA1_SUPER_HASH,
     SHA1_SUPER_HASH_MSB,
     SHA1_SUPER_HASH_LSB,
