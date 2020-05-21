@@ -20,7 +20,7 @@ public class ScanSummaryInfo implements Serializable {
     private List<String> sourceControlManagers;
     private List<String> containerRegistries;
     private List<String> otherIntegrationTypes;
-
+    private boolean isPrivileged;
 
     /* --- Constructors --- */
 
@@ -102,5 +102,13 @@ public class ScanSummaryInfo implements Serializable {
 
     public void setOtherIntegrationTypes(List<String> otherIntegrationTypes) {
         this.otherIntegrationTypes = otherIntegrationTypes;
+    }
+
+    public boolean isPrivileged() {
+        return isPrivileged;
+    }
+
+    public void setPrivileged(boolean privileged) {
+        isPrivileged = privileged;
     }
 }
