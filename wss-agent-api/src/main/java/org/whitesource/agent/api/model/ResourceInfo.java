@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2012 White Source Ltd.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -49,11 +49,17 @@ public class ResourceInfo implements Serializable {
     private String homepageUrl;
     private String description;
     /**
-    * @since 2.9.8
-    */
+     * @since 2.9.8
+     */
     @Since(AgentApiVersion.AGENT_API_VERSION_2_9_8)
     private String keyUuid;
 
+    /**
+     *
+     * @since 2.9.9.47
+     */
+    private String systemPath;
+    private String manifestFileSystemPath;
     /* --- Constructors --- */
 
     /**
@@ -128,11 +134,11 @@ public class ResourceInfo implements Serializable {
         this.licenses = licenses;
     }
 
-    public String getKeyUuid(){
+    public String getKeyUuid() {
         return keyUuid;
     }
 
-    public void  setKeyUuid(String value){
+    public void setKeyUuid(String value) {
         keyUuid = value;
     }
 
@@ -166,5 +172,21 @@ public class ResourceInfo implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getSystemPath() {
+        return systemPath;
+    }
+
+    public void setSystemPath(String systemPath) {
+        this.systemPath = systemPath;
+    }
+
+    public String getManifestFileSystemPath() {
+        return manifestFileSystemPath;
+    }
+
+    public void setManifestFileSystemPath(String manifestFileSystemPath) {
+        this.manifestFileSystemPath = manifestFileSystemPath;
     }
 }
