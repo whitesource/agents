@@ -136,13 +136,13 @@ public final class ChecksumUtils {
                     }
                 }
             } catch (Exception e) {
-                logger.debug("Unable to create other platform file for {}: {}", file.getPath(), e.getMessage());
+//                logger.debug("Unable to create other platform file for {}: {}", file.getPath(), e.getMessage())WSE-4272
             } finally {
                 FileHandler.deleteTempFoldersHelper(FileHandler.PATH_TO_PLATFORM_DEPENDENT_TMP_DIR);
             }
         } else {
-            // too big for calculating other platform sha1
-            logger.debug("File {} is skipped, size is too large.", file.getName());
+            // too big for calculating other platform sha1 WSE-4272
+//            logger.debug("File {} is skipped, size is too large.", file.getName());
         }
         return otherPlatformSha1;
     }
