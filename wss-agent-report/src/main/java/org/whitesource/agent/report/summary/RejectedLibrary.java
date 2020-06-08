@@ -37,18 +37,21 @@ public class RejectedLibrary implements Serializable {
     private String sha1;
     private String link;
     private Set<String> projects;
-
+    private String systemPath;
+    private String manifestFile;
     /* --- Constructors --- */
 
     public RejectedLibrary() {
         projects = new HashSet<String>();
     }
 
-    public RejectedLibrary(String name, String sha1, String link) {
+    public RejectedLibrary(String name, String sha1, String link,String systemPath,String manifestFile) {
         this();
         this.name = name;
         this.sha1 = sha1;
         this.link = link;
+        this.systemPath = systemPath;
+        this.manifestFile = manifestFile;
     }
 
     /* --- Overridden methods --- */

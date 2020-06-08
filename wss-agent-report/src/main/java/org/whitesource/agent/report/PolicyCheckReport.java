@@ -307,7 +307,8 @@ public class PolicyCheckReport {
 
             Set<RejectedLibrary> rejectedResources = rejectingPolicy.getRejectedLibraries();
             ResourceInfo resource = node.getResource();
-            RejectedLibrary rejectedLibrary = new RejectedLibrary(resource.getDisplayName(), resource.getSha1(), resource.getLink());
+            RejectedLibrary rejectedLibrary = new RejectedLibrary(resource.getDisplayName(), resource.getSha1(),
+                    resource.getLink(),resource.getSystemPath(),resource.getManifestFileSystemPath());
             if (rejectedResources.contains(rejectedLibrary)) {
                 for (RejectedLibrary summary : rejectedResources) {
                     if (rejectedLibrary.equals(summary)) {
