@@ -24,6 +24,7 @@ public enum DependencyType {
 
     MAVEN,
     GRADLE,
+    JAVA, //(For additionalSha1 purpose do not send it to application)
 
     NPM,
     BOWER,
