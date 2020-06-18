@@ -52,7 +52,8 @@ public enum DependencyType {
     OPAM,
     PUB,
 
-    DOCKER;
+    DOCKER,
+    DOCKER_LAYER;
 
     @Override
     public String toString() {
