@@ -414,26 +414,17 @@
     </profiles>
 
     <distributionManagement>
-<!--        <repository>-->
-<!--            <id>sonatype-nexus-staging</id>-->
-<!--            <name>Sonatype staging repository</name>-->
-<!--            <uniqueVersion>false</uniqueVersion>-->
-<!--            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>-->
-<!--        </repository>-->
-<!--        <snapshotRepository>-->
-<!--            <id>sonatype-nexus-snapshots</id>-->
-<!--            <name>Sonatype snapshots repository</name>-->
-<!--            <uniqueVersion>false</uniqueVersion>-->
-<!--            <url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
-<!--        </snapshotRepository>-->
-
         <repository>
-            <id>internal-nexus-release</id>
-            <url>http://nexus-internal.whitesourcesoftware.com:8081/nexus/content/repositories/releases</url>
+            <id>sonatype-nexus-staging</id>
+            <name>Sonatype staging repository</name>
+            <uniqueVersion>false</uniqueVersion>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>
         <snapshotRepository>
-            <id>internal-nexus-snapshots</id>
-            <url>http://nexus-internal.whitesourcesoftware.com:8081/nexus/content/repositories/snapshots</url>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype snapshots repository</name>
+            <uniqueVersion>false</uniqueVersion>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 
