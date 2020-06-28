@@ -22,7 +22,6 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.whitesource.agent.api.dispatch.BaseCheckPoliciesResult;
 import org.whitesource.agent.api.model.PolicyCheckResourceNode;
@@ -242,7 +241,7 @@ public class PolicyCheckReport {
     protected void writeToFile(File file, String json) throws IOException {
         FileWriter fw = new FileWriter(file);
         try {
-            fw.write(StringEscapeUtils.unescapeJava(json));
+            fw.write(json);
             fw.flush();
         } finally {
             FileUtils.close(fw);
