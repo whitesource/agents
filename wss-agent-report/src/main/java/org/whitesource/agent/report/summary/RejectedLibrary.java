@@ -108,4 +108,20 @@ public class RejectedLibrary implements Serializable {
     public void setProjects(Set<String> projects) {
         this.projects = projects;
     }
+
+    public String getSystemPath() {
+        return systemPath;
+    }
+
+    public void setSystemPath(String systemPath) {
+        this.systemPath = systemPath;
+    }
+
+    public String getManifestFile() {
+        return manifestFile;
+    }
+
+    public void setManifestFile(String manifestFile) {
+        this.manifestFile = manifestFile;
+    }
 }

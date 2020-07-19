@@ -15,6 +15,8 @@
  */
 package org.whitesource.agent.report;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import freemarker.log.Logger;
@@ -164,7 +166,10 @@ public class PolicyCheckReport {
         }
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        writeToFile(new File(workDir, CHECK_POLICIES_JSON_FILE), gson.toJson(result));
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        String json = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(result);
+        writeToFile(new File(workDir, CHECK_POLICIES_JSON_FILE), json);
 
         // summarized policy rejection report
         Map<RequestPolicyInfo, RejectingPolicy> policyToSummaryMap = new HashMap<RequestPolicyInfo, RejectingPolicy>();
@@ -181,7 +186,8 @@ public class PolicyCheckReport {
             report.getSummary().setTotalRejectedLibraries(
                     report.getSummary().getTotalRejectedLibraries() + rejectingPolicy.getRejectedLibraries().size());
         }
-        writeToFile(new File(workDir, POLICY_REJECTION_SUMMARY_FILE), gson.toJson(report));
+        String reportJson = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(report);
+        writeToFile(new File(workDir, POLICY_REJECTION_SUMMARY_FILE), reportJson);
 
         return workDir;
     }
