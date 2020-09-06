@@ -57,6 +57,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
 
         <httpclient.version>4.5.12</httpclient.version>
+		    <commonscodec.version>1.13</commonscodec.version>
         <gson.version>2.8.5</gson.version>
         <junit.version>4.10</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -74,6 +75,11 @@
     <dependencyManagement>
         <dependencies>
             <!-- Utilities -->
+			      <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commonscodec.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
@@ -139,6 +145,17 @@
                     <!--</execution>-->
                 <!--</executions>-->
             <!--</plugin>-->
+			      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>3.0.0-M3</version>
+        <configuration>
+          <rules>
+            <dependencyConvergence/>
+            <requiresUpperBound/>
+          </rules>
+        </configuration>
+      </plugin>
             <plugin>
                 <groupId>com.mycila.maven-license-plugin</groupId>
                 <artifactId>maven-license-plugin</artifactId>
