@@ -145,17 +145,17 @@
                     <!--</execution>-->
                 <!--</executions>-->
             <!--</plugin>-->
-			      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <version>3.0.0-M3</version>
-        <configuration>
-          <rules>
-            <dependencyConvergence/>
-            <requiresUpperBound/>
-          </rules>
-        </configuration>
-      </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.0.0-M3</version>
+                <configuration>
+                  <rules>
+                    <dependencyConvergence/>
+                    <requiresUpperBound/>
+                  </rules>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>com.mycila.maven-license-plugin</groupId>
                 <artifactId>maven-license-plugin</artifactId>
