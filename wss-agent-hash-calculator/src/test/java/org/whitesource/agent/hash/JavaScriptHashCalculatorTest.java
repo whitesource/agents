@@ -16,6 +16,7 @@
 package org.whitesource.agent.hash;
 
 import junit.framework.Assert;
+import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.whitesource.agent.api.model.ChecksumType;
@@ -63,7 +64,10 @@ public class JavaScriptHashCalculatorTest {
     @Test
     public void testCalculateJavaScriptHash() throws IOException, WssHashException {
         HashCalculator hashCalculator = new HashCalculator();
-        byte[] fileBytes = IOUtils.toByteArray(getClass().getResource(JQUERY_JUSTIFIED_GALLERY_JS));
+        String filePath = getClass().getResource(JQUERY_JUSTIFIED_GALLERY_JS).getFile();
+        File file = new File(filePath);
+        String fileContent = IOUtils.toString(new FileInputStream(file)).replaceAll("\\r\\n", "\n");
+        byte[] fileBytes = StringUtils.getBytesUtf8(fileContent);
         String normalSha1 = hashCalculator.calculateByteArraySHA1(fileBytes);
         Map<ChecksumType, String> javascriptChecksums = hashCalculator.calculateJavaScriptHashes(fileBytes);
 
