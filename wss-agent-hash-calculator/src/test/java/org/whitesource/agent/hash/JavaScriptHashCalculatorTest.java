@@ -39,8 +39,8 @@ public class JavaScriptHashCalculatorTest {
 
     /* --- Static members --- */
 
-    private static final String SHA1 = "8c2f15cf879497f6687d7b66cbbbc96213542d36";
-    private static final String NO_HEADER_SHA1 = "f9411dc4dabca94e4c92767f1b315ffb57c13dd5";
+    private static final String SHA1 = "34b52cd823327013a78bd9c9f10d08e908d4d76d";
+    private static final String NO_HEADER_SHA1 = "05a11a55eef5239b3ebb983f6234365014d937c0";
     private static final String NO_COMMENTS_SUPER_HASH = "a8d1acba4fe94512f71d8dd4666653a231abf6e1";
 
     private static final String JQUERY_JUSTIFIED_GALLERY_JS = "/js/jquery.justifiedGallery.js";
