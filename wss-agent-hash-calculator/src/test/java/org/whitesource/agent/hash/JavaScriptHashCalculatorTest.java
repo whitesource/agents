@@ -23,12 +23,11 @@ import org.whitesource.agent.parser.JavaScriptParser;
 import org.whitesource.agent.parser.ParseResult;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
+import java.net.URLDecoder;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -40,18 +39,19 @@ public class JavaScriptHashCalculatorTest {
 
     /* --- Static members --- */
 
-    private static final String SHA1 = "34b52cd823327013a78bd9c9f10d08e908d4d76d";
-    private static final String NO_HEADER_SHA1 = "05a11a55eef5239b3ebb983f6234365014d937c0";
+    private static final String SHA1 = "8c2f15cf879497f6687d7b66cbbbc96213542d36";
+    private static final String NO_HEADER_SHA1 = "f9411dc4dabca94e4c92767f1b315ffb57c13dd5";
     private static final String NO_COMMENTS_SUPER_HASH = "a8d1acba4fe94512f71d8dd4666653a231abf6e1";
 
-    private static final String JQUERY_JUSTIFIED_GALLERY_URL = "https://cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.7.0/js/jquery.justifiedGallery.js";
-
+    private static final String JQUERY_JUSTIFIED_GALLERY_JS = "/js/jquery.justifiedGallery.js";
+    private static final String UTF_8 = "utf-8";
     /* --- Test methods --- */
 
     @Test
     public void testParseJavaScript() throws IOException {
-//        String fileContent = IOUtils.toString(new URL("https://cdnjs.cloudflare.com/ajax/libs/hopscotch/0.2.0/js/hopscotch.js"), UTF_8);
-        String fileContent = IOUtils.toString(new URL(JQUERY_JUSTIFIED_GALLERY_URL), StandardCharsets.UTF_8);
+        String filePath = getClass().getResource(JQUERY_JUSTIFIED_GALLERY_JS).getFile();
+        File file = new File(URLDecoder.decode(filePath, UTF_8));
+        String fileContent = IOUtils.toString(new FileInputStream(file), UTF_8);
         ParseResult parseResult = new JavaScriptParser().parse(fileContent);
         String headerlessContent = parseResult.getContentWithoutHeaderComments();
         assertTrue(headerlessContent.startsWith("(function (factory) {"));
@@ -63,7 +63,7 @@ public class JavaScriptHashCalculatorTest {
     @Test
     public void testCalculateJavaScriptHash() throws IOException, WssHashException {
         HashCalculator hashCalculator = new HashCalculator();
-        byte[] fileBytes = IOUtils.toByteArray(new URL(JQUERY_JUSTIFIED_GALLERY_URL));
+        byte[] fileBytes = IOUtils.toByteArray(getClass().getResource(JQUERY_JUSTIFIED_GALLERY_JS));
         String normalSha1 = hashCalculator.calculateByteArraySHA1(fileBytes);
         Map<ChecksumType, String> javascriptChecksums = hashCalculator.calculateJavaScriptHashes(fileBytes);
 
