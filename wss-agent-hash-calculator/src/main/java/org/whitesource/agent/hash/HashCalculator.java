@@ -275,7 +275,25 @@ public class HashCalculator {
     }
 
     /**
-     * Calculates SHA-1 for library by name, version and dependencyType
+     * Calculates SHA-1 for library by name, version, architecture, release and dependencyType
+     *
+     * @param name of library
+     * @param version of library
+     * @param dependencyType of library
+     * @param architecture of library
+     * @param release of library
+     * @return Calculated SHA-1 for library by name, version and dependencyType
+     * @throws IOException when failed to calculate sha-1
+     */
+    public String calculateSha1ByNameVersionArchitectureReleaseAndType(String name, String version, String architecture,
+                                                                String release, DependencyType dependencyType) throws IOException {
+        String sha1ToCalc = name + UNDERSCORE + version + UNDERSCORE + architecture + UNDERSCORE +
+                release + UNDERSCORE + dependencyType.toString();
+        return calculateByteArraySHA1(sha1ToCalc.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Calculates SHA-1 for library by name, version, architecture and dependencyType
      *
      * @param name of library
      * @param version of library
