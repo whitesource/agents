@@ -275,7 +275,7 @@ public class HashCalculator {
     }
 
     /**
-     * Calculates SHA-1 for library by name, version and dependencyType
+     * Calculates SHA-1 for library by name, version, architecture, release and dependencyType
      *
      * @param name of library
      * @param version of library
@@ -293,7 +293,7 @@ public class HashCalculator {
     }
 
     /**
-     * Calculates SHA-1 for library by name, version and dependencyType
+     * Calculates SHA-1 for library by name, version, architecture and dependencyType
      *
      * @param name of library
      * @param version of library
