@@ -9,7 +9,7 @@
 
     <groupId>org.whitesource</groupId>
     <artifactId>wss-agent-parent</artifactId>
-    <version>2.9.9.57-SNAPSHOT</version>
+    <version>2.9.9.58-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>White Source agent API</name>
