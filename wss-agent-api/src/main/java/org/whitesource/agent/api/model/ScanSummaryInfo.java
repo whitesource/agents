@@ -21,8 +21,7 @@ public class ScanSummaryInfo implements Serializable {
     private List<String> containerRegistries;
     private List<String> otherIntegrationTypes;
     private boolean isPrivileged;
-    private String scanMethod;
-    private String scanMethodVersion;
+    private ScanMethod scanMethod;
 
     /* --- Constructors --- */
 
@@ -114,19 +113,11 @@ public class ScanSummaryInfo implements Serializable {
         isPrivileged = privileged;
     }
 
-    public String getScanMethod() {
+    public ScanMethod getScanMethod() {
         return scanMethod;
     }
 
-    public void setScanMethod(String scanMethod) {
+    public void setScanMethod(ScanMethod scanMethod) {
         this.scanMethod = scanMethod;
-    }
-
-    public String getScanMethodVersion() {
-        return scanMethodVersion;
-    }
-
-    public void setScanMethodVersion(String scanMethodVersion) {
-        this.scanMethodVersion = scanMethodVersion;
     }
 }
