@@ -9,6 +9,11 @@ public class ScanMethod implements Serializable {
     private String type;
     private String version;
 
+    public ScanMethod(String type, String version) {
+        this.type = type;
+        this.version = version;
+    }
+
     public String getType() {
         return type;
     }
