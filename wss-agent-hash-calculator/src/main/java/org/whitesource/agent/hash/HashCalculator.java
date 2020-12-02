@@ -262,9 +262,9 @@ public class HashCalculator {
     /**
      * Calculates SHA-1 for library by name, version and dependencyType
      *
-     * @param groupId        of library
-     * @param artifactId     of library
-     * @param version        of library
+     * @param groupId of library
+     * @param artifactId of library
+     * @param version of library
      * @param dependencyType of library
      * @return Calculated SHA-1 for library by name, version and dependencyType
      * @throws IOException when failed to calculate sha-1
@@ -280,10 +280,10 @@ public class HashCalculator {
     /**
      * Calculates SHA-1 for library by name, version, architecture, release and dependencyType
      *
-     * @param name           of library
-     * @param version        of library
-     * @param architecture   of library
-     * @param release        of library
+     * @param name of library
+     * @param version of library
+     * @param architecture of library
+     * @param release of library
      * @param dependencyType of library
      * @return Calculated SHA-1 for library by name, version, architecture, release and dependencyType
      * @throws IOException when failed to calculate sha-1
@@ -298,10 +298,10 @@ public class HashCalculator {
     /**
      * Calculates SHA-1 for library by name, version, architecture, branch and dependencyType
      *
-     * @param name           of library
-     * @param version        of library
-     * @param architecture   of library
-     * @param branch         of operating system
+     * @param name of library
+     * @param version of library
+     * @param architecture of library
+     * @param branch of operating system
      * @param dependencyType of library
      * @return Calculated SHA-1 for library by name, version, architecture, branch and dependencyType
      * @throws IOException when failed to calculate sha-1
@@ -316,9 +316,9 @@ public class HashCalculator {
     /**
      * Calculates SHA-1 for library by name, version, architecture and dependencyType
      *
-     * @param name           of library
-     * @param version        of library
-     * @param architecture   of library
+     * @param name of library
+     * @param version of library
+     * @param architecture of library
      * @param dependencyType of library
      * @return Calculated SHA-1 for library by name, version, architecture and dependencyType
      * @throws IOException when failed to calculate sha-1
@@ -333,8 +333,8 @@ public class HashCalculator {
     /**
      * Calculates SHA-1 for library by name, version and dependencyType
      *
-     * @param name           of library
-     * @param version        of library
+     * @param name of library
+     * @param version of library
      * @param dependencyType of library
      * @return Calculated SHA-1 for library by name, version and dependencyType
      * @throws IOException when failed to calculate sha-1
