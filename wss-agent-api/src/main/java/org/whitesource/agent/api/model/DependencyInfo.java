@@ -72,6 +72,7 @@ public class DependencyInfo implements Serializable {
     private Map<String, String> dependencyModulesToPaths;
     private String euaArtifactId;
     private Collection<DependencyInfo> aggregatedDependencies;
+    private OSInfo osInfo;
 
     /* --- Constructors --- */
 
@@ -535,5 +536,13 @@ public class DependencyInfo implements Serializable {
 
     public void setAggregatedDependencies(Collection<DependencyInfo> aggregatedDependencies) {
         this.aggregatedDependencies = aggregatedDependencies;
+    }
+
+    public OSInfo getOsInfo() {
+        return osInfo;
+    }
+
+    public void setOsInfo(OSInfo osInfo) {
+        this.osInfo = osInfo;
     }
 }
