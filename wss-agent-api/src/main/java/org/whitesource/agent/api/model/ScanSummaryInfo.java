@@ -21,6 +21,8 @@ public class ScanSummaryInfo implements Serializable {
     private List<String> containerRegistries;
     private List<String> otherIntegrationTypes;
     private boolean isPrivileged;
+    private ScanMethod scanMethod;
+    private Map<String, String> scanStatistics;
 
     /* --- Constructors --- */
 
@@ -30,6 +32,7 @@ public class ScanSummaryInfo implements Serializable {
         containerRegistries = new LinkedList<>();
         sourceControlManagers = new LinkedList<>();
         otherIntegrationTypes = new LinkedList<>();
+        scanStatistics = new HashMap<>();
     }
 
     public ScanSummaryInfo(long totalElapsedTime, Collection<StepInfo> stepsSummaryInfo) {
@@ -55,6 +58,14 @@ public class ScanSummaryInfo implements Serializable {
     }
 
     /* --- Getters / Setters --- */
+
+    public Map<String, String> getScanStatistics() {
+        return scanStatistics;
+    }
+
+    public void setScanStatistics(Map<String, String> scanStatistics) {
+        this.scanStatistics = scanStatistics;
+    }
 
     public long getTotalElapsedTime() {
         return totalElapsedTime;
@@ -110,5 +121,13 @@ public class ScanSummaryInfo implements Serializable {
 
     public void setPrivileged(boolean privileged) {
         isPrivileged = privileged;
+    }
+
+    public ScanMethod getScanMethod() {
+        return scanMethod;
+    }
+
+    public void setScanMethod(ScanMethod scanMethod) {
+        this.scanMethod = scanMethod;
     }
 }

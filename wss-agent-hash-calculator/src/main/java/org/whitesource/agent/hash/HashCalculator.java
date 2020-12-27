@@ -55,7 +55,7 @@ public class HashCalculator {
     private static final int FILE_MAX_SIZE_THRESHOLD = Integer.MAX_VALUE;
 
     private static final double FILE_SMALL_BUCKET_SIZE = 1024 * 1.25;
-    
+
     private static final char ZERO = '0';
 
     private static final byte CARRIAGE_RETURN = (byte) 0x0d;
@@ -76,7 +76,7 @@ public class HashCalculator {
      * 1. Hash of the file without new lines and whitespaces
      * 2. Hash of the most significant bits of the file without new lines and whitespaces
      * 3. Hash of the least significant bits of the file without new lines and whitespaces
-     * 
+     *
      * @param file input
      * @return HashCalculationResult with all three hashes
      * @throws IOException exception1
@@ -85,11 +85,13 @@ public class HashCalculator {
         // Ignore files smaller than 0.5kb
         long fileSize = file.length();
         if (fileSize <= FILE_MIN_SIZE_THRESHOLD) {
-            logger.debug("Ignored file " + file.getName() + " (" + FileUtils.byteCountToDisplaySize(fileSize) + "): minimum file size is 512B");
+            logger.debug("Ignored file " + file.getName() + " (" + FileUtils.byteCountToDisplaySize(fileSize)
+                    + "): minimum file size is 512B");
             return null;
         }
-        if (fileSize >= FILE_MAX_SIZE_THRESHOLD){
-            logger.debug("Ignore file {}, ({}): maximum file size is 2GB", file.getName(), FileUtils.byteCountToDisplaySize(fileSize));
+        if (fileSize >= FILE_MAX_SIZE_THRESHOLD) {
+            logger.debug("Ignore file {}, ({}): maximum file size is 2GB", file.getName(),
+                    FileUtils.byteCountToDisplaySize(fileSize));
             return null;
         }
 
@@ -167,8 +169,8 @@ public class HashCalculator {
             throw new IllegalStateException(e.getMessage(), e);
         }
 
-        try(InputStream inputStream = new FileInputStream(resourceFile);
-            BOMInputStream fis = new BOMInputStream(inputStream)) {
+        try (InputStream inputStream = new FileInputStream(resourceFile);
+             BOMInputStream fis = new BOMInputStream(inputStream)) {
             byte[] buffer = new byte[BUFFER_SIZE];
             int len = fis.read(buffer, 0, BUFFER_SIZE);
             while (len >= 0) {
@@ -211,13 +213,14 @@ public class HashCalculator {
         Map<ChecksumType, String> checksums = new EnumMap<>(ChecksumType.class);
         try {
             long fileLength = file.length();
-            if (fileLength >= FILE_MAX_SIZE_THRESHOLD){
-                logger.debug("Ignore file {}, ({}): maximum file size  is 2GB", file.getName(), FileUtils.byteCountToDisplaySize(fileLength));
+            if (fileLength >= FILE_MAX_SIZE_THRESHOLD) {
+                logger.debug("Ignore file {}, ({}): maximum file size  is 2GB", file.getName(),
+                        FileUtils.byteCountToDisplaySize(fileLength));
                 return checksums;
             }
             checksums = calculateJavaScriptHashes(FileUtils.readFileToByteArray(file));
         } catch (Exception e) {
-            throw new WssHashException("Error calculating JavaScript hash: "+ e.getMessage());
+            throw new WssHashException("Error calculating JavaScript hash: " + e.getMessage());
         }
         return checksums;
     }
@@ -251,7 +254,7 @@ public class HashCalculator {
                 }
             }
         } catch (Exception e) {
-            throw new WssHashException("Error calculating JavaScript hash: "+ e.getMessage());
+            throw new WssHashException("Error calculating JavaScript hash: " + e.getMessage());
         }
         return checksums;
     }
@@ -267,9 +270,9 @@ public class HashCalculator {
      * @throws IOException when failed to calculate sha-1
      */
     public String calculateSha1ByGAVCoordinatesAndType(String groupId, String artifactId, String version,
-                                                                DependencyType dependencyType) throws IOException {
-        String sha1ToCalc = groupId.toLowerCase() + UNDERSCORE + artifactId.toLowerCase() + UNDERSCORE + version.toLowerCase()
-                + UNDERSCORE + dependencyType.toString();
+                                                       DependencyType dependencyType) throws IOException {
+        String sha1ToCalc = groupId.toLowerCase() + UNDERSCORE + artifactId.toLowerCase() + UNDERSCORE
+                + version.toLowerCase() + UNDERSCORE + dependencyType.toString();
 
         return calculateByteArraySHA1(sha1ToCalc.getBytes(StandardCharsets.UTF_8));
     }
@@ -279,16 +282,34 @@ public class HashCalculator {
      *
      * @param name of library
      * @param version of library
-     * @param dependencyType of library
      * @param architecture of library
      * @param release of library
-     * @return Calculated SHA-1 for library by name, version and dependencyType
+     * @param dependencyType of library
+     * @return Calculated SHA-1 for library by name, version, architecture, release and dependencyType
      * @throws IOException when failed to calculate sha-1
      */
     public String calculateSha1ByNameVersionArchitectureReleaseAndType(String name, String version, String architecture,
-                                                                String release, DependencyType dependencyType) throws IOException {
+                                                                       String release, DependencyType dependencyType) throws IOException {
         String sha1ToCalc = name + UNDERSCORE + version + UNDERSCORE + architecture + UNDERSCORE +
                 release + UNDERSCORE + dependencyType.toString();
+        return calculateByteArraySHA1(sha1ToCalc.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Calculates SHA-1 for library by name, version, architecture, branch and dependencyType
+     *
+     * @param name of library
+     * @param version of library
+     * @param architecture of library
+     * @param branch of operating system
+     * @param dependencyType of library
+     * @return Calculated SHA-1 for library by name, version, architecture, branch and dependencyType
+     * @throws IOException when failed to calculate sha-1
+     */
+    public String calculateSha1ByNameVersionArchitectureBranchAndType(String name, String version, String architecture,
+                                                                      String branch, DependencyType dependencyType) throws IOException {
+        String sha1ToCalc = name + UNDERSCORE + version + UNDERSCORE + architecture + UNDERSCORE +
+                branch + UNDERSCORE + dependencyType.toString();
         return calculateByteArraySHA1(sha1ToCalc.getBytes(StandardCharsets.UTF_8));
     }
 
@@ -297,9 +318,9 @@ public class HashCalculator {
      *
      * @param name of library
      * @param version of library
-     * @param dependencyType of library
      * @param architecture of library
-     * @return Calculated SHA-1 for library by name, version and dependencyType
+     * @param dependencyType of library
+     * @return Calculated SHA-1 for library by name, version, architecture and dependencyType
      * @throws IOException when failed to calculate sha-1
      */
     public String calculateSha1ByNameVersionArchitectureAndType(String name, String version, String architecture,

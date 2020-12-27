@@ -68,6 +68,7 @@ public class DependencyInfo implements Serializable {
     private boolean deduped;
     private Map<String, String> dependencyModulesToPaths;
     private String euaArtifactId;
+    private OSInfo osInfo;
 
     /* --- Constructors --- */
 
@@ -501,5 +502,13 @@ public class DependencyInfo implements Serializable {
 
     public void setEuaArtifactId(String euaArtifactId) {
         this.euaArtifactId = euaArtifactId;
+    }
+
+    public OSInfo getOsInfo() {
+        return osInfo;
+    }
+
+    public void setOsInfo(OSInfo osInfo) {
+        this.osInfo = osInfo;
     }
 }
