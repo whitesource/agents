@@ -295,9 +295,6 @@ public class DependencyInfo implements Serializable {
     }
 
     public void setChildren(Collection<DependencyInfo> children) {
-        if (children == null) {
-            children = new LinkedList<>();
-        }
         this.children = children;
     }
 
@@ -419,9 +416,6 @@ public class DependencyInfo implements Serializable {
     }
 
     public void setChecksums(Map<ChecksumType, String> checksums) {
-        if (checksums == null) {
-            checksums = new TreeMap<>();
-        }
         this.checksums = checksums;
     }
 
@@ -490,9 +484,6 @@ public class DependencyInfo implements Serializable {
     }
 
     public void setDependencyModulesToPaths(Map<String, String> dependencyModulesToPaths) {
-        if (dependencyModulesToPaths == null) {
-            dependencyModulesToPaths = new HashMap<>();
-        }
         this.dependencyModulesToPaths = dependencyModulesToPaths;
     }
 
