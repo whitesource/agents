@@ -157,8 +157,6 @@ public class ModelSerializationTest {
             dependencyInfo.setSha1("sha1-" + i);
             dependencyInfo.setSystemPath("systemPath-" + i);
             dependencyInfo.setOptional(true);
-            dependencyInfo.getExclusions().add(new ExclusionInfo("exclusion-groupId-" + i, "exclusion-artifactId-" + i));
-            dependencyInfo.getExclusions().add(new ExclusionInfo("exclusion-groupId-" + i, "exclusion-artifactId-" + i));
 
             projectInfo.getDependencies().add(dependencyInfo);
         }
@@ -212,7 +210,6 @@ public class ModelSerializationTest {
             assertEquals(expectedDependency.getSha1(), dependency.getSha1());
             assertEquals(expectedDependency.getSystemPath(), dependency.getSystemPath());
             assertEquals(expectedDependency.isOptional(), dependency.getOptional());
-            testExclusions(dependency.getExclusions(), expectedDependency.getExclusions());
         }
     }
 
