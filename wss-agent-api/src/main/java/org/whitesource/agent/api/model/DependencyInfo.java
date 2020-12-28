@@ -199,10 +199,10 @@ public class DependencyInfo implements Serializable {
 
     /* --- Public methods --- */
     public void addChecksum(ChecksumType checksumType, String checksum) {
-        if (checksums == null) {
-            checksums = new TreeMap<>();
-        }
         if (StringUtils.isNotBlank(checksum)) {
+            if (checksums == null) {
+                checksums = new TreeMap<>();
+            }
             checksums.put(checksumType, checksum);
         }
     }
