@@ -242,6 +242,30 @@ public class DependencyInfo implements Serializable {
         return true;
     }
 
+    /**
+     * This method was created in WSE-5514 task which will help decrease the size of the update-request file, by removing
+     * all the empty initialized objects.
+     * This method runs recursively on a dependencyInfo object and its children and reset all the initialized object
+     * which contains no elements (empty collections)
+     */
+    public void recursivelyResetUnusedInitializedObjects() {
+        if (dependencyModulesToPaths != null && dependencyModulesToPaths.size() == 0) {
+            dependencyModulesToPaths = null;
+        }
+
+        if (checksums != null && checksums.size() == 0) {
+            checksums = null;
+        }
+
+        if (children != null && children.size() == 0) {
+            children = null;
+        } else if (children != null) {
+            for (DependencyInfo child : children) {
+                child.recursivelyResetUnusedInitializedObjects();
+            }
+        }
+    }
+
     /* --- Getters / Setters --- */
 
     public String getGroupId() {
