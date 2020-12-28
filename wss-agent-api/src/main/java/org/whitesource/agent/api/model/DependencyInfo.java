@@ -248,7 +248,7 @@ public class DependencyInfo implements Serializable {
      * This method runs recursively on a dependencyInfo object and its children and reset all the initialized object
      * which contains no elements (empty collections)
      */
-    public void recursivelyResetUnusedInitializedObjects() {
+    public void resetUnusedCollections() {
         if (dependencyModulesToPaths != null && dependencyModulesToPaths.size() == 0) {
             dependencyModulesToPaths = null;
         }
@@ -261,7 +261,7 @@ public class DependencyInfo implements Serializable {
             children = null;
         } else if (children != null) {
             for (DependencyInfo child : children) {
-                child.recursivelyResetUnusedInitializedObjects();
+                child.resetUnusedCollections();
             }
         }
     }
