@@ -54,9 +54,6 @@ public class DependencyInfo implements Serializable {
     private String systemPath;
     private boolean optional;
     private Collection<DependencyInfo> children;
-    private Collection<ExclusionInfo> exclusions;
-    private Collection<String> licenses;
-    private Collection<CopyrightInfo> copyrights;
     private Date lastModified;
     private String filename;
     private DependencyType dependencyType;
@@ -71,7 +68,6 @@ public class DependencyInfo implements Serializable {
     private boolean deduped;
     private Map<String, String> dependencyModulesToPaths;
     private String euaArtifactId;
-    private Collection<DependencyInfo> aggregatedDependencies;
     private OSInfo osInfo;
 
     /* --- Constructors --- */
@@ -79,22 +75,14 @@ public class DependencyInfo implements Serializable {
     /**
      * Default constructor
      */
-    public DependencyInfo() {
-        children = new LinkedList<>();
-        exclusions = new LinkedList<>();
-        licenses = new LinkedList<>();
-        copyrights = new LinkedList<>();
-        checksums = new TreeMap<>();
-        dependencyModulesToPaths = new HashMap<>();
-        aggregatedDependencies = new LinkedList<>();
-    }
+    public DependencyInfo() {}
 
     /**
      * Constructor
      *
-     * @param groupId
-     * @param artifactId
-     * @param version
+     * @param groupId - the dependency groupId
+     * @param artifactId - the dependency artifactId
+     * @param version - the dependency version
      */
     public DependencyInfo(String groupId, String artifactId, String version) {
         this();
@@ -106,7 +94,7 @@ public class DependencyInfo implements Serializable {
     /**
      * Constructor
      *
-     * @param sha1
+     * @param sha1 - the dependency sha1
      */
     public DependencyInfo(String sha1) {
         this();
@@ -116,8 +104,8 @@ public class DependencyInfo implements Serializable {
     /**
      * Constructor
      *
-     * @param sha1
-     * @param fullHash
+     * @param sha1 - the dependency sha1
+     * @param fullHash - the dependency fullHash
      */
     public DependencyInfo(String sha1, String fullHash) {
         this(sha1);
@@ -127,10 +115,10 @@ public class DependencyInfo implements Serializable {
     /**
      * Constructor
      *
-     * @param sha1
-     * @param fullHash
-     * @param mostSigBitsHash
-     * @param leastSigBitsHash
+     * @param sha1 - the dependency sha1
+     * @param fullHash - the dependency fullHash
+     * @param mostSigBitsHash - the dependency mostSigBitsHash
+     * @param leastSigBitsHash - the dependency leastSigBitsHash
      */
     public DependencyInfo(String sha1, String fullHash, String mostSigBitsHash, String leastSigBitsHash) {
         this(sha1, fullHash);
@@ -171,7 +159,6 @@ public class DependencyInfo implements Serializable {
         if (optional != that.optional) return false;
         if (artifactId != null ? !artifactId.equals(that.artifactId) : that.artifactId != null) return false;
         if (classifier != null ? !classifier.equals(that.classifier) : that.classifier != null) return false;
-        if (exclusions != null ? !exclusions.equals(that.exclusions) : that.exclusions != null) return false;
         if (groupId != null ? !groupId.equals(that.groupId) : that.groupId != null) return false;
         if (scope != null ? !scope.equals(that.scope) : that.scope != null) return false;
         if (type != null ? !type.equals(that.type) : that.type != null) return false;
@@ -183,7 +170,9 @@ public class DependencyInfo implements Serializable {
         if (systemPath != null ? !systemPath.equals(that.systemPath) : that.systemPath != null) return false;
         if (dependencyFile != null ? !dependencyFile.equals(that.dependencyFile) : that.dependencyFile != null)
             return false;
-        if (vulnerabilityAnalysisResult != null ? !vulnerabilityAnalysisResult.equals(that.vulnerabilityAnalysisResult) : that.vulnerabilityAnalysisResult != null)
+        if (vulnerabilityAnalysisResult != null ?
+                !vulnerabilityAnalysisResult.equals(that.vulnerabilityAnalysisResult) :
+                that.vulnerabilityAnalysisResult != null)
             return false;
 
         return true;
@@ -199,7 +188,6 @@ public class DependencyInfo implements Serializable {
         result = APIConstants.HASH_CODE_FACTOR * result + (classifier != null ? classifier.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (scope != null ? scope.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (sha1 != null ? sha1.hashCode() : 0);
-        result = APIConstants.HASH_CODE_FACTOR * result + (exclusions != null ? exclusions.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (optional ? 1 : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (filename != null ? filename.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (dependencyType != null ? dependencyType.hashCode() : 0);
@@ -213,21 +201,32 @@ public class DependencyInfo implements Serializable {
 
     /* --- Public methods --- */
 
-    public boolean hasLicenses() {
-        return licenses != null && !licenses.isEmpty();
-    }
+    /**
+     * This method was created in WSE-5514 task which will help decrease the size of the update-request file,
+     * by removing all the empty initialized objects.
+     * This method runs recursively on a dependencyInfo object and its children and reset all the initialized object
+     * which contains no elements (empty collections)
+     */
+    public void resetUnusedCollections() {
+        if (dependencyModulesToPaths != null && dependencyModulesToPaths.size() == 0) {
+            dependencyModulesToPaths = null;
+        }
 
-    public boolean hasCopyrights() {
-        return copyrights != null && !copyrights.isEmpty();
-    }
+        if (checksums != null && checksums.size() == 0) {
+            checksums = null;
+        }
 
-    public void addChecksum(ChecksumType checksumType, String checksum) {
-        if (StringUtils.isNotBlank(checksum)) {
-            checksums.put(checksumType, checksum);
+        if (children != null && children.size() == 0) {
+            children = null;
+        }
+
+        // recursive call
+        if (children != null) {
+            for (DependencyInfo child : children) {
+                child.resetUnusedCollections();
+            }
         }
     }
-
-    /* --- Getters / Setters --- */
 
     public String getGroupId() {
         return groupId;
@@ -295,14 +294,6 @@ public class DependencyInfo implements Serializable {
         this.systemPath = systemPath;
     }
 
-    public Collection<ExclusionInfo> getExclusions() {
-        return exclusions;
-    }
-
-    public void setExclusions(Collection<ExclusionInfo> exclusions) {
-        this.exclusions = exclusions;
-    }
-
     public boolean getOptional() {
         return optional;
     }
@@ -316,6 +307,9 @@ public class DependencyInfo implements Serializable {
     }
 
     public Collection<DependencyInfo> getChildren() {
+        if (children == null) {
+            children = new LinkedList<>();
+        }
         return children;
     }
 
@@ -323,20 +317,15 @@ public class DependencyInfo implements Serializable {
         this.children = children;
     }
 
-    public Collection<String> getLicenses() {
-        return licenses;
+    public void addChild(DependencyInfo child) {
+        if (children == null) {
+            children = new LinkedList<>();
+        }
+        children.add(child);
     }
 
-    public void setLicenses(Collection<String> licenses) {
-        this.licenses = licenses;
-    }
-
-    public Collection<CopyrightInfo> getCopyrights() {
-        return copyrights;
-    }
-
-    public void setCopyrights(Collection<CopyrightInfo> copyrights) {
-        this.copyrights = copyrights;
+    public boolean hasChildren() {
+        return children != null && children.size() != 0;
     }
 
     public Date getLastModified() {
@@ -450,11 +439,27 @@ public class DependencyInfo implements Serializable {
     }
 
     public Map<ChecksumType, String> getChecksums() {
+        if (checksums == null) {
+            checksums = new TreeMap<>();
+        }
         return checksums;
     }
 
     public void setChecksums(Map<ChecksumType, String> checksums) {
         this.checksums = checksums;
+    }
+
+    public void addChecksum(ChecksumType checksumType, String checksum) {
+        if (StringUtils.isNotBlank(checksum)) {
+            if (checksums == null) {
+                checksums = new TreeMap<>();
+            }
+            checksums.put(checksumType, checksum);
+        }
+    }
+
+    public boolean hasChecksum() {
+        return checksums != null && checksums.size() != 0;
     }
 
     public VulnerabilityAnalysisResult getVulnerabilityAnalysisResult() {
@@ -515,11 +520,25 @@ public class DependencyInfo implements Serializable {
 
 
     public Map<String, String> getDependencyModulesToPaths() {
+        if (dependencyModulesToPaths == null) {
+            dependencyModulesToPaths = new HashMap<>();
+        }
         return dependencyModulesToPaths;
     }
 
     public void setDependencyModulesToPaths(Map<String, String> dependencyModulesToPaths) {
         this.dependencyModulesToPaths = dependencyModulesToPaths;
+    }
+
+    public void addDependencyModulesToPaths(String key, String value) {
+        if (dependencyModulesToPaths == null) {
+            dependencyModulesToPaths = new HashMap<>();
+        }
+        dependencyModulesToPaths.put(key, value);
+    }
+
+    public boolean hasDependencyModulesToPaths() {
+        return dependencyModulesToPaths != null && dependencyModulesToPaths.size() != 0;
     }
 
     public String getEuaArtifactId() {
@@ -528,14 +547,6 @@ public class DependencyInfo implements Serializable {
 
     public void setEuaArtifactId(String euaArtifactId) {
         this.euaArtifactId = euaArtifactId;
-    }
-
-    public Collection<DependencyInfo> getAggregatedDependencies() {
-        return aggregatedDependencies;
-    }
-
-    public void setAggregatedDependencies(Collection<DependencyInfo> aggregatedDependencies) {
-        this.aggregatedDependencies = aggregatedDependencies;
     }
 
     public OSInfo getOsInfo() {
