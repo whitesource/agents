@@ -80,9 +80,9 @@ public class DependencyInfo implements Serializable {
     /**
      * Constructor
      *
-     * @param groupId
-     * @param artifactId
-     * @param version
+     * @param groupId - the dependency groupId
+     * @param artifactId - the dependency artifactId
+     * @param version - the dependency version
      */
     public DependencyInfo(String groupId, String artifactId, String version) {
         this();
@@ -94,7 +94,7 @@ public class DependencyInfo implements Serializable {
     /**
      * Constructor
      *
-     * @param sha1
+     * @param sha1 - the dependency sha1
      */
     public DependencyInfo(String sha1) {
         this();
@@ -104,8 +104,8 @@ public class DependencyInfo implements Serializable {
     /**
      * Constructor
      *
-     * @param sha1
-     * @param fullHash
+     * @param sha1 - the dependency sha1
+     * @param fullHash - the dependency fullHash
      */
     public DependencyInfo(String sha1, String fullHash) {
         this(sha1);
@@ -115,10 +115,10 @@ public class DependencyInfo implements Serializable {
     /**
      * Constructor
      *
-     * @param sha1
-     * @param fullHash
-     * @param mostSigBitsHash
-     * @param leastSigBitsHash
+     * @param sha1 - the dependency sha1
+     * @param fullHash - the dependency fullHash
+     * @param mostSigBitsHash - the dependency mostSigBitsHash
+     * @param leastSigBitsHash - the dependency leastSigBitsHash
      */
     public DependencyInfo(String sha1, String fullHash, String mostSigBitsHash, String leastSigBitsHash) {
         this(sha1, fullHash);
@@ -170,7 +170,9 @@ public class DependencyInfo implements Serializable {
         if (systemPath != null ? !systemPath.equals(that.systemPath) : that.systemPath != null) return false;
         if (dependencyFile != null ? !dependencyFile.equals(that.dependencyFile) : that.dependencyFile != null)
             return false;
-        if (vulnerabilityAnalysisResult != null ? !vulnerabilityAnalysisResult.equals(that.vulnerabilityAnalysisResult) : that.vulnerabilityAnalysisResult != null)
+        if (vulnerabilityAnalysisResult != null ?
+                !vulnerabilityAnalysisResult.equals(that.vulnerabilityAnalysisResult) :
+                that.vulnerabilityAnalysisResult != null)
             return false;
 
         return true;
@@ -198,49 +200,6 @@ public class DependencyInfo implements Serializable {
     }
 
     /* --- Public methods --- */
-    public void addChecksum(ChecksumType checksumType, String checksum) {
-        if (StringUtils.isNotBlank(checksum)) {
-            if (checksums == null) {
-                checksums = new TreeMap<>();
-            }
-            checksums.put(checksumType, checksum);
-        }
-    }
-
-    public boolean hasChecksum() {
-        if (checksums == null || checksums.size() == 0) {
-            return false;
-        }
-        return true;
-    }
-
-    public void addChild(DependencyInfo child) {
-        if (children == null) {
-            children = new LinkedList<>();
-        }
-        children.add(child);
-    }
-
-    public boolean hasChildren() {
-        if (children == null || children.size() == 0) {
-            return false;
-        }
-        return true;
-    }
-
-    public void addDependencyModulesToPaths(String key, String value) {
-        if (dependencyModulesToPaths == null) {
-            dependencyModulesToPaths = new HashMap<>();
-        }
-        dependencyModulesToPaths.put(key, value);
-    }
-
-    public boolean hasDependencyModulesToPaths() {
-        if (dependencyModulesToPaths == null || dependencyModulesToPaths.size() == 0) {
-            return false;
-        }
-        return true;
-    }
 
     /**
      * This method was created in WSE-5514 task which will help decrease the size of the update-request file,
@@ -268,8 +227,6 @@ public class DependencyInfo implements Serializable {
             }
         }
     }
-
-    /* --- Getters / Setters --- */
 
     public String getGroupId() {
         return groupId;
@@ -358,6 +315,17 @@ public class DependencyInfo implements Serializable {
 
     public void setChildren(Collection<DependencyInfo> children) {
         this.children = children;
+    }
+
+    public void addChild(DependencyInfo child) {
+        if (children == null) {
+            children = new LinkedList<>();
+        }
+        children.add(child);
+    }
+
+    public boolean hasChildren() {
+        return children != null && children.size() != 0;
     }
 
     public Date getLastModified() {
@@ -481,6 +449,19 @@ public class DependencyInfo implements Serializable {
         this.checksums = checksums;
     }
 
+    public void addChecksum(ChecksumType checksumType, String checksum) {
+        if (StringUtils.isNotBlank(checksum)) {
+            if (checksums == null) {
+                checksums = new TreeMap<>();
+            }
+            checksums.put(checksumType, checksum);
+        }
+    }
+
+    public boolean hasChecksum() {
+        return checksums != null && checksums.size() != 0;
+    }
+
     public VulnerabilityAnalysisResult getVulnerabilityAnalysisResult() {
         return vulnerabilityAnalysisResult;
     }
@@ -547,6 +528,17 @@ public class DependencyInfo implements Serializable {
 
     public void setDependencyModulesToPaths(Map<String, String> dependencyModulesToPaths) {
         this.dependencyModulesToPaths = dependencyModulesToPaths;
+    }
+
+    public void addDependencyModulesToPaths(String key, String value) {
+        if (dependencyModulesToPaths == null) {
+            dependencyModulesToPaths = new HashMap<>();
+        }
+        dependencyModulesToPaths.put(key, value);
+    }
+
+    public boolean hasDependencyModulesToPaths() {
+        return dependencyModulesToPaths != null && dependencyModulesToPaths.size() != 0;
     }
 
     public String getEuaArtifactId() {
