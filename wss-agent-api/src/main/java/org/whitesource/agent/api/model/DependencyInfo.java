@@ -207,6 +207,41 @@ public class DependencyInfo implements Serializable {
         }
     }
 
+    public boolean hasChecksum() {
+        if (checksums == null || checksums.size() == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    public void addChild(DependencyInfo child) {
+        if (children == null) {
+            children = new LinkedList<>();
+        }
+        children.add(child);
+    }
+
+    public boolean hasChildren() {
+        if (children == null || children.size() == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    public void addDependencyModulesToPaths(String key, String value) {
+        if (dependencyModulesToPaths == null) {
+            dependencyModulesToPaths = new HashMap<>();
+        }
+        dependencyModulesToPaths.put(key, value);
+    }
+
+    public boolean hasDependencyModulesToPaths() {
+        if (dependencyModulesToPaths == null || dependencyModulesToPaths.size() == 0) {
+            return false;
+        }
+        return true;
+    }
+
     /* --- Getters / Setters --- */
 
     public String getGroupId() {
