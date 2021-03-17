@@ -13,6 +13,13 @@ public class AnalysisInputs {
     private String euaArtifactId;
     private boolean emptyDependency;
 
+    public AnalysisInputs() {
+    }
+
+    public AnalysisInputs(String euaArtifactId) {
+        this.euaArtifactId = euaArtifactId;
+    }
+
     public Map<String, String> getModulesToPaths() {
         if (modulesToPaths == null) {
             modulesToPaths = new HashMap<>();

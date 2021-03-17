@@ -74,14 +74,15 @@ public class DependencyInfo implements Serializable {
     /**
      * Default constructor
      */
-    public DependencyInfo() {}
+    public DependencyInfo() {
+    }
 
     /**
      * Constructor
      *
-     * @param groupId - the dependency groupId
+     * @param groupId    - the dependency groupId
      * @param artifactId - the dependency artifactId
-     * @param version - the dependency version
+     * @param version    - the dependency version
      */
     public DependencyInfo(String groupId, String artifactId, String version) {
         this();
@@ -103,7 +104,7 @@ public class DependencyInfo implements Serializable {
     /**
      * Constructor
      *
-     * @param sha1 - the dependency sha1
+     * @param sha1     - the dependency sha1
      * @param fullHash - the dependency fullHash
      */
     public DependencyInfo(String sha1, String fullHash) {
@@ -114,9 +115,9 @@ public class DependencyInfo implements Serializable {
     /**
      * Constructor
      *
-     * @param sha1 - the dependency sha1
-     * @param fullHash - the dependency fullHash
-     * @param mostSigBitsHash - the dependency mostSigBitsHash
+     * @param sha1             - the dependency sha1
+     * @param fullHash         - the dependency fullHash
+     * @param mostSigBitsHash  - the dependency mostSigBitsHash
      * @param leastSigBitsHash - the dependency leastSigBitsHash
      */
     public DependencyInfo(String sha1, String fullHash, String mostSigBitsHash, String leastSigBitsHash) {
@@ -529,15 +530,35 @@ public class DependencyInfo implements Serializable {
         this.osInfo = osInfo;
     }
 
-    public AnalysisInputs getAnalysisInputs() {
-        if (analysisInputs == null) {
-            analysisInputs = new AnalysisInputs();
-        }
-        return analysisInputs;
-    }
+    public AnalysisInputs getAnalysisInputs() { return analysisInputs; }
 
     public void setAnalysisInputs(AnalysisInputs analysisInputs) {
         this.analysisInputs = analysisInputs;
     }
 
+    /* --- Utility methods --- */
+
+    /**
+     * This method initializes the analysis inputs only if it's null.
+     * Otherwise, nothing will happen.
+     *
+     * The artifactId is copied to the analysisInputs object.
+     */
+    public void initAnalysisInputs() {
+        if (analysisInputs == null) {
+            analysisInputs = new AnalysisInputs(artifactId);
+        }
+    }
+
+    /**
+     * This method initializes the analysisInputs only if it's null.
+     * Otherwise, nothing will happen.
+     *
+     * @param euaArtifactId to be set inside the analysisInputs object
+     */
+    public void initAnalysisInputs(String euaArtifactId) {
+        if (analysisInputs == null) {
+            analysisInputs = new AnalysisInputs(euaArtifactId);
+        }
+    }
 }
