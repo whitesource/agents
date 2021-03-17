@@ -201,37 +201,6 @@ public class DependencyInfo implements Serializable {
 
     /* --- Public methods --- */
 
-    /**
-     * This method resets all unused fields and empty collections,
-     * in order to decrease the size of the update-request file.
-     */
-    public void resetUnusedFields() {
-        analysisInputs = null;
-        resetUnusedCollections();
-    }
-
-    /**
-     * This method was created in WSE-5514 task which will help decrease the size of the update-request file,
-     * by removing all the empty initialized objects.
-     * This method runs recursively on a dependencyInfo object and its children and reset all the initialized object
-     * which contains no elements (empty collections)
-     */
-    public void resetUnusedCollections() {
-        if (checksums != null && checksums.size() == 0) {
-            checksums = null;
-        }
-
-        if (children != null && children.size() == 0) {
-            children = null;
-        }
-
-        // recursive call
-        if (children != null) {
-            for (DependencyInfo child : children) {
-                child.resetUnusedCollections();
-            }
-        }
-    }
 
     public String getGroupId() {
         return groupId;
@@ -559,6 +528,32 @@ public class DependencyInfo implements Serializable {
     public void initAnalysisInputs(String euaArtifactId) {
         if (analysisInputs == null) {
             analysisInputs = new AnalysisInputs(euaArtifactId);
+        }
+    }
+
+    /**
+     * This method was created in WSE-5514 task which will help decrease the size of the update-request file,
+     * by removing all the empty initialized objects.
+     * This method runs recursively on a dependencyInfo object and its children and reset all the initialized object
+     * which contains no elements (empty collections)
+     * In addition the analysisInputs object is set to null, as it is not needed in the update-request.
+     */
+    public void resetUnusedFields() {
+        analysisInputs = null;
+
+        if (checksums != null && checksums.size() == 0) {
+            checksums = null;
+        }
+
+        if (children != null && children.size() == 0) {
+            children = null;
+        }
+
+        // recursive call
+        if (children != null) {
+            for (DependencyInfo child : children) {
+                child.resetUnusedFields();
+            }
         }
     }
 }
