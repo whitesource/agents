@@ -14,13 +14,12 @@ public class DependencyInfoTest {
     public void dependencyInfoWithEmptyArgumentsTest() {
         DependencyInfo depInfo = new DependencyInfo();
 
-        Assert.assertEquals(null, depInfo.getVersion());
-        Assert.assertEquals(null, depInfo.getArtifactId());
-        Assert.assertEquals(null, depInfo.getGroupId());
-        Assert.assertEquals(false, depInfo.getOptional());
+        Assert.assertNull(depInfo.getVersion());
+        Assert.assertNull(depInfo.getArtifactId());
+        Assert.assertNull(depInfo.getGroupId());
+        Assert.assertFalse(depInfo.getOptional());
         Assert.assertEquals(new LinkedList<>(), depInfo.getChildren());
         Assert.assertEquals(new TreeMap<>(), depInfo.getChecksums());
-        Assert.assertEquals(new HashMap<>(), depInfo.getDependencyModulesToPaths());
     }
 
     @Test
@@ -30,10 +29,9 @@ public class DependencyInfoTest {
         Assert.assertEquals("1.0.0", depInfo.getVersion());
         Assert.assertEquals("bbbb", depInfo.getArtifactId());
         Assert.assertEquals("aaaa", depInfo.getGroupId());
-        Assert.assertEquals(false, depInfo.getOptional());
+        Assert.assertFalse(depInfo.getOptional());
         Assert.assertEquals(new LinkedList<>(), depInfo.getChildren());
         Assert.assertEquals(new TreeMap<>(), depInfo.getChecksums());
-        Assert.assertEquals(new HashMap<>(), depInfo.getDependencyModulesToPaths());
     }
 
     @Test
@@ -44,15 +42,16 @@ public class DependencyInfoTest {
         childrenField.setAccessible(true);
         Field checksumsField = DependencyInfo.class.getDeclaredField("checksums");
         checksumsField.setAccessible(true);
-        Field dependencyModulesToPathsField = DependencyInfo.class.getDeclaredField("dependencyModulesToPaths");
-        dependencyModulesToPathsField.setAccessible(true);
+        Field analysisInfoField = DependencyInfo.class.getDeclaredField("analysisInputs");
+        analysisInfoField.setAccessible(true);
 
-        Assert.assertEquals(null, childrenField.get(depInfo));
-        Assert.assertEquals(null,  checksumsField.get(depInfo));
-        Assert.assertEquals(null,  dependencyModulesToPathsField.get(depInfo));
+        Assert.assertNull(childrenField.get(depInfo));
+        Assert.assertNull(checksumsField.get(depInfo));
+        Assert.assertNull(analysisInfoField.get(depInfo));
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void checkAddChecksumTest() throws NoSuchFieldException, IllegalAccessException {
         DependencyInfo depInfo = new DependencyInfo();
 
@@ -61,12 +60,12 @@ public class DependencyInfoTest {
 
         ChecksumType type = ChecksumType.ADDITIONAL_SHA1;
         depInfo.addChecksum(type, "");
-        Assert.assertEquals(null,  checksumsField.get(depInfo));
+        Assert.assertNull(checksumsField.get(depInfo));
 
         String additionalSha1 = "blablablablabla";
         depInfo.addChecksum(type, additionalSha1);
         Map<ChecksumType, String> csf = (Map<ChecksumType, String>) checksumsField.get(depInfo);
-        Assert.assertTrue(csf != null);
+        Assert.assertNotNull(csf);
         Assert.assertEquals(1, csf.size());
         Assert.assertEquals(additionalSha1, csf.get(type));
 
@@ -89,8 +88,8 @@ public class DependencyInfoTest {
         Field checksumsField = DependencyInfo.class.getDeclaredField("checksums");
         checksumsField.setAccessible(true);
 
-        Assert.assertEquals(null,  checksumsField.get(depInfo));
-        Assert.assertTrue(depInfo.getChecksums() != null);
+        Assert.assertNull(checksumsField.get(depInfo));
+        Assert.assertNotNull(depInfo.getChecksums());
         Assert.assertEquals(0, depInfo.getChecksums().size());
     }
 
@@ -101,8 +100,8 @@ public class DependencyInfoTest {
         Field childrenField = DependencyInfo.class.getDeclaredField("children");
         childrenField.setAccessible(true);
 
-        Assert.assertEquals(null,  childrenField.get(depInfo));
-        Assert.assertTrue(depInfo.getChildren() != null);
+        Assert.assertNull(childrenField.get(depInfo));
+        Assert.assertNotNull(depInfo.getChildren());
         Assert.assertEquals(0, depInfo.getChildren().size());
 
         DependencyInfo childDep = new DependencyInfo();

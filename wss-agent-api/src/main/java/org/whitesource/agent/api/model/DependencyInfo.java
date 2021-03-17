@@ -66,9 +66,8 @@ public class DependencyInfo implements Serializable {
     private String architecture;
     private String languageVersion;
     private boolean deduped;
-    private Map<String, String> dependencyModulesToPaths;
-    private String euaArtifactId;
     private OSInfo osInfo;
+    private AnalysisInputs analysisInputs;
 
     /* --- Constructors --- */
 
@@ -88,7 +87,7 @@ public class DependencyInfo implements Serializable {
         this();
         this.groupId = groupId;
         this.version = version;
-        this.setArtifactId(artifactId);
+        this.artifactId = artifactId;
     }
 
     /**
@@ -202,16 +201,21 @@ public class DependencyInfo implements Serializable {
     /* --- Public methods --- */
 
     /**
+     * This method resets all unused fields and empty collections,
+     * in order to decrease the size of the update-request file.
+     */
+    public void resetUnusedFields() {
+        analysisInputs = null;
+        resetUnusedCollections();
+    }
+
+    /**
      * This method was created in WSE-5514 task which will help decrease the size of the update-request file,
      * by removing all the empty initialized objects.
      * This method runs recursively on a dependencyInfo object and its children and reset all the initialized object
      * which contains no elements (empty collections)
      */
     public void resetUnusedCollections() {
-        if (dependencyModulesToPaths != null && dependencyModulesToPaths.size() == 0) {
-            dependencyModulesToPaths = null;
-        }
-
         if (checksums != null && checksums.size() == 0) {
             checksums = null;
         }
@@ -242,7 +246,6 @@ public class DependencyInfo implements Serializable {
 
     public void setArtifactId(String artifactId) {
         this.artifactId = artifactId;
-        this.euaArtifactId = artifactId;
     }
 
     public String getVersion() {
@@ -518,37 +521,6 @@ public class DependencyInfo implements Serializable {
         this.deduped = deduped;
     }
 
-
-    public Map<String, String> getDependencyModulesToPaths() {
-        if (dependencyModulesToPaths == null) {
-            dependencyModulesToPaths = new HashMap<>();
-        }
-        return dependencyModulesToPaths;
-    }
-
-    public void setDependencyModulesToPaths(Map<String, String> dependencyModulesToPaths) {
-        this.dependencyModulesToPaths = dependencyModulesToPaths;
-    }
-
-    public void addDependencyModulesToPaths(String key, String value) {
-        if (dependencyModulesToPaths == null) {
-            dependencyModulesToPaths = new HashMap<>();
-        }
-        dependencyModulesToPaths.put(key, value);
-    }
-
-    public boolean hasDependencyModulesToPaths() {
-        return dependencyModulesToPaths != null && dependencyModulesToPaths.size() != 0;
-    }
-
-    public String getEuaArtifactId() {
-        return euaArtifactId;
-    }
-
-    public void setEuaArtifactId(String euaArtifactId) {
-        this.euaArtifactId = euaArtifactId;
-    }
-
     public OSInfo getOsInfo() {
         return osInfo;
     }
@@ -556,4 +528,16 @@ public class DependencyInfo implements Serializable {
     public void setOsInfo(OSInfo osInfo) {
         this.osInfo = osInfo;
     }
+
+    public AnalysisInputs getAnalysisInputs() {
+        if (analysisInputs == null) {
+            analysisInputs = new AnalysisInputs();
+        }
+        return analysisInputs;
+    }
+
+    public void setAnalysisInputs(AnalysisInputs analysisInputs) {
+        this.analysisInputs = analysisInputs;
+    }
+
 }
