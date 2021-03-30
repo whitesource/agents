@@ -1,5 +1,6 @@
 package org.whitesource.agent.api.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,7 +9,10 @@ import java.util.Map;
  *
  * @author noam.dolovich
  */
-public class AnalysisInputs {
+public class AnalysisInputs implements Serializable {
+
+    private static final long serialVersionUID = -1209587213611770019L;
+
     private Map<String, String> modulesToPaths;
     private String euaArtifactId;
     private boolean emptyDependency;
