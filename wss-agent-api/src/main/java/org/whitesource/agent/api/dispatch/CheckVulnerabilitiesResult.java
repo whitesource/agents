@@ -22,6 +22,8 @@ public class CheckVulnerabilitiesResult implements Serializable {
 
     /* --- Members --- */
 
+    // stores the sha1 of the euaDep.json used to calculate the vulnerabilities
+    private String euaDepFileSha1;
     private Map<String, Collection<VulnerabilityInfo>> sha1ToVulnerabilitiesMap;
 
     /* --- Constructors --- */
@@ -45,5 +47,13 @@ public class CheckVulnerabilitiesResult implements Serializable {
 
     public void setSha1ToVulnerabilitiesMap(Map<String, Collection<VulnerabilityInfo>> sha1ToVulnerabilitiesMap) {
         this.sha1ToVulnerabilitiesMap = sha1ToVulnerabilitiesMap;
+    }
+
+    public String getzEuaDepFileSha1() {
+        return euaDepFileSha1;
+    }
+
+    public void setEuaDepFileSha1(String euaDepFileSha1) {
+        this.euaDepFileSha1 = euaDepFileSha1;
     }
 }
