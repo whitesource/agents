@@ -22,6 +22,7 @@ public class CheckVulnerabilitiesResult implements Serializable {
 
     /* --- Members --- */
 
+    private String depSha1;
     private Map<String, Collection<VulnerabilityInfo>> sha1ToVulnerabilitiesMap;
 
     /* --- Constructors --- */
@@ -46,4 +47,18 @@ public class CheckVulnerabilitiesResult implements Serializable {
     public void setSha1ToVulnerabilitiesMap(Map<String, Collection<VulnerabilityInfo>> sha1ToVulnerabilitiesMap) {
         this.sha1ToVulnerabilitiesMap = sha1ToVulnerabilitiesMap;
     }
+
+    public String getDepSha1() {
+        return depSha1;
+    }
+
+    public void setDepSha1(String depSha1) {
+        this.depSha1 = depSha1;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+
 }
