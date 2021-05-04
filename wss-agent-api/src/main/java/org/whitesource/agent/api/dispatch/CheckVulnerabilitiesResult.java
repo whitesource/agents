@@ -49,7 +49,7 @@ public class CheckVulnerabilitiesResult implements Serializable {
         this.sha1ToVulnerabilitiesMap = sha1ToVulnerabilitiesMap;
     }
 
-    public String getEuaDepFileSha1() {
+    public String getzEuaDepFileSha1() {
         return euaDepFileSha1;
     }
 
