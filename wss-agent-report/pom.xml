@@ -46,6 +46,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
+            <version>${commonsio.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
