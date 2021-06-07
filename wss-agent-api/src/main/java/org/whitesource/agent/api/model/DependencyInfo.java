@@ -465,6 +465,7 @@ public class DependencyInfo implements Serializable {
 
     public void setAdditionalSha1(String additionalSha1) {
         this.additionalSha1 = additionalSha1;
+        addChecksum(ChecksumType.ADDITIONAL_SHA1, additionalSha1);
     }
 
     public String getArchitecture() {
