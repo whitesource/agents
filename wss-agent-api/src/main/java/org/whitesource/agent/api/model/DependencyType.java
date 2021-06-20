@@ -51,6 +51,7 @@ public enum DependencyType {
     CABAL,
     OPAM,
     PUB,
+    CONDA,
 
     DOCKER,
     DOCKER_LAYER;
