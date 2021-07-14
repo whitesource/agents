@@ -95,6 +95,7 @@ public class WssServiceClientImpl implements WssServiceClient {
     private int proxyPort;
     private String proxyUsername;
     private String proxyPassword;
+    private Map<String, String> headers;
 
     private final boolean proxyEnabled;
 
@@ -457,6 +458,10 @@ public class WssServiceClientImpl implements WssServiceClient {
 
         httpRequest.setEntity(new UrlEncodedFormEntity(nvps, UTF_8));
 
+        if (headers != null) {
+            headers.forEach(httpRequest::setHeader);
+        }
+
         return httpRequest;
     }
 
@@ -568,5 +573,15 @@ public class WssServiceClientImpl implements WssServiceClient {
     @Override
     public boolean getIgnoreCertificateCheck() {
       return this.ignoreCertificateCheck;
+    }
+
+    @Override
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
+    @Override
+    public void setHeaders(Map<String, String> headers) {
+        this.headers = headers;
     }
 }
