@@ -90,7 +90,7 @@ public class WhitesourceService {
       WssServiceClient client = this.getClient();
       WhitesourceService whitesourceService = new WhitesourceService(requestFactory.getAgent(),
           requestFactory.getAgentVersion(), requestFactory.getPluginVersion(),
-          client.getServiceUrl(), client.isProxy(), client.getConnectionTimeout(),
+          client.getServiceUrl(), client.isProxy(), client.getConnectionTimeoutMinutes(),
           client.getIgnoreCertificateCheck());
 
       whitesourceService.getClient()

@@ -236,42 +236,42 @@ public class WssServiceClientImpl implements WssServiceClient {
 
     @Override
     public void setProxy(String host, int port, String username, String password) {
-      this.proxyHost = host;
-      this.proxyPort = port;
-      this.proxyUsername = username;
-      this.proxyPassword = password;
-      if (host == null || host.trim().length() == 0) {
-        return;
-      }
-      if (port < 0 || port > 65535) {
-        return;
-      }
-
-      HttpHost proxy = new HttpHost(proxyHost, proxyPort);
-      //		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
-      DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
-      httpClient = HttpClients.custom().setRoutePlanner(routePlanner).build();
-      logger.info("Using proxy: " + proxy.toHostString());
-
-      if (proxyUsername != null && proxyUsername.trim().length() > 0) {
-        logger.info("Proxy username: " + proxyUsername);
-        Credentials credentials;
-        if (proxyUsername.indexOf('/') >= 0) {
-          credentials = new NTCredentials(proxyUsername + ":" + proxyPassword);
-        } else if (proxyUsername.indexOf('\\') >= 0) {
-          proxyUsername = proxyUsername.replace('\\', '/');
-          credentials = new NTCredentials(proxyUsername + ":" + proxyPassword);
-        } else {
-          credentials = new UsernamePasswordCredentials(proxyUsername, proxyPassword);
+        this.proxyHost = host;
+        this.proxyPort = port;
+        this.proxyUsername = username;
+        this.proxyPassword = password;
+        if (host == null || host.trim().length() == 0) {
+            return;
         }
-        CredentialsProvider credsProvider = new BasicCredentialsProvider();
-        credsProvider.setCredentials(AuthScope.ANY, credentials);
-        // TODO check
-        httpClient = HttpClientBuilder.create().setProxy(proxy)
-            .setDefaultCredentialsProvider(credsProvider).build();
+        if (port < 0 || port > 65535) {
+            return;
+        }
 
-        //            httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, credentials);
-      }
+        HttpHost proxy = new HttpHost(proxyHost, proxyPort);
+        //		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
+        DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
+        httpClient = HttpClients.custom().setRoutePlanner(routePlanner).build();
+        logger.info("Using proxy: " + proxy.toHostString());
+
+        if (proxyUsername != null && proxyUsername.trim().length() > 0) {
+            logger.info("Proxy username: " + proxyUsername);
+            Credentials credentials;
+            if (proxyUsername.indexOf('/') >= 0) {
+                credentials = new NTCredentials(proxyUsername + ":" + proxyPassword);
+            } else if (proxyUsername.indexOf('\\') >= 0) {
+                proxyUsername = proxyUsername.replace('\\', '/');
+                credentials = new NTCredentials(proxyUsername + ":" + proxyPassword);
+            } else {
+                credentials = new UsernamePasswordCredentials(proxyUsername, proxyPassword);
+            }
+            CredentialsProvider credsProvider = new BasicCredentialsProvider();
+            credsProvider.setCredentials(AuthScope.ANY, credentials);
+            // TODO check
+            httpClient = HttpClientBuilder.create().setProxy(proxy)
+                    .setDefaultCredentialsProvider(credsProvider).build();
+
+            //            httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, credentials);
+        }
     }
 
     @Override
@@ -367,8 +367,8 @@ public class WssServiceClientImpl implements WssServiceClient {
         } catch (JsonSyntaxException e) {
             throw new WssServiceException("JsonSyntax exception. Response data is:  " + response + e.getMessage(), e);
         } catch (HttpResponseException e) {
-            throw new WssServiceException("Unexpected error. Response data is: " + response + e.getMessage() + " Error code is " + e.getStatusCode(), e.getCause(),e.getStatusCode());
-        } catch (IOException e){
+            throw new WssServiceException("Unexpected error. Response data is: " + response + e.getMessage() + " Error code is " + e.getStatusCode(), e.getCause(), e.getStatusCode());
+        } catch (IOException e) {
             throw new WssServiceException("Unexpected error. Response data is: " + response + e.getMessage(), e);
         }
 
@@ -497,11 +497,12 @@ public class WssServiceClientImpl implements WssServiceClient {
     private void findDefaultProxy() {
         Map<String, String> proxyDetails = findDefaultProxyDetails(serviceUrl);
         if (proxyDetails.size() > 0) {
-            setProxy(proxyDetails.get(PROXY_HOST), Integer.valueOf(proxyDetails.get(PROXY_PORT)), proxyDetails.get(PROXY_USER), proxyDetails.get(PROXY_PASS));
+            setProxy(proxyDetails.get(PROXY_HOST), Integer.parseInt(proxyDetails.get(PROXY_PORT)),
+                    proxyDetails.get(PROXY_USER), proxyDetails.get(PROXY_PASS));
         }
     }
 
-    private ExclusionStrategy getExclusionStrategy(){
+    private ExclusionStrategy getExclusionStrategy() {
         return new ExclusionStrategy() {
             @Override
             public boolean shouldSkipField(FieldAttributes fieldAttributes) {
@@ -544,35 +545,39 @@ public class WssServiceClientImpl implements WssServiceClient {
         return httpClient;
     }
 
-  /* --- Getters  --- */
+    /* --- Getters  --- */
 
     public int getConnectionTimeout() {
-      return connectionTimeout;
+        return connectionTimeout;
+    }
+
+    public int getConnectionTimeoutMinutes() {
+        return connectionTimeout / TO_MILLISECONDS;
     }
 
     public String getProxyHost() {
-      return proxyHost;
+        return proxyHost;
     }
 
     public int getProxyPort() {
-      return proxyPort;
+        return proxyPort;
     }
 
     public String getProxyUsername() {
-      return proxyUsername;
+        return proxyUsername;
     }
 
     public String getProxyPassword() {
-      return proxyPassword;
+        return proxyPassword;
     }
 
     public boolean isProxy() {
-      return proxyEnabled;
+        return proxyEnabled;
     }
 
     @Override
     public boolean getIgnoreCertificateCheck() {
-      return this.ignoreCertificateCheck;
+        return this.ignoreCertificateCheck;
     }
 
     @Override
