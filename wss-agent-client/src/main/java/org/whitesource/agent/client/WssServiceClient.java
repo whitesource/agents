@@ -110,11 +110,25 @@ public interface WssServiceClient {
     /**
      * @return ConnectionTimeout
      */
+    /**
+     *
+     * @return ConnectionTimeout in ms
+     */
     public int getConnectionTimeout();
 
     /**
      * @return isProxy
      */
+    /**
+     *
+     * @return ConnectionTimeout in minutes
+     */
+    public int getConnectionTimeoutMinutes();
+
+  /**
+   *
+   * @return isProxy
+   */
     public boolean isProxy();
 
     /**
