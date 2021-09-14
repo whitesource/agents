@@ -116,4 +116,5 @@ public interface ServiceRequest<R> extends Serializable {
      * @return extra Properties.
      */
     Map<String, String> extraProperties();
+
 }

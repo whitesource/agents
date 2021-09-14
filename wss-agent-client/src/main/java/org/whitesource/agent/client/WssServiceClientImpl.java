@@ -419,6 +419,7 @@ public class WssServiceClientImpl implements WssServiceClient {
                 UpdateInventoryRequest updateInventoryRequest = (UpdateInventoryRequest) request;
                 nvps.add(new BasicNameValuePair(APIConstants.SCAN_SUMMARY_INFO, gson.toJson(updateInventoryRequest.getScanSummaryInfo())));
                 nvps.add(new BasicNameValuePair(APIConstants.PARAM_UPDATE_TYPE, updateInventoryRequest.getUpdateType().toString()));
+                nvps.add(new BasicNameValuePair(APIConstants.CONTRIBUTIONS, gson.toJson(updateInventoryRequest.getContributions())));
                 jsonDiff = gson.toJson(updateInventoryRequest.getProjects());
                 break;
             case CHECK_POLICIES:
@@ -429,6 +430,7 @@ public class WssServiceClientImpl implements WssServiceClient {
                 nvps.add(new BasicNameValuePair(APIConstants.SCAN_SUMMARY_INFO, this.gson.toJson(checkPolicyComplianceRequest.getScanSummaryInfo())));
                 nvps.add(new BasicNameValuePair(APIConstants.PARAM_FORCE_CHECK_ALL_DEPENDENCIES,
                         String.valueOf(checkPolicyComplianceRequest.isForceCheckAllDependencies())));
+                nvps.add(new BasicNameValuePair(APIConstants.CONTRIBUTIONS, this.gson.toJson(checkPolicyComplianceRequest.getContributions())));
                 /*Gson checkPoliciesGson = new GsonBuilder().setPrettyPrinting()
                         .addSerializationExclusionStrategy(getExclusionStrategy())
                         .registerTypeHierarchyAdapter(Collection.class, new CollectionAdapter()).create();

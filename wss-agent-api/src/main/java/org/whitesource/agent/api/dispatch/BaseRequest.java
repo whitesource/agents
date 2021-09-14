@@ -17,6 +17,7 @@ package org.whitesource.agent.api.dispatch;
 
 import org.whitesource.agent.api.model.AgentProjectInfo;
 import org.whitesource.agent.api.model.ScanSummaryInfo;
+import org.whitesource.agent.api.model.contribution.ContributionInfo;
 
 import java.util.*;
 
@@ -74,6 +75,7 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 
     protected ScanSummaryInfo scanSummaryInfo;
 
+    protected Collection<ContributionInfo> contributions;
 
     /* --- Constructors --- */
 
@@ -112,6 +114,7 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
         this.timeStamp = System.currentTimeMillis();
         projects = new ArrayList<AgentProjectInfo>();
         this.extraProperties = new HashMap<>();
+        contributions = new LinkedList<>();
     }
 
     /* --- Interface implementation methods --- */
@@ -295,5 +298,13 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 
     public void setScanSummaryInfo(ScanSummaryInfo scanSummaryInfo) {
         this.scanSummaryInfo = scanSummaryInfo;
+    }
+
+    public Collection<ContributionInfo> getContributions() {
+        return contributions;
+    }
+
+    public void setContributions(Collection<ContributionInfo> contributions) {
+        this.contributions = contributions;
     }
 }
