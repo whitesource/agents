@@ -42,12 +42,7 @@ public class DependencyInfo implements Serializable {
     private String classifier;
     private String scope;
     private String sha1;
-    private String headerSha1;
-    private String footerSha1;
-    private String utf8Sha1;
     private String fullHash;
-    private String mostSigBitsHash;
-    private String leastSigBitsHash;
     private String commentlessSha1;
     private String noNewLinesSha1;
     private String otherPlatformSha1;
@@ -68,6 +63,7 @@ public class DependencyInfo implements Serializable {
     private boolean deduped;
     private OSInfo osInfo;
     private AnalysisInputs analysisInputs;
+    private boolean isRelocated;
 
     /* --- Constructors --- */
 
@@ -110,20 +106,6 @@ public class DependencyInfo implements Serializable {
     public DependencyInfo(String sha1, String fullHash) {
         this(sha1);
         setFullHash(fullHash);
-    }
-
-    /**
-     * Constructor
-     *
-     * @param sha1             - the dependency sha1
-     * @param fullHash         - the dependency fullHash
-     * @param mostSigBitsHash  - the dependency mostSigBitsHash
-     * @param leastSigBitsHash - the dependency leastSigBitsHash
-     */
-    public DependencyInfo(String sha1, String fullHash, String mostSigBitsHash, String leastSigBitsHash) {
-        this(sha1, fullHash);
-        setMostSigBitsHash(mostSigBitsHash);
-        setLeastSigBitsHash(leastSigBitsHash);
     }
 
     /* --- Overridden methods --- */
@@ -309,31 +291,6 @@ public class DependencyInfo implements Serializable {
         this.lastModified = lastModified;
     }
 
-    public String getHeaderSha1() {
-        return headerSha1;
-    }
-
-    public void setHeaderSha1(String headerSha1) {
-        this.headerSha1 = headerSha1;
-    }
-
-    public String getFooterSha1() {
-        return footerSha1;
-    }
-
-    public void setFooterSha1(String footerSha1) {
-        this.footerSha1 = footerSha1;
-    }
-
-    public String getUtf8Sha1() {
-        return utf8Sha1;
-    }
-
-    public void setUtf8Sha1(String utf8Sha1) {
-        this.utf8Sha1 = utf8Sha1;
-        addChecksum(ChecksumType.SHA1_UTF8, utf8Sha1);
-    }
-
     public String getCommentlessSha1() {
         return commentlessSha1;
     }
@@ -367,24 +324,6 @@ public class DependencyInfo implements Serializable {
     public void setFullHash(String fullHash) {
         this.fullHash = fullHash;
         addChecksum(ChecksumType.SHA1_SUPER_HASH, fullHash);
-    }
-
-    public String getMostSigBitsHash() {
-        return mostSigBitsHash;
-    }
-
-    public void setMostSigBitsHash(String mostSigBitsHash) {
-        this.mostSigBitsHash = mostSigBitsHash;
-        addChecksum(ChecksumType.SHA1_SUPER_HASH_MSB, mostSigBitsHash);
-    }
-
-    public String getLeastSigBitsHash() {
-        return leastSigBitsHash;
-    }
-
-    public void setLeastSigBitsHash(String leastSigBitsHash) {
-        this.leastSigBitsHash = leastSigBitsHash;
-        addChecksum(ChecksumType.SHA1_SUPER_HASH_LSB, leastSigBitsHash);
     }
 
     public String getFilename() {
@@ -503,6 +442,14 @@ public class DependencyInfo implements Serializable {
 
     public void setAnalysisInputs(AnalysisInputs analysisInputs) {
         this.analysisInputs = analysisInputs;
+    }
+
+    public boolean isRelocated() {
+        return isRelocated;
+    }
+
+    public void setRelocated(boolean relocated) {
+        isRelocated = relocated;
     }
 
     /* --- Utility methods --- */

@@ -94,8 +94,6 @@ public class HashCalculatorTest {
         HashCalculationResult lsbTestFileHashResult = hashCalculator.calculateSuperHash(lsbTestFile);
 
         Assert.assertEquals("Files must match despite whitespace changes", originFileHashResult.getFullHash(), whitespaceFileHashResult.getFullHash());
-        Assert.assertEquals("File msb hashes must match", originFileHashResult.getMostSigBitsHash(), msbTestFileHashResult.getMostSigBitsHash());
-        Assert.assertEquals("File lsb hashes must match", originFileHashResult.getLeastSigBitsHash(), lsbTestFileHashResult.getLeastSigBitsHash());
 
         File smallFile = new File(URLDecoder.decode(getClass().getResource("/superHash/small-file.txt").getFile(), "utf-8"));
         HashCalculationResult smallFileHashResult = hashCalculator.calculateSuperHash(smallFile);

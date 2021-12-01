@@ -29,19 +29,11 @@ public class HashCalculationResult implements Comparable {
     /* --- Members --- */
 
     private String fullHash;
-    private String mostSigBitsHash;
-    private String leastSigBitsHash;
 
     /* --- Constructors --- */
 
     public HashCalculationResult(String fullHash) {
         this.fullHash = fullHash;
-    }
-
-    public HashCalculationResult(String fullHash, String mostSigBitsHash, String leastSigBitsHash) {
-        this.fullHash = fullHash;
-        this.mostSigBitsHash = mostSigBitsHash;
-        this.leastSigBitsHash = leastSigBitsHash;
     }
 
     /* --- Overridden --- */
@@ -51,8 +43,6 @@ public class HashCalculationResult implements Comparable {
         HashCalculationResult myClass = (HashCalculationResult) o;
         return new CompareToBuilder()
                 .append(this.fullHash, myClass.fullHash)
-                .append(this.mostSigBitsHash, myClass.mostSigBitsHash)
-                .append(this.leastSigBitsHash, myClass.leastSigBitsHash)
                 .toComparison();
     }
 
@@ -61,14 +51,12 @@ public class HashCalculationResult implements Comparable {
         if (this == o) return true;
         if (!(o instanceof HashCalculationResult)) return false;
         HashCalculationResult that = (HashCalculationResult) o;
-        return Objects.equals(fullHash, that.fullHash) &&
-                Objects.equals(mostSigBitsHash, that.mostSigBitsHash) &&
-                Objects.equals(leastSigBitsHash, that.leastSigBitsHash);
+        return Objects.equals(fullHash, that.fullHash);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(fullHash, mostSigBitsHash, leastSigBitsHash);
+        return Objects.hash(fullHash);
     }
 
     /* --- Getters / Setters --- */
@@ -81,19 +69,4 @@ public class HashCalculationResult implements Comparable {
         this.fullHash = fullHash;
     }
 
-    public String getMostSigBitsHash() {
-        return mostSigBitsHash;
-    }
-
-    public void setMostSigBitsHash(String mostSigBitsHash) {
-        this.mostSigBitsHash = mostSigBitsHash;
-    }
-
-    public String getLeastSigBitsHash() {
-        return leastSigBitsHash;
-    }
-
-    public void setLeastSigBitsHash(String leastSigBitsHash) {
-        this.leastSigBitsHash = leastSigBitsHash;
-    }
 }

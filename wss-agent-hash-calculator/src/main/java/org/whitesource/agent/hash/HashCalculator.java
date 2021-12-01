@@ -355,9 +355,7 @@ public class HashCalculator {
         int length = fileWithoutSpaces.length;
         byte[] leastSigBytes = Arrays.copyOfRange(fileWithoutSpaces, length - bucketIntSize, length);
         String fullFileHash = calculateByteArraySHA1(fileWithoutSpaces);
-        String mostSigBitsHash = calculateByteArraySHA1(mostSigBytes);
-        String leastSigBitsHash = calculateByteArraySHA1(leastSigBytes);
-        return new HashCalculationResult(fullFileHash, mostSigBitsHash, leastSigBitsHash);
+        return new HashCalculationResult(fullFileHash);
     }
 
     private String toHex(byte[] bytes) {
