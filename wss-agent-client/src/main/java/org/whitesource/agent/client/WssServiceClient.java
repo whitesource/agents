@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2012 White Source Ltd.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,8 @@ package org.whitesource.agent.client;
 
 import org.apache.http.client.HttpClient;
 import org.whitesource.agent.api.dispatch.*;
+
+import java.util.Map;
 
 /**
  * The interface describes the functionality to be exposed by a client implementation to the White Source agent service.
@@ -37,6 +39,7 @@ public interface WssServiceClient {
 
     /**
      * The method call the White Source service for checking policies application.
+     *
      * @param request Check Policies request.
      * @return Check Policies result.
      * @throws WssServiceException In case an error occurred during the call to WhiteSource server.
@@ -46,6 +49,7 @@ public interface WssServiceClient {
 
     /**
      * The method call the White Source service for checking policies application.
+     *
      * @param request Check Policies request.
      * @return Check Policies result.
      * @throws WssServiceException In case an error occurred during the call to WhiteSource server.
@@ -54,6 +58,7 @@ public interface WssServiceClient {
 
     /**
      * The method call the White Source service for getting additional dependency data.
+     *
      * @param request Get Dependency Data request.
      * @return Get Dependency Data result.
      * @throws WssServiceException In case an error occurred during the call to WhiteSource server.
@@ -92,23 +97,33 @@ public interface WssServiceClient {
      */
     ConfigurationResult getConfiguration(ConfigurationRequest request) throws WssServiceException;
 
-  /**
-   *
-   * @return serviceUrl
-   */
+    /**
+     * @return serviceUrl
+     */
     public String getServiceUrl();
 
-  /**
-   *
-   * @return HttpClient
-   */
+    /**
+     * @return HttpClient
+     */
     public HttpClient getHttpClient();
 
-  /**
-   *
-   * @return ConnectionTimeout
-   */
+    /**
+     * @return ConnectionTimeout
+     */
+    /**
+     *
+     * @return ConnectionTimeout in ms
+     */
     public int getConnectionTimeout();
+
+    /**
+     * @return isProxy
+     */
+    /**
+     *
+     * @return ConnectionTimeout in minutes
+     */
+    public int getConnectionTimeoutMinutes();
 
   /**
    *
@@ -116,34 +131,29 @@ public interface WssServiceClient {
    */
     public boolean isProxy();
 
-  /**
-   *
-   * @return ProxyHost
-   */
-    public String getProxyHost() ;
+    /**
+     * @return ProxyHost
+     */
+    public String getProxyHost();
 
-  /**
-   *
-   * @return ProxyPort
-   */
-    public int getProxyPort() ;
+    /**
+     * @return ProxyPort
+     */
+    public int getProxyPort();
 
-  /**
-   *
-   * @return ProxyUsername
-   */
-    public String getProxyUsername() ;
+    /**
+     * @return ProxyUsername
+     */
+    public String getProxyUsername();
 
-  /**
-   *
-   * @return ProxyPassword
-   */
-    public String getProxyPassword() ;
+    /**
+     * @return ProxyPassword
+     */
+    public String getProxyPassword();
 
-  /**
-   *
-   * @return IgnoreCertificateCheck
-   */
+    /**
+     * @return IgnoreCertificateCheck
+     */
     boolean getIgnoreCertificateCheck();
 
     void shutdown();
@@ -165,4 +175,16 @@ public interface WssServiceClient {
      * @param timeout In milliseconds.
      */
     void setConnectionTimeout(int timeout);
+
+    /**
+     * The method configures custom headers to be appended to each http request
+     *
+     * @param headers the custom headers
+     */
+    void setHeaders(Map<String, String> headers);
+
+    /**
+     * @return the customer headers configured for this client
+     */
+    Map<String, String> getHeaders();
 }

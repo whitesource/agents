@@ -27,7 +27,6 @@ import java.util.Map;
  * @author Edo.Shor
  */
 public class WhitesourceService {
-
     /* --- Members --- */
 
     private WssServiceClient client;
@@ -70,6 +69,7 @@ public class WhitesourceService {
             connectionTimeoutMinutes = Integer.parseInt(System.getProperty(ClientConstants.CONNECTION_TIMEOUT_KEYWORD,
                     String.valueOf(ClientConstants.DEFAULT_CONNECTION_TIMEOUT_MINUTES)));
         }
+
         client = new WssServiceClientImpl(url, setProxy, connectionTimeoutMinutes, ignoreCertificateCheck);
     }
 
@@ -90,7 +90,7 @@ public class WhitesourceService {
       WssServiceClient client = this.getClient();
       WhitesourceService whitesourceService = new WhitesourceService(requestFactory.getAgent(),
           requestFactory.getAgentVersion(), requestFactory.getPluginVersion(),
-          client.getServiceUrl(), client.isProxy(), client.getConnectionTimeout(),
+          client.getServiceUrl(), client.isProxy(), client.getConnectionTimeoutMinutes(),
           client.getIgnoreCertificateCheck());
 
       whitesourceService.getClient()
@@ -888,4 +888,14 @@ public class WhitesourceService {
         this.requestFactory = requestFactory;
     }
 
+    /**
+     * This method allows configuring custom headers to be sent in each HTTP request.
+     *
+     * @param headers custom headers to configure
+     */
+    public void setHeaders(Map<String, String> headers) {
+        if (client != null) {
+            client.setHeaders(headers);
+        }
+    }
 }

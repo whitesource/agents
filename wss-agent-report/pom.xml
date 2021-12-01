@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.whitesource</groupId>
         <artifactId>wss-agent-parent</artifactId>
-        <version>2.9.9.67-SNAPSHOT</version>
+        <version>2.9.9.76-SNAPSHOT</version>
     </parent>
 
     <artifactId>wss-agent-report</artifactId>
@@ -46,6 +46,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
+            <version>${commonsio.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

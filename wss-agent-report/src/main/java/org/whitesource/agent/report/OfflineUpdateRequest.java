@@ -15,23 +15,22 @@
  */
 package org.whitesource.agent.report;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
-import com.sun.org.apache.xpath.internal.axes.UnionPathIterator;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.SerializationUtils;
 import org.whitesource.agent.api.dispatch.UpdateInventoryRequest;
 import org.whitesource.agent.api.dispatch.UpdateType;
 import org.whitesource.agent.api.model.*;
+import org.whitesource.agent.api.model.contribution.ContributionInfo;
+import org.whitesource.agent.api.model.contribution.ContributionInfoCollection;
 import org.whitesource.agent.utils.ZipUtils;
 
-import java.io.*;
-import java.lang.reflect.Field;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -176,6 +175,12 @@ public class OfflineUpdateRequest {
         gson.toJson(extraProperties, Map.class, writer);
         ScanSummaryInfo scanSummaryInfo = this.request.getScanSummaryInfo();
         gson.toJson(scanSummaryInfo, ScanSummaryInfo.class, writer);
+
+        Collection<ContributionInfo> contributions = this.request.getContributions();
+        if (contributions != null) {
+            gson.toJson(contributions, ContributionInfoCollection.class, writer);
+        }
+
         for (AgentProjectInfo agentProjectInfo : this.request.getProjects()){
             Coordinates coordinates = agentProjectInfo.getCoordinates();
             gson.toJson(coordinates, Coordinates.class, writer);
