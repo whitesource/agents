@@ -63,7 +63,6 @@ public class DependencyInfo implements Serializable {
     private boolean deduped;
     private OSInfo osInfo;
     private AnalysisInputs analysisInputs;
-    private boolean isRelocated;
 
     /* --- Constructors --- */
 
@@ -443,14 +442,6 @@ public class DependencyInfo implements Serializable {
 
     public void setAnalysisInputs(AnalysisInputs analysisInputs) {
         this.analysisInputs = analysisInputs;
-    }
-
-    public boolean isRelocated() {
-        return isRelocated;
-    }
-
-    public void setRelocated(boolean relocated) {
-        isRelocated = relocated;
     }
 
     /* --- Utility methods --- */
