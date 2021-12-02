@@ -68,42 +68,6 @@ public final class ChecksumUtils {
         return new HashCalculator().calculateHash(resourceFile, algorithm);
     }
 
-    public static void calculateHeaderAndFooterSha1(File file, DependencyInfo dependencyInfo) {
-        try {
-            int lines = FileUtils.readLines(file).size();
-            if (lines > PARTIAL_SHA1_LINES) {
-                // get lines to read
-                int i = (int) (Math.log((double) lines / PARTIAL_SHA1_LINES) / Math.log(2));
-                int linesToRead = (int) (50 * Math.pow(2, i));
-
-                StringBuilder header = new StringBuilder();
-                StringBuilder footer = new StringBuilder();
-                int lineIndex = 0;
-
-                for (String line : FileUtils.readLines(file)) {
-                    // read header
-                    if (lineIndex < linesToRead) {
-                        header.append(line);
-                    }
-
-                    // read footer
-                    if (lineIndex >= lines - linesToRead) {
-                        footer.append(line);
-                    }
-                    lineIndex++;
-                }
-
-                // calculate sha1s
-                dependencyInfo.setHeaderSha1(DigestUtils.sha1Hex(header.toString()));
-                dependencyInfo.setFooterSha1(DigestUtils.sha1Hex(footer.toString()));
-            }
-        } catch (FileNotFoundException e) {
-            // ignore
-        } catch (IOException e) {
-            // ignore
-        }
-    }
-
     public static void calculateSuperHash(DependencyInfo dependencyInfo, File dependencyFile) {
         StringBuilder superHash = new StringBuilder("");
         HashCalculator superHashCalculator = new HashCalculator();
@@ -113,8 +77,6 @@ public final class ChecksumUtils {
                 HashCalculationResult superHashResult = superHashCalculator.calculateSuperHash(dependencyFile);
                 if (superHashResult != null) {
                     dependencyInfo.setFullHash(superHashResult.getFullHash());
-                    dependencyInfo.setMostSigBitsHash(superHashResult.getMostSigBitsHash());
-                    dependencyInfo.setLeastSigBitsHash(superHashResult.getLeastSigBitsHash());
                     superHash.append(superHashResult.getFullHash());
                 }
             } catch (IOException e) {
