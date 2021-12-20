@@ -70,7 +70,7 @@ public enum DependencyType {
             case ARCH_LINUX: return "Arch Linux";
             case PUB: return "Pub";
             case DOCKER: return "Docker";
-            case YOCTO: return "YOCTO";
+            case YOCTO: return "Yocto";
             default: return super.toString();
         }
     }

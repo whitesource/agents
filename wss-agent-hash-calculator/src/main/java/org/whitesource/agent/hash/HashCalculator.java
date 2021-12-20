@@ -67,6 +67,7 @@ public class HashCalculator {
     private static final String UTF_8 = "utf-8";
 
     private static final String UNDERSCORE = "_";
+    public static final String YOCTO = "YOCTO";
 
     /* --- Static methods --- */
 
@@ -337,15 +338,13 @@ public class HashCalculator {
      * @param revision of recipe
      * @param layer of recipe
      * @param tag of yocto distribution-version
-     * @param type YOCTO
      * @return Calculated SHA-1 of  recipeName_recipeVersion_recipeRevision_layer_yoctoTag_"YOCTO"
      * @throws IOException
      */
     public String calculateSha1ByNameVersionRevisionLayerTagLanguage(String name, String version, String revision,
-                                                                     String layer, String tag ,
-                                                                     DependencyType type) throws IOException {
+                                                                     String layer, String tag) throws IOException {
         String sha1ToCalc = name + UNDERSCORE + version + UNDERSCORE + revision + UNDERSCORE + layer +
-                UNDERSCORE + tag + UNDERSCORE + type;
+                UNDERSCORE + tag + UNDERSCORE + YOCTO;
         return calculateByteArraySHA1(sha1ToCalc.getBytes(StandardCharsets.UTF_8));
     }
 
