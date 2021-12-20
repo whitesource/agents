@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2017 White Source Ltd.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -329,6 +329,25 @@ public class HashCalculator {
         return calculateByteArraySHA1(sha1ToCalc.getBytes(StandardCharsets.UTF_8));
     }
 
+    /**
+     * This is meant for the additionalSha1 of yocto.
+     * <recipeName>_<recipeVersion>_<recipeRevision>_<layer>_<yoctoTag>_<language>
+     * @param name of recipe
+     * @param version of recipe
+     * @param revision of recipe
+     * @param layer of recipe
+     * @param tag of yocto distribution-version
+     * @param type YOCTO
+     * @return Calculated SHA-1 of  recipeName_recipeVersion_recipeRevision_layer_yoctoTag_"YOCTO"
+     * @throws IOException
+     */
+    public String calculateSha1ByNameVersionRevisionLayerTagLanguage(String name, String version, String revision,
+                                                                     String layer, String tag ,
+                                                                     DependencyType type) throws IOException {
+        String sha1ToCalc = name + UNDERSCORE + version + UNDERSCORE + revision + UNDERSCORE + layer +
+                UNDERSCORE + tag + UNDERSCORE + type;
+        return calculateByteArraySHA1(sha1ToCalc.getBytes(StandardCharsets.UTF_8));
+    }
 
     /**
      * Calculates SHA-1 for library by name, version and dependencyType
