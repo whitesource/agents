@@ -54,7 +54,9 @@ public enum DependencyType {
     CONDA,
 
     DOCKER,
-    DOCKER_LAYER;
+    DOCKER_LAYER,
+
+    YOCTO;
 
     @Override
     public String toString() {
@@ -68,6 +70,7 @@ public enum DependencyType {
             case ARCH_LINUX: return "Arch Linux";
             case PUB: return "Pub";
             case DOCKER: return "Docker";
+            case YOCTO: return "Yocto";
             default: return super.toString();
         }
     }
