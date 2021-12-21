@@ -330,22 +330,23 @@ public class HashCalculator {
     }
 
     /**
-     * This is meant for the additionalSha1 of yocto.
-     * <recipeName>_<recipeVersion>_<recipeRevision>_<layer>_<yoctoTag>_<language>
-     * @param name of recipe
-     * @param version of recipe
-     * @param revision of recipe
-     * @param layer of recipe
-     * @param tag of yocto distribution-version
-     * @param type YOCTO
-     * @return Calculated SHA-1 of  recipeName_recipeVersion_recipeRevision_layer_yoctoTag_"YOCTO"
+     * Calculates SHA-1 for library by name_version_revision_layer_tag_type
+     * Example for use in yocto:
+     *  <recipeName>_<recipeVersion>_<recipeRevision>_<layer>_<yoctoTag>_<language>
+     * @param name of library
+     * @param version of library
+     * @param revision of library
+     * @param layer of library
+     * @param tag of library
+     * @param type library
+     * @return Calculated SHA-1 of  name_version_revision_layer_tag_type
      * @throws IOException
      */
     public String calculateSha1ByNameVersionRevisionLayerTagLanguage(String name, String version, String revision,
                                                                      String layer, String tag ,
                                                                      DependencyType type) throws IOException {
         String sha1ToCalc = name + UNDERSCORE + version + UNDERSCORE + revision + UNDERSCORE + layer +
-                UNDERSCORE + tag + UNDERSCORE + type;
+                UNDERSCORE + tag + UNDERSCORE + type.toString();
         return calculateByteArraySHA1(sha1ToCalc.getBytes(StandardCharsets.UTF_8));
     }
 
