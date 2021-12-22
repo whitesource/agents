@@ -15,7 +15,7 @@
  */
 package org.whitesource.agent.client;
 
-import com.btr.proxy.search.ProxySearch;
+import com.github.markusbernhardt.proxy.ProxySearch;
 import com.google.gson.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
