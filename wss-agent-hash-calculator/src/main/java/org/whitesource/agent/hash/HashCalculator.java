@@ -330,9 +330,9 @@ public class HashCalculator {
     }
 
     /**
-     * Calculates SHA-1 for library by name_version_revision_layer_tag_type
+     * Calculates SHA-1 for library by recipeName_recipeVersion_recipeRevision_layer_yoctoTag_language
      * Example for use in yocto:
-     *  <recipeName>_<recipeVersion>_<recipeRevision>_<layer>_<yoctoTag>_<language>
+     *
      * @param name of library
      * @param version of library
      * @param revision of library
@@ -340,7 +340,7 @@ public class HashCalculator {
      * @param tag of library
      * @param type library
      * @return Calculated SHA-1 of  name_version_revision_layer_tag_type
-     * @throws IOException
+     * @throws IOException when failed to calculate sha-1
      */
     public String calculateSha1ByNameVersionRevisionLayerTagLanguage(String name, String version, String revision,
                                                                      String layer, String tag ,
