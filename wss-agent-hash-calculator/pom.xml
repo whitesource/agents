@@ -45,8 +45,8 @@
         <dependency>
             <groupId>net.java.dev.jna</groupId>
             <artifactId>jna-platform</artifactId>
-            <!-- same version as in com.github.markusbernhardt:proxy-vole:1.0.5 -->
-            <version>4.5.1</version>
+            <!-- same version as in org.bidib.com.github.markusbernhardt:proxy-vole -->
+            <version>5.6.0</version>
         </dependency>
 
         <!-- JavaScript parser -->
