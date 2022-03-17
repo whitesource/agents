@@ -1,3 +1,18 @@
 {
-  "settingsInheritedFrom": "whitesource/whitesource-config@main"
+	"settingsInheritedFrom": "whitesource/whitesource-config@main",
+	"scanSettings": {
+		"baseBranches": [
+			"master"
+		]
+	},
+	"remediateSettings": {
+		"enableRenovate": true,
+		"extends": [
+			"config:base"
+		],
+		"baseBranches": [
+			"dev"
+		],
+		"dependencyDashboard": true
+	}
 }
