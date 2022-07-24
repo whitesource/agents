@@ -63,6 +63,7 @@ public class DependencyInfo implements Serializable {
     private boolean deduped;
     private OSInfo osInfo;
     private AnalysisInputs analysisInputs;
+    private String sourcePackageName;
 
     /* --- Constructors --- */
 
@@ -155,6 +156,8 @@ public class DependencyInfo implements Serializable {
                 !vulnerabilityAnalysisResult.equals(that.vulnerabilityAnalysisResult) :
                 that.vulnerabilityAnalysisResult != null)
             return false;
+        if (sourcePackageName != null ? !sourcePackageName.equals(that.sourcePackageName) : that.sourcePackageName != null)
+            return false;
 
         return true;
     }
@@ -177,6 +180,7 @@ public class DependencyInfo implements Serializable {
         result = APIConstants.HASH_CODE_FACTOR * result + (vulnerabilityAnalysisResult != null ? vulnerabilityAnalysisResult.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (commit != null ? commit.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (additionalSha1 != null ? additionalSha1.hashCode() : 0);
+        result = APIConstants.HASH_CODE_FACTOR * result + (sourcePackageName != null ? sourcePackageName.hashCode() : 0);
         return result;
     }
 
@@ -494,5 +498,13 @@ public class DependencyInfo implements Serializable {
                 child.resetUnusedFields();
             }
         }
+    }
+
+    public String getSourcePackageName() {
+        return sourcePackageName;
+    }
+
+    public void setSourcePackageName(String sourcePackageName) {
+        this.sourcePackageName = sourcePackageName;
     }
 }
