@@ -24,7 +24,7 @@ import java.io.Serializable;
  * 
  * @author sami salami
  *
- * @since 2.2.7
+ * @since 2.9.9.80
  */
 public class GetCloudNativeVulnerabilitiesResult implements Serializable {
 

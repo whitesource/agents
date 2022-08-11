@@ -26,7 +26,7 @@ import java.util.Collection;
  * 
  * @author sami salami
  *
- * @since 2.2.7
+ * @since 2.9.9.81
  */
 public class GetCloudNativeVulnerabilitiesRequest extends BaseRequest<CheckVulnerabilitiesResult> {
 
