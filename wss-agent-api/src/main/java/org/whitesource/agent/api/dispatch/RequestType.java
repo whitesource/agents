@@ -21,7 +21,7 @@ package org.whitesource.agent.api.dispatch;
  * @author Edo.Shor
  */
 public enum RequestType {
-	UPDATE ("UPDATE"),
+    UPDATE ("UPDATE"),
     CHECK_POLICIES ("CHECK_POLICIES"),
     CHECK_POLICY_COMPLIANCE ("CHECK_POLICY_COMPLIANCE"),
     CHECK_VULNERABILITIES ("CHECK_VULNERABILITIES"),
