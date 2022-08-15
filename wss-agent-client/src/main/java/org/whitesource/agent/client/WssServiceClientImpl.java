@@ -352,6 +352,9 @@ public class WssServiceClientImpl implements WssServiceClient {
                 case CHECK_VULNERABILITIES:
                     result = (R) gson.fromJson(data, CheckVulnerabilitiesResult.class);
                     break;
+                case GET_CLOUD_NATIVE_VULNERABILITIES:
+                    result = (R) gson.fromJson(data, GetCloudNativeVulnerabilitiesResult.class);
+                    break;
                 case GET_DEPENDENCY_DATA:
                     result = (R) gson.fromJson(data, GetDependencyDataResult.class);
                     break;
@@ -439,6 +442,9 @@ public class WssServiceClientImpl implements WssServiceClient {
                 break;
             case CHECK_VULNERABILITIES:
                 jsonDiff = gson.toJson(((CheckVulnerabilitiesRequest) request).getProjects());
+                break;
+            case GET_CLOUD_NATIVE_VULNERABILITIES:
+                jsonDiff = gson.toJson(((GetCloudNativeVulnerabilitiesRequest) request).getProjects());
                 break;
             case GET_DEPENDENCY_DATA:
                 jsonDiff = gson.toJson(((GetDependencyDataRequest) request).getProjects());
