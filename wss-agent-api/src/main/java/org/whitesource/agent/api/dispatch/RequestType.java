@@ -21,12 +21,23 @@ package org.whitesource.agent.api.dispatch;
  * @author Edo.Shor
  */
 public enum RequestType {
-	UPDATE,
-    CHECK_POLICIES,
-    CHECK_POLICY_COMPLIANCE,
-    CHECK_VULNERABILITIES,
-    GET_CLOUD_NATIVE_VULNERABILITIES,
-    GET_DEPENDENCY_DATA,
-    SUMMARY_SCAN,
-    GET_CONFIGURATION
+	UPDATE ("UPDATE"),
+    CHECK_POLICIES ("CHECK_POLICIES"),
+    CHECK_POLICY_COMPLIANCE ("CHECK_POLICY_COMPLIANCE"),
+    CHECK_VULNERABILITIES ("CHECK_VULNERABILITIES"),
+    GET_CLOUD_NATIVE_VULNERABILITIES ("GET_CLOUD_NATIVE_VULNERABILITIES"),
+    GET_DEPENDENCY_DATA ("GET_DEPENDENCY_DATA"),
+    SUMMARY_SCAN ("SUMMARY_SCAN"),
+    GET_CONFIGURATION ("GET_CONFIGURATION");
+
+    private final String value;
+
+    RequestType(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }
+
