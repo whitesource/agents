@@ -433,6 +433,8 @@ public class WssServiceClientImpl implements WssServiceClient {
                 nvps.add(new BasicNameValuePair(APIConstants.SCAN_SUMMARY_INFO, this.gson.toJson(checkPolicyComplianceRequest.getScanSummaryInfo())));
                 nvps.add(new BasicNameValuePair(APIConstants.PARAM_FORCE_CHECK_ALL_DEPENDENCIES,
                         String.valueOf(checkPolicyComplianceRequest.isForceCheckAllDependencies())));
+                nvps.add(new BasicNameValuePair(APIConstants.PARAM_POPULATE_VULNERABILITIES,
+                        String.valueOf(checkPolicyComplianceRequest.isPopulateVulnerabilities())));
                 nvps.add(new BasicNameValuePair(APIConstants.CONTRIBUTIONS, this.gson.toJson(checkPolicyComplianceRequest.getContributions())));
                 /*Gson checkPoliciesGson = new GsonBuilder().setPrettyPrinting()
                         .addSerializationExclusionStrategy(getExclusionStrategy())
