@@ -39,6 +39,7 @@ public class AgentProjectInfo implements Serializable {
     private Coordinates parentCoordinates;
 
     private Collection<DependencyInfo> dependencies;
+    private Collection<SecretFinding> secretFindings;
 
     private String projectToken;
 
@@ -140,5 +141,9 @@ public class AgentProjectInfo implements Serializable {
 
     public void setViaLanguageName(String viaLanguageName) {
         this.viaLanguageName = viaLanguageName;
+    }
+
+    public Collection<SecretFinding> getSecretFindings() {
+        return secretFindings;
     }
 }
