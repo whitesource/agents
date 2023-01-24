@@ -147,7 +147,7 @@ public class AgentProjectInfo implements Serializable {
         return secretFindings;
     }
 
-    public void setSecretFindings() {
+    public void setSecretFindings(Collection<SecretFinding> secretFindings) {
         this.secretFindings = secretFindings;
     }
 
