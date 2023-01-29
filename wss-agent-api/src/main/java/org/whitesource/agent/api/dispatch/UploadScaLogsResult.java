@@ -5,7 +5,8 @@ import java.util.HashMap;
 public class UploadScaLogsResult extends BaseResult {
 
     /* --- Static members --- */
-    private static final long serialVersionUID = 4057058239018411900L;
+
+    private static final long serialVersionUID = -8474225446757628208L;
 
     /* --- Constructors ---*/
 

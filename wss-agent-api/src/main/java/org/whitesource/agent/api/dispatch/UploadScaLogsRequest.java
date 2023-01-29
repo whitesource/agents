@@ -3,6 +3,11 @@ package org.whitesource.agent.api.dispatch;
 import java.io.File;
 
 public class UploadScaLogsRequest extends BaseRequest<UploadScaLogsResult> {
+
+    /* --- Static members --- */
+
+    private static final long serialVersionUID = -6634396300199014567L;
+
     /* --- Members --- */
 
     private File logfile;
