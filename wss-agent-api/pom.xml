@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.whitesource</groupId>
         <artifactId>wss-agent-parent</artifactId>
-        <version>2.9.9.85-SNAPSHOT</version>
+        <version>2.9.9.85</version>
     </parent>
     <artifactId>wss-agent-api</artifactId>
     <packaging>jar</packaging>
