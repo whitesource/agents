@@ -210,6 +210,21 @@ public class WssServiceClientImpl implements WssServiceClient {
     }
 
     @Override
+    public AsyncCheckPolicyComplianceResult asyncCheckPolicyCompliance(AsyncCheckPolicyComplianceRequest request) throws WssServiceException {
+        return service(request);
+    }
+
+    @Override
+    public AsyncCheckPolicyComplianceStatusResult asyncCheckPolicyComplianceStatus(AsyncCheckPolicyComplianceStatusRequest request) throws WssServiceException {
+        return service(request);
+    }
+
+    @Override
+    public AsyncCheckPolicyComplianceResponseResult asyncCheckPolicyComplianceResponse(AsyncCheckPolicyComplianceResponseRequest request) throws WssServiceException {
+        return service(request);
+    }
+
+    @Override
     public GetDependencyDataResult getDependencyData(GetDependencyDataRequest request) throws WssServiceException {
         return service(request);
     }
@@ -349,6 +364,15 @@ public class WssServiceClientImpl implements WssServiceClient {
                 case CHECK_POLICY_COMPLIANCE:
                     result = (R) gson.fromJson(data, CheckPolicyComplianceResult.class);
                     break;
+                case ASYNC_CHECK_POLICY_COMPLIANCE:
+                    result = (R) gson.fromJson(data, AsyncCheckPolicyComplianceResult.class);
+                    break;
+                case ASYNC_CHECK_POLICY_COMPLIANCE_STATUS:
+                    result = (R) gson.fromJson(data, AsyncCheckPolicyComplianceStatusResult.class);
+                    break;
+                case ASYNC_CHECK_POLICY_COMPLIANCE_RESPONSE:
+                    result = (R) gson.fromJson(data, AsyncCheckPolicyComplianceResponseResult.class);
+                    break;
                 case CHECK_VULNERABILITIES:
                     result = (R) gson.fromJson(data, CheckVulnerabilitiesResult.class);
                     break;
@@ -416,6 +440,8 @@ public class WssServiceClientImpl implements WssServiceClient {
             nvps.add(new BasicNameValuePair(APIConstants.EXTRA_PROPERTIES, "{}"));
         }
 
+        if (requestType == RequestType.ASYNC_CHECK_POLICY_COMPLIANCE)
+            requestType = RequestType.CHECK_POLICY_COMPLIANCE;
         String jsonDiff = null;
         switch (requestType) {
             case UPDATE:
@@ -441,6 +467,12 @@ public class WssServiceClientImpl implements WssServiceClient {
                         .registerTypeHierarchyAdapter(Collection.class, new CollectionAdapter()).create();
                 jsonDiff = checkPoliciesGson.toJson(checkPolicyComplianceRequest.getProjects());*/
                 jsonDiff = gson.toJson(checkPolicyComplianceRequest.getProjects());
+                break;
+            case ASYNC_CHECK_POLICY_COMPLIANCE_STATUS:
+                jsonDiff = gson.toJson(((AsyncCheckPolicyComplianceStatusRequest) request).getProjects());
+                break;
+            case ASYNC_CHECK_POLICY_COMPLIANCE_RESPONSE:
+                jsonDiff = gson.toJson(((AsyncCheckPolicyComplianceResponseRequest) request).getProjects());
                 break;
             case CHECK_VULNERABILITIES:
                 jsonDiff = gson.toJson(((CheckVulnerabilitiesRequest) request).getProjects());
