@@ -472,6 +472,21 @@ public class RequestFactory {
         return (CheckPolicyComplianceRequest) prepareRequest(request);
     }
 
+    public AsyncCheckPolicyComplianceRequest newAsyncCheckPolicyComplianceRequest(AsyncCheckPolicyComplianceRequest request) {
+        return (AsyncCheckPolicyComplianceRequest) prepareRequest(request);
+
+    }
+
+    public AsyncCheckPolicyComplianceStatusRequest newAsyncCheckPolicyComplianceStatusRequest(AsyncCheckPolicyComplianceStatusRequest request) {
+        return (AsyncCheckPolicyComplianceStatusRequest) prepareRequest(request);
+
+    }
+
+    public AsyncCheckPolicyComplianceResponseRequest newAsyncCheckPolicyComplianceResponseRequest(AsyncCheckPolicyComplianceResponseRequest request) {
+        return (AsyncCheckPolicyComplianceResponseRequest) prepareRequest(request);
+
+    }
+
     /**
      * Create new Dependency Data request.
      *
@@ -709,5 +724,6 @@ public class RequestFactory {
     public String getPluginVersion() {
         return pluginVersion;
     }
+
 
 }

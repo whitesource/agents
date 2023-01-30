@@ -624,6 +624,22 @@ public class WhitesourceService {
                 requestFactory.newCheckPolicyComplianceRequest(request));
     }
 
+    public AsyncCheckPolicyComplianceResult asyncCheckPolicyCompliance(AsyncCheckPolicyComplianceRequest request) throws WssServiceException {
+        return client.asyncCheckPolicyCompliance(
+                requestFactory.newAsyncCheckPolicyComplianceRequest(request));
+    }
+
+    public AsyncCheckPolicyComplianceStatusResult asyncCheckPolicyComplianceStatus(AsyncCheckPolicyComplianceStatusRequest request) throws WssServiceException {
+        return client.asyncCheckPolicyComplianceStatus(
+                requestFactory.newAsyncCheckPolicyComplianceStatusRequest(request));
+    }
+
+    public AsyncCheckPolicyComplianceResponseResult asyncCheckPolicyRComplianceResponse(AsyncCheckPolicyComplianceResponseRequest request) throws WssServiceException {
+        return client.asyncCheckPolicyComplianceResponse(
+                requestFactory.newAsyncCheckPolicyComplianceResponseRequest(request));
+    }
+
+
     /**
      * Gets additional data for given dependencies.
      *
