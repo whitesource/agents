@@ -3,9 +3,13 @@ package org.whitesource.agent.api.dispatch;
 import java.io.File;
 
 public class UploadScaLogsRequest extends BaseRequest<UploadScaLogsResult> {
+
+    /* --- Static members --- */
+
+    private static final long serialVersionUID = -6634396300199014567L;
+
     /* --- Members --- */
 
-    private File logfile;
 
     /* --- Constructors --- */
 
@@ -23,9 +27,8 @@ public class UploadScaLogsRequest extends BaseRequest<UploadScaLogsResult> {
      * @param userKey        user key uniquely identifying the account at white source.
      * @param requesterEmail Email of the WhiteSource user that requests to update WhiteSource.
      */
-    public UploadScaLogsRequest(String orgToken, String userKey, String requesterEmail, File file) {
+    public UploadScaLogsRequest(String orgToken, String userKey, String requesterEmail) {
         this();
-        this.logfile = file;
         this.orgToken = orgToken;
         this.userKey = userKey;
         this.requesterEmail = requesterEmail;
