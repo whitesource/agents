@@ -500,7 +500,7 @@ public class WssServiceClientImpl implements WssServiceClient {
 
         nvps.add(new BasicNameValuePair(APIConstants.SCAN_SUMMARY_INFO, this.gson.toJson(br.getScanSummaryInfo())));
         nvps.add(new BasicNameValuePair(APIConstants.CONTRIBUTIONS, this.gson.toJson(br.getContributions())));
-        if (request.type() == RequestType.ASYNC_CHECK_POLICY_COMPLIANCE) {
+        if (request.type() != RequestType.ASYNC_CHECK_POLICY_COMPLIANCE) {
             nvps.add(new BasicNameValuePair(APIConstants.PARAM_FORCE_CHECK_ALL_DEPENDENCIES,
                     String.valueOf(((CheckPolicyComplianceRequest)br).isForceCheckAllDependencies())));
             nvps.add(new BasicNameValuePair(APIConstants.PARAM_POPULATE_VULNERABILITIES,
