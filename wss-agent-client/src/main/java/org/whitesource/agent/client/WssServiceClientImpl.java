@@ -210,6 +210,21 @@ public class WssServiceClientImpl implements WssServiceClient {
     }
 
     @Override
+    public AsyncCheckPolicyComplianceResult asyncCheckPolicyCompliance(AsyncCheckPolicyComplianceRequest request) throws WssServiceException {
+        return service(request);
+    }
+
+    @Override
+    public AsyncCheckPolicyComplianceStatusResult asyncCheckPolicyComplianceStatus(AsyncCheckPolicyComplianceStatusRequest request) throws WssServiceException {
+        return service(request);
+    }
+
+    @Override
+    public AsyncCheckPolicyComplianceResponseResult asyncCheckPolicyComplianceResponse(AsyncCheckPolicyComplianceResponseRequest request) throws WssServiceException {
+        return service(request);
+    }
+
+    @Override
     public GetDependencyDataResult getDependencyData(GetDependencyDataRequest request) throws WssServiceException {
         return service(request);
     }
@@ -349,6 +364,15 @@ public class WssServiceClientImpl implements WssServiceClient {
                 case CHECK_POLICY_COMPLIANCE:
                     result = (R) gson.fromJson(data, CheckPolicyComplianceResult.class);
                     break;
+                case ASYNC_CHECK_POLICY_COMPLIANCE:
+                    result = (R) gson.fromJson(data, AsyncCheckPolicyComplianceResult.class);
+                    break;
+                case ASYNC_CHECK_POLICY_COMPLIANCE_STATUS:
+                    result = (R) gson.fromJson(data, AsyncCheckPolicyComplianceStatusResult.class);
+                    break;
+                case ASYNC_CHECK_POLICY_COMPLIANCE_RESPONSE:
+                    result = (R) gson.fromJson(data, AsyncCheckPolicyComplianceResponseResult.class);
+                    break;
                 case CHECK_VULNERABILITIES:
                     result = (R) gson.fromJson(data, CheckVulnerabilitiesResult.class);
                     break;
@@ -429,18 +453,16 @@ public class WssServiceClientImpl implements WssServiceClient {
                 jsonDiff = gson.toJson(((CheckPoliciesRequest) request).getProjects());
                 break;
             case CHECK_POLICY_COMPLIANCE:
-                CheckPolicyComplianceRequest checkPolicyComplianceRequest = (CheckPolicyComplianceRequest) request;
-                nvps.add(new BasicNameValuePair(APIConstants.SCAN_SUMMARY_INFO, this.gson.toJson(checkPolicyComplianceRequest.getScanSummaryInfo())));
-                nvps.add(new BasicNameValuePair(APIConstants.PARAM_FORCE_CHECK_ALL_DEPENDENCIES,
-                        String.valueOf(checkPolicyComplianceRequest.isForceCheckAllDependencies())));
-                nvps.add(new BasicNameValuePair(APIConstants.PARAM_POPULATE_VULNERABILITIES,
-                        String.valueOf(checkPolicyComplianceRequest.isPopulateVulnerabilities())));
-                nvps.add(new BasicNameValuePair(APIConstants.CONTRIBUTIONS, this.gson.toJson(checkPolicyComplianceRequest.getContributions())));
-                /*Gson checkPoliciesGson = new GsonBuilder().setPrettyPrinting()
-                        .addSerializationExclusionStrategy(getExclusionStrategy())
-                        .registerTypeHierarchyAdapter(Collection.class, new CollectionAdapter()).create();
-                jsonDiff = checkPoliciesGson.toJson(checkPolicyComplianceRequest.getProjects());*/
-                jsonDiff = gson.toJson(checkPolicyComplianceRequest.getProjects());
+            case ASYNC_CHECK_POLICY_COMPLIANCE:
+                jsonDiff = handleCheckPolicyReq(nvps, request);
+                break;
+            case ASYNC_CHECK_POLICY_COMPLIANCE_STATUS:
+                jsonDiff = gson.toJson(((AsyncCheckPolicyComplianceStatusRequest) request).getProjects());
+                nvps.add(new BasicNameValuePair(APIConstants.IDENTIFIER, ((AsyncCheckPolicyComplianceStatusRequest) request).getIdentifier()));
+                break;
+            case ASYNC_CHECK_POLICY_COMPLIANCE_RESPONSE:
+                jsonDiff = gson.toJson(((AsyncCheckPolicyComplianceResponseRequest) request).getProjects());
+                nvps.add(new BasicNameValuePair(APIConstants.IDENTIFIER, ((AsyncCheckPolicyComplianceResponseRequest) request).getIdentifier()));
                 break;
             case CHECK_VULNERABILITIES:
                 jsonDiff = gson.toJson(((CheckVulnerabilitiesRequest) request).getProjects());
@@ -473,6 +495,26 @@ public class WssServiceClientImpl implements WssServiceClient {
         }
 
         return httpRequest;
+    }
+
+    private <R> String handleCheckPolicyReq(List<NameValuePair> nvps, ServiceRequest<R> request) {
+        BaseRequest<R> br = (BaseRequest<R>) request;
+
+        nvps.add(new BasicNameValuePair(APIConstants.SCAN_SUMMARY_INFO, this.gson.toJson(br.getScanSummaryInfo())));
+        nvps.add(new BasicNameValuePair(APIConstants.CONTRIBUTIONS, this.gson.toJson(br.getContributions())));
+        if (request.type() != RequestType.ASYNC_CHECK_POLICY_COMPLIANCE) {
+            nvps.add(new BasicNameValuePair(APIConstants.PARAM_FORCE_CHECK_ALL_DEPENDENCIES,
+                    String.valueOf(((CheckPolicyComplianceRequest)br).isForceCheckAllDependencies())));
+            nvps.add(new BasicNameValuePair(APIConstants.PARAM_POPULATE_VULNERABILITIES,
+                    String.valueOf(((CheckPolicyComplianceRequest)br).isPopulateVulnerabilities())));
+        } else {
+            nvps.add(new BasicNameValuePair(APIConstants.PARAM_FORCE_CHECK_ALL_DEPENDENCIES,
+                    String.valueOf(((AsyncCheckPolicyComplianceRequest)br).isForceCheckAllDependencies())));
+            nvps.add(new BasicNameValuePair(APIConstants.PARAM_POPULATE_VULNERABILITIES,
+                    String.valueOf(((AsyncCheckPolicyComplianceRequest)br).isPopulateVulnerabilities())));
+        }
+
+        return gson.toJson(br.getProjects());
     }
 
     /**
