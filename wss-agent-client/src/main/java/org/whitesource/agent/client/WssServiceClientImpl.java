@@ -458,9 +458,11 @@ public class WssServiceClientImpl implements WssServiceClient {
                 break;
             case ASYNC_CHECK_POLICY_COMPLIANCE_STATUS:
                 jsonDiff = gson.toJson(((AsyncCheckPolicyComplianceStatusRequest) request).getProjects());
+                nvps.add(new BasicNameValuePair(APIConstants.IDENTIFIER, ((AsyncCheckPolicyComplianceStatusRequest) request).getIdentifier()));
                 break;
             case ASYNC_CHECK_POLICY_COMPLIANCE_RESPONSE:
                 jsonDiff = gson.toJson(((AsyncCheckPolicyComplianceResponseRequest) request).getProjects());
+                nvps.add(new BasicNameValuePair(APIConstants.IDENTIFIER, ((AsyncCheckPolicyComplianceResponseRequest) request).getIdentifier()));
                 break;
             case CHECK_VULNERABILITIES:
                 jsonDiff = gson.toJson(((CheckVulnerabilitiesRequest) request).getProjects());
