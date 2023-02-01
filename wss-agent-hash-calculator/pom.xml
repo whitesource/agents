@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.whitesource</groupId>
         <artifactId>wss-agent-parent</artifactId>
-        <version>2.9.9.86-SNAPSHOT</version>
+        <version>2.9.9.86</version>
     </parent>
 
     <groupId>org.whitesource</groupId>
     <artifactId>wss-agent-hash-calculator</artifactId>
-    <version>2.9.9.86-SNAPSHOT</version>
+    <version>2.9.9.86</version>
 
     <dependencies>
         <dependency>
