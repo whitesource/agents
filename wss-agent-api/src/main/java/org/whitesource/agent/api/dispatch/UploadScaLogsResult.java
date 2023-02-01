@@ -1,7 +1,5 @@
 package org.whitesource.agent.api.dispatch;
 
-import java.util.HashMap;
-
 public class UploadScaLogsResult extends BaseResult {
 
     /* --- Static members --- */

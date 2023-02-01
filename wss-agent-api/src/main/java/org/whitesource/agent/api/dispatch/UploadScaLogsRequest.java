@@ -1,7 +1,5 @@
 package org.whitesource.agent.api.dispatch;
 
-import java.io.File;
-
 public class UploadScaLogsRequest extends BaseRequest<UploadScaLogsResult> {
 
     /* --- Static members --- */
