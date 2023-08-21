@@ -20,6 +20,7 @@ import org.whitesource.agent.api.AgentApiVersion;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 /**
@@ -46,6 +47,12 @@ public class ResourceInfo implements Serializable {
      */
     private String sha1;
     private Collection<VulnerabilityInfo> vulnerabilities;
+    /**
+     *
+     * @since 2.9.9.87
+     */
+    private Collection<String> ignoredVulnerabilities;
+
     private String homepageUrl;
     private String description;
     /**
@@ -68,6 +75,7 @@ public class ResourceInfo implements Serializable {
     public ResourceInfo() {
         licenses = new LinkedList<>();
         vulnerabilities = new LinkedList<>();
+        ignoredVulnerabilities = new HashSet<>();
     }
 
     /**
@@ -156,6 +164,14 @@ public class ResourceInfo implements Serializable {
 
     public void setVulnerabilities(Collection<VulnerabilityInfo> vulnerabilities) {
         this.vulnerabilities = vulnerabilities;
+    }
+
+    public Collection<String> getIgnoredVulnerabilities() {
+        return ignoredVulnerabilities;
+    }
+
+    public void setIgnoredVulnerabilities(Collection<String> ignoredVulnerabilities) {
+        this.ignoredVulnerabilities = ignoredVulnerabilities;
     }
 
     public String getHomepageUrl() {
