@@ -20,6 +20,7 @@ import org.whitesource.agent.api.AgentApiVersion;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 
 /**
@@ -74,7 +75,7 @@ public class ResourceInfo implements Serializable {
     public ResourceInfo() {
         licenses = new LinkedList<>();
         vulnerabilities = new LinkedList<>();
-        ignoredVulnerabilities = new LinkedList<>();
+        ignoredVulnerabilities = new HashSet<>();
     }
 
     /**
