@@ -57,7 +57,7 @@ public enum DependencyType {
     DOCKER_LAYER,
 
     YOCTO,
-    ML_PACKAGE,
+    ML_MODEL,
     SWIFT;
 
     @Override
