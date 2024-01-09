@@ -57,8 +57,8 @@ public enum DependencyType {
     DOCKER_LAYER,
 
     YOCTO,
-    ML_MODEL,
-    SWIFT;
+    SWIFT,
+    ML_MODEL;
 
     @Override
     public String toString() {
