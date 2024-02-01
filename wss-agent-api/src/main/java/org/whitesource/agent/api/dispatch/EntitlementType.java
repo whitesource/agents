@@ -10,7 +10,8 @@ public enum EntitlementType {
     CN("CN"),
     LLM("LLM"),
     IMG("IMG"),
-    IAC("IAC");
+    IAC("IAC"),
+    CONTAINER_SECURITY("CONTAINER_SECURITY");
 
     private final String value;
 
