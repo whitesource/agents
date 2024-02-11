@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2014 WhiteSource Ltd.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,10 +25,7 @@ import org.whitesource.agent.api.model.contribution.ContributionInfo;
 import org.whitesource.agent.api.model.contribution.ContributionInfoCollection;
 import org.whitesource.agent.utils.ZipUtils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Map;
@@ -64,11 +61,10 @@ public class OfflineUpdateRequest {
     /**
      * The method generates the update request file.
      *
-     * @param outputDir Directory where request file will be created.
-     * @param zip Whether or not to zip the request.
+     * @param outputDir  Directory where request file will be created.
+     * @param zip        Whether or not to zip the request.
      * @param prettyJson Whether or not to parse the json before writing to file (only if zip is false).
-     * @param filePath path to the output file; null by default
-     *
+     * @param filePath   path to the output file; null by default
      * @return File reference to the resulting request.
      * @throws java.io.IOException In case of errors during file generation process.
      */
@@ -80,9 +76,9 @@ public class OfflineUpdateRequest {
         // prepare working directory
         File workDir;
         File requestFile;
-        if (filePath != null){
+        if (filePath != null) {
             String fileSeparator = System.getProperty("file.separator");
-            if (filePath.contains(fileSeparator)){
+            if (filePath.contains(fileSeparator)) {
                 requestFile = new File(filePath);
                 String folderName = filePath.substring(0, filePath.lastIndexOf(fileSeparator));
                 workDir = new File(folderName);
@@ -97,40 +93,15 @@ public class OfflineUpdateRequest {
         if (!workDir.exists() && !workDir.mkdir()) {
             throw new IOException("Unable to make output directory: " + workDir);
         }
-
-        String json;
-        if (zip) {
-            json = new Gson().toJson(request);
-            json = ZipUtils.compressString(json);
-        } else if (prettyJson) {
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            /*Gson gson = new GsonBuilder().setPrettyPrinting()
-                    .addSerializationExclusionStrategy(getExclusionStrategy())
-                    .registerTypeHierarchyAdapter(Collection.class, new CollectionAdapter()).create();*/
-            json = gson.toJson(request);
-            //json = turnRequestToJson(gson);
-        } else {
-            json = new Gson().toJson(request);
+        try (JsonWriter writer = new JsonWriter(new FileWriter(requestFile))) {
+            Gson gson = new Gson();
+            gson.toJson(request, UpdateInventoryRequest.class, writer);
         }
-
-
-        /*ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(request);*/
-
-        /*byte[] serialize = SerializationUtils.serialize(request);
-        FileUtils.writeByteArrayToFile(requestFile, serialize);*/
-
-        /*FileOutputStream fileOut = new FileOutputStream(requestFile.getPath());
-        ObjectOutputStream objectOut = new ObjectOutputStream(fileOut);
-        objectOut.writeObject(request);
-        objectOut.close();*/
-
-        FileUtils.writeStringToFile(requestFile, json, UTF_8);
         return requestFile;
     }
 
     // excluding attributes 'optional', 'checksums' & 'deduped' from the json
-    private ExclusionStrategy getExclusionStrategy(){
+    private ExclusionStrategy getExclusionStrategy() {
         return new ExclusionStrategy() {
             @Override
             public boolean shouldSkipField(FieldAttributes fieldAttributes) {
@@ -181,7 +152,7 @@ public class OfflineUpdateRequest {
             gson.toJson(contributions, ContributionInfoCollection.class, writer);
         }
 
-        for (AgentProjectInfo agentProjectInfo : this.request.getProjects()){
+        for (AgentProjectInfo agentProjectInfo : this.request.getProjects()) {
             Coordinates coordinates = agentProjectInfo.getCoordinates();
             gson.toJson(coordinates, Coordinates.class, writer);
             Coordinates parentCoordinates = agentProjectInfo.getParentCoordinates();
@@ -194,7 +165,7 @@ public class OfflineUpdateRequest {
             gson.toJson(projectTags, Collection.class, writer);
             String projectToken = agentProjectInfo.getProjectToken();
             gson.toJson(projectToken, String.class, writer);
-            for (DependencyInfo dependencyInfo : agentProjectInfo.getDependencies()){
+            for (DependencyInfo dependencyInfo : agentProjectInfo.getDependencies()) {
                 gson.toJson(dependencyInfo, DependencyInfo.class, writer);
             }
         }
