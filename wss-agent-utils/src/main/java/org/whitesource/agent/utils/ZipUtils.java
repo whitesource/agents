@@ -17,6 +17,7 @@ package org.whitesource.agent.utils;
  */
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Base64OutputStream;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -188,6 +189,17 @@ public class ZipUtils {
         }
     }
 
+    public static ByteArrayOutputStream compressOutputStream(InputStream inputStream, OutputStream outputStream) throws IOException {
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            fillExportStreamCompress(inputStream, byteArrayOutputStream);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            org.apache.commons.codec.binary.Base64OutputStream base64OutputStream = new Base64OutputStream(baos, true);
+            byteArrayOutputStream.writeTo(base64OutputStream);
+            base64OutputStream.close();
+            return baos;
+
+        }
+    }
 
     public static String decompressString(String text) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();

@@ -18,9 +18,10 @@ package org.whitesource.agent.client;
 import com.github.markusbernhardt.proxy.ProxySearch;
 import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
@@ -43,6 +44,8 @@ import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.*;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
@@ -52,19 +55,20 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 import org.whitesource.agent.api.APIConstants;
 import org.whitesource.agent.api.dispatch.*;
 import org.whitesource.agent.api.model.AgentProjectInfo;
+import org.whitesource.agent.utils.ByteArrayOutputStreamToInputStream;
 import org.whitesource.agent.utils.ZipUtils;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.*;
-import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.util.*;
-import java.util.stream.Collectors;
-
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 /**
  * Default Implementation of the interface using Apache's HttpClient.
@@ -353,19 +357,11 @@ public class WssStreamServiceClientImpl implements WssServiceClient {
             HttpRequestBase httpRequest = createHttpRequest(request);
             RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
             httpRequest.setConfig(requestConfig);
+
             logger.trace("Calling White Source service: " + request);
-
-            try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-                try (CloseableHttpResponse resp = httpClient.execute(httpRequest)) {
-                    // Get the response entity
-                    HttpEntity responseEntity = resp.getEntity();
-
-                    if (responseEntity != null) {
-                        // Read the response content
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(responseEntity.getContent()));
-                        response = reader.lines().collect(Collectors.joining("\n"));
-                    }
-                }
+            try (CloseableHttpResponse resp = httpClient.execute(httpRequest)) {
+                response = EntityUtils.toString(resp.getEntity());
+                logger.trace("Response Code: " + resp.getStatusLine().getStatusCode());
             }
             String data = extractResultData(response);
             logger.trace("Result data is: " + data);
@@ -413,8 +409,6 @@ public class WssStreamServiceClientImpl implements WssServiceClient {
             throw new WssServiceException("Unexpected error. Response data is: " + response + e.getMessage() + " Error code is " + e.getStatusCode(), e.getCause(), e.getStatusCode());
         } catch (IOException e) {
             throw new WssServiceException("Unexpected error. Response data is: " + response + e.getMessage(), e);
-        } catch (Exception e) {
-            throw new WssServiceException("Unexpected error. error: " + e.getMessage(), e);
         }
 
         return result;
@@ -427,10 +421,9 @@ public class WssStreamServiceClientImpl implements WssServiceClient {
      * @return Newly created HTTP post request.
      * @throws IOException In case of error creating the request.
      */
-    protected <R> HttpRequestBase createHttpRequest(ServiceRequest<R> request) throws Exception {
+    protected <R> HttpRequestBase createHttpRequest(ServiceRequest<R> request) throws IOException, WssServiceException {
         HttpPost httpRequest = new HttpPost(serviceUrl);
         httpRequest.setHeader("Accept", ClientConstants.APPLICATION_JSON);
-
         RequestType requestType = request.type();
         List<NameValuePair> nvps = new ArrayList<>();
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_REQUEST_TYPE, requestType.toString()));
@@ -457,78 +450,66 @@ public class WssStreamServiceClientImpl implements WssServiceClient {
         } else {
             nvps.add(new BasicNameValuePair(APIConstants.EXTRA_PROPERTIES, "{}"));
         }
-
-        String jsonDiff = null;
         switch (requestType) {
             case UPDATE:
                 UpdateInventoryRequest updateInventoryRequest = (UpdateInventoryRequest) request;
                 nvps.add(new BasicNameValuePair(APIConstants.SCAN_SUMMARY_INFO, gson.toJson(updateInventoryRequest.getScanSummaryInfo())));
                 nvps.add(new BasicNameValuePair(APIConstants.PARAM_UPDATE_TYPE, updateInventoryRequest.getUpdateType().toString()));
                 nvps.add(new BasicNameValuePair(APIConstants.CONTRIBUTIONS, gson.toJson(updateInventoryRequest.getContributions())));
-                jsonDiff = streamProjectInfos(updateInventoryRequest.getProjects());
-                break;
-            case CHECK_POLICIES:
-                jsonDiff = streamProjectInfos(((CheckPoliciesRequest) request).getProjects());
                 break;
             case CHECK_POLICY_COMPLIANCE:
             case ASYNC_CHECK_POLICY_COMPLIANCE:
-                jsonDiff = handleCheckPolicyReq(nvps, request);
+                handleCheckPolicyReq(nvps, request);
                 break;
             case ASYNC_CHECK_POLICY_COMPLIANCE_STATUS:
-                jsonDiff = streamProjectInfos(((AsyncCheckPolicyComplianceStatusRequest) request).getProjects());
                 nvps.add(new BasicNameValuePair(APIConstants.IDENTIFIER, ((AsyncCheckPolicyComplianceStatusRequest) request).getIdentifier()));
                 break;
             case ASYNC_CHECK_POLICY_COMPLIANCE_RESPONSE:
-                jsonDiff = streamProjectInfos(((AsyncCheckPolicyComplianceResponseRequest) request).getProjects());
                 nvps.add(new BasicNameValuePair(APIConstants.IDENTIFIER, ((AsyncCheckPolicyComplianceResponseRequest) request).getIdentifier()));
-                break;
-            case CHECK_VULNERABILITIES:
-                jsonDiff = streamProjectInfos(((CheckVulnerabilitiesRequest) request).getProjects());
-                break;
-            case GET_CLOUD_NATIVE_VULNERABILITIES:
-                jsonDiff = streamProjectInfos(((GetCloudNativeVulnerabilitiesRequest) request).getProjects());
-                break;
-            case GET_DEPENDENCY_DATA:
-                jsonDiff = streamProjectInfos(((GetDependencyDataRequest) request).getProjects());
-                break;
-            case SUMMARY_SCAN:
-                SummaryScanRequest summaryScanRequest = (SummaryScanRequest) request;
-                jsonDiff = streamProjectInfos(summaryScanRequest.getProjects());
-                break;
-            case GET_CONFIGURATION:
-                jsonDiff = streamProjectInfos(((ConfigurationRequest) request).getProjects());
                 break;
             default:
                 break;
         }
-
-        // compress json before sending
-        String compressedString = ZipUtils.compressString(jsonDiff);
-        nvps.add(new BasicNameValuePair(APIConstants.PARAM_DIFF, compressedString));
-
-        httpRequest.setEntity(new UrlEncodedFormEntity(nvps, UTF_8));
-
+        try {
+            ByteArrayOutputStream byteStream = streamProjects(((BaseRequest) request).getProjects());
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(byteStream.toByteArray());
+            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+            ByteArrayOutputStream encodedCompressedStream = ZipUtils.compressOutputStream(inputStream, outStream);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            for (NameValuePair nvp : nvps) {
+                baos.write(nvp.toString().getBytes());
+                baos.write("&".getBytes());
+            }
+            baos.write((APIConstants.PARAM_DIFF + "=").getBytes());
+            encodedCompressedStream.writeTo(baos);
+            InputStream is = new ByteArrayOutputStreamToInputStream(baos);
+            InputStreamEntity reqEntity = new InputStreamEntity(is, ContentType.APPLICATION_FORM_URLENCODED);
+            reqEntity.setChunked(true);
+            httpRequest.setEntity(reqEntity);
+        } catch (IOException e) {
+            throw new WssServiceException("Error compressing projects", e);
+        }
         if (headers != null) {
             headers.forEach(httpRequest::setHeader);
         }
-
         return httpRequest;
     }
 
-    private String streamProjectInfos(Collection<AgentProjectInfo> projects) throws Exception {
-        StringWriter stringWriter = new StringWriter();
-        JsonWriter writer = new JsonWriter(stringWriter);
-        writer.setIndent("");
-        writer.beginArray();
-        for (AgentProjectInfo project : projects) {
-            gson.toJson(project, AgentProjectInfo.class, writer);
+    private ByteArrayOutputStream streamProjects(Collection<AgentProjectInfo> projects) throws IOException {
+        java.io.ByteArrayOutputStream outputStream = new java.io.ByteArrayOutputStream();
+        try (JsonWriter writer = new JsonWriter(new OutputStreamWriter(outputStream))) {
+            writer.beginArray(); // Start writing array
+            for (AgentProjectInfo project : projects) {
+                gson.toJson(project, AgentProjectInfo.class, writer);
+            }
+            writer.endArray(); // End writing array
+            return outputStream;
+        } catch (IOException e) {
+            throw new IOException(e);
         }
-        writer.endArray();
-        writer.close();
-        return stringWriter.toString();
     }
 
-    private <R> String handleCheckPolicyReq(List<NameValuePair> nvps, ServiceRequest<R> request) {
+    private <R> void handleCheckPolicyReq(List<NameValuePair> nvps, ServiceRequest<R> request) {
         BaseRequest<R> br = (BaseRequest<R>) request;
 
         nvps.add(new BasicNameValuePair(APIConstants.SCAN_SUMMARY_INFO, this.gson.toJson(br.getScanSummaryInfo())));
@@ -544,12 +525,10 @@ public class WssStreamServiceClientImpl implements WssServiceClient {
             nvps.add(new BasicNameValuePair(APIConstants.PARAM_POPULATE_VULNERABILITIES,
                     String.valueOf(((AsyncCheckPolicyComplianceRequest) br).isPopulateVulnerabilities())));
         }
-
-        return gson.toJson(br.getProjects());
     }
 
     /**
-     * The method extract the data from the given {@link ResultEnvelope}.
+     * The method extract the data from the given {@link org.whitesource.agent.api.dispatch.ResultEnvelope}.
      *
      * @param response HTTP response as string.
      * @return String with logical result in JSON format.
