@@ -18,8 +18,6 @@ package org.whitesource.agent.client;
 import com.github.markusbernhardt.proxy.ProxySearch;
 import com.google.gson.*;
 import com.google.gson.stream.JsonWriter;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpHost;
@@ -34,7 +32,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -67,8 +64,6 @@ import java.lang.reflect.Type;
 import java.net.*;
 import java.security.KeyStore;
 import java.util.*;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
 
 /**
  * Default Implementation of the interface using Apache's HttpClient.
@@ -472,9 +467,10 @@ public class WssStreamServiceClientImpl implements WssServiceClient {
         }
         try {
             ByteArrayOutputStream byteStream = streamProjects(((BaseRequest) request).getProjects());
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(byteStream.toByteArray());
+            InputStream projStream = new ByteArrayOutputStreamToInputStream(byteStream);
+            //ByteArrayInputStream inputStream = new ByteArrayInputStream(projStream);
             ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-            ByteArrayOutputStream encodedCompressedStream = ZipUtils.compressOutputStream(inputStream, outStream);
+            ByteArrayOutputStream encodedCompressedStream = ZipUtils.compressOutputStream(projStream, outStream);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             for (NameValuePair nvp : nvps) {
                 baos.write(nvp.toString().getBytes());
