@@ -32,10 +32,12 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.params.HttpClientParams;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
@@ -62,6 +64,7 @@ import org.whitesource.agent.utils.ZipUtils;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.util.*;
 
@@ -468,27 +471,48 @@ public class WssStreamServiceClientImpl implements WssServiceClient {
         try {
             ByteArrayOutputStream byteStream = streamProjects(((BaseRequest) request).getProjects());
             InputStream projStream = new ByteArrayOutputStreamToInputStream(byteStream);
-            //ByteArrayInputStream inputStream = new ByteArrayInputStream(projStream);
             ByteArrayOutputStream outStream = new ByteArrayOutputStream();
             ByteArrayOutputStream encodedCompressedStream = ZipUtils.compressOutputStream(projStream, outStream);
+            ByteArrayOutputStream urlEncodedDiff = encodediff(encodedCompressedStream);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            for (NameValuePair nvp : nvps) {
-                baos.write(nvp.toString().getBytes());
-                baos.write("&".getBytes());
-            }
+            byte[] paramsArray = URLEncodedUtils.format(nvps, StandardCharsets.UTF_8).getBytes(StandardCharsets.UTF_8);
+            baos.write(paramsArray);
+            baos.write("&".getBytes());
             baos.write((APIConstants.PARAM_DIFF + "=").getBytes());
-            encodedCompressedStream.writeTo(baos);
+            urlEncodedDiff.writeTo(baos);
             InputStream is = new ByteArrayOutputStreamToInputStream(baos);
             InputStreamEntity reqEntity = new InputStreamEntity(is, ContentType.APPLICATION_FORM_URLENCODED);
             reqEntity.setChunked(true);
+            reqEntity.setContentType(ContentType.APPLICATION_FORM_URLENCODED.getMimeType());
             httpRequest.setEntity(reqEntity);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new WssServiceException("Error compressing projects", e);
         }
         if (headers != null) {
             headers.forEach(httpRequest::setHeader);
         }
         return httpRequest;
+    }
+
+    public static ByteArrayOutputStream encodediff(ByteArrayOutputStream input) throws Exception {
+        try {
+            InputStream is = new ByteArrayOutputStreamToInputStream(input);
+            // Create a new ByteArrayOutputStream to store the encoded data
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+            // Get the content of the input ByteArrayOutputStream
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            //is.reset(); // Ensure reading from the beginning of the input stream
+            while ((bytesRead = is.read(buffer)) != -1) {
+                // URL encode the current chunk of data and write it to the output stream
+                output.write(URLEncoder.encode(new String(buffer, 0, bytesRead), "UTF-8").getBytes());
+            }
+
+            return output;
+        } catch (Exception e) {
+            throw new Exception(e);
+        }
     }
 
     private ByteArrayOutputStream streamProjects(Collection<AgentProjectInfo> projects) throws IOException {
