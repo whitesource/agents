@@ -17,6 +17,7 @@ package org.whitesource.agent.utils;
  */
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Base64InputStream;
 import org.apache.commons.codec.binary.Base64OutputStream;
 
 import java.io.*;
@@ -193,7 +194,7 @@ public class ZipUtils {
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             fillExportStreamCompress(inputStream, byteArrayOutputStream);
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            org.apache.commons.codec.binary.Base64OutputStream base64OutputStream = new Base64OutputStream(baos, true);
+            org.apache.commons.codec.binary.Base64OutputStream base64OutputStream = new Base64OutputStream(baos, true, -1, null);
             byteArrayOutputStream.writeTo(base64OutputStream);
             base64OutputStream.close();
             return baos;
