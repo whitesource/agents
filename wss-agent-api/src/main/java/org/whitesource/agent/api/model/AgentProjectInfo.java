@@ -61,6 +61,17 @@ public class AgentProjectInfo implements Serializable {
         projectTags = new ArrayList<>();
     }
 
+    public AgentProjectInfo(AgentProjectInfo other) {
+        this.coordinates = other.coordinates;
+        this.parentCoordinates = other.parentCoordinates;
+        this.dependencies = other.dependencies != null ? new ArrayList<>(other.dependencies) : null;
+        this.secretFindings = other.secretFindings != null ? new ArrayList<>(other.secretFindings) : null;
+        this.projectToken = other.projectToken;
+        this.projectSetupStatus = other.projectSetupStatus;
+        this.projectSetupDescription = other.projectSetupDescription;
+        this.projectTags = other.projectTags != null ? new ArrayList<>(other.projectTags) : null;
+        this.viaLanguageName = other.viaLanguageName;
+    }
     /* --- Overridden methods --- */
 
     @Override

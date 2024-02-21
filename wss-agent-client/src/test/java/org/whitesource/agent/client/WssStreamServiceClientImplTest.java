@@ -6,6 +6,7 @@
 //import org.junit.Before;
 //import org.junit.Ignore;
 //import org.junit.Test;
+//import org.whitesource.agent.api.dispatch.ConfigurationRequest;
 //import org.whitesource.agent.api.dispatch.UpdateInventoryRequest;
 //import org.whitesource.agent.api.dispatch.UpdateType;
 //import org.whitesource.agent.api.model.AgentProjectInfo;
@@ -19,6 +20,7 @@
 //
 //public class WssStreamServiceClientImplTest {
 //    UpdateInventoryRequest request;
+//    ConfigurationRequest cRequest;
 //    Collection<AgentProjectInfo> projects;
 //    String url;
 //    String userKey;
@@ -48,7 +50,7 @@
 //            dependency.setSha1("779f60f3844dadc3ef597976fcb1e5127b1f343d");
 //            children.add(dependency);
 //        }
-//        for (int i = 0; i < 2500000; i++) {
+//        for (int i = 0; i < 500000; i++) {
 //            DependencyInfo dependency = new DependencyInfo();
 //            dependency.setArtifactId("guava");
 //            dependency.setGroupId("com.google.guava");
@@ -79,9 +81,17 @@
 //        request.setAggregateModules(false);
 //        request.setPreserveModuleStructure(false);
 //        request.setUpdateType(UpdateType.OVERRIDE);
+//        cRequest = new ConfigurationRequest(apiKey,"streaming-test","",userKey,"muhammad.abu-elula@whitesourcesoftware.com","25d61abeb6a94166932aff211a1d929f258ee9b246ca42c5a245e23920ed1d9f");
+//       // cRequest.setProjects(projects);
+//        cRequest.setAgent("fs-agent");
+//        cRequest.setAgentVersion("2.9.9.90-SNAPSHOT");
+//        cRequest.setOrgToken(apiKey);
+//        cRequest.setUserKey(userKey);
+//        cRequest.setProduct("streaming-test");
+//        cRequest.setTimeStamp(System.currentTimeMillis());
+//        cRequest.setPluginVersion("24.1.2");
 //
 //    }
-//
 //    @After
 //    public void tearDown() throws Exception {
 //    }
@@ -92,6 +102,7 @@
 //
 //        WssStreamServiceClientImpl streamClient = new WssStreamServiceClientImpl(url, false, 60, true);
 //        try {
+//            //streamClient.getConfiguration(cRequest);
 //            streamClient.updateInventory(request);
 //
 //        } catch (Exception e) {

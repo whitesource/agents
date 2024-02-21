@@ -109,6 +109,39 @@ public class DependencyInfo implements Serializable {
         setFullHash(fullHash);
     }
 
+    public DependencyInfo(DependencyInfo dependency) {
+        this.groupId = dependency.groupId;
+        this.artifactId = dependency.artifactId;
+        this.version = dependency.version;
+        this.type = dependency.type;
+        this.classifier = dependency.classifier;
+        this.scope = dependency.scope;
+        this.sha1 = dependency.sha1;
+        this.fullHash = dependency.fullHash;
+        this.commentlessSha1 = dependency.commentlessSha1;
+        this.noNewLinesSha1 = dependency.noNewLinesSha1;
+        this.otherPlatformSha1 = dependency.otherPlatformSha1;
+        this.systemPath = dependency.systemPath;
+        this.optional = dependency.optional;
+        this.children = dependency.children != null ? new ArrayList<>(dependency.children) : null;
+        this.lastModified = dependency.lastModified;
+        this.filename = dependency.filename;
+        this.dependencyType = dependency.dependencyType;
+        this.hints = dependency.hints;
+        this.checksums = dependency.checksums != null ? new TreeMap<>(dependency.checksums) : null;
+        this.vulnerabilityAnalysisResult = dependency.vulnerabilityAnalysisResult;
+        this.commit = dependency.commit;
+        this.dependencyFile = dependency.dependencyFile;
+        this.additionalSha1 = dependency.additionalSha1;
+        this.architecture = dependency.architecture;
+        this.languageVersion = dependency.languageVersion;
+        this.deduped = dependency.deduped;
+        this.osInfo = dependency.osInfo;
+        this.analysisInputs = dependency.analysisInputs;
+        this.sourcePackageName = dependency.sourcePackageName;
+        this.release   = dependency.release;
+    }
+
     /* --- Overridden methods --- */
 
     @Override
@@ -446,7 +479,9 @@ public class DependencyInfo implements Serializable {
         this.osInfo = osInfo;
     }
 
-    public AnalysisInputs getAnalysisInputs() { return analysisInputs; }
+    public AnalysisInputs getAnalysisInputs() {
+        return analysisInputs;
+    }
 
     public void setAnalysisInputs(AnalysisInputs analysisInputs) {
         this.analysisInputs = analysisInputs;
@@ -457,7 +492,7 @@ public class DependencyInfo implements Serializable {
     /**
      * This method initializes the analysis inputs only if it's null.
      * Otherwise, nothing will happen.
-     *
+     * <p>
      * The artifactId is copied to the analysisInputs object.
      */
     public void initAnalysisInputs() {

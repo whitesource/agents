@@ -58,10 +58,11 @@ import org.apache.http.util.EntityUtils;
 import org.whitesource.agent.api.APIConstants;
 import org.whitesource.agent.api.dispatch.*;
 import org.whitesource.agent.api.model.AgentProjectInfo;
-import org.whitesource.agent.utils.ByteArrayOutputStreamToInputStream;
+import org.whitesource.agent.api.model.DependencyInfo;
 import org.whitesource.agent.utils.ZipUtils;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
@@ -355,11 +356,12 @@ public class WssStreamServiceClientImpl implements WssServiceClient {
             HttpRequestBase httpRequest = createHttpRequest(request);
             RequestConfig requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.STANDARD).build();
             httpRequest.setConfig(requestConfig);
-
             logger.trace("Calling White Source service: " + request);
             try (CloseableHttpResponse resp = httpClient.execute(httpRequest)) {
                 response = EntityUtils.toString(resp.getEntity());
                 logger.trace("Response Code: " + resp.getStatusLine().getStatusCode());
+            } catch (Exception e) {
+                throw new WssServiceException("Unexpected error. err: " + e.getMessage(), e);
             }
             String data = extractResultData(response);
             logger.trace("Result data is: " + data);
@@ -422,6 +424,12 @@ public class WssStreamServiceClientImpl implements WssServiceClient {
     protected <R> HttpRequestBase createHttpRequest(ServiceRequest<R> request) throws IOException, WssServiceException {
         HttpPost httpRequest = new HttpPost(serviceUrl);
         httpRequest.setHeader("Accept", ClientConstants.APPLICATION_JSON);
+//        if (((BaseRequest) request).getProjects() == null || ((BaseRequest) request).getProjects().isEmpty() ){
+//            appendDummyProject(request);
+//        }
+        PipedOutputStream pos = new PipedOutputStream();
+        PipedInputStream pis = new PipedInputStream(pos);
+
         RequestType requestType = request.type();
         List<NameValuePair> nvps = new ArrayList<>();
         nvps.add(new BasicNameValuePair(APIConstants.PARAM_REQUEST_TYPE, requestType.toString()));
@@ -468,67 +476,124 @@ public class WssStreamServiceClientImpl implements WssServiceClient {
             default:
                 break;
         }
-        try {
-            ByteArrayOutputStream byteStream = streamProjects(((BaseRequest) request).getProjects());
-            InputStream projStream = new ByteArrayOutputStreamToInputStream(byteStream);
-            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-            ByteArrayOutputStream encodedCompressedStream = ZipUtils.compressOutputStream(projStream, outStream);
-            ByteArrayOutputStream urlEncodedDiff = encodediff(encodedCompressedStream);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            byte[] paramsArray = URLEncodedUtils.format(nvps, StandardCharsets.UTF_8).getBytes(StandardCharsets.UTF_8);
-            baos.write(paramsArray);
-            baos.write("&".getBytes());
-            baos.write((APIConstants.PARAM_DIFF + "=").getBytes());
-            urlEncodedDiff.writeTo(baos);
-            InputStream is = new ByteArrayOutputStreamToInputStream(baos);
-            InputStreamEntity reqEntity = new InputStreamEntity(is, ContentType.APPLICATION_FORM_URLENCODED);
-            reqEntity.setChunked(true);
-            reqEntity.setContentType(ContentType.APPLICATION_FORM_URLENCODED.getMimeType());
-            httpRequest.setEntity(reqEntity);
-        } catch (Exception e) {
-            throw new WssServiceException("Error compressing projects", e);
+        if (requestType == RequestType.UPDATE || requestType == RequestType.CHECK_POLICIES || requestType == RequestType.CHECK_POLICY_COMPLIANCE || requestType == RequestType.ASYNC_CHECK_POLICY_COMPLIANCE) {
+            new Thread(() -> {
+                try {
+                    byte[] paramsArray = URLEncodedUtils.format(nvps, StandardCharsets.UTF_8).getBytes(StandardCharsets.UTF_8);
+                    pos.write(paramsArray);
+                    pos.write("&".getBytes());
+                    pos.write((APIConstants.PARAM_DIFF + "=").getBytes());
+                    streamProjects(((BaseRequest) request).getProjects(), pos);
+                    ZipUtils.compressOutputStream(pis, pos);
+                    encodediff(pis,pos);
+                } catch (Exception e) {
+                    throw new RuntimeException("failed processing update", e);
+                } finally {
+                    try {
+                        pos.close();
+                    } catch (IOException e) {
+                        throw new RuntimeException("failed closing piped stream: ", e);
+                    }
+                }
+            }).start();
+            //    if (requestType == RequestType.UPDATE) {
+            InputStreamEntity entity = new InputStreamEntity(pis, ContentType.APPLICATION_FORM_URLENCODED);
+            entity.setChunked(true);
+            httpRequest.setEntity(entity);
+        } else {
+            String compressedString = ZipUtils.compressString(gson.toJson(((BaseRequest<R>) request).getProjects()));
+            nvps.add(new BasicNameValuePair(APIConstants.PARAM_DIFF, compressedString));
+
+            httpRequest.setEntity(new UrlEncodedFormEntity(nvps, UTF_8));
         }
         if (headers != null) {
             headers.forEach(httpRequest::setHeader);
         }
         return httpRequest;
     }
-
-    public static ByteArrayOutputStream encodediff(ByteArrayOutputStream input) throws Exception {
-        try {
-            InputStream is = new ByteArrayOutputStreamToInputStream(input);
-            // Create a new ByteArrayOutputStream to store the encoded data
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-
-            // Get the content of the input ByteArrayOutputStream
+    public static void encodediff(PipedInputStream pis, PipedOutputStream pos) throws Exception {
+        try (OutputStreamWriter writer = new OutputStreamWriter(pos, StandardCharsets.UTF_8)) {
             byte[] buffer = new byte[1024];
-            int bytesRead;
-            //is.reset(); // Ensure reading from the beginning of the input stream
-            while ((bytesRead = is.read(buffer)) != -1) {
-                // URL encode the current chunk of data and write it to the output stream
-                output.write(URLEncoder.encode(new String(buffer, 0, bytesRead), "UTF-8").getBytes());
+            int len;
+            while ((len = pis.read(buffer)) != -1) {
+                String encodedString = URLEncoder.encode(new String(buffer, 0, len, StandardCharsets.UTF_8), StandardCharsets.UTF_8.toString());
+                writer.write(encodedString);
             }
-
-            return output;
-        } catch (Exception e) {
-            throw new Exception(e);
         }
     }
 
-    private ByteArrayOutputStream streamProjects(Collection<AgentProjectInfo> projects) throws IOException {
-        java.io.ByteArrayOutputStream outputStream = new java.io.ByteArrayOutputStream();
-        try (JsonWriter writer = new JsonWriter(new OutputStreamWriter(outputStream))) {
-            writer.beginArray(); // Start writing array
-            for (AgentProjectInfo project : projects) {
-                gson.toJson(project, AgentProjectInfo.class, writer);
-            }
-            writer.endArray(); // End writing array
-            return outputStream;
-        } catch (IOException e) {
-            throw new IOException(e);
-        }
-    }
+    private void streamProjects(Collection<AgentProjectInfo> projects,PipedOutputStream pos) throws IOException {
+        OutputStreamWriter osw = new OutputStreamWriter(pos, StandardCharsets.UTF_8);
+        JsonWriter writer = new JsonWriter(osw);
 
+        writer.beginArray(); // Start of projects
+
+        for (AgentProjectInfo project : projects) {
+            writer.beginObject(); // Start of project
+
+            // Use Java Reflection to iterate over all fields
+            for (Field field : AgentProjectInfo.class.getDeclaredFields()) {
+                field.setAccessible(true); // You might want to set this only if your field is private
+                Object value;
+                try {
+                    value = field.get(project);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e); // This should never happen
+                }
+
+                // Check if the field value is not null and the field is not "dependencies"
+                if (value != null && !field.getName().equals("dependencies") && !field.getName().equals("serialVersionUID")) {
+                    writer.name(field.getName()).jsonValue(gson.toJson(value));
+                }
+            }
+
+            // Now handle the "dependencies" field separately
+            if (project.getDependencies() != null) {
+                writer.name("dependencies");
+                writer.beginArray();
+                for (DependencyInfo dependency : project.getDependencies()) {
+                    streamDependencyInfo(dependency, writer);
+                }
+                writer.endArray();
+            }
+
+            writer.endObject(); // End of project
+        }
+
+        writer.endArray(); // End of projects
+        writer.close();
+    }
+    private void streamDependencyInfo(DependencyInfo dependency, JsonWriter writer) throws IOException {
+        writer.beginObject(); // Start DependencyInfo object
+
+        // Manually write the properties of the DependencyInfo object
+        // Use Java Reflection to iterate over all fields
+        for (Field field : DependencyInfo.class.getDeclaredFields()) {
+            field.setAccessible(true); // You might want to set this only if your field is private
+            Object value;
+            try {
+                value = field.get(dependency);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e); // This should never happen
+            }
+
+            // Check if the field value is not null and the field is not "children"
+            if (value != null && !field.getName().equals("children") && !field.getName().equals("serialVersionUID")) {
+                writer.name(field.getName()).jsonValue(gson.toJson(value));
+            }
+        }
+
+        // Now add the "children" property
+        if (dependency.getChildren() != null) {
+            writer.name("children");
+            writer.beginArray();
+            for (DependencyInfo child : dependency.getChildren()) {
+                streamDependencyInfo(child, writer);
+            }
+            writer.endArray();
+        }
+        writer.endObject(); // End DependencyInfo object
+    }
     private <R> void handleCheckPolicyReq(List<NameValuePair> nvps, ServiceRequest<R> request) {
         BaseRequest<R> br = (BaseRequest<R>) request;
 
