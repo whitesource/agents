@@ -32,7 +32,7 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
     private static final long serialVersionUID = 7731258010033962980L;
 
     private UpdateType updateType = UpdateType.OVERRIDE;
-
+    private String scanUuid;
     /* --- Constructors --- */
 
     /**
@@ -55,12 +55,37 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
     /**
      * Constructor
      *
+     * @param projects Open Source usage statement to update White Source.
+     * @param scanUuid scan uuid
+     */
+    public UpdateInventoryRequest(Collection<AgentProjectInfo> projects, String scanUuid) {
+        this();
+        this.projects = projects;
+        this.scanUuid = scanUuid;
+    }
+
+    /**
+     * Constructor
+     *
      * @param projects   Open Source usage statement to update White Source.
      * @param updateType Request UpdateType
      */
     public UpdateInventoryRequest(Collection<AgentProjectInfo> projects, UpdateType updateType) {
         this(projects);
         this.updateType = updateType;
+    }
+
+    /**
+     * Constructor
+     *
+     * @param projects   Open Source usage statement to update White Source.
+     * @param updateType Request UpdateType
+     * @param scanUuid   scan uuid
+     */
+    public UpdateInventoryRequest(Collection<AgentProjectInfo> projects, UpdateType updateType, String scanUuid) {
+        this(projects);
+        this.updateType = updateType;
+        this.scanUuid = scanUuid;
     }
 
     /**
@@ -77,6 +102,19 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
     /**
      * Constructor
      *
+     * @param orgToken WhiteSource organization token.
+     * @param projects Open Source usage statement to update White Source.
+     * @param scanUuid scan uuid
+     */
+    public UpdateInventoryRequest(String orgToken, Collection<AgentProjectInfo> projects, String scanUuid) {
+        this(projects);
+        this.orgToken = orgToken;
+        this.scanUuid = scanUuid;
+    }
+
+    /**
+     * Constructor
+     *
      * @param orgToken   WhiteSource organization token.
      * @param projects   Open Source usage statement to update White Source.
      * @param updateType Request UpdateType
@@ -86,20 +124,33 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
         this.updateType = updateType;
     }
 
+    /**
+     * Constructor
+     *
+     * @param orgToken   WhiteSource organization token.
+     * @param projects   Open Source usage statement to update White Source.
+     * @param updateType Request UpdateType
+     * @param scanUuid   scan uuid
+     */
+    public UpdateInventoryRequest(String orgToken, Collection<AgentProjectInfo> projects, UpdateType updateType, String scanUuid) {
+        this(orgToken, projects);
+        this.updateType = updateType;
+        this.scanUuid = scanUuid;
+    }
 
     /**
      * Constructor
      *
-     * @param orgToken        Organization token uniquely identifying the account at white source.
-     * @param requesterEmail  Email of the WhiteSource user that requests to update WhiteSource.
-     * @param updateType      Request UpdateType
-     * @param product         The product name or token to update.
-     * @param productVersion  The product version.
-     * @param productToken    The product token.
-     * @param projects        OSS usage information to send to white source.
-     * @param userKey         user key uniquely identifying the account at white source.
-     * @param logData         list of FSA's log data events
-     * @param scanComment     scan description
+     * @param orgToken       Organization token uniquely identifying the account at white source.
+     * @param requesterEmail Email of the WhiteSource user that requests to update WhiteSource.
+     * @param updateType     Request UpdateType
+     * @param product        The product name or token to update.
+     * @param productVersion The product version.
+     * @param productToken   The product token.
+     * @param projects       OSS usage information to send to white source.
+     * @param userKey        user key uniquely identifying the account at white source.
+     * @param logData        list of FSA's log data events
+     * @param scanComment    scan description
      */
     public UpdateInventoryRequest(String orgToken, String requesterEmail, UpdateType updateType, String product, String productVersion, Collection<AgentProjectInfo> projects,
                                   String userKey, String logData, String scanComment, String productToken) {
@@ -111,6 +162,34 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
         this.logData = logData;
         this.scanComment = scanComment;
         this.productToken = productToken;
+    }
+
+    /**
+     * Constructor
+     *
+     * @param orgToken       Organization token uniquely identifying the account at white source.
+     * @param requesterEmail Email of the WhiteSource user that requests to update WhiteSource.
+     * @param updateType     Request UpdateType
+     * @param product        The product name or token to update.
+     * @param productVersion The product version.
+     * @param productToken   The product token.
+     * @param projects       OSS usage information to send to white source.
+     * @param userKey        user key uniquely identifying the account at white source.
+     * @param logData        list of FSA's log data events
+     * @param scanComment    scan description
+     * @param scanUuid       scan uuid
+     */
+    public UpdateInventoryRequest(String orgToken, String requesterEmail, UpdateType updateType, String product, String productVersion, Collection<AgentProjectInfo> projects,
+                                  String userKey, String logData, String scanComment, String productToken, String scanUuid) {
+        this(orgToken, projects, updateType);
+        this.requesterEmail = requesterEmail;
+        this.product = product;
+        this.productVersion = productVersion;
+        this.userKey = userKey;
+        this.logData = logData;
+        this.scanComment = scanComment;
+        this.productToken = productToken;
+        this.scanUuid = scanUuid;
     }
 
     /**
@@ -141,16 +220,46 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
         this.scanSummaryInfo = scanSummaryInfo;
     }
 
+    /**
+     * Constructor
+     *
+     * @param orgToken        Organization token uniquely identifying the account at white source.
+     * @param requesterEmail  Email of the WhiteSource user that requests to update WhiteSource.
+     * @param updateType      Request UpdateType
+     * @param product         The product name or token to update.
+     * @param productVersion  The product version.
+     * @param productToken    The product token.
+     * @param projects        OSS usage information to send to white source.
+     * @param userKey         user key uniquely identifying the account at white source.
+     * @param logData         list of FSA's log data events
+     * @param scanComment     scan description
+     * @param productToken    The product token.
+     * @param scanSummaryInfo Summary statistics for each step in Unified Agent
+     * @param scanUuid        scan uuid
+     */
+    public UpdateInventoryRequest(String orgToken, String requesterEmail, UpdateType updateType, String product, String productVersion, Collection<AgentProjectInfo> projects,
+                                  String userKey, String logData, String scanComment, String productToken, ScanSummaryInfo scanSummaryInfo, String scanUuid) {
+        this(orgToken, projects, updateType);
+        this.requesterEmail = requesterEmail;
+        this.product = product;
+        this.productVersion = productVersion;
+        this.userKey = userKey;
+        this.logData = logData;
+        this.scanComment = scanComment;
+        this.productToken = productToken;
+        this.scanSummaryInfo = scanSummaryInfo;
+        this.scanUuid = scanUuid;
+    }
 
     /**
      * Constructor to create offline request
      *
-     * @param orgToken        Organization token uniquely identifying the account at white source.
-     * @param product         The product name or token to update.
-     * @param productVersion  The product version.
-     * @param projects        OSS usage information to send to white source.
-     * @param userKey         user key uniquely identifying the account at white source.
-     * @param scanComment     scan description
+     * @param orgToken       Organization token uniquely identifying the account at white source.
+     * @param product        The product name or token to update.
+     * @param productVersion The product version.
+     * @param projects       OSS usage information to send to white source.
+     * @param userKey        user key uniquely identifying the account at white source.
+     * @param scanComment    scan description
      */
     public UpdateInventoryRequest(String orgToken, String product, String productVersion, Collection<AgentProjectInfo> projects, String userKey, String scanComment) {
         this(orgToken, projects);
@@ -158,6 +267,26 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
         this.productVersion = productVersion;
         this.userKey = userKey;
         this.scanComment = scanComment;
+    }
+
+    /**
+     * Constructor to create offline request
+     *
+     * @param orgToken       Organization token uniquely identifying the account at white source.
+     * @param product        The product name or token to update.
+     * @param productVersion The product version.
+     * @param projects       OSS usage information to send to white source.
+     * @param userKey        user key uniquely identifying the account at white source.
+     * @param scanComment    scan description
+     * @param scanUuid       scan uuid
+     */
+    public UpdateInventoryRequest(String orgToken, String product, String productVersion, Collection<AgentProjectInfo> projects, String userKey, String scanComment, String scanUuid) {
+        this(orgToken, projects);
+        this.product = product;
+        this.productVersion = productVersion;
+        this.userKey = userKey;
+        this.scanComment = scanComment;
+        this.scanUuid = scanUuid;
     }
 
     /**
@@ -181,6 +310,28 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
         this.scanSummaryInfo = scanSummaryInfo;
     }
 
+    /**
+     * Constructor to create offline request
+     *
+     * @param orgToken        Organization token uniquely identifying the account at white source.
+     * @param product         The product name or token to update.
+     * @param productVersion  The product version.
+     * @param projects        OSS usage information to send to white source.
+     * @param userKey         user key uniquely identifying the account at white source.
+     * @param scanComment     scan description
+     * @param scanSummaryInfo Summary statistics for each step in Unified Agent
+     * @param scanUuid        scan uuid
+     */
+    public UpdateInventoryRequest(String orgToken, String product, String productVersion, Collection<AgentProjectInfo> projects, String userKey, String scanComment,
+                                  ScanSummaryInfo scanSummaryInfo, String scanUuid) {
+        this(orgToken, projects);
+        this.product = product;
+        this.productVersion = productVersion;
+        this.userKey = userKey;
+        this.scanComment = scanComment;
+        this.scanSummaryInfo = scanSummaryInfo;
+        this.scanUuid = scanUuid;
+    }
 
 
     /**
@@ -195,5 +346,19 @@ public class UpdateInventoryRequest extends BaseRequest<UpdateInventoryResult> {
      */
     public void setUpdateType(UpdateType updateType) {
         this.updateType = updateType;
+    }
+
+    /**
+     * @return scanUuid
+     */
+    public String getScanUuid() {
+        return scanUuid;
+    }
+
+    /**
+     * @param scanUuid scan uuid
+     */
+    public void setScanUuid(String scanUuid) {
+        this.scanUuid = scanUuid;
     }
 }
