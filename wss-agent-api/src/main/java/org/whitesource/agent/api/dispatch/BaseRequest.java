@@ -76,6 +76,7 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
     protected ScanSummaryInfo scanSummaryInfo;
 
     protected Collection<ContributionInfo> contributions;
+    protected String scanUuid;
 
     /* --- Constructors --- */
 
@@ -115,6 +116,26 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
         projects = new ArrayList<AgentProjectInfo>();
         this.extraProperties = new HashMap<>();
         contributions = new LinkedList<>();
+    }
+    /**
+     * Constructor
+     *
+     * @param type          Request operation type.
+     * @param agent         Agent type identifier.
+     * @param agentVersion  Agent version.
+     * @param pluginVersion Plugin version.
+     * @param scanUuid      Scan UUID.
+     */
+    public BaseRequest(RequestType type, String agent, String agentVersion, String pluginVersion, String scanUuid) {
+        this.type = type;
+        this.agent = agent;
+        this.agentVersion = agentVersion;
+        this.pluginVersion = pluginVersion;
+        this.timeStamp = System.currentTimeMillis();
+        projects = new ArrayList<AgentProjectInfo>();
+        this.extraProperties = new HashMap<>();
+        contributions = new LinkedList<>();
+        this.scanUuid = scanUuid;
     }
 
     /* --- Interface implementation methods --- */
@@ -208,6 +229,10 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
     @Override
     public Map<String, String> extraProperties() {
         return extraProperties;
+    }
+    @Override
+    public String scanUuid() {
+        return scanUuid;
     }
 
     /* --- Getters / Setters --- */
@@ -306,5 +331,11 @@ public abstract class BaseRequest<R> implements ServiceRequest<R> {
 
     public void setContributions(Collection<ContributionInfo> contributions) {
         this.contributions = contributions;
+    }
+    public void setScanUuid(String scanUuid) {
+        this.scanUuid = scanUuid;
+    }
+    public String getScanUuid() {
+        return scanUuid;
     }
 }

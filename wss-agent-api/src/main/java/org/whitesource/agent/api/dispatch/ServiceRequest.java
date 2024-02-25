@@ -117,4 +117,6 @@ public interface ServiceRequest<R> extends Serializable {
      */
     Map<String, String> extraProperties();
 
+    String scanUuid();
+
 }
