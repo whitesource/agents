@@ -56,6 +56,12 @@ public interface WssServiceClient {
      */
     CheckPolicyComplianceResult checkPolicyCompliance(CheckPolicyComplianceRequest request) throws WssServiceException;
 
+    AsyncCheckPolicyComplianceResult asyncCheckPolicyCompliance(AsyncCheckPolicyComplianceRequest request) throws WssServiceException;
+
+    AsyncCheckPolicyComplianceStatusResult asyncCheckPolicyComplianceStatus(AsyncCheckPolicyComplianceStatusRequest request) throws WssServiceException;
+
+    AsyncCheckPolicyComplianceResponseResult asyncCheckPolicyComplianceResponse(AsyncCheckPolicyComplianceResponseRequest request) throws WssServiceException;
+
     /**
      * The method call the White Source service for getting additional dependency data.
      *

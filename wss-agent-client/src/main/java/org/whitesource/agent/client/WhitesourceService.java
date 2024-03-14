@@ -73,6 +73,26 @@ public class WhitesourceService {
         client = new WssServiceClientImpl(url, setProxy, connectionTimeoutMinutes, ignoreCertificateCheck);
     }
 
+    public WhitesourceService(final String agent, final String agentVersion, String pluginVersion, final String serviceUrl, boolean setProxy,
+                              int connectionTimeoutMinutes, boolean ignoreCertificateCheck, boolean useStreams) {
+        requestFactory = new RequestFactory(agent, agentVersion, pluginVersion);
+
+        String url = serviceUrl;
+        if (url == null || url.trim().length() == 0) {
+            url = System.getProperty(ClientConstants.SERVICE_URL_KEYWORD, ClientConstants.DEFAULT_SERVICE_URL);
+        }
+
+        if (connectionTimeoutMinutes <= 0) {
+            connectionTimeoutMinutes = Integer.parseInt(System.getProperty(ClientConstants.CONNECTION_TIMEOUT_KEYWORD,
+                    String.valueOf(ClientConstants.DEFAULT_CONNECTION_TIMEOUT_MINUTES)));
+        }
+        if (useStreams) {
+            client = new WssStreamServiceClientImpl(url, setProxy, connectionTimeoutMinutes, ignoreCertificateCheck);
+        } else {
+            client = new WssServiceClientImpl(url, setProxy, connectionTimeoutMinutes, ignoreCertificateCheck);
+        }
+    }
+
     // backward compatibility methods (plugin version is not a parameter)
 
     public WhitesourceService(final String agent, final String agentVersion, final String serviceUrl, boolean setProxy) {
@@ -87,21 +107,21 @@ public class WhitesourceService {
     /* --- Public methods --- */
 
     public WhitesourceService cloneWhitesourceService() {
-      WssServiceClient client = this.getClient();
-      WhitesourceService whitesourceService = new WhitesourceService(requestFactory.getAgent(),
-          requestFactory.getAgentVersion(), requestFactory.getPluginVersion(),
-          client.getServiceUrl(), client.isProxy(), client.getConnectionTimeoutMinutes(),
-          client.getIgnoreCertificateCheck());
+        WssServiceClient client = this.getClient();
+        WhitesourceService whitesourceService = new WhitesourceService(requestFactory.getAgent(),
+                requestFactory.getAgentVersion(), requestFactory.getPluginVersion(),
+                client.getServiceUrl(), client.isProxy(), client.getConnectionTimeoutMinutes(),
+                client.getIgnoreCertificateCheck());
 
-      whitesourceService.getClient()
-          .setProxy(client.getProxyHost(), client.getProxyPort(), client.getProxyUsername(),
-              client.getProxyPassword());
+        whitesourceService.getClient()
+                .setProxy(client.getProxyHost(), client.getProxyPort(), client.getProxyUsername(),
+                        client.getProxyPassword());
 
-      return whitesourceService;
+        return whitesourceService;
     }
 
 
-  /**
+    /**
      * Updates the White Source organization account with the given OSS information.
      *
      * @param orgToken       Organization token uniquely identifying the account at white source.
@@ -623,6 +643,22 @@ public class WhitesourceService {
         return client.checkPolicyCompliance(
                 requestFactory.newCheckPolicyComplianceRequest(request));
     }
+
+    public AsyncCheckPolicyComplianceResult asyncCheckPolicyCompliance(AsyncCheckPolicyComplianceRequest request) throws WssServiceException {
+        return client.asyncCheckPolicyCompliance(
+                requestFactory.newAsyncCheckPolicyComplianceRequest(request));
+    }
+
+    public AsyncCheckPolicyComplianceStatusResult asyncCheckPolicyComplianceStatus(AsyncCheckPolicyComplianceStatusRequest request) throws WssServiceException {
+        return client.asyncCheckPolicyComplianceStatus(
+                requestFactory.newAsyncCheckPolicyComplianceStatusRequest(request));
+    }
+
+    public AsyncCheckPolicyComplianceResponseResult asyncCheckPolicyRComplianceResponse(AsyncCheckPolicyComplianceResponseRequest request) throws WssServiceException {
+        return client.asyncCheckPolicyComplianceResponse(
+                requestFactory.newAsyncCheckPolicyComplianceResponseRequest(request));
+    }
+
 
     /**
      * Gets additional data for given dependencies.

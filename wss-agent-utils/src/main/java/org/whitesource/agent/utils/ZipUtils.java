@@ -17,8 +17,11 @@ package org.whitesource.agent.utils;
  */
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.binary.Base64InputStream;
+import org.apache.commons.codec.binary.Base64OutputStream;
 
 import java.io.*;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -169,6 +172,14 @@ public class ZipUtils {
             return getStringFromEncode(exportByteArrayOutputStream.toByteArray());
         }
     }
+    public static String compressAndEncodeString(String text) throws IOException {
+        try (ByteArrayOutputStream exportByteArrayOutputStream = new ByteArrayOutputStream()) {
+            fillExportStreamCompress(text, exportByteArrayOutputStream);
+            return getStringFromEncode(exportByteArrayOutputStream.toByteArray());
+            //String base64Encoded =  getStringFromEncode(exportByteArrayOutputStream.toByteArray());
+            //return URLEncoder.encode(base64Encoded, "UTF-8");
+        }
+    }
 
     /**
      * The method compresses the big strings using gzip - low memory via Streams
@@ -188,6 +199,15 @@ public class ZipUtils {
         }
     }
 
+    public static void compressOutputStream(PipedInputStream pis, PipedOutputStream pos) throws IOException {
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            fillExportStreamCompress(pis, byteArrayOutputStream);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            org.apache.commons.codec.binary.Base64OutputStream base64OutputStream = new Base64OutputStream(pos, true, -1, null);
+            byteArrayOutputStream.writeTo(base64OutputStream);
+            base64OutputStream.close();
+        }
+    }
 
     public static String decompressString(String text) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();

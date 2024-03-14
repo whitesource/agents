@@ -1,5 +1,10 @@
 package org.whitesource.agent.api.dispatch;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by anna.rozin
  */
@@ -32,20 +37,37 @@ public class ConfigurationResult extends BaseResult {
 
     private FsaConfiguration fsaConfiguration;
 
+    private Map<AppFlags, Object> flags;
+
+    private Collection<EntitlementType> entitlements;
+
     /* --- Constructors --- */
 
-    public ConfigurationResult(){
+    public ConfigurationResult() {
         fsaConfiguration = new FsaConfiguration();
+        flags = new HashMap<>();
+        entitlements = new ArrayList<>();
     }
 
     public ConfigurationResult(boolean checkPolicies, boolean forceCheckAllDependencies, boolean forceUpdate, String includes,
-                               String excludes){
+                               String excludes) {
         this();
         this.checkPolicies = checkPolicies;
         this.forceCheckAllDependencies = forceCheckAllDependencies;
         this.forceUpdate = forceUpdate;
         this.includes = includes;
         this.excludes = excludes;
+    }
+
+    public ConfigurationResult(boolean checkPolicies, boolean forceCheckAllDependencies, boolean forceUpdate, String includes,
+                               String excludes, Map<AppFlags, Object> flags) {
+        this();
+        this.checkPolicies = checkPolicies;
+        this.forceCheckAllDependencies = forceCheckAllDependencies;
+        this.forceUpdate = forceUpdate;
+        this.includes = includes;
+        this.excludes = excludes;
+        this.flags = flags;
     }
 
 
@@ -153,5 +175,21 @@ public class ConfigurationResult extends BaseResult {
 
     public void setFsaConfiguration(FsaConfiguration fsaConfiguration) {
         this.fsaConfiguration = fsaConfiguration;
+    }
+
+    public void setFlags(Map<AppFlags, Object> flags) {
+        this.flags = flags;
+    }
+
+    public Map<AppFlags, Object> getFlags() {
+        return this.flags;
+    }
+
+    public Collection<EntitlementType> getEntitlements() {
+        return entitlements;
+    }
+
+    public void setEntitlements(Collection<EntitlementType> entitlements) {
+        this.entitlements = entitlements;
     }
 }
