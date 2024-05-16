@@ -2,6 +2,8 @@ package org.whitesource.agent.api.dispatch;
 
 public class JwtAccessTokenResult extends BaseResult {
 
+    private static final long serialVersionUID = 4617440013556093604L;
+
     private String jwtAccessToken;
 
     public JwtAccessTokenResult() {
