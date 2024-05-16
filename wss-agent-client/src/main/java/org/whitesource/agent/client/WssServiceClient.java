@@ -193,4 +193,6 @@ public interface WssServiceClient {
      * @return the customer headers configured for this client
      */
     Map<String, String> getHeaders();
+
+    JwtAccessTokenResult jwtAccessToken(JwtAccessTokenRequest request) throws WssServiceException;
 }
