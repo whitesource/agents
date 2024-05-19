@@ -1,7 +1,5 @@
 package org.whitesource.agent.api.dispatch;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,15 +36,11 @@ public class ConfigurationResult extends BaseResult {
     private FsaConfiguration fsaConfiguration;
 
     private Map<AppFlags, Object> flags;
-
-    private Collection<EntitlementType> entitlements;
-
     /* --- Constructors --- */
 
     public ConfigurationResult() {
         fsaConfiguration = new FsaConfiguration();
         flags = new HashMap<>();
-        entitlements = new ArrayList<>();
     }
 
     public ConfigurationResult(boolean checkPolicies, boolean forceCheckAllDependencies, boolean forceUpdate, String includes,
@@ -180,16 +174,8 @@ public class ConfigurationResult extends BaseResult {
     public void setFlags(Map<AppFlags, Object> flags) {
         this.flags = flags;
     }
-
     public Map<AppFlags, Object> getFlags() {
         return this.flags;
     }
 
-    public Collection<EntitlementType> getEntitlements() {
-        return entitlements;
-    }
-
-    public void setEntitlements(Collection<EntitlementType> entitlements) {
-        this.entitlements = entitlements;
-    }
 }
