@@ -195,4 +195,6 @@ public interface WssServiceClient {
     Map<String, String> getHeaders();
 
     JwtAccessTokenResult jwtAccessToken(JwtAccessTokenRequest request) throws WssServiceException;
+
+    UploadScaLogsResult uploadScaLogs(UploadScaLogsRequest request) throws WssServiceException;
 }
