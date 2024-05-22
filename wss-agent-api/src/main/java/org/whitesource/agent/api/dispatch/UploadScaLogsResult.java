@@ -28,6 +28,6 @@ public class UploadScaLogsResult extends BaseResult {
 
     @Override
     public String toString() {
-        return String.format("UploadScaLogsResult{success=%s, message='%s'}", success, message);
+        return String.format("UploadScaLogsResult{requestToken=%s, success=%s, message='%s'}", getRequestToken(), isSuccess(), getMessage());
     }
 }
