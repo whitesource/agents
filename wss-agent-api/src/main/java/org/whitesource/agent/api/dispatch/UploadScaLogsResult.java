@@ -25,4 +25,9 @@ public class UploadScaLogsResult extends BaseResult {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    @Override
+    public String toString() {
+        return String.format("UploadScaLogsResult{success=%s, message='%s'}", success, message);
+    }
 }
