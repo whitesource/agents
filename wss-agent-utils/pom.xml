@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.whitesource</groupId>
         <artifactId>wss-agent-parent</artifactId>
-        <version>2.9.9.92-SNAPSHOT</version>
+        <version>2.9.9.93</version>
     </parent>
 
     <groupId>org.whitesource</groupId>
     <artifactId>wss-agent-utils</artifactId>
-    <version>2.9.9.92-SNAPSHOT</version>
+    <version>2.9.9.93</version>
 
     <dependencies>
         <dependency>
