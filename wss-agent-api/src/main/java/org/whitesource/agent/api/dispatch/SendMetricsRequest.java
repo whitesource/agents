@@ -1,6 +1,5 @@
 package org.whitesource.agent.api.dispatch;
 
-import java.io.Serial;
 
 public class SendMetricsRequest extends BaseRequest<SendMetricsResult> {
 
