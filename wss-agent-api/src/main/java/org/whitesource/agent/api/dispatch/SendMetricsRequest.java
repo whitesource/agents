@@ -1,6 +1,5 @@
 package org.whitesource.agent.api.dispatch;
 
-
 public class SendMetricsRequest extends BaseRequest<SendMetricsResult> {
 
     private static final long serialVersionUID = -6575498573910995957L;
