@@ -682,6 +682,10 @@ public class RequestFactory {
         return (ConfigurationRequest) prepareRequest(request);
     }
 
+    public SendMetricsRequest newSendMetricsRequest(SendMetricsRequest request) {
+        return (SendMetricsRequest) prepareRequest(request);
+    }
+
     /* --- Protected methods --- */
 
     @Deprecated
