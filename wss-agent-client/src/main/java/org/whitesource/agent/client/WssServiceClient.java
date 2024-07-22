@@ -103,6 +103,9 @@ public interface WssServiceClient {
      */
     ConfigurationResult getConfiguration(ConfigurationRequest request) throws WssServiceException;
 
+
+    SendMetricsResult sendMetrics(SendMetricsRequest request) throws WssServiceException;
+
     /**
      * @return serviceUrl
      */

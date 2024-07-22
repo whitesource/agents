@@ -250,6 +250,11 @@ public class WssServiceClientImpl implements WssServiceClient {
     }
 
     @Override
+    public SendMetricsResult sendMetrics(SendMetricsRequest request) throws WssServiceException {
+        return service(request);
+    }
+
+    @Override
     public void shutdown() {
         httpClient.getConnectionManager().shutdown();
     }
@@ -396,6 +401,9 @@ public class WssServiceClientImpl implements WssServiceClient {
                 case JWT_ACCESS_TOKEN:
                     result = (R) gson.fromJson(data, JwtAccessTokenResult.class);
                     break;
+                case SEND_METRICS:
+                    result = (R) gson.fromJson(data, SendMetricsResult.class);
+                    break;
                 default:
                     throw new IllegalStateException("Unsupported request type.");
             }
@@ -490,6 +498,9 @@ public class WssServiceClientImpl implements WssServiceClient {
                 break;
             case JWT_ACCESS_TOKEN:
                 jsonDiff = gson.toJson(((JwtAccessTokenRequest) request).getProjects());
+                break;
+            case SEND_METRICS:
+                jsonDiff = gson.toJson(((SendMetricsRequest) request).getProjects());
                 break;
             default:
                 break;
