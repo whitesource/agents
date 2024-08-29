@@ -47,6 +47,7 @@ public class DependencyInfo implements Serializable {
     private String noNewLinesSha1;
     private String otherPlatformSha1;
     private String systemPath;
+    private boolean isModule;
     private boolean optional;
     private Collection<DependencyInfo> children;
     private Date lastModified;
@@ -140,6 +141,7 @@ public class DependencyInfo implements Serializable {
             return false;
         }
         if (optional != that.optional) return false;
+        if (isModule != that.isModule) return false;
         if (artifactId != null ? !artifactId.equals(that.artifactId) : that.artifactId != null) return false;
         if (classifier != null ? !classifier.equals(that.classifier) : that.classifier != null) return false;
         if (groupId != null ? !groupId.equals(that.groupId) : that.groupId != null) return false;
@@ -179,6 +181,7 @@ public class DependencyInfo implements Serializable {
         result = APIConstants.HASH_CODE_FACTOR * result + (filename != null ? filename.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (dependencyType != null ? dependencyType.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (systemPath != null ? systemPath.hashCode() : 0);
+        result = APIConstants.HASH_CODE_FACTOR * result + (isModule ? 1 : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (dependencyFile != null ? dependencyFile.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (vulnerabilityAnalysisResult != null ? vulnerabilityAnalysisResult.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (commit != null ? commit.hashCode() : 0);
@@ -250,6 +253,14 @@ public class DependencyInfo implements Serializable {
 
     public String getSystemPath() {
         return systemPath;
+    }
+
+    public boolean getIsModule() {
+        return isModule;
+    }
+
+    public void setIsModule(boolean isModule) {
+        this.isModule = isModule;
     }
 
     public void setSystemPath(String systemPath) {

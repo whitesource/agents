@@ -103,6 +103,9 @@ public interface WssServiceClient {
      */
     ConfigurationResult getConfiguration(ConfigurationRequest request) throws WssServiceException;
 
+
+    SendMetricsResult sendMetrics(SendMetricsRequest request) throws WssServiceException;
+
     /**
      * @return serviceUrl
      */
@@ -193,4 +196,6 @@ public interface WssServiceClient {
      * @return the customer headers configured for this client
      */
     Map<String, String> getHeaders();
+
+    JwtAccessTokenResult jwtAccessToken(JwtAccessTokenRequest request) throws WssServiceException;
 }

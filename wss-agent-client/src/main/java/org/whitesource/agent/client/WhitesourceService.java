@@ -877,6 +877,10 @@ public class WhitesourceService {
         return client.getConfiguration(requestFactory.newConfigurationRequest(request));
     }
 
+    public SendMetricsResult sendMetrics(SendMetricsRequest request) throws WssServiceException {
+        return client.sendMetrics(requestFactory.newSendMetricsRequest(request));
+    }
+
     /**
      * The method close the underlying client to the White Source service.
      *
