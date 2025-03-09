@@ -24,7 +24,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.whitesource.agent.api.dispatch.BaseCheckPoliciesResult;
 import org.whitesource.agent.api.model.PolicyCheckResourceNode;
 import org.whitesource.agent.api.model.RequestPolicyInfo;
