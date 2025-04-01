@@ -11,11 +11,11 @@ This information is used to:
     * Open requests for newly introduced libraries
     * Cancel requests for removed libraries.
 
-An agent is a plugin for one or more components in the your project ecosystem. Build systems, continuous integration servers, etc...
+An agent is a plugin for one or more components in your project ecosystem. Build systems, continuous integration servers, etc...
 
 ### Getting started
 Setup and usage instructions for each agent can be found in the [documentation][1].
-We recommend to visit the [service documentation][7] as well.
+We recommend visiting the [service documentation][7] as well.
 
 ### Available plugins
 At the moment we have plugins for [Maven][3], [Ant][10], [Jenkins][4] and [TeamCity][5].
@@ -24,7 +24,7 @@ Meanwhile, if you need a plugin for another system please drop a line to our [su
 
 ### Developers
 Agents are clients to the service REST api. You can develop your own agent by implementing such a client.
-This project provide two modules for Java based agents:
+This project provides two modules for Java based agents:
 
  * Domain model for information and operations in the api
  * Client implementation of the api
