@@ -1,0 +1,89 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      releaseVersion:
+        description: "Release version"
+        required: true
+        default: "2.9.9.99"
+      nextDevVersion:
+        description: "Next development version (must end with -SNAPSHOT)"
+        required: true
+        default: "2.9.9.100-SNAPSHOT"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v4
+        with:
+          java-version: "8"
+          distribution: "temurin"
+          server-id: sonatype-nexus-staging
+          server-username: ${{ secrets.OSSRH_USERNAME }}
+          server-password: ${{ secrets.OSSRH_TOKEN }}
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Configure Git
+        run: |
+          git config user.email "hudson@whitesourcesoftware.com"
+          git config user.name "whitesource-ci"
+          # Configure Git to use HTTPS instead of SSH
+          git config --global url."https://x-access-token:${{ github.token }}@github.com/".insteadOf "git@github.com:"
+
+      - name: Configure GPG
+        run: |
+          mkdir -p ~/.gnupg
+          chmod 700 ~/.gnupg
+          echo "allow-loopback-pinentry" > ~/.gnupg/gpg-agent.conf
+          echo "pinentry-mode loopback" > ~/.gnupg/gpg.conf
+
+      - name: Create Maven settings.xml
+        run: |
+          mkdir -p ~/.m2
+          echo "<settings>
+            <servers>
+              <server>
+                <id>sonatype-nexus-staging</id>
+                <username>${{ secrets.OSSRH_USERNAME }}</username>
+                <password>${{ secrets.OSSRH_TOKEN }}</password>
+              </server>
+            </servers>
+            <profiles>
+              <profile>
+                <id>gpg-settings</id>
+                <properties>
+                  <gpg.executable>gpg</gpg.executable>
+                  <gpg.passphrase>${{ secrets.GPG_PASSPHRASE }}</gpg.passphrase>
+                </properties>
+              </profile>
+            </profiles>
+            <activeProfiles>
+              <activeProfile>gpg-settings</activeProfile>
+            </activeProfiles>
+          </settings>" > ~/.m2/settings.xml
+
+      - name: Maven Release
+        run: |
+          export GPG_TTY=$(tty)
+          mvn -B -DsourceLevel=1.8 -Djava.version=1.8 \
+            -DreleaseVersion=${{ github.event.inputs.releaseVersion }} \
+            -DdevelopmentVersion=${{ github.event.inputs.nextDevVersion }} \
+            -DscmCommentPrefix="[maven-release-plugin] [skip ci] " \
+            -Darguments="-Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} -Pci-build -PRelease" \
+            release:clean release:prepare release:perform
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
