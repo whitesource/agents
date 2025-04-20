@@ -52,6 +52,7 @@ public enum DependencyType {
     OPAM,
     PUB,
     CONDA,
+    CONAN,
 
     DOCKER,
     DOCKER_LAYER,
