@@ -15,7 +15,7 @@
  */
 package org.whitesource.agent.hash;
 
-import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang3.builder.CompareToBuilder;
 
 import java.util.Objects;
 

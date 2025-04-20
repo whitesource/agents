@@ -16,7 +16,7 @@
 package org.whitesource.agent.hash;
 
 import com.sun.jna.Platform;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.boris.pecoff4j.PE;
 import org.boris.pecoff4j.ResourceDirectory;
 import org.boris.pecoff4j.ResourceEntry;

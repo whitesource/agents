@@ -18,7 +18,7 @@ package org.whitesource.agent.hash;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.BOMInputStream;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.whitesource.agent.api.model.ChecksumType;
 import org.whitesource.agent.api.model.DependencyType;
