@@ -66,6 +66,7 @@ public class DependencyInfo implements Serializable {
     private AnalysisInputs analysisInputs;
     private String sourcePackageName;
     private String release;
+    private String purl;
 
     /* --- Constructors --- */
 
@@ -163,6 +164,8 @@ public class DependencyInfo implements Serializable {
             return false;
         if (release != null ? !release.equals(that.release) : that.release != null)
             return false;
+        if (purl != null ? !purl.equals(that.purl) : that.purl != null)
+            return false;
 
         return true;
     }
@@ -188,6 +191,7 @@ public class DependencyInfo implements Serializable {
         result = APIConstants.HASH_CODE_FACTOR * result + (additionalSha1 != null ? additionalSha1.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (sourcePackageName != null ? sourcePackageName.hashCode() : 0);
         result = APIConstants.HASH_CODE_FACTOR * result + (release != null ? release.hashCode() : 0);
+        result = APIConstants.HASH_CODE_FACTOR * result + (purl != null ? purl.hashCode() : 0);
         return result;
     }
 
@@ -529,5 +533,13 @@ public class DependencyInfo implements Serializable {
 
     public void setRelease(String release) {
         this.release = release;
+    }
+
+    public String getPurl() {
+        return purl;
+    }
+
+    public void setPurl(String purl) {
+        this.purl = purl;
     }
 }
