@@ -1,6 +1,9 @@
 package org.whitesource.agent.api.dispatch;
 
+import org.whitesource.agent.api.model.ProjectEvents;
+
 import java.io.Serializable;
+import java.util.Collection;
 
 public class AsyncCheckPolicyComplianceStatusResult implements Serializable {
 
@@ -12,6 +15,7 @@ public class AsyncCheckPolicyComplianceStatusResult implements Serializable {
 
     // stores the sha1 of the euaDep.json used to calculate the vulnerabilities
     private String status;
+    private Collection<ProjectEvents> projectEvents;
 
     /**
      * Default constructor
@@ -29,5 +33,13 @@ public class AsyncCheckPolicyComplianceStatusResult implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Collection<ProjectEvents> getProjectEvents() {
+        return projectEvents;
+    }
+
+    public void setProjectEvents(Collection<ProjectEvents> projectEvents) {
+        this.projectEvents = projectEvents;
     }
 }
