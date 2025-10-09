@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - ossrh-migration
     paths-ignore:
       - "**/*.md"
 
