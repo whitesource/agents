@@ -406,14 +406,12 @@
         <repository>
             <id>sonatype-nexus-staging</id>
             <name>Central Portal</name>
-            <uniqueVersion>false</uniqueVersion>
-            <url>https://central.sonatype.com/api/v1/publisher</url>
+            <url>https://central.sonatype.com</url>
         </repository>
         <snapshotRepository>
             <id>sonatype-nexus-snapshots</id>
             <name>Central Portal Snapshots</name>
-            <uniqueVersion>false</uniqueVersion>
-            <url>https://central.sonatype.com/api/v1/publisher</url>
+            <url>https://central.sonatype.com</url>
         </snapshotRepository>
     </distributionManagement>
 
