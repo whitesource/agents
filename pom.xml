@@ -1,12 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
-
     <groupId>org.whitesource</groupId>
     <artifactId>wss-agent-parent</artifactId>
     <version>2.9.9.101-SNAPSHOT</version>
@@ -29,8 +23,8 @@
         <connection>scm:git:git@github.com:whitesource/agents.git</connection>
         <developerConnection>scm:git:git@github.com:whitesource/agents.git</developerConnection>
         <url>git@github.com:whitesource/agents.git</url>
-      <tag>release-tag-2.9.9.86</tag>
-  </scm>
+        <tag>release-tag-2.9.9.86</tag>
+    </scm>
     <issueManagement>
         <url>https://github.com/whitesource/agents/issues</url>
         <system>GitHub Issues</system>
@@ -62,9 +56,6 @@
         <gson.version>2.9.0</gson.version>
         <junit.version>4.13.2</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <!-- Skip parent POM's old GPG plugin configuration -->
-        <gpg.skip>true</gpg.skip>
     </properties>
 
     <modules>
@@ -371,10 +362,6 @@
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
-            <properties>
-                <!-- Enable GPG signing in ci-build profile -->
-                <gpg.skip>false</gpg.skip>
-            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -408,23 +395,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.2.7</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <gpgArguments>
-                                <arg>--pinentry-mode</arg>
-                                <arg>loopback</arg>
-                            </gpgArguments>
-                            <bestPractices>true</bestPractices>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>
@@ -447,6 +417,10 @@
                                 <phase>site</phase>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
                     </plugin>
                 </plugins>
             </build>
