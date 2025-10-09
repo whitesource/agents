@@ -62,6 +62,9 @@
         <gson.version>2.9.0</gson.version>
         <junit.version>4.13.2</junit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Skip parent POM's old GPG plugin configuration -->
+        <gpg.skip>true</gpg.skip>
     </properties>
 
     <modules>
@@ -368,6 +371,10 @@
             <activation>
                 <activeByDefault>false</activeByDefault>
             </activation>
+            <properties>
+                <!-- Enable GPG signing in ci-build profile -->
+                <gpg.skip>false</gpg.skip>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
