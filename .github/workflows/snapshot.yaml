@@ -40,3 +40,5 @@ jobs:
 
       - name: Build and deploy
         run: mvn -B clean deploy -Pci-build
+        env:
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
