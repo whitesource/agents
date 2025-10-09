@@ -11,6 +11,7 @@
     <groupId>org.whitesource</groupId>
     <artifactId>wss-agent-utils</artifactId>
     <version>2.9.9.101-SNAPSHOT</version>
+    <name>wss-agent-utils</name>
 
     <dependencies>
         <dependency>
