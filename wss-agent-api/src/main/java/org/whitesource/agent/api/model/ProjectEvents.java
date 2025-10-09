@@ -1,6 +1,7 @@
 package org.whitesource.agent.api.model;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 public class ProjectEvents  implements Serializable {
 
@@ -10,15 +11,17 @@ public class ProjectEvents  implements Serializable {
     private String eventUuid;
     private String projectUuid;
     private String projectName;
+    private String status;
 
     public ProjectEvents() {
     }
 
-    public ProjectEvents(String scanUuid, String eventUuid, String projectUuid, String projectName) {
+    public ProjectEvents(String scanUuid, String eventUuid, String projectUuid, String projectName, String status) {
         this.scanUuid = scanUuid;
         this.eventUuid = eventUuid;
         this.projectUuid = projectUuid;
         this.projectName = projectName;
+        this.status = status;
     }
 
     public String getScanUuid() {
@@ -51,5 +54,13 @@ public class ProjectEvents  implements Serializable {
 
     public void setProjectName(String projectName) {
         this.projectName = projectName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
