@@ -60,6 +60,15 @@ public class JavaScriptHashCalculatorTest {
         assertTrue(commentlessContent.startsWith("(function(factory) {"));
     }
 
+    @Test
+    public void testRemoveHeaderCommentEndingWithP() {
+        String fileContent = "//# sourceMappingURL=IRotate.js.map";
+        ParseResult parseResult = new JavaScriptParser().parse(fileContent);
+        String headerlessContent = parseResult.getContentWithoutHeaderComments();
+        Assert.assertNotNull(headerlessContent);
+        Assert.assertEquals(0, headerlessContent.length());
+    }
+
 //    @Ignore
     @Test
     public void testCalculateJavaScriptHash() throws IOException, WssHashException {

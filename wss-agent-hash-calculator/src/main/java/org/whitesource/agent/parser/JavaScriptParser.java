@@ -1,6 +1,5 @@
 package org.whitesource.agent.parser;
 
-import org.apache.commons.lang3.StringUtils;
 import org.mozilla.javascript.CompilerEnvirons;
 import org.mozilla.javascript.Parser;
 import org.mozilla.javascript.ast.AstRoot;
@@ -71,20 +70,37 @@ public class JavaScriptParser {
      * Go over each comment and remove from content until reaching the beginning of the actual code.
      */
     private String removeHeaderComments(String fileContent, SortedSet<Comment> comments) {
-        String headerlessFileContent = fileContent;
+        int contentLength = fileContent.length();
+        int currentIndex = 0;
         for (Comment comment : comments) {
-            String commentValue = comment.getValue();
-            if (headerlessFileContent.startsWith(commentValue)) {
-                headerlessFileContent = headerlessFileContent.replace(commentValue, EMPTY_STRING);
-                // remove all leading white spaces and new line characters
-                while (StringUtils.isNotBlank(headerlessFileContent) && Character.isWhitespace(headerlessFileContent.charAt(0))) {
-                    headerlessFileContent = headerlessFileContent.substring(1);
-                }
-            } else {
+            int commentStart = comment.getAbsolutePosition();
+
+            if (commentStart > currentIndex) {
                 // finished removing all header comments
                 break;
             }
+
+            if (commentStart + comment.getLength() > contentLength) {
+                // safety check – malformed comment location
+                break;
+            }
+
+            if (commentStart < currentIndex) {
+                // comment already removed as part of a previous comment
+                continue;
+            }
+
+            currentIndex += comment.getLength();
+
+            while (currentIndex < contentLength && Character.isWhitespace(fileContent.charAt(currentIndex))) {
+                currentIndex++;
+            }
         }
-        return headerlessFileContent;
+
+        if (currentIndex >= contentLength) {
+            return EMPTY_STRING;
+        }
+
+        return fileContent.substring(currentIndex);
     }
 }
