@@ -3,6 +3,7 @@ package org.whitesource.agent.parser;
 import org.apache.commons.lang3.StringUtils;
 import org.mozilla.javascript.CompilerEnvirons;
 import org.mozilla.javascript.Parser;
+import org.mozilla.javascript.Token;
 import org.mozilla.javascript.ast.AstRoot;
 import org.mozilla.javascript.ast.Comment;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,9 @@ public class JavaScriptParser {
 
     private static final String EMPTY_STRING = "";
 
-    private static final String COMMENT_REGEX = "(/\\*[\\s\\S]*?\\*/)";
+    private static final String LINE_COMMENT_PREFIX = "//";
+    private static final String HTML_OPEN_COMMENT_PREFIX = "<!--";
+    private static final String HTML_CLOSE_COMMENT_PREFIX = "-->";
 
     /* --- Public methods --- */
 
@@ -68,23 +71,69 @@ public class JavaScriptParser {
     /* --- Private methods --- */
 
     /**
-     * Go over each comment and remove from content until reaching the beginning of the actual code.
+     * Strip leading comments (and the whitespace between them) until reaching
+     * the first non-comment content.
+     *
+     * For line-style comments (LINE / HTML) we scan to the next line terminator
+     * rather than relying on {@link Comment#getValue()}: Rhino 1.7.7.2 returns
+     * a value that is one character short when the comment is not newline-
+     * terminated (e.g. at EOF), which would leak the trailing character of the
+     * file into the headerless content and produce hash collisions in the
+     * Index. See TKA-8744 / SCA-5117.
+     *
+     * For block-style comments (BLOCK / JSDOC) the closing &#42;/ delimiter is
+     * required to terminate the comment, so {@link Comment#getValue()} is
+     * reliable. Stripping is anchored at offset 0 ({@code substring}) instead
+     * of using {@code String.replace}, which would also strip later in-body
+     * occurrences of the same string.
      */
     private String removeHeaderComments(String fileContent, SortedSet<Comment> comments) {
         String headerlessFileContent = fileContent;
         for (Comment comment : comments) {
-            String commentValue = comment.getValue();
-            if (headerlessFileContent.startsWith(commentValue)) {
-                headerlessFileContent = headerlessFileContent.replace(commentValue, EMPTY_STRING);
-                // remove all leading white spaces and new line characters
-                while (StringUtils.isNotBlank(headerlessFileContent) && Character.isWhitespace(headerlessFileContent.charAt(0))) {
-                    headerlessFileContent = headerlessFileContent.substring(1);
-                }
-            } else {
-                // finished removing all header comments
+            String afterRemoval = removeLeadingHeader(headerlessFileContent, comment);
+            if (afterRemoval == null) {
+                // no longer at a header — body reached
                 break;
             }
+            headerlessFileContent = StringUtils.stripStart(afterRemoval, null);
         }
         return headerlessFileContent;
+    }
+
+    /**
+     * Returns the content with the given header comment removed from offset 0,
+     * or {@code null} if the content does not currently start with that
+     * comment (i.e. we've reached the body of the file).
+     */
+    private String removeLeadingHeader(String content, Comment comment) {
+        Token.CommentType type = comment.getCommentType();
+        if (type == Token.CommentType.LINE || type == Token.CommentType.HTML) {
+            if (!startsWithLineCommentDelimiter(content)) {
+                return null;
+            }
+            int terminatorIdx = indexOfLineTerminator(content);
+            return terminatorIdx < 0 ? EMPTY_STRING : content.substring(terminatorIdx);
+        }
+        String commentValue = comment.getValue();
+        if (!content.startsWith(commentValue)) {
+            return null;
+        }
+        return content.substring(commentValue.length());
+    }
+
+    private static boolean startsWithLineCommentDelimiter(String s) {
+        return s.startsWith(LINE_COMMENT_PREFIX)
+                || s.startsWith(HTML_OPEN_COMMENT_PREFIX)
+                || s.startsWith(HTML_CLOSE_COMMENT_PREFIX);
+    }
+
+    private static int indexOfLineTerminator(String s) {
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '\n' || c == '\r') {
+                return i;
+            }
+        }
+        return -1;
     }
 }
