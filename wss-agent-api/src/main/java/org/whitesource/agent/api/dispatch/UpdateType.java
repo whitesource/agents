@@ -23,5 +23,6 @@ package org.whitesource.agent.api.dispatch;
 public enum UpdateType {
     OVERRIDE,
     APPEND,
-    REMOVE
+    REMOVE,
+    SOFT_RUN
 }
