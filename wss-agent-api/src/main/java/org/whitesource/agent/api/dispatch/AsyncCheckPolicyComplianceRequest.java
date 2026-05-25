@@ -24,6 +24,7 @@ public class AsyncCheckPolicyComplianceRequest extends BaseRequest<AsyncCheckPol
      */
     protected boolean populateVulnerabilities;
 
+    private UpdateType updateType = null;
     /* --- Constructors --- */
 
     /**
@@ -110,6 +111,30 @@ public class AsyncCheckPolicyComplianceRequest extends BaseRequest<AsyncCheckPol
         this.logData = logData;
         this.productToken = productToken;
     }
+    /**
+     * Constructor
+     *
+     * @param orgToken                  Organization token uniquely identifying the account at white source.
+     * @param product                   The product name or token to update.
+     * @param productVersion            The product version.
+     * @param projects                  Open Source usage statement to check against policies.
+     * @param forceCheckAllDependencies Boolean to check new data only or not.
+     * @param userKey                   user key uniquely identifying the account at white source.
+     * @param requesterEmail            Email of the WhiteSource user that requests to update WhiteSource.
+     * @param logData                   list of FSA's log data events
+     * @param productToken              The product token
+     */
+    public AsyncCheckPolicyComplianceRequest(String orgToken, String product, String productVersion, Collection<AgentProjectInfo> projects, boolean forceCheckAllDependencies,
+                                             String userKey, String requesterEmail, String logData, String productToken, UpdateType updateType) {
+        this(orgToken, projects, forceCheckAllDependencies);
+        this.product = product;
+        this.productVersion = productVersion;
+        this.userKey = userKey;
+        this.requesterEmail = requesterEmail;
+        this.logData = logData;
+        this.productToken = productToken;
+        this.updateType = updateType;
+    }
 
     /**
      * Constructor
@@ -181,5 +206,18 @@ public class AsyncCheckPolicyComplianceRequest extends BaseRequest<AsyncCheckPol
 
     public void setPopulateVulnerabilities(boolean populateVulnerabilities) {
         this.populateVulnerabilities = populateVulnerabilities;
+    }
+    /**
+     * @return Request UpdateType
+     */
+    public UpdateType getUpdateType() {
+        return updateType;
+    }
+
+    /**
+     * @param updateType Request UpdateType
+     */
+    public void setUpdateType(UpdateType updateType) {
+        this.updateType = updateType;
     }
 }

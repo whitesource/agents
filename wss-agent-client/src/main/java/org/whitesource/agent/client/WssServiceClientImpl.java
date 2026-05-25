@@ -470,6 +470,8 @@ public class WssServiceClientImpl implements WssServiceClient {
                 break;
             case CHECK_POLICY_COMPLIANCE:
             case ASYNC_CHECK_POLICY_COMPLIANCE:
+                AsyncCheckPolicyComplianceRequest asyncCheckPolicyComplianceRequest = (AsyncCheckPolicyComplianceRequest) request;
+                if (asyncCheckPolicyComplianceRequest.getUpdateType() != null) nvps.add(new BasicNameValuePair(APIConstants.PARAM_UPDATE_TYPE, asyncCheckPolicyComplianceRequest.getUpdateType().toString()));
                 jsonDiff = handleCheckPolicyReq(nvps, request);
                 break;
             case ASYNC_CHECK_POLICY_COMPLIANCE_STATUS:
