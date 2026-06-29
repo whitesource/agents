@@ -40,6 +40,7 @@ import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.impl.NoConnectionReuseStrategy;
 import org.apache.http.impl.client.*;
 import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
@@ -187,6 +188,15 @@ public class WssServiceClientImpl implements WssServiceClient {
 
         setConnectionTimeout(this.connectionTimeout);
 
+        // Never reuse a persistent (keep-alive) connection. A pooled connection that an upstream
+        // load balancer / proxy / firewall has silently dropped (half-open) would otherwise be
+        // reused for the next request; the request is then written into a dead socket, no response
+        // ever arrives, and the read blocks for the full connection timeout (default 60 minutes)
+        // before the agent retries on a fresh connection. Forcing a fresh connection per request
+        // removes that "first attempt times out, retry succeeds" failure. The cost is one extra
+        // connection setup per request, which is negligible for the agent's request volume.
+        ((DefaultHttpClient) httpClient).setReuseStrategy(new NoConnectionReuseStrategy());
+
         if (this.proxyEnabled) {
             findDefaultProxy();
         }
@@ -275,7 +285,9 @@ public class WssServiceClientImpl implements WssServiceClient {
         HttpHost proxy = new HttpHost(proxyHost, proxyPort);
         //		httpClient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, proxy);
         DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
-        httpClient = HttpClients.custom().setRoutePlanner(routePlanner).build();
+        // see constructor: disable connection reuse to avoid reusing a stale/half-open connection
+        httpClient = HttpClients.custom().setRoutePlanner(routePlanner)
+                .setConnectionReuseStrategy(new NoConnectionReuseStrategy()).build();
         logger.info("Using proxy: " + proxy.toHostString());
 
         if (proxyUsername != null && proxyUsername.trim().length() > 0) {
@@ -293,7 +305,8 @@ public class WssServiceClientImpl implements WssServiceClient {
             credsProvider.setCredentials(AuthScope.ANY, credentials);
             // TODO check
             httpClient = HttpClientBuilder.create().setProxy(proxy)
-                    .setDefaultCredentialsProvider(credsProvider).build();
+                    .setDefaultCredentialsProvider(credsProvider)
+                    .setConnectionReuseStrategy(new NoConnectionReuseStrategy()).build();
 
             //            httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, credentials);
         }
